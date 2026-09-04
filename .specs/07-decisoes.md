@@ -355,3 +355,9 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
 - Fontes: arquitetura oficial MCP, Anthropic Managed Agents/Contextual Retrieval e documentação Google Cloud de tuning, consultadas em 04/09/2026. Links junto ao conteúdo.
 - Recursos novos pecas-ia.{js,css}, pecas-ia-cenas.js e generate-pecas-ia.mjs. 19 falas ElevenLabs, 2.785 caracteres, 185,8 s, salvas localmente em assets/audio/pecas-ia-cap00/. Sem chamadas externas no navegador e respeitando CAP_AUDIO/teatro:play.
 - Validação: 19 MP3 decodificados; sintaxe JS, IDs, âncoras e recursos locais conferidos. Browser validou RAG com fonte antiga/vigente, bloqueio do harness, MCP desconectado/conectado e comparação/avaliação do ajuste. Ciclo completo do harness com voz, pausa/retomada, mudo global e layout de 390 px sem overflow nos quatro componentes; console sem erros.
+
+## 2026-09-04 — Fluxo didático do Cap 0 consolidado como skill
+- Professor aprovou e pediu reutilizar o ciclo **fundamentação teórica → teatro/simulação → quiz/prática** nos próximos materiais.
+- A regra central, o caso e o vocabulário atravessam as três camadas: a teoria constrói o modelo mental, a experiência visual revela o estado mudando e o quiz exige aplicar a regra em um caso novo.
+- Criada a skill portátil `capitulo-didatico-interativo`, disponível para Codex e Claude Code. Ela complementa `teatro-didatico-animado`, que continua responsável pelos detalhes de personagens, player e vozes locais.
+- O padrão mantém exemplos acessíveis a iniciantes no tema e preserva julgamento técnico avançado, inclui limite/erro plausível, feedback explicativo e validação sem áudio ou internet essencial.

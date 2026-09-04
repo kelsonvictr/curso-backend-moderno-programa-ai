@@ -22,6 +22,20 @@ a **Oficina de falas** do Cap 0 de Java Avançado (Lia, Beto e Tico), com vozes 
   do aluno. A chave fica no ambiente ou Keychain, nunca no HTML. Novas gerações respeitam o pedido
   atual; a aprovação deste exemplo não autoriza cobranças futuras por si só.
 
+## Fluxo de capítulo didático — padrão aprovado
+
+Ao criar ou revisar uma seção conceitual, use a skill **`capitulo-didatico-interativo`**. O padrão
+aprovado no Cap 0 conecta três camadas: fundamentação gradual, teatro/simulação que torna o
+mecanismo visível e quiz/prática em que o aluno aplica a mesma regra a um caso novo.
+
+- Codex: `~/.codex/skills/capitulo-didatico-interativo/SKILL.md` — `$capitulo-didatico-interativo`.
+- Claude Code: `~/.claude/skills/capitulo-didatico-interativo/SKILL.md` — `/capitulo-didatico-interativo`.
+- Defina termos e siglas antes do uso; exemplos Java/Spring começam acessíveis sem reduzir a
+  profundidade da decisão profissional.
+- Teoria, experiência visual e quiz devem compartilhar caso, vocabulário e regra central. Cada
+  camada acrescenta uma função pedagógica própria e inclui o limite ou erro plausível do conceito.
+- Use também `teatro-didatico-animado` quando a experiência tiver personagens e vozes.
+
 
 
 ## Cap 0 — exemplos de Java/Spring acessíveis (2026-09-04)
