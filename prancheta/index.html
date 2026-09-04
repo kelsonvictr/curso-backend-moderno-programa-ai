@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prancheta de arquitetura | Backend Moderno, Agentes de IA e Cloud</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/styles.css">
+<link rel="stylesheet" href="../shared/components.css">
+<link rel="stylesheet" href="../shared/animations.css">
+<link rel="stylesheet" href="../shared/lab-kit.css?v=3">
+<style>
+  .gal{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+  .gal .arch{margin:0}
+  .gal-meta{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+  .gal-meta .m{font-size:0.74rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace}
+  .gal-empty{color:var(--text-dim);font-size:0.92rem;line-height:1.6}
+  .habit{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+  @media(max-width:700px){.habit{grid-template-columns:1fr}}
+  .hb{background:var(--surface2);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px}
+  .hb .e{font-size:1.6rem}
+  .hb .t{font-weight:900;margin:4px 0}
+  .hb .d{font-size:0.82rem;color:var(--text-dim);line-height:1.5}
+</style>
+</head>
+<body data-page="Prancheta">
+
+<div class="bg-grid"></div>
+<div class="bg-orbs"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+<div class="progress-track"><div class="progress-bar"></div></div>
+
+<section class="hero" style="padding-bottom:40px">
+  <div class="hero-icons" data-motion="float">📐 🏗️</div>
+  <span class="hero-badge" style="background:linear-gradient(135deg,var(--accent6),var(--accent4))">ferramenta do curso</span>
+  <h1>Prancheta de arquitetura</h1>
+  <p class="subtitle">
+    Quem desenha o que está construindo <strong style="color:var(--text)">enxerga antes de errar</strong>. Aqui você desenha livre,
+    e embaixo ficam todos os diagramas que você fez dentro dos capítulos — salvos neste navegador.
+  </p>
+  <p class="text-dim" style="font-size:0.82rem"><a href="../" style="color:var(--accent4);text-decoration:none">← voltar ao hub</a></p>
+</section>
+
+<div class="container">
+
+  <section class="step-section visible">
+    <div class="card">
+      <div class="habit">
+        <div class="hb"><div class="e">✍️</div><div class="t">Antes de pedir ao agente</div><div class="d">Desenhe o que você quer que exista. Caixas e setas expõem o que a spec ainda não diz.</div></div>
+        <div class="hb"><div class="e">🔍</div><div class="t">Depois que ele entregou</div><div class="d">Desenhe o que ele fez. Se o desenho ficou diferente do primeiro, a revisão já começou.</div></div>
+        <div class="hb"><div class="e">🗂️</div><div class="t">Versão a versão</div><div class="d">Duplique o diagrama antes de mudar. No fim do curso você tem a história da arquitetura, do <code>record</code> à AWS.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step-section visible" id="livre">
+    <div class="step-header">
+      <div class="step-number sn-purple">✏️</div>
+      <div><div class="step-title">Prancheta livre</div><div class="step-sub">Todas as paletas. Use ⛶ pra tela cheia.</div></div>
+    </div>
+    <div data-arch="prancheta/livre" data-palette="sdd,app,eda,aws,free" data-title="Prancheta livre" data-height="560"></div>
+  </section>
+
+  <section class="step-section visible" id="meus">
+    <div class="step-header">
+      <div class="step-number sn-java">🗂️</div>
+      <div><div class="step-title">Meus desenhos nos capítulos</div><div class="step-sub">Cada exercício do curso tem a sua prancheta. Elas aparecem aqui.</div></div>
+    </div>
+    <div class="card">
+      <div class="gal" id="gal"></div>
+      <p class="gal-empty" id="gal-empty" hidden>Nenhum desenho ainda. Quando você desenhar num capítulo (ou aqui em cima), ele aparece nesta galeria.</p>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <strong style="color:var(--java)">Backend Moderno, Agentes de IA e Cloud</strong> · Prancheta ·
+  <a href="../">← voltar ao hub</a>
+</footer>
+
+<script src="../shared/scripts.js" defer></script>
+<script src="../shared/lab-kit.js?v=3" defer></script>
+<script type="module" src="../shared/motion-fx.js?v=3"></script>
+<script>
+  window.addEventListener('load', function(){
+    var K = window.LabKit; if (!K) return;
+    var gal = document.getElementById('gal'), empty = document.getElementById('gal-empty');
+    var keys = K.store.keys('arch:').filter(function(k){ return k !== 'arch:prancheta/livre'; });
+    var items = keys.map(function(k){ var s = K.store.get(k, null); return s && s.nodes && s.nodes.length ? { id: k.slice(5), s: s } : null; }).filter(Boolean)
+      .sort(function(a,b){ return (b.s.u||0) - (a.s.u||0); });
+    if (!items.length){ empty.hidden = false; return; }
+    items.forEach(function(it){
+      var wrap = document.createElement('div');
+      var el = document.createElement('div');
+      el.setAttribute('data-arch', 'gal/' + it.id); el.setAttribute('data-readonly', ''); el.setAttribute('data-height', '300');
+      el.setAttribute('data-title', it.s.t || it.id);
+      var sc = document.createElement('script'); sc.type = 'application/json'; sc.textContent = JSON.stringify({ nodes: it.s.nodes, edges: it.s.edges }); el.appendChild(sc);
+      wrap.appendChild(el);
+      var meta = document.createElement('div'); meta.className = 'gal-meta';
+      var m = document.createElement('span'); m.className = 'm'; m.textContent = (it.s.p || it.id) + ' · ' + it.s.nodes.length + ' nós · ' + (it.s.u ? new Date(it.s.u).toLocaleDateString('pt-BR') : '');
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'lk-btn sm ghost'; b.textContent = '✏️ Editar uma cópia na prancheta livre';
+      b.addEventListener('click', function(){
+        if (!confirm('Copiar este desenho para a prancheta livre? (o desenho original do capítulo não muda)')) return;
+        var cur = K.store.get('arch:prancheta/livre', null) || {};
+        K.store.set('arch:prancheta/livre', { nodes: it.s.nodes, edges: it.s.edges, view: cur.view || { k: 1, tx: 0, ty: 0 }, t: 'Prancheta livre', p: 'Prancheta', u: Date.now() });
+        location.hash = '#livre'; location.reload();
+      });
+      meta.appendChild(m); meta.appendChild(b); wrap.appendChild(meta); gal.appendChild(wrap);
+      K.mountArch(el);
+    });
+  });
+</script>
+</body>
+</html>

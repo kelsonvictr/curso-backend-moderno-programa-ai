@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Backend Moderno, Agentes de IA e Cloud | programa AI</title>
+<meta name="description" content="Formação avançada de backend em Java: do código de sênior aos sistemas orientados a eventos (RabbitMQ, Kafka) e ao serverless na AWS — dirigindo e revisando agentes de IA (Claude Code, SDD) o tempo todo. 8 sábados, presencial em João Pessoa ou remoto ao vivo.">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/styles.css">
+<link rel="stylesheet" href="shared/components.css">
+<link rel="stylesheet" href="shared/animations.css">
+<link rel="stylesheet" href="shared/lab-kit.css?v=3">
+<style>
+  .ai-ribbon{
+    position:absolute;top:12px;right:12px;display:inline-flex;align-items:center;gap:5px;
+    background:linear-gradient(135deg,rgba(217,119,87,0.18),rgba(167,139,250,0.14));
+    border:1px solid rgba(217,119,87,0.35);color:var(--claude);
+    font-size:0.6rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border-radius:50px;
+  }
+  .hub-card.bloco1::before{background:linear-gradient(90deg,var(--java),var(--spring))}
+  .hub-card.bloco2::before{background:linear-gradient(90deg,var(--rabbit),var(--kafka))}
+  .hub-card.bloco3::before{background:linear-gradient(90deg,var(--aws),var(--lambda))}
+  .hub-card.setup::before{background:linear-gradient(90deg,var(--accent4),var(--spring))}
+  .hub-card .pill{font-size:0.66rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);background:var(--surface2);border:1px solid rgba(255,255,255,0.06);padding:3px 9px;border-radius:50px}
+  .pill.aval{color:var(--accent5);border-color:rgba(247,183,49,0.3)}
+  .hub-card .date{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:0.72rem;font-weight:800;color:var(--text-dim);margin-left:auto}
+  .hub-card .date b{color:var(--text)}
+  .hub-card .num{display:flex;align-items:center;gap:8px}
+  .hub-card.em-breve{opacity:0.55;pointer-events:none;filter:grayscale(0.2)}
+  .hub-card.em-breve::after{content:'🔒 em breve';position:absolute;bottom:14px;right:14px;background:rgba(255,255,255,0.06);color:var(--text-dim);font-size:0.6rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border-radius:50px;border:1px solid rgba(255,255,255,0.08)}
+  .bloco-head{display:flex;align-items:center;gap:14px;margin:38px 0 4px}
+  .bloco-tag{font-family:'JetBrains Mono',monospace;font-size:0.7rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;border-radius:8px;white-space:nowrap}
+  .bloco1 .bloco-tag{background:rgba(248,152,32,0.14);color:var(--java)}
+  .bloco2 .bloco-tag{background:rgba(255,102,0,0.14);color:var(--rabbit)}
+  .bloco3 .bloco-tag{background:rgba(255,153,0,0.14);color:var(--aws)}
+  .bloco-head h3{font-size:1.3rem;font-weight:900}
+  .bloco-head .obj{font-size:0.82rem;color:var(--text-dim);margin-top:2px}
+
+  /* fluxo SDD */
+  .sdd-flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;justify-content:center;margin:10px 0}
+  .sdd-node{flex:1;min-width:150px;background:var(--surface2);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:16px 14px;text-align:center;transition:all 0.4s}
+  .sdd-node.active{transform:translateY(-4px);box-shadow:0 0 28px var(--glow-claude);border-color:rgba(217,119,87,0.4)}
+  .sdd-node .who{font-size:0.62rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:800;margin-bottom:6px}
+  .sdd-node.human .who{color:var(--spring)} .sdd-node.agent .who{color:var(--claude)}
+  .sdd-node .em{font-size:1.7rem;line-height:1;display:block;margin-bottom:6px}
+  .sdd-node h4{font-size:0.98rem;margin-bottom:4px}
+  .sdd-node p{font-size:0.74rem;color:var(--text-dim);line-height:1.4}
+  .sdd-sep{flex:0 0 26px;display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:1.1rem}
+  @media(max-width:680px){.sdd-sep{flex-basis:100%;transform:rotate(90deg);height:18px}}
+
+  /* mock PR */
+  .pr-mock{border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);background:#0f1320;margin-top:8px}
+  .pr-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(217,119,87,0.08);border-bottom:1px solid rgba(255,255,255,0.06)}
+  .pr-bar .b-dot{width:10px;height:10px;border-radius:50%}
+  .pr-bar .b-dot:nth-child(1){background:#ff5f57}.pr-bar .b-dot:nth-child(2){background:#febc2e}.pr-bar .b-dot:nth-child(3){background:#28c840}
+  .pr-bar .b-title{margin-left:6px;font-size:0.76rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace}
+  .pr-bar .b-title .agent{color:var(--claude)}
+  .pr-code{margin:0;padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:0.8rem;line-height:1.7;color:#c9d1d9;overflow-x:auto}
+  .pr-code .ln{display:block}
+  .pr-code .add{background:rgba(6,214,160,0.08)}
+  .pr-comment{display:flex;gap:10px;padding:14px 16px;border-top:1px solid rgba(255,255,255,0.06);background:rgba(108,99,255,0.04)}
+  .pr-comment .av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--spring),var(--accent3));display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0}
+  .pr-comment .cm-body{font-size:0.84rem}
+  .pr-comment .cm-who{font-weight:800;font-size:0.8rem}
+  .pr-comment .cm-who .role{color:var(--text-dim);font-weight:600;font-size:0.72rem}
+
+  /* calendário */
+  .cal{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin-top:14px}
+  @media(max-width:760px){.cal{grid-template-columns:repeat(4,1fr)}}
+  .cal-d{background:var(--surface2);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:10px 6px;text-align:center;position:relative}
+  .cal-d .m{font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);font-weight:800}
+  .cal-d .d{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:800;line-height:1.1}
+  .cal-d .s{font-size:0.62rem;color:var(--text-dim);font-weight:700}
+  .cal-d.b1{border-color:rgba(248,152,32,.35)} .cal-d.b1 .d{color:var(--java)}
+  .cal-d.b2{border-color:rgba(255,102,0,.35)} .cal-d.b2 .d{color:var(--rabbit)}
+  .cal-d.b3{border-color:rgba(255,153,0,.35)} .cal-d.b3 .d{color:var(--aws)}
+  .cal-d.now{box-shadow:0 0 24px rgba(248,152,32,.3)}
+  .cal-d.now::after{content:'▶ próximo';position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--java);color:var(--bg);font-size:0.55rem;font-weight:900;letter-spacing:1px;padding:1px 8px;border-radius:50px;white-space:nowrap}
+
+  /* sala invertida */
+  .zone3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+  @media(max-width:700px){.zone3{grid-template-columns:1fr}}
+  .z{border-radius:14px;padding:16px;border:1px solid rgba(255,255,255,.06)}
+  .z .z-em{font-size:1.8rem}
+  .z .z-t{font-weight:900;margin:4px 0}
+  .z .z-d{font-size:0.82rem;color:var(--text-dim);line-height:1.5}
+  .z1{background:rgba(69,183,209,.08)} .z2{background:rgba(248,152,32,.10)} .z3{background:rgba(247,183,49,.08)}
+  .start-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:720px){.start-grid{grid-template-columns:1fr}}
+  .start-card{display:flex;gap:16px;align-items:center;text-decoration:none;color:inherit;cursor:pointer;height:100%}
+  .start-card .big{font-size:2.6rem;line-height:1}
+  .start-card .go{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:50px;font-weight:800;font-size:0.8rem;color:var(--bg);flex-shrink:0}
+</style>
+</head>
+<body data-page="Hub do curso" data-no-caderno>
+
+<div class="bg-grid"></div>
+<div class="bg-orbs"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+<div class="progress-track"><div class="progress-bar"></div></div>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero">
+  <div class="hero-icons" data-motion="float">☕ ⚡ ☁️ 🤖</div>
+  <span class="hero-badge" style="background:linear-gradient(135deg,var(--claude),var(--ai))">programa AI · Formação avançada · Turma 01 · início 05/09</span>
+  <h1>Backend Moderno,<br>Agentes de IA e Cloud</h1>
+  <p style="font-family:'Caveat',cursive;font-size:clamp(1.5rem,4vw,2.3rem);color:var(--claude);margin:-6px 0 18px;font-weight:700">
+    Java de sênior · eventos · AWS serverless — <strong style="color:var(--ai)">dirigindo agentes de IA</strong> o tempo todo
+  </p>
+  <p class="subtitle">
+    Do código que um <strong style="color:var(--text)">sênior espera ver</strong> aos sistemas orientados a eventos
+    (<strong style="color:var(--rabbit)">RabbitMQ</strong>, <strong style="color:var(--kafka)">Kafka</strong>) e ao serverless na
+    <strong style="color:var(--aws)">AWS</strong>. O diferencial: você não digita no piloto automático — você
+    <strong style="color:var(--claude)">escreve a spec, dirige o Claude Code e revisa o que ele gera</strong>.
+  </p>
+  <div class="hero-stack">
+    <span class="stack-chip" style="border-color:rgba(248,152,32,0.4);color:var(--java)"><img src="assets/svg/java.svg" alt="" width="16" height="16"> Java 21</span>
+    <span class="stack-chip" style="border-color:rgba(109,179,63,0.4);color:var(--spring)"><img src="assets/svg/spring.svg" alt="" width="16" height="16"> Spring Boot</span>
+    <span class="stack-chip" style="border-color:rgba(255,102,0,0.45);color:var(--rabbit)"><img src="assets/svg/rabbitmq.svg" alt="" width="16" height="16"> RabbitMQ</span>
+    <span class="stack-chip" style="border-color:rgba(78,156,143,0.5);color:var(--kafka)"><img src="assets/svg/kafka.svg" alt="" width="16" height="16"> Kafka</span>
+    <span class="stack-chip" style="border-color:rgba(255,153,0,0.4);color:var(--aws)"><img src="assets/svg/aws.svg" alt="" width="22" height="16"> AWS</span>
+    <span class="stack-chip" style="border-color:rgba(217,119,87,0.45);color:var(--claude)"><img src="assets/svg/claude.svg" alt="" width="16" height="16"> Claude Code</span>
+  </div>
+  <p class="text-dim" style="font-size:0.85rem;margin-top:16px">
+    <strong style="color:var(--text)">8 sábados</strong> · 13h30 às 17h30 · 32h ·
+    presencial em João Pessoa <strong style="color:var(--text)">ou remoto ao vivo</strong> (Zoom) ·
+    para quem já tem <strong style="color:var(--text)">Java + Spring</strong> sólidos
+  </p>
+</section>
+
+<div class="container">
+
+  <!-- ═══════════════ A INVERSÃO ═══════════════ -->
+  <section class="step-section visible">
+    <div class="card" data-motion="rise" style="background:linear-gradient(135deg,rgba(217,119,87,0.10),rgba(167,139,250,0.05));border-color:rgba(217,119,87,0.25)">
+      <h3 style="font-size:1.5rem;margin-bottom:10px">Escrever código virou commodity. <span style="color:var(--claude)">Julgamento, não.</span></h3>
+      <p style="font-size:1.05rem;max-width:760px">
+        A IA já escreve a sintaxe. O que o mercado paga é a habilidade de
+        <strong style="color:var(--text)">reconhecer código bom, nomear por que é bom, e cobrar isso</strong>
+        de quem — ou do que — escreve. Por isso este curso <strong style="color:var(--claude)">inverte o seu papel</strong>:
+        o <strong style="color:var(--claude)">Claude Code gera</strong>; <strong style="color:var(--spring)">você revisa</strong>
+        contra SOLID, padrões e arquitetura.
+      </p>
+      <div class="pr-mock" data-motion="pop" style="margin-top:18px">
+        <div class="pr-bar">
+          <span class="b-dot"></span><span class="b-dot"></span><span class="b-dot"></span>
+          <span class="b-title">PedidoService.java · PR aberto por <span class="agent">🤖 claude-code</span></span>
+        </div>
+        <pre class="pr-code"><span class="ln add">+ public class PedidoService {</span>
+<span class="ln add">+   public void processar(Pedido p) {</span>
+<span class="ln add">+     validar(p); salvarNoBanco(p);</span>
+<span class="ln add">+     enviarEmail(p); gerarNotaFiscal(p);</span>
+<span class="ln add">+     atualizarEstoque(p); logarAuditoria(p);</span>
+<span class="ln add">+   }</span>
+<span class="ln add">+ }</span></pre>
+        <div class="pr-comment">
+          <div class="av">🧑‍💻</div>
+          <div class="cm-body">
+            <div class="cm-who">Você <span class="role">· revisor</span></div>
+            <span>Uma classe fazendo validação, persistência, e-mail, fiscal, estoque e auditoria?
+            Isso viola <code>SRP</code>. Quebra em colaboradores e deixa o <code>PedidoService</code> só orquestrando. Refatora.</span>
+          </div>
+        </div>
+      </div>
+      <p class="text-dim center" style="font-size:0.8rem;margin-top:10px">
+        ☝️ a avaliação do curso é exatamente isto: <strong style="color:var(--text)">revisar o PR do agente e apontar as violações</strong> — não "implemente X do zero"
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════ COMECE POR AQUI ═══════════════ -->
+  <section class="step-section visible">
+    <div class="start-grid">
+      <a href="setup/" class="card start-card" style="background:linear-gradient(135deg,rgba(69,183,209,0.10),rgba(109,179,63,0.06));border-color:rgba(69,183,209,0.30)">
+        <div class="big" data-motion="float">🧰</div>
+        <div style="flex:1;min-width:0">
+          <span style="display:inline-block;background:var(--accent4);color:var(--bg);font-size:0.6rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:50px;margin-bottom:6px">1º · antes do dia 05/09</span>
+          <h3 style="margin-bottom:4px;font-size:1.1rem">Sábado 0 — Prepare o ambiente</h3>
+          <p style="color:var(--text-dim);font-size:0.86rem">Java 21, IntelliJ, Docker com os brokers, Claude Code logado. Checklist que fica salvo no seu navegador.</p>
+        </div>
+        <span class="go" style="background:linear-gradient(135deg,var(--accent4),var(--spring))">Preparar →</span>
+      </a>
+      <a href="capitulos/00-como-um-agente-pensa/" class="card start-card" style="background:linear-gradient(135deg,rgba(217,119,87,0.10),rgba(167,139,250,0.06));border-color:rgba(217,119,87,0.30)">
+        <div class="big" data-motion="float">🧠</div>
+        <div style="flex:1;min-width:0">
+          <span style="display:inline-block;background:var(--java);color:var(--bg);font-size:0.6rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:50px;margin-bottom:6px">2º · leia antes de sábado</span>
+          <h3 style="margin-bottom:4px;font-size:1.1rem">Cap 0 — Como um agente pensa</h3>
+          <p style="color:var(--text-dim);font-size:0.86rem">LLM, contexto, o loop do agente, anatomia do Claude Code, <code>CLAUDE.md</code> × <code>AGENTS.md</code>, SDD e o ritual de revisão. Com simuladores.</p>
+        </div>
+        <span class="go" style="background:linear-gradient(135deg,var(--claude),var(--ai))">Ler →</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════════════ COMO FUNCIONA ═══════════════ -->
+  <section class="step-section visible" id="como">
+    <div class="step-header">
+      <div class="step-number" style="background:var(--accent4)">📐</div>
+      <div><div class="step-title">Como funciona: sala invertida</div><div class="step-sub">4h por sábado é pouco pra teoria + prática. Então a teoria é sua, em casa.</div></div>
+    </div>
+    <div class="card">
+      <div class="zone3">
+        <div class="z z1"><div class="z-em">📖</div><div class="z-t">Antes da aula (~1h)</div><div class="z-d">Você lê o capítulo, mexe nos simuladores, escreve sua spec. Vídeo e podcast no classcontent.</div></div>
+        <div class="z z2"><div class="z-em">🏫</div><div class="z-t">Em sala (4h)</div><div class="z-d">Só labs de julgamento: 🧭 dirigir o agente, 🔬 revisar PR, ⚖️ defender/refutar. Roteiro com tempos e entregáveis.</div></div>
+        <div class="z z3"><div class="z-em">🏠</div><div class="z-t">Até o próximo sábado</div><div class="z-d">Seu repositório evolui em casa com o Claude Pro. O capstone só existe porque isso existe.</div></div>
+      </div>
+      <div class="tip" style="margin-top:14px">
+        <span class="tip-icon">📓</span>
+        <div class="tip-content">
+          Cada capítulo tem <strong>caixas de anotação, checklists e um canvas pra você desenhar a arquitetura</strong>. Tudo fica salvo
+          no seu navegador (localStorage) e junta no <strong>Caderno</strong>, que exporta em Markdown. É o seu quadro pessoal de "quando usar qual" nascendo.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ ARTEFATO CONTÍNUO ═══════════════ -->
+  <section class="step-section visible" id="pedidos">
+    <div class="step-header">
+      <div class="step-number sn-java">💎</div>
+      <div><div class="step-title">Um sistema que atravessa o curso: Pedidos &amp; Pagamentos</div><div class="step-sub">Nasce hexagonal, com Postgres no Docker, no Sáb 1. Chega aqui no Sáb 8.</div></div>
+    </div>
+    <div class="card">
+      <p style="color:var(--text-dim);margin-bottom:6px">
+        Um pedido é criado, o pagamento é aprovado (ou não), o estoque baixa, a nota fiscal é gerada, o cliente é avisado. Simples de
+        entender — e cheio dos problemas certos: <strong style="color:var(--text)">e se o e-mail cair, o pedido falha?</strong>
+        E se a mensagem de pagamento chegar duas vezes, cobra dobrado? Esse mesmo domínio vira domínio rico (Bloco 1),
+        ganha filas e tópicos (Bloco 2) e vai pra nuvem (Bloco 3). A versão final, animada:
+      </p>
+      <div data-arch="hub/capstone" data-readonly data-title="Capstone — o sistema de Pedidos serverless (Sáb 8)" data-height="330">
+        <script type="application/json">{"nodes":[
+          {"id":"c","t":"cliente","x":10,"y":136,"l":"Cliente"},
+          {"id":"g","t":"apigw","x":160,"y":136,"l":"API Gateway"},
+          {"id":"l1","t":"lambda","x":310,"y":136,"l":"criar-pedido"},
+          {"id":"db","t":"dynamo","x":310,"y":250,"l":"Pedidos"},
+          {"id":"sns","t":"sns","x":460,"y":136,"l":"PedidoCriado"},
+          {"id":"q1","t":"sqs","x":610,"y":40,"l":"fila-estoque"},
+          {"id":"q2","t":"sqs","x":610,"y":232,"l":"fila-nf"},
+          {"id":"l2","t":"lambda","x":760,"y":40,"l":"estoque"},
+          {"id":"l3","t":"lambda","x":760,"y":232,"l":"nota-fiscal"},
+          {"id":"s3","t":"s3","x":610,"y":136,"l":"notas-fiscais"},
+          {"id":"l4","t":"lambda","x":460,"y":250,"l":"notificacao"},
+          {"id":"em","t":"email","x":160,"y":250,"l":"E-mail"}
+        ],"edges":[
+          {"id":"e1","a":"c","b":"g","l":"POST /pedidos"},
+          {"id":"e2","a":"g","b":"l1","l":""},
+          {"id":"e3","a":"l1","b":"db","l":"put"},
+          {"id":"e4","a":"l1","b":"sns","l":"publica"},
+          {"id":"e5","a":"sns","b":"q1","l":"fan-out"},
+          {"id":"e6","a":"sns","b":"q2","l":"fan-out"},
+          {"id":"e7","a":"q1","b":"l2","l":""},
+          {"id":"e8","a":"q2","b":"l3","l":""},
+          {"id":"e9","a":"l3","b":"s3","l":"grava PDF"},
+          {"id":"e10","a":"s3","b":"l4","l":"evento S3"},
+          {"id":"e11","a":"l4","b":"em","l":"envia"}
+        ]}</script>
+      </div>
+      <p class="text-dim center" style="font-size:0.8rem;margin-top:8px">☝️ a bolinha é a mensagem andando. No curso você desenha as suas versões desse diagrama — e defende cada seta.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════ TRILHA DE IA ═══════════════ -->
+  <section class="step-section visible" id="trilha-ia">
+    <div class="step-header">
+      <div class="step-number" style="background:var(--claude)">🤖</div>
+      <div><div class="step-title">A trilha de IA é o sistema operacional do curso</div><div class="step-sub">Não é um módulo no fim — atravessa os 8 sábados e amadurece a cada bloco</div></div>
+    </div>
+    <div class="card">
+      <p style="color:var(--text-dim);margin-bottom:8px">
+        Todo o curso roda sobre <strong style="color:var(--claude)">SDD — Spec-Driven Development</strong>. A spec é onde mora o
+        seu julgamento; o código é consequência. O ciclo se repete em cada lab:
+      </p>
+      <div class="sdd-flow" data-seq="1300">
+        <div class="sdd-node human" data-seq-step><span class="em">📝</span><div class="who">você</div><h4>Spec</h4><p>descreve o quê e os critérios de qualidade</p></div>
+        <div class="sdd-sep">→</div>
+        <div class="sdd-node agent" data-seq-step><span class="em">🧠</span><div class="who">agente</div><h4>Plan</h4><p>propõe a abordagem (modelo forte)</p></div>
+        <div class="sdd-sep">→</div>
+        <div class="sdd-node agent" data-seq-step><span class="em">⚙️</span><div class="who">agente</div><h4>Execute</h4><p>gera o código (modelo rápido)</p></div>
+        <div class="sdd-sep">→</div>
+        <div class="sdd-node human" data-seq-step><span class="em">🔍</span><div class="who">você</div><h4>Review</h4><p>critica linha a linha e manda corrigir</p></div>
+      </div>
+      <div class="keyword-grid" style="margin-top:14px">
+        <div class="keyword-chip"><span class="emoji">🧱</span><span class="kw-name">Sáb 1–3</span><span class="kw-desc">Setup, SDD, <code>CLAUDE.md</code>, contexto, revisão crítica. Primeira skill: <code>revisar-solid</code>.</span></div>
+        <div class="keyword-chip"><span class="emoji">📡</span><span class="kw-name">Sáb 4–5</span><span class="kw-desc">Spec que produz arquitetura, não só código. Skill <code>revisar-mensageria</code>.</span></div>
+        <div class="keyword-chip"><span class="emoji">☁️</span><span class="kw-name">Sáb 6–8</span><span class="kw-desc">Plan com modelo forte, execute com modelo rápido. Skills de projeto. Capstone ponta a ponta.</span></div>
+      </div>
+      <div class="tip" style="margin-top:14px">
+        <span class="tip-icon">🪞</span>
+        <div class="tip-content">
+          <strong>Dogfooding:</strong> este próprio site foi construído com SDD. Em aula você vê a
+          <code>.specs/</code> e o <code>CLAUDE.md</code> que geraram estas páginas — um exemplo real, não slide.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ CALENDÁRIO ═══════════════ -->
+  <section class="step-section visible" id="calendario">
+    <div class="step-header">
+      <div class="step-number sn-spring">📅</div>
+      <div><div class="step-title">Os 8 sábados</div><div class="step-sub">13h30 às 17h30 · presencial ou Zoom · gravações no classcontent</div></div>
+    </div>
+    <div class="card">
+      <div class="cal">
+        <div class="cal-d b1 now"><div class="m">set</div><div class="d">05</div><div class="s">Sáb 1</div></div>
+        <div class="cal-d b1"><div class="m">set</div><div class="d">19</div><div class="s">Sáb 2</div></div>
+        <div class="cal-d b1"><div class="m">set</div><div class="d">26</div><div class="s">Sáb 3</div></div>
+        <div class="cal-d b2"><div class="m">out</div><div class="d">10</div><div class="s">Sáb 4</div></div>
+        <div class="cal-d b2"><div class="m">out</div><div class="d">17</div><div class="s">Sáb 5</div></div>
+        <div class="cal-d b3"><div class="m">out</div><div class="d">24</div><div class="s">Sáb 6</div></div>
+        <div class="cal-d b3"><div class="m">out</div><div class="d">31</div><div class="s">Sáb 7</div></div>
+        <div class="cal-d b3"><div class="m">nov</div><div class="d">07</div><div class="s">Sáb 8</div></div>
+      </div>
+      <p class="text-dim center" style="font-size:0.78rem;margin-top:10px">12/09 e 03/10 não têm aula — são as duas semanas de folga pra tarefa de casa maior.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════ BLOCO 1 ═══════════════ -->
+  <div class="bloco-head bloco1">
+    <span class="bloco-tag">Bloco 1 · Sáb 1–3</span>
+    <div><h3>Fundamentos de Engenharia</h3><div class="obj">Olhar um trecho de código e dizer, com vocabulário técnico, por que é bom ou ruim — e cobrar isso do agente.</div></div>
+  </div>
+  <div class="hub-grid">
+    <a class="hub-card bloco1" href="capitulos/00-como-um-agente-pensa/" style="border-color:rgba(217,119,87,.35)">
+      <span class="ai-ribbon">🤖 teoria</span>
+      <span class="num">CAP · 00 <span class="date">📖 <b>pré</b></span></span><span class="ic">🧠</span>
+      <span class="title">Como um agente pensa</span>
+      <span class="desc">LLM, janela de contexto, alucinação, o loop do agente, anatomia do Claude Code, <code>CLAUDE.md</code> × <code>AGENTS.md</code>, SDD e o ritual de revisão. Leitura obrigatória antes do dia 05/09.</span>
+      <span class="pills"><span class="pill">LLM</span><span class="pill">contexto</span><span class="pill">SDD</span></span>
+    </a>
+    <a class="hub-card bloco1" href="capitulos/01-sdd-na-pratica-spring-hexagonal/">
+      <span class="ai-ribbon">🤖 SDD</span>
+      <span class="num">SÁB · 01 <span class="date">📅 <b>05/09</b></span></span><span class="ic">☕</span>
+      <span class="title">SDD na prática: Spring hexagonal, do papel ao Postgres</span>
+      <span class="desc">Um grande lab: <code>CLAUDE.md</code> e specs primeiro, depois o domínio imutável, o caso de uso atrás de ports, REST e JPA como adapters, Postgres no Docker. Nasce o serviço de Pedidos.</span>
+      <span class="pills"><span class="pill">SDD</span><span class="pill">hexagonal</span><span class="pill">Postgres · Docker</span></span>
+    </a>
+    <a class="hub-card bloco1 em-breve" href="capitulos/02-oo-de-verdade-e-solid/">
+      <span class="ai-ribbon">🤖 skill</span>
+      <span class="num">SÁB · 02 <span class="date">📅 <b>19/09</b></span></span><span class="ic">🧩</span>
+      <span class="title">OO de verdade + SOLID</span>
+      <span class="desc">Domínio rico vs <em>anemic model</em>, composição vs herança. Os cinco princípios como checklist de revisão de PR do agente.</span>
+      <span class="pills"><span class="pill aval">avaliativo</span><span class="pill">domínio rico</span><span class="pill">SRP · OCP · …</span></span>
+    </a>
+    <a class="hub-card bloco1 em-breve" href="capitulos/03-padroes-hexagonal-e-testes/">
+      <span class="ai-ribbon">🤖 TDD c/ agente</span>
+      <span class="num">SÁB · 03 <span class="date">📅 <b>26/09</b></span></span><span class="ic">🧪</span>
+      <span class="title">Padrões que pagam o custo + testes de verdade</span>
+      <span class="desc">Strategy, Factory, Adapter, Observer — e quando é over-engineering. Testcontainers no adapter JPA, Flyway, TDD com agente, o hexagonal ganhando o port de eventos.</span>
+      <span class="pills"><span class="pill aval">avaliativo</span><span class="pill">padrões</span><span class="pill">Testcontainers</span></span>
+    </a>
+  </div>
+
+  <!-- ═══════════════ BLOCO 2 ═══════════════ -->
+  <div class="bloco-head bloco2">
+    <span class="bloco-tag">Bloco 2 · Sáb 4–5</span>
+    <div><h3>Arquitetura Orientada a Eventos / Brokers</h3><div class="obj">Entender EDA como conceito uma vez, e escolher entre RabbitMQ e Kafka com argumento técnico.</div></div>
+  </div>
+  <div class="hub-grid">
+    <a class="hub-card bloco2 em-breve" href="capitulos/04-eda-e-rabbitmq/">
+      <span class="ai-ribbon">🤖 spec→arquitetura</span>
+      <span class="num">SÁB · 04 <span class="date">📅 <b>10/10</b></span></span><span class="ic"><img src="assets/svg/rabbitmq.svg" alt="RabbitMQ" width="36" height="36"></span>
+      <span class="title">EDA: os conceitos + RabbitMQ</span>
+      <span class="desc">Síncrono vs assíncrono, pub/sub, filas, DLQ, idempotência, garantias de entrega. Exchanges, bindings, routing keys. Spring AMQP com DLQ.</span>
+      <span class="pills"><span class="pill aval">spec avaliada</span><span class="pill">idempotência</span><span class="pill">DLQ</span></span>
+    </a>
+    <a class="hub-card bloco2 em-breve" href="capitulos/05-kafka-e-quando-usar-qual/">
+      <span class="ai-ribbon">🤖 defender/refutar</span>
+      <span class="num">SÁB · 05 <span class="date">📅 <b>17/10</b></span></span><span class="ic"><img src="assets/svg/kafka.svg" alt="Kafka" width="32" height="32"></span>
+      <span class="title">Kafka + "quando usar qual"</span>
+      <span class="desc">Tópicos, partições, offsets, consumer groups, replay. O quadro de decisão RabbitMQ × Kafka — o diferencial no mercado.</span>
+      <span class="pills"><span class="pill aval">avaliativo</span><span class="pill">partições</span></span>
+    </a>
+  </div>
+
+  <!-- ═══════════════ BLOCO 3 ═══════════════ -->
+  <div class="bloco-head bloco3">
+    <span class="bloco-tag">Bloco 3 · Sáb 6–8</span>
+    <div><h3>Eventos na Nuvem / Serverless AWS</h3><div class="obj">Montar um sistema event-driven serverless real, na sua conta, espelhando stack de produção.</div></div>
+  </div>
+  <div class="hub-grid">
+    <a class="hub-card bloco3 em-breve" href="capitulos/06-sqs-sns-lambda-api-gateway/">
+      <span class="ai-ribbon">🤖 2 fases</span>
+      <span class="num">SÁB · 06 <span class="date">📅 <b>24/10</b></span></span><span class="ic">📬</span>
+      <span class="title">SQS + SNS + Lambda + API Gateway</span>
+      <span class="desc">Fan-out SNS→SQS, visibility timeout, DLQ na nuvem. Lambda como compute orientado a evento. Fecha o "quando usar qual" com as três famílias.</span>
+      <span class="pills"><span class="pill aval">spec avaliada</span><span class="pill">fan-out</span><span class="pill">SAM</span></span>
+    </a>
+    <a class="hub-card bloco3 em-breve" href="capitulos/07-dynamodb-s3-e-kickoff-capstone/">
+      <span class="ai-ribbon">🤖 2 fases</span>
+      <span class="num">SÁB · 07 <span class="date">📅 <b>31/10</b></span></span><span class="ic">🗄️</span>
+      <span class="title">DynamoDB + S3 + kickoff do capstone</span>
+      <span class="desc">Tabela de Pedidos, Streams como fonte de eventos. S3 e eventos de S3. Custo e free tier reais. A spec do capstone nasce em sala.</span>
+      <span class="pills"><span class="pill">Streams</span><span class="pill">eventos S3</span></span>
+    </a>
+    <a class="hub-card bloco3 em-breve" href="capitulos/08-capstone/">
+      <span class="ai-ribbon">🤖 plan/execute</span>
+      <span class="num">SÁB · 08 <span class="date">📅 <b>07/11</b></span></span><span class="ic">🏆</span>
+      <span class="title">Capstone</span>
+      <span class="desc">Sistema event-driven serverless completo, no seu portfólio. Defesa de arquitetura + revisão crítica cruzada de código gerado pelo agente.</span>
+      <span class="pills"><span class="pill aval">avaliativo</span><span class="pill">portfólio</span></span>
+    </a>
+  </div>
+
+  <!-- ═══════════════ ENTREGÁVEIS ═══════════════ -->
+  <section class="step-section visible" style="margin-top:40px">
+    <div class="step-header">
+      <div class="step-number" style="background:var(--spring)">🎒</div>
+      <div><div class="step-title">O que você leva no fim</div><div class="step-sub">Não é exercício de mentirinha — é portfólio de gente grande</div></div>
+    </div>
+    <div class="keyword-grid">
+      <div class="keyword-chip"><span class="emoji">💎</span><span class="kw-name">Serviço de Pedidos</span><span class="kw-desc">Domínio rico, refatorado contra SOLID, hexagonal, com testes — dirigido via agente.</span></div>
+      <div class="keyword-chip"><span class="emoji">📨</span><span class="kw-name">Eventos de verdade</span><span class="kw-desc">O serviço publicando e consumindo em RabbitMQ e Kafka + seu quadro de "quando usar qual".</span></div>
+      <div class="keyword-chip"><span class="emoji">☁️</span><span class="kw-name">Sistema serverless na AWS</span><span class="kw-desc">Event-driven, ponta a ponta, na sua conta, no seu GitHub.</span></div>
+      <div class="keyword-chip"><span class="emoji">🧭</span><span class="kw-name">Julgamento de engenharia</span><span class="kw-desc">O ativo que a IA não substitui — e que decide a vaga.</span></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ PROFESSOR ═══════════════ -->
+  <section class="step-section visible">
+    <div class="step-header">
+      <div class="step-number sn-purple">👨‍🏫</div>
+      <div><div class="step-title">Quem te acompanha</div><div class="step-sub">Seu professor nessa jornada</div></div>
+    </div>
+    <div class="card" style="display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+      <img src="assets/prof/cut-prof1.png" alt="Prof. Kelson Almeida" style="width:110px;height:110px;border-radius:50%;object-fit:cover;object-position:top;border:3px solid var(--java);flex-shrink:0;background:var(--surface2)">
+      <div style="flex:1;min-width:240px">
+        <h3 style="margin-bottom:6px">Prof. Kelson Almeida</h3>
+        <p style="color:var(--text-dim);font-size:0.95rem">
+          Mestre em Informática (UFPB) · Desenvolvedor Sênior na NTT Data, atuando no Itaú · professor na UNIESP · criador da programa AI.
+          Mais de 200 devs formados em cursos presenciais, muitos hoje em grandes empresas do Brasil e do exterior.
+          O stack de nuvem deste curso espelha sistemas de produção que ele opera.
+        </p>
+        <p style="margin-top:12px"><a href="https://github.com/kelsonvictr" target="_blank" rel="noopener" style="color:var(--accent4);text-decoration:none;font-weight:700;font-size:0.85rem">github.com/kelsonvictr ↗</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="step-section visible">
+    <div class="card" style="text-align:center;background:linear-gradient(135deg,rgba(248,152,32,0.10),rgba(217,119,87,0.06));border-color:rgba(248,152,32,0.22)">
+      <h3 style="font-size:1.4rem;margin-bottom:8px">Pronto pra parar de digitar e começar a dirigir? 🤖</h3>
+      <p class="text-dim" style="max-width:560px;margin:0 auto 20px">Prepare o ambiente, leia o capítulo 1, e chegue no dia 05/09 já no comando do agente.</p>
+      <a href="setup/" style="display:inline-block;padding:14px 28px;background:linear-gradient(135deg,var(--accent4),var(--spring));color:var(--bg);text-decoration:none;font-weight:900;border-radius:50px;letter-spacing:1px;font-size:0.95rem;margin:4px">🧰 Sábado 0 — setup</a>
+      <a href="capitulos/01-sdd-na-pratica-spring-hexagonal/" style="display:inline-block;padding:14px 28px;background:linear-gradient(135deg,var(--java),var(--claude));color:var(--bg);text-decoration:none;font-weight:900;border-radius:50px;letter-spacing:1px;font-size:0.95rem;margin:4px">☕ Sábado 1 — começar →</a>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  Feito com <span class="heart">♥</span> pela <strong style="color:var(--text)">programa AI</strong> ·
+  <strong style="color:var(--java)">Backend Moderno, Agentes de IA e Cloud</strong> · Turma 01 ·
+  <a href="https://programaai.dev" target="_blank" rel="noopener">programaai.dev</a> ·
+  <a href="https://github.com/kelsonvictr" target="_blank" rel="noopener">github.com/kelsonvictr</a>
+</footer>
+
+<script src="shared/scripts.js" defer></script>
+<script src="shared/lab-kit.js?v=3" defer></script>
+<script type="module" src="shared/motion-fx.js?v=3"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 280" role="img" aria-label="Claude Code">
+  <defs>
+    <linearGradient id="clay" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e89070"/>
+      <stop offset="1" stop-color="#cc6647"/>
+    </linearGradient>
+    <radialGradient id="hl" cx="32%" cy="26%" r="60%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".30"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- burst do Claude (anteninha) -->
+  <g stroke="#f0a585" stroke-width="3.2" stroke-linecap="round">
+    <line x1="120" y1="22" x2="134" y2="22"/>
+    <line x1="120" y1="22" x2="129.9" y2="31.9"/>
+    <line x1="120" y1="22" x2="120" y2="36"/>
+    <line x1="120" y1="22" x2="110.1" y2="31.9"/>
+    <line x1="120" y1="22" x2="106" y2="22"/>
+    <line x1="120" y1="22" x2="110.1" y2="12.1"/>
+    <line x1="120" y1="22" x2="120" y2="8"/>
+    <line x1="120" y1="22" x2="129.9" y2="12.1"/>
+  </g>
+  <line x1="120" y1="34" x2="120" y2="58" stroke="#cc6647" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- orelhas -->
+  <rect x="22" y="120" width="22" height="58" rx="11" fill="url(#clay)"/>
+  <rect x="196" y="120" width="22" height="58" rx="11" fill="url(#clay)"/>
+
+  <!-- corpo (ombros aparecendo embaixo) -->
+  <rect x="72" y="214" width="96" height="52" rx="24" fill="url(#clay)"/>
+
+  <!-- cabeça -->
+  <rect x="44" y="56" width="152" height="162" rx="48" fill="url(#clay)"/>
+  <rect x="44" y="56" width="152" height="162" rx="48" fill="url(#hl)"/>
+
+  <!-- visor -->
+  <rect x="66" y="92" width="108" height="86" rx="36" fill="#2b1611"/>
+
+  <!-- olhos -->
+  <circle cx="100" cy="130" r="13" fill="#ffdcc6"/>
+  <circle cx="140" cy="130" r="13" fill="#ffdcc6"/>
+  <circle cx="96" cy="126" r="4" fill="#fff5ee"/>
+  <circle cx="136" cy="126" r="4" fill="#fff5ee"/>
+
+  <!-- sorriso -->
+  <path d="M101 154 q19 17 38 0" stroke="#ffdcc6" stroke-width="7" fill="none" stroke-linecap="round"/>
+</svg>

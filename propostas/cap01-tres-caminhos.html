@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Três caminhos para o Sábado 1</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap">
+<style>
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --surface2:#e9edf2; --ink:#16202b; --muted:#5c6b7a; --line:#d7dee6;
+  --accent:#e8891a; --accent-ink:#9a5200; --clay:#c8653f;
+  --teoria:#4a6fa5; --junto:#e8891a; --sozinho:#2f9e6a; --desenho:#7c5cc4; --pausa:#9aa7b4;
+  --teoria-bg:#e3ebf6; --junto-bg:#fdebd6; --sozinho-bg:#dff3e8; --desenho-bg:#ebe4f7; --pausa-bg:#e9edf2;
+  --code:#1e2732;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0f141a; --surface:#161d25; --surface2:#1d2630; --ink:#e9eef3; --muted:#97a4b2; --line:#26313c;
+  --accent:#f89820; --accent-ink:#ffb45c; --clay:#e08a66;
+  --teoria-bg:#1b2a3f; --junto-bg:#3a2712; --sozinho-bg:#123425; --desenho-bg:#2a2140; --pausa-bg:#1d2630;
+  --teoria:#8fb3e6; --junto:#f5a34a; --sozinho:#5fd39a; --desenho:#b59cf0; --pausa:#7f8c99; --code:#0b1016;
+}}
+:root[data-theme="dark"]{
+  --bg:#0f141a; --surface:#161d25; --surface2:#1d2630; --ink:#e9eef3; --muted:#97a4b2; --line:#26313c;
+  --accent:#f89820; --accent-ink:#ffb45c; --clay:#e08a66;
+  --teoria-bg:#1b2a3f; --junto-bg:#3a2712; --sozinho-bg:#123425; --desenho-bg:#2a2140; --pausa-bg:#1d2630;
+  --teoria:#8fb3e6; --junto:#f5a34a; --sozinho:#5fd39a; --desenho:#b59cf0; --pausa:#7f8c99; --code:#0b1016;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Nunito',system-ui,sans-serif;font-size:16px;line-height:1.6}
+.wrap{max-width:1040px;margin:0 auto;padding:40px 24px 80px}
+h1,h2,h3,h4{text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(1.9rem,4vw,2.8rem);font-weight:900}
+h2{font-size:1.5rem;font-weight:900}
+h3{font-size:1.1rem;font-weight:800}
+p{margin:0}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);font-weight:700}
+.lede{font-size:1.1rem;color:var(--muted);max-width:64ch;margin-top:10px}
+.mono{font-family:'JetBrains Mono',monospace;font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0}
+code{font-family:'JetBrains Mono',monospace;font-variant-ligatures:none;font-size:.86em;background:var(--surface2);padding:1px 6px;border-radius:5px}
+header{display:grid;grid-template-columns:1.3fr 1fr;gap:32px;align-items:start;padding-bottom:28px;border-bottom:1px solid var(--line)}
+@media(max-width:760px){header{grid-template-columns:1fr}}
+.brief{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.brief h3{font-size:.95rem;margin-bottom:10px}
+.brief ul{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.brief li{display:grid;grid-template-columns:22px 1fr;gap:8px;font-size:.92rem}
+.brief li b{color:var(--ink)}
+.brief .ok{color:var(--sozinho);font-weight:900}
+nav.jump{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);margin:0 -24px;padding:10px 24px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+nav.jump a{text-decoration:none;color:var(--muted);font-weight:800;font-size:.85rem;padding:6px 12px;border-radius:999px;border:1px solid transparent}
+nav.jump a:hover,nav.jump a:focus-visible{color:var(--ink);border-color:var(--line);outline:none}
+nav.jump a.rec{color:var(--accent-ink)}
+section{margin-top:44px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:.82rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:14px;height:14px;border-radius:3px;display:inline-block}
+table.cmp{width:100%;border-collapse:collapse;margin-top:16px;font-size:.92rem}
+table.cmp th,table.cmp td{text-align:left;vertical-align:top;padding:12px 12px;border-top:1px solid var(--line)}
+table.cmp th{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:800}
+table.cmp thead th{border-top:none}
+table.cmp td:first-child{color:var(--muted);font-weight:700;width:150px}
+table.cmp .rec-col{background:var(--junto-bg)}
+.tablewrap{overflow-x:auto}
+.option{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px;margin-top:22px;position:relative}
+.option.rec{border-color:var(--accent);box-shadow:0 0 0 4px var(--junto-bg)}
+.option .tag{position:absolute;top:-12px;left:24px;background:var(--accent);color:#1a1207;font-weight:900;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:999px}
+.option .head{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start}
+.option .letter{font-family:'JetBrains Mono',monospace;font-size:2.4rem;font-weight:700;color:var(--accent);line-height:1}
+.thesis{font-size:1.05rem;margin-top:6px;max-width:66ch}
+.thesis b{color:var(--ink)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:22px}
+@media(max-width:760px){.cols{grid-template-columns:1fr}}
+.block h4{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.block ul{margin:0;padding-left:18px;font-size:.93rem}
+.block li{margin:4px 0}
+.strip{display:flex;height:34px;border-radius:8px;overflow:hidden;margin-top:18px;border:1px solid var(--line)}
+.strip i{display:block;height:100%}
+.tl{margin-top:8px;display:grid;gap:6px}
+.row{display:grid;grid-template-columns:96px 12px 1fr;gap:12px;align-items:start;padding:10px 12px;border-radius:10px;background:var(--surface2)}
+.row .t{font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.row .t small{display:block;color:var(--muted);font-weight:600}
+.row .m{width:12px;height:12px;border-radius:3px;margin-top:5px}
+.row h5{margin:0;font-size:.95rem;font-weight:900}
+.row p{font-size:.88rem;color:var(--muted);margin-top:2px}
+.row .pr{display:inline-block;margin-top:6px;font-size:.8rem;font-weight:700;color:var(--desenho);background:var(--desenho-bg);padding:3px 9px;border-radius:6px}
+.modes{display:inline-flex;gap:4px;margin-left:6px;vertical-align:middle}
+.modes b{font-size:.66rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:999px}
+.mj{background:var(--junto-bg);color:var(--junto)} .ms{background:var(--sozinho-bg);color:var(--sozinho)} .mt{background:var(--teoria-bg);color:var(--teoria)} .md{background:var(--desenho-bg);color:var(--desenho)} .mp{background:var(--pausa-bg);color:var(--pausa)}
+.sample{margin-top:22px;border-left:3px solid var(--accent);padding:6px 0 6px 18px;max-width:66ch}
+.sample h4{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.sample p{font-size:.98rem;margin-top:10px}
+.sample p:first-of-type{margin-top:0}
+.verdict{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
+@media(max-width:760px){.verdict{grid-template-columns:1fr}}
+.verdict div{border-radius:10px;padding:14px 16px;font-size:.9rem}
+.verdict .plus{background:var(--sozinho-bg)} .verdict .minus{background:var(--junto-bg)}
+.verdict h4{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.verdict .plus h4{color:var(--sozinho)} .verdict .minus h4{color:var(--accent-ink)}
+.verdict ul{margin:0;padding-left:18px}
+.anatomy{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+@media(max-width:760px){.anatomy{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.card h4{font-size:.95rem;margin-bottom:6px}
+.card p{font-size:.9rem;color:var(--muted)}
+.mock{margin-top:10px;border-radius:8px;background:var(--code);color:#e9eef3;padding:12px 14px;font-size:.84rem;line-height:1.5}
+.mock .pill{display:inline-block;font-weight:900;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:999px;margin-right:6px}
+.reco{margin-top:44px;background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--accent);border-radius:12px;padding:24px 26px}
+.reco p{max-width:66ch;margin-top:8px}
+.reco ol{margin:10px 0 0;padding-left:20px}
+.reco li{margin:4px 0}
+@media(prefers-reduced-motion:no-preference){ .option{transition:box-shadow .2s} }
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+<header>
+  <div>
+    <div class="eyebrow">Backend Moderno, Agentes de IA e Cloud · Sábado 1 · 05/09 · 13h30–17h30</div>
+    <h1 style="margin-top:10px">Três caminhos para o Sábado 1</h1>
+    <p class="lede">A versão atual do capítulo virou roteiro: seco, direto ao ponto, com a teoria separada da prática. Estas são três reescritas possíveis, todas com um grande lab que atravessa a tarde, teoria puxada pela prática, e a prancheta de arquitetura em cada exercício. Escolha uma e eu reescrevo o capítulo inteiro nesse formato.</p>
+  </div>
+  <div class="brief">
+    <h3>O que você pediu, e o que toda opção cumpre</h3>
+    <ul>
+      <li><span class="ok">✓</span><span><b>Teoria aliada à prática.</b> Nenhum conceito aparece antes de o lab precisar dele; nenhum lab começa sem a teoria que o justifica.</span></li>
+      <li><span class="ok">✓</span><span><b>Nada direto ao ponto.</b> Cada bloco abre com a história, o porquê e o contexto de mercado, mesmo sendo turma sênior.</span></li>
+      <li><span class="ok">✓</span><span><b>Um grande lab no dia.</b> Uma única construção, em atos, do começo ao fim da tarde.</span></li>
+      <li><span class="ok">✓</span><span><b>Junto com você, depois sozinho.</b> Cada passo marcado como <span class="modes"><b class="mj">👥 junto</b></span> ou <span class="modes"><b class="ms">🧍 sozinho</b></span>, com o entregável de cada um.</span></li>
+      <li><span class="ok">✓</span><span><b>Desenhar sempre.</b> Cada exercício tem a sua prancheta (agora estilo draw.io: áreas, cores, setas sólidas ou tracejadas, zoom, tela cheia, undo, PNG).</span></li>
+    </ul>
+  </div>
+</header>
+
+<nav class="jump" aria-label="opções">
+  <a href="#cmp">Comparação</a>
+  <a href="#a" class="rec">A · A vida de um pedido</a>
+  <a href="#b">B · O PR que chegou errado</a>
+  <a href="#c">C · Três rodadas</a>
+  <a href="#anatomia">Anatomia comum</a>
+  <a href="#reco">Recomendação</a>
+</nav>
+
+<section id="cmp">
+  <div class="eyebrow">De relance</div>
+  <h2 style="margin-top:6px">Mesmo destino, três estradas</h2>
+  <p class="lede">As três chegam ao mesmo lugar às 17h30: o domínio <code>Pedido</code> rico e imutável no repositório do aluno, com testes, e três ou mais desenhos salvos. O que muda é <b>de onde a aula parte</b> e <b>o que puxa a teoria</b>.</p>
+  <div class="legend">
+    <span><i style="background:var(--teoria)"></i> teoria com história</span>
+    <span><i style="background:var(--junto)"></i> 👥 junto com o prof</span>
+    <span><i style="background:var(--sozinho)"></i> 🧍 sozinho</span>
+    <span><i style="background:var(--desenho)"></i> 📐 desenhar</span>
+    <span><i style="background:var(--pausa)"></i> intervalo</span>
+  </div>
+  <div class="tablewrap">
+  <table class="cmp">
+    <thead><tr><th></th><th class="rec-col">A · A vida de um pedido</th><th>B · O PR que chegou errado</th><th>C · Três rodadas</th></tr></thead>
+    <tbody>
+      <tr><td>Ponto de partida</td><td class="rec-col">Uma história de produção: o pedido 4711, o e-mail que caiu, a cobrança dobrada.</td><td>Um pedido feito "do jeito que todo mundo pede" ao agente, e o código ruim que volta.</td><td>Uma pergunta: de quem é a culpa quando o agente entrega ruim? Depois, um experimento.</td></tr>
+      <tr><td>O grande lab</td><td class="rec-col">Construir o serviço de Pedidos do zero, em cinco atos, acompanhando o pedido de ponta a ponta.</td><td>Refatorar, em cinco atos, o repositório ruim até virar o domínio rico.</td><td>Pedir a mesma coisa três vezes, com specs cada vez melhores, e comparar.</td></tr>
+      <tr><td>O que puxa a teoria</td><td class="rec-col">A próxima peça do sistema ("agora o pedido precisa de status").</td><td>O próximo smell encontrado ("por que esse <code>double</code> é um problema?").</td><td>A lacuna da rodada anterior ("o que faltou na spec?").</td></tr>
+      <tr><td>Proporção junto / sozinho</td><td class="rec-col">Começa junto, cada ato migra pra sozinho. ~45% / 35%.</td><td>Caçada de smells junto; refatorações sozinho. ~40% / 40%.</td><td>Rodada 1 junto, 2 mista, 3 sozinho. ~35% / 45%.</td></tr>
+      <tr><td>Pranchetas do dia</td><td class="rec-col">5: o sistema imaginado, o fluxo SDD, o domínio, a máquina de estados, o sistema de hoje com as setas síncronas.</td><td>4: o que o agente entregou, o mapa dos smells (com cores), o fluxo SDD, o depois.</td><td>4: uma por rodada, mais a máquina de estados.</td></tr>
+      <tr><td>Competência mais treinada</td><td class="rec-col">Dirigir: escrever spec e revisar o que veio.</td><td>Revisar: ler, nomear, corrigir.</td><td>Especificar: a spec como produto.</td></tr>
+      <tr><td>Risco principal</td><td class="rec-col">Quem trava no setup atrasa os atos 3 e 4. Mitigação: repo-esqueleto pronto pra baixar.</td><td>O agente pode gerar um código ruim diferente pra cada aluno. Mitigação: repo <code>pedidos-legado</code> de referência.</td><td>Repetir a mesma tarefa três vezes pode cansar. Mitigação: cada rodada acrescenta comportamento novo.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ═══════════════ OPÇÃO A ═══════════════ -->
+<section id="a">
+  <div class="option rec">
+    <span class="tag">Recomendada</span>
+    <div class="head">
+      <div class="letter">A</div>
+      <div>
+        <div class="eyebrow">Narrativa do domínio · construir do zero</div>
+        <h2 style="margin-top:4px">A vida de um pedido</h2>
+        <p class="thesis">A tarde inteira segue <b>um pedido</b>, do clique do cliente ao e-mail de confirmação. Cada ato do lab constrói a peça do sistema que o pedido precisa naquele momento, e a teoria entra porque a peça exige. O aluno termina com o serviço nascido nas próprias mãos, e com cinco desenhos que contam a história.</p>
+      </div>
+    </div>
+
+    <div class="strip" aria-hidden="true">
+      <i style="width:8.3%;background:var(--teoria)"></i><i style="width:14.6%;background:var(--junto)"></i><i style="width:14.6%;background:var(--junto)"></i><i style="width:6.3%;background:var(--pausa)"></i><i style="width:16.7%;background:var(--sozinho)"></i><i style="width:14.6%;background:var(--junto)"></i><i style="width:10.4%;background:var(--desenho)"></i><i style="width:14.5%;background:var(--sozinho)"></i>
+    </div>
+    <div class="tl">
+      <div class="row"><div class="t">13:30<small>20 min</small></div><div class="m" style="background:var(--teoria)"></div><div><h5>Abertura: o pedido 4711 <span class="modes"><b class="mt">teoria</b><b class="md">desenhar</b></span></h5><p>Você conta o incidente (o e-mail caiu, o pedido falhou; a mensagem chegou duas vezes, cobrou dobrado). O que é um backend moderno em 2026, o que o mercado passou a pagar, por que julgamento. Termina com a pergunta do dia: por onde um pedido anda?</p><span class="pr">📐 Prancheta 1 · "Desenhe como você imagina que um pedido anda, do clique ao e-mail"</span></div></div>
+      <div class="row"><div class="t">13:50<small>35 min</small></div><div class="m" style="background:var(--junto)"></div><div><h5>Ato 1: o contrato <span class="modes"><b class="mj">👥 junto</b><b class="mt">teoria</b></span></h5><p>SDD explicado enquanto se faz: você cria o repositório <code>pedidos</code>, o <code>CLAUDE.md</code> e a pasta <code>.specs/</code> no projetor; todo mundo faz o mesmo. A teoria de contexto, memória do projeto e spec verificável vem em pausas curtas entre um arquivo e outro. Dogfooding: a <code>.specs/</code> deste site aberta ao lado.</p><span class="pr">📐 Prancheta 2 · "Quem faz o quê: desenhe o ciclo spec → plan → execute → review, com o CLAUDE.md alimentando o agente"</span></div></div>
+      <div class="row"><div class="t">14:25<small>35 min</small></div><div class="m" style="background:var(--junto)"></div><div><h5>Ato 2: o item <span class="modes"><b class="mj">👥 junto</b><b class="ms">🧍 sozinho</b></span></h5><p>Pausa teórica: por que um domínio é imutável (a história do POJO de 40 linhas, threads, e o que acontece quando o mesmo objeto passa por uma fila). <code>record</code>, compact constructor, <code>BigDecimal</code>. Junto: a spec de <code>ItemPedido</code> no editor com lint, a geração, a revisão linha a linha ao vivo. Sozinho: cada um revisa o próprio output contra o checklist e manda corrigir.</p><span class="pr">📐 Prancheta 1 revisitada · "Adicione a caixa Domínio e ligue ao que já existia"</span></div></div>
+      <div class="row"><div class="t">15:00<small>15 min</small></div><div class="m" style="background:var(--pausa)"></div><div><h5>Intervalo</h5></div></div>
+      <div class="row"><div class="t">15:15<small>40 min</small></div><div class="m" style="background:var(--sozinho)"></div><div><h5>Ato 3: o pedido <span class="modes"><b class="ms">🧍 sozinho</b><b class="mt">teoria</b></span></h5><p>Pausa teórica curta: cópia defensiva, total derivado, e a diferença entre um domínio rico e um anêmico contada como história (o service que sabia tudo e a classe que não sabia nada). Sozinho, com você circulando na sala e no Zoom: spec de <code>Pedido</code> com <code>adicionarItem</code> devolvendo um novo pedido, geração, revisão, correção.</p><span class="pr">📐 Prancheta 3 · "Onde mora cada regra? Desenhe Pedido, ItemPedido e as regras como notas coladas na caixa dona"</span></div></div>
+      <div class="row"><div class="t">15:55<small>35 min</small></div><div class="m" style="background:var(--junto)"></div><div><h5>Ato 4: o status <span class="modes"><b class="mj">👥 junto</b><b class="ms">🧍 sozinho</b></span></h5><p>Pausa teórica: tipos fechados. Por que <code>String status</code> é uma bomba, o que <code>sealed</code> diz ao compilador, o <code>switch</code> exaustivo, o enum que carrega comportamento. Junto: <code>StatusPedido</code> com transições. Sozinho: <code>ResultadoPagamento</code> sealed e <code>pagar()</code>.</p><span class="pr">📐 Prancheta 4 · "Máquina de estados: os estados são caixas, as transições são setas com rótulo"</span></div></div>
+      <div class="row"><div class="t">16:30<small>25 min</small></div><div class="m" style="background:var(--desenho)"></div><div><h5>Ato 5: o mundo lá fora <span class="modes"><b class="md">desenhar</b><b class="mt">teoria</b></span></h5><p>O pedido foi pago: quem precisa saber? Estoque, e-mail, nota fiscal. Hoje isso é uma chamada síncrona atrás da outra. O incidente da abertura volta, agora com nome: acoplamento temporal. É a ponte para o Bloco 2, sem resolver nada ainda.</p><span class="pr">📐 Prancheta 5 · "O sistema de hoje com as setas síncronas para estoque, e-mail e NF. Marque em vermelho onde você acha que vai quebrar. Compare com a Prancheta 1"</span></div></div>
+      <div class="row"><div class="t">16:55<small>35 min</small></div><div class="m" style="background:var(--sozinho)"></div><div><h5>Fechamento: revisão cruzada <span class="modes"><b class="ms">🧍 sozinho</b></span></h5><p>Em duplas (presencial e Zoom), cada um abre o repositório do outro e aponta dois problemas com nome. O que fixou como critério. Tarefa de casa: o repositório no GitHub, a spec de estorno, e as cinco pranchetas exportadas no README.</p></div></div>
+    </div>
+
+    <div class="cols">
+      <div class="block"><h4>Onde a teoria vive</h4><ul>
+        <li><b>Abertura:</b> o que é backend moderno, o que mudou com agentes, julgamento como competência.</li>
+        <li><b>Ato 1:</b> SDD, contexto, <code>CLAUDE.md</code>, spec verificável, dogfooding.</li>
+        <li><b>Ato 2:</b> imutabilidade (com história), <code>record</code>, compact constructor, <code>BigDecimal</code>.</li>
+        <li><b>Ato 3:</b> cópia defensiva, estado derivado, domínio rico vs anêmico.</li>
+        <li><b>Ato 4:</b> tipos fechados, <code>sealed</code>, <code>switch</code> exaustivo, enum rico.</li>
+        <li><b>Ato 5:</b> acoplamento temporal (ponte, sem resolver).</li>
+      </ul></div>
+      <div class="block"><h4>Antes da aula (leve, 30 min) e depois</h4><ul>
+        <li><b>Antes:</b> setup feito; ler "a história do pedido 4711" (3 parágrafos) e desenhar a Prancheta 1 em casa, se quiser chegar na frente.</li>
+        <li><b>Depois, até 19/09:</b> repositório no GitHub; spec e implementação de <code>estornar()</code>; pedir ao agente melhorias no <code>CLAUDE.md</code> e rejeitar pelo menos uma; pranchetas 1 e 5 no README com um parágrafo sobre a diferença.</li>
+      </ul></div>
+    </div>
+
+    <div class="sample">
+      <h4>Amostra do tom (abertura do capítulo)</h4>
+      <p>Era uma terça-feira comum quando o pedido 4711 entrou. Um cliente, três itens, cartão aprovado. O serviço fez o que sempre fazia: salvou no banco, chamou o estoque, mandou o e-mail, gerou a nota. Só que naquela terça o servidor de e-mail estava fora do ar por quatro minutos. O pedido 4711 falhou inteiro. O estoque tinha baixado. O cliente viu "erro" na tela e comprou de novo. Dois pedidos, duas cobranças, uma reclamação.</p>
+      <p>Ninguém nesse sistema errou a sintaxe. Todo teste unitário passava. O erro era de julgamento: alguém decidiu, provavelmente sem perceber, que mandar um e-mail fazia parte de criar um pedido. Hoje a IA escreve a sintaxe. O que sobra para você é exatamente esse tipo de decisão. E é nele que passamos as próximas quatro horas, construindo, do zero, o serviço que teria salvado o pedido 4711.</p>
+    </div>
+
+    <div class="verdict">
+      <div class="plus"><h4>Por que escolher</h4><ul><li>A narrativa dá o "porquê" antes de cada peça sem virar palestra.</li><li>O aluno constrói: sai com a sensação de ter feito o sistema nascer.</li><li>As cinco pranchetas viram a linha do tempo da arquitetura, reaproveitada nos sábados seguintes.</li><li>Os atos migram de junto para sozinho de forma natural.</li></ul></div>
+      <div class="minus"><h4>O que exige de você</h4><ul><li>Contar bem a história da abertura: ela sustenta a tarde.</li><li>Ter um repositório-esqueleto pronto para quem travar no Ato 1.</li><li>Segurar o relógio nos atos 3 e 4: são os mais longos e os mais sozinhos.</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ OPÇÃO B ═══════════════ -->
+<section id="b">
+  <div class="option">
+    <div class="head">
+      <div class="letter">B</div>
+      <div>
+        <div class="eyebrow">Refatoração dirigida · partir do código ruim</div>
+        <h2 style="margin-top:4px">O PR que chegou errado</h2>
+        <p class="thesis">A aula começa com um <b>pedido feito do jeito errado</b>, ao vivo: você abre o Claude Code num repositório vazio e digita "cria um serviço de pedidos em Java". Todo mundo faz igual. Volta um sistema que funciona e é ruim. A tarde é uma refatoração guiada: cada smell puxa a teoria, e cada correção é uma spec dirigida ao agente. Chega-se ao mesmo domínio rico da opção A, mas pelo caminho da revisão.</p>
+      </div>
+    </div>
+
+    <div class="strip" aria-hidden="true">
+      <i style="width:10.4%;background:var(--junto)"></i><i style="width:12.5%;background:var(--junto)"></i><i style="width:12.5%;background:var(--junto)"></i><i style="width:6.3%;background:var(--pausa)"></i><i style="width:14.6%;background:var(--sozinho)"></i><i style="width:12.5%;background:var(--sozinho)"></i><i style="width:12.5%;background:var(--desenho)"></i><i style="width:18.7%;background:var(--sozinho)"></i>
+    </div>
+    <div class="tl">
+      <div class="row"><div class="t">13:30<small>25 min</small></div><div class="m" style="background:var(--junto)"></div><div><h5>Abertura: vamos pedir do jeito errado <span class="modes"><b class="mj">👥 junto</b><b class="mt">teoria</b></span></h5><p>Você digita o prompt vago no projetor. Enquanto o agente gera doze arquivos, a teoria: o que acontece quando o contexto está vazio (o agente preenche com defaults), por que a sintaxe virou commodity e o julgamento não. O código chega; ninguém abre ainda.</p><span class="pr">📐 Prancheta 1 · "Leia os arquivos e desenhe o que o agente entregou: pacotes, classes, quem chama quem"</span></div></div>
+      <div class="row"><div class="t">13:55<small>30 min</small></div><div class="m" style="background:var(--junto)"></div><div><h5>Ato 1: ler antes de julgar <span class="modes"><b class="mj">👥 junto</b><b class="mt">teoria</b></span></h5><p>Como um sênior lê um PR: de fora para dentro, dependências antes de linhas. O vocabulário de smell. Caçada guiada: você aponta os três primeiros (setter em tudo, <code>double</code> no dinheiro, <code>String</code> no status) e explica o dano de cada um com um exemplo de produção. Os alunos encontram mais dois.</p><span class="pr">📐 Prancheta 1 revisitada · "Pinte de vermelho as caixas com smell e cole uma nota com o nome do smell"</span></div></div>
+      <div class="row"><div class="t">14:25<small>30 min</small></div><div class="m" style="background:var(--junto)"></div><div><h5>Ato 2: o contrato que faltou <span class="modes"><b class="mj">👥 junto</b><b class="mt">teoria</b></span></h5><p>Agora que o estrago está mapeado, a teoria de SDD ganha peso: a spec que teria evitado cada smell, o <code>CLAUDE.md</code> como memória, contexto como recurso escasso. Junto: escrever o <code>CLAUDE.md</code> e a <code>.specs/pedido.md</code> a partir da lista de smells.</p><span class="pr">📐 Prancheta 2 · "O ciclo SDD, e uma seta de cada smell para a linha da spec que o proíbe"</span></div></div>
+      <div class="row"><div class="t">14:55<small>15 min</small></div><div class="m" style="background:var(--pausa)"></div><div><h5>Intervalo</h5></div></div>
+      <div class="row"><div class="t">15:10<small>35 min</small></div><div class="m" style="background:var(--sozinho)"></div><div><h5>Ato 3: refatorar o item <span class="modes"><b class="mj">👥 junto</b><b class="ms">🧍 sozinho</b></span></h5><p>Teoria: imutabilidade, <code>record</code>, compact constructor, <code>BigDecimal</code>. Junto: a spec de refatoração de <code>ItemPedido</code>, o agente refatora, revisão ao vivo. Sozinho: aplicar o mesmo critério em <code>Pedido</code> (cópia defensiva, total derivado).</p></div></div>
+      <div class="row"><div class="t">15:45<small>30 min</small></div><div class="m" style="background:var(--sozinho)"></div><div><h5>Ato 4: refatorar o status <span class="modes"><b class="ms">🧍 sozinho</b><b class="mt">teoria</b></span></h5><p>Teoria: stringly typed, tipos fechados, <code>sealed</code>, enum rico, <code>switch</code> exaustivo. Sozinho: spec, refatoração, testes de transição.</p><span class="pr">📐 Prancheta 3 · "Máquina de estados do pedido"</span></div></div>
+      <div class="row"><div class="t">16:15<small>30 min</small></div><div class="m" style="background:var(--desenho)"></div><div><h5>Ato 5: antes e depois <span class="modes"><b class="md">desenhar</b><b class="mt">teoria</b></span></h5><p>Desenhar a arquitetura depois da refatoração e colocar ao lado da Prancheta 1. A teoria fecha com o que os dois desenhos mostram: domínio anêmico vs rico, onde a regra mora, e o service que enviava e-mail (SRP aparece sozinho, sem ser anunciado). Ponte para o Sáb 2.</p><span class="pr">📐 Prancheta 4 · "O depois. Duplique a Prancheta 1 antes, pra comparar lado a lado na galeria"</span></div></div>
+      <div class="row"><div class="t">16:45<small>45 min</small></div><div class="m" style="background:var(--sozinho)"></div><div><h5>Fechamento: troca de repositórios <span class="modes"><b class="ms">🧍 sozinho</b></span></h5><p>Duplas trocam os repositórios refatorados e revisam: dois apontamentos nomeados cada. Fixação e tarefa de casa.</p></div></div>
+    </div>
+
+    <div class="cols">
+      <div class="block"><h4>Onde a teoria vive</h4><ul>
+        <li><b>Abertura:</b> o que acontece sem contexto; commodity vs julgamento.</li>
+        <li><b>Ato 1:</b> como ler um PR; vocabulário de smells; o dano de cada um em produção.</li>
+        <li><b>Ato 2:</b> SDD como resposta ao estrago; <code>CLAUDE.md</code>; contexto.</li>
+        <li><b>Ato 3:</b> imutabilidade, <code>record</code>, <code>BigDecimal</code>.</li>
+        <li><b>Ato 4:</b> tipos fechados, <code>sealed</code>, enum rico.</li>
+        <li><b>Ato 5:</b> anêmico vs rico; SRP aparece sem ser anunciado.</li>
+      </ul></div>
+      <div class="block"><h4>Antes da aula e depois</h4><ul>
+        <li><b>Antes:</b> setup feito; ler "como um sênior lê um PR" (uma página); nada de código.</li>
+        <li><b>Depois, até 19/09:</b> terminar a refatoração (o que sobrou do legado); escrever a spec de <code>estornar()</code> do zero, agora sem legado; Prancheta 1 e 4 no README com o antes e depois.</li>
+        <li><b>Rede de segurança:</b> eu gero um repositório <code>pedidos-legado</code> de referência, para quem o agente entregar algo bom demais ou ruim demais.</li>
+      </ul></div>
+    </div>
+
+    <div class="sample">
+      <h4>Amostra do tom (abertura do capítulo)</h4>
+      <p>Antes de ensinar qualquer coisa, vamos fazer o que todo mundo faz na primeira semana com um agente: pedir errado. Abra o Claude Code numa pasta vazia e digite exatamente isto: "cria um serviço de pedidos em java". Sem spec, sem contexto, sem critério. Dê Enter.</p>
+      <p>Enquanto ele gera, repare em uma coisa: ele não perguntou nada. Não perguntou se dinheiro é <code>double</code> ou <code>BigDecimal</code>, se pedido muda depois de pago, se o e-mail faz parte do pedido. Ele decidiu tudo isso por você, em silêncio, com o default de milhões de repositórios medianos. Daqui a doze arquivos, você vai ter um sistema que funciona. E vai passar a tarde descobrindo, um smell de cada vez, por que ele não presta, e o que uma frase na spec teria evitado.</p>
+    </div>
+
+    <div class="verdict">
+      <div class="plus"><h4>Por que escolher</h4><ul><li>Treina exatamente a competência que o curso avalia: revisar e nomear.</li><li>O gancho inicial é forte e é uma experiência, não uma explicação.</li><li>Toda teoria chega como resposta a um problema já visto.</li><li>O "antes e depois" desenhado é um artefato memorável.</li></ul></div>
+      <div class="minus"><h4>O que exige de você</h4><ul><li>Aceitar variação: cada aluno recebe um código ruim diferente. O repo de referência resolve, mas tira parte da surpresa.</li><li>Menos "construir do zero": quem quer sentir o sistema nascer sente menos.</li><li>Segurar o Ato 1 para não virar aula expositiva de smells.</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ OPÇÃO C ═══════════════ -->
+<section id="c">
+  <div class="option">
+    <div class="head">
+      <div class="letter">C</div>
+      <div>
+        <div class="eyebrow">Oficina de spec · experimento controlado</div>
+        <h2 style="margin-top:4px">Três rodadas</h2>
+        <p class="thesis">A mesma tarefa é pedida ao agente <b>três vezes</b>, com specs progressivamente melhores. Entre uma rodada e outra, uma pausa teórica entrega o vocabulário que a rodada seguinte usa como critério. O aluno vê com os próprios olhos que a qualidade do código é a qualidade do pedido, e desenha as três versões para comparar.</p>
+      </div>
+    </div>
+
+    <div class="strip" aria-hidden="true">
+      <i style="width:8.3%;background:var(--teoria)"></i><i style="width:12.5%;background:var(--junto)"></i><i style="width:12.5%;background:var(--teoria)"></i><i style="width:6.3%;background:var(--pausa)"></i><i style="width:16.7%;background:var(--sozinho)"></i><i style="width:10.4%;background:var(--teoria)"></i><i style="width:16.7%;background:var(--sozinho)"></i><i style="width:16.6%;background:var(--desenho)"></i>
+    </div>
+    <div class="tl">
+      <div class="row"><div class="t">13:30<small>20 min</small></div><div class="m" style="background:var(--teoria)"></div><div><h5>Abertura: de quem é a culpa? <span class="modes"><b class="mt">teoria</b><b class="mj">👥 junto</b></span></h5><p>A tese do curso como pergunta. O método do dia explicado: três rodadas, um experimento. Setup do repositório junto.</p></div></div>
+      <div class="row"><div class="t">13:50<small>30 min</small></div><div class="m" style="background:var(--junto)"></div><div><h5>Rodada 1: a spec ingênua <span class="modes"><b class="mj">👥 junto</b><b class="mt">teoria</b></span></h5><p>Todos pedem "crie um Pedido com itens e total". Cinco minutos. Depois a teoria do que faltou: contexto, restrições, definição de pronto. SDD é apresentado como a resposta; o <code>CLAUDE.md</code> nasce agora, junto.</p><span class="pr">📐 Prancheta 1 · "O que veio na rodada 1"</span></div></div>
+      <div class="row"><div class="t">14:20<small>30 min</small></div><div class="m" style="background:var(--teoria)"></div><div><h5>Pausa teórica: o Java que um sênior espera <span class="modes"><b class="mt">teoria</b></span></h5><p>Imutabilidade contada como história, <code>record</code>, cópia defensiva, <code>BigDecimal</code>, <code>Optional</code> no lugar certo. O simulador "Record cabe aqui?" e o quiz. Tudo isso vira o checklist de critérios da próxima rodada.</p></div></div>
+      <div class="row"><div class="t">14:50<small>15 min</small></div><div class="m" style="background:var(--pausa)"></div><div><h5>Intervalo</h5></div></div>
+      <div class="row"><div class="t">15:05<small>40 min</small></div><div class="m" style="background:var(--sozinho)"></div><div><h5>Rodada 2: a spec com critérios <span class="modes"><b class="mj">👥 junto</b><b class="ms">🧍 sozinho</b></span></h5><p>Reescrever a spec com os critérios (junto, no editor com lint); gerar e revisar sozinho contra o checklist. Diff entre rodadas anotado no caderno.</p><span class="pr">📐 Prancheta 2 · "O que veio na rodada 2. Duplique a 1 e mostre o que mudou"</span></div></div>
+      <div class="row"><div class="t">15:45<small>25 min</small></div><div class="m" style="background:var(--teoria)"></div><div><h5>Pausa teórica: tipos fechados e domínio rico <span class="modes"><b class="mt">teoria</b></span></h5><p><code>sealed</code>, enum rico, <code>switch</code> exaustivo, anêmico vs rico, onde a regra mora.</p></div></div>
+      <div class="row"><div class="t">16:10<small>40 min</small></div><div class="m" style="background:var(--sozinho)"></div><div><h5>Rodada 3: a spec com comportamento <span class="modes"><b class="ms">🧍 sozinho</b></span></h5><p>Status, transições, <code>adicionarItem</code>, <code>pagar(ResultadoPagamento)</code>; os testes como definição de pronto. Sozinho, com apoio.</p><span class="pr">📐 Prancheta 3 · "Rodada 3: módulo + máquina de estados"</span></div></div>
+      <div class="row"><div class="t">16:50<small>40 min</small></div><div class="m" style="background:var(--desenho)"></div><div><h5>Fechamento: as três lado a lado <span class="modes"><b class="md">desenhar</b><b class="ms">🧍 sozinho</b></span></h5><p>A galeria da prancheta mostra as três arquiteturas. O que mudou e por quê. Revisão cruzada em duplas e tarefa de casa.</p></div></div>
+    </div>
+
+    <div class="cols">
+      <div class="block"><h4>Onde a teoria vive</h4><ul>
+        <li><b>Abertura:</b> julgamento como competência; o método experimental.</li>
+        <li><b>Rodada 1:</b> contexto, restrições, definição de pronto, SDD, <code>CLAUDE.md</code>.</li>
+        <li><b>Pausa 1:</b> Java moderno completo, em bloco.</li>
+        <li><b>Pausa 2:</b> tipos fechados, domínio rico.</li>
+        <li><b>Fechamento:</b> síntese pelo desenho.</li>
+      </ul></div>
+      <div class="block"><h4>Antes da aula e depois</h4><ul>
+        <li><b>Antes:</b> setup feito; nada mais (a surpresa da rodada 1 depende disso).</li>
+        <li><b>Depois, até 19/09:</b> rodada 4 em casa: <code>estornar()</code> com spec completa; comparar a spec da rodada 1 com a da 4 num parágrafo no README; as três pranchetas exportadas.</li>
+      </ul></div>
+    </div>
+
+    <div class="sample">
+      <h4>Amostra do tom (abertura do capítulo)</h4>
+      <p>Quando o agente entrega um código ruim, de quem é a culpa? A resposta fácil é "do agente". A resposta de sênior é mais incômoda: na maior parte das vezes, o código ruim é a tradução fiel de um pedido ruim. Hoje a gente prova isso. Não com argumento, com experimento: você vai pedir a mesma coisa três vezes, e entre uma vez e outra vai aprender exatamente o vocabulário que faltava no pedido. No fim da tarde, três diagramas lado a lado vão mostrar o que uma frase a mais na spec muda num sistema.</p>
+    </div>
+
+    <div class="verdict">
+      <div class="plus"><h4>Por que escolher</h4><ul><li>É a explicação mais nítida de SDD que existe: a evidência aparece na tela do próprio aluno.</li><li>A teoria vem em blocos claros, bom para quem gosta de "aula" com começo, meio e fim.</li><li>Três desenhos comparáveis são um ótimo artefato de fechamento.</li></ul></div>
+      <div class="minus"><h4>O que exige de você</h4><ul><li>Cuidar para que cada rodada acrescente comportamento novo, ou a repetição cansa.</li><li>É a opção com menos narrativa de sistema: o pedido não "anda" por lugar nenhum.</li><li>As pausas teóricas são mais longas e mais expositivas.</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ ANATOMIA COMUM ═══════════════ -->
+<section id="anatomia">
+  <div class="eyebrow">Comum às três</div>
+  <h2 style="margin-top:6px">Como isso aparece na página do capítulo</h2>
+  <p class="lede">Três peças novas na marcação do material, além do que já existe (caderno, checklists, editor de spec com lint).</p>
+  <div class="anatomy">
+    <div class="card"><h4>Marcador de modo em cada passo</h4><p>Cada passo do lab diz, antes de qualquer instrução, quem está fazendo. O aluno nunca se pergunta "isso é pra eu fazer agora?".</p>
+      <div class="mock"><span class="pill" style="background:#f5a34a;color:#1a1207">👥 junto com o prof</span>Acompanhe no projetor. Você faz o mesmo no seu terminal, um comando por vez.<br><br><span class="pill" style="background:#5fd39a;color:#06170f">🧍 agora é você</span>Mesmo critério, tarefa nova. O prof circula; no Zoom, levante a mão.<br><br><span class="pill" style="background:#8fb3e6;color:#0a1524">📖 pausa teórica</span>Cinco minutos de história antes do próximo passo.</div></div>
+    <div class="card"><h4>Prancheta em cada exercício</h4><p>Todo passo termina com um pedido de desenho, específico e curto. A prancheta é a mesma ferramenta em todo o site: paleta tipada, formas livres, áreas, cores, setas sólidas ou tracejadas, zoom, tela cheia, undo, exportar PNG.</p>
+      <div class="mock"><span class="pill" style="background:#b59cf0;color:#160d2b">📐 desenhe</span>"Adicione a caixa Domínio e ligue ao Service. Cole uma nota com a regra que mora nela."<br><br>Salva sozinha. Aparece na galeria da <b>Prancheta</b> do curso, ao lado das outras versões.</div></div>
+    <div class="card"><h4>Pausa teórica com história</h4><p>A teoria não é uma seção separada: é um bloco que interrompe o lab quando o próximo passo precisa dela. Sempre com o porquê, um caso de produção e o que muda na spec.</p>
+      <div class="mock"><b>Por que imutável?</b><br>Em 2009 o Java ganhou uma fila. Em 2012, dois threads. Em 2014, o primeiro bug de estado compartilhado que ninguém conseguia reproduzir…<br><br><b>O que isso muda na sua spec:</b> "Pedido é record; listas com List.copyOf; nenhum setter."</div></div>
+  </div>
+</section>
+
+<!-- ═══════════════ RECOMENDAÇÃO ═══════════════ -->
+<section id="reco">
+  <div class="reco">
+    <div class="eyebrow">Recomendação</div>
+    <h2 style="margin-top:6px">A, com o gancho de B na abertura</h2>
+    <p><b>A vida de um pedido</b> é a que melhor junta o que você pediu: teoria puxada pela peça seguinte do sistema, um lab que cresce em atos, migração natural de junto para sozinho, e cinco desenhos que contam a evolução da arquitetura. É também a que melhor prepara o Bloco 2: o Ato 5 deixa o acoplamento temporal desenhado e sem solução, e o Sáb 4 começa exatamente dali.</p>
+    <p>Se quiser mais impacto nos primeiros minutos, dá para emprestar a abertura de B: antes de contar a história do pedido 4711, todo mundo pede "cria um serviço de pedidos" e vê o que volta. Custa dez minutos e dá ao Ato 1 um motivo concreto para o <code>CLAUDE.md</code> existir.</p>
+    <p style="margin-top:14px"><b>Se você escolher uma, o que eu faço em seguida:</b></p>
+    <ol>
+      <li>Reescrevo o Cap 1 inteiro nesse formato: narrativa, pausas teóricas com história, os atos com os marcadores de modo, uma prancheta por passo com o pedido de desenho, tarefa de casa.</li>
+      <li>Preparo o repositório-esqueleto (A) ou o <code>pedidos-legado</code> de referência (B) para você ter na manga.</li>
+      <li>Registro a escolha na <code>.specs/</code> como o formato-padrão dos próximos capítulos.</li>
+    </ol>
+  </div>
+</section>
+</div>
+
+</body>
+</html>

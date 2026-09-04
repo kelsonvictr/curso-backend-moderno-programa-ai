@@ -1,0 +1,10 @@
+import {readFile,writeFile} from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
+import {spawnSync} from 'node:child_process';
+import vm from 'node:vm';
+const project=new URL('../../',import.meta.url),target=new URL('assets/audio/pecas-ia-cap00/',project);
+const source=await readFile(new URL('capitulos/00-como-um-agente-pensa/pecas-ia-cenas.js',project),'utf8');
+const context={window:{}};vm.runInNewContext(source,context);
+const script=Object.fromEntries(Object.entries(context.window.PECAS_CENAS).flatMap(([name,frames])=>frames.map((f,i)=>[name+'-'+i,[{role:f.role,text:f.text}]])));
+await writeFile(new URL('roteiro.json',target),JSON.stringify(script,null,2)+'\n');
+const run=spawnSync(process.execPath,[fileURLToPath(new URL('generate-audio.mjs',import.meta.url)),'--project',fileURLToPath(target),process.argv[2]||'--dry-run'],{stdio:'inherit'});process.exit(run.status??1);

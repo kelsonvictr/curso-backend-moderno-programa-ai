@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap 0 — Como um agente pensa | Backend Moderno, Agentes de IA e Cloud</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../shared/styles.css">
+<link rel="stylesheet" href="./llm-teatro.css?v=2">
+<link rel="stylesheet" href="./contexto-teatro.css?v=2">
+<link rel="stylesheet" href="./jogos.css?v=1">
+<link rel="stylesheet" href="./laboratorios.css?v=2">
+<link rel="stylesheet" href="./pecas-ia.css?v=2">
+<link rel="stylesheet" href="../../shared/components.css">
+<link rel="stylesheet" href="../../shared/animations.css">
+<link rel="stylesheet" href="../../shared/lab-kit.css?v=3">
+<style>
+  /* mono didático: SEMPRE sem ligaduras (-> não vira →, => não vira ⇒) */
+  .mono,.pw-sent,.pw-cand,.mc-block,.lp-console,.lp-step,.ps-code,.ci-line,.tool-cmd{
+    font-family:'JetBrains Mono',monospace;font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+  .ia{color:var(--ai)}
+  .lead{font-size:1.02rem}
+
+  /* ═══ 🔮 Próxima Palavra ═══ */
+  .pwm{background:linear-gradient(180deg,#0b1020,#0d0d1a);border:1px solid rgba(167,139,250,0.35);border-radius:16px;padding:18px;margin:14px 0}
+  .pw-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+  .pw-lab{font-size:0.74rem;color:var(--text-dim);font-weight:700}
+  .pw-chip{border:1px solid rgba(167,139,250,0.45);background:var(--surface2);color:#c9b8ff;font-weight:700;font-size:0.76rem;padding:8px 12px;border-radius:10px;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif}
+  .pw-chip:hover{transform:translateY(-2px)}
+  .pw-chip.active{border-color:#fff;color:#fff;background:rgba(255,255,255,0.08)}
+  .pw-stage{background:#06060c;border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:16px;min-height:64px}
+  .pw-sent{font-size:0.95rem;color:#cdd6f4;line-height:1.7;word-break:break-word}
+  .pw-sent .pw-new{color:#a78bfa;font-weight:700}
+  .pw-cands{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;min-height:44px}
+  .pw-cand{border:1px solid rgba(255,255,255,0.14);background:#0b0b14;border-radius:10px;padding:7px 10px;font-size:0.72rem;color:#cdd6f4;position:relative;overflow:hidden;display:flex;align-items:center;gap:8px;transition:all .25s}
+  .pw-cand .bar{position:absolute;left:0;top:0;bottom:0;background:rgba(167,139,250,0.16);width:0;transition:width .5s}
+  .pw-cand b{position:relative;font-weight:700}
+  .pw-cand small{position:relative;color:var(--text-dim)}
+  .pw-cand.win{border-color:rgba(70,211,154,0.7);box-shadow:0 0 12px rgba(70,211,154,0.2)}
+  .pw-cand.win small{color:#46d39a}
+  .pw-note,.mc-note,.lp-note,.ps-note,.ci-note{margin-top:12px;background:#0b0b14;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 12px;font-size:0.82rem;color:#cdd6f4;text-align:center;min-height:40px}
+
+  /* ═══ 📦 Mesa de Contexto ═══ */
+  .mcm{background:linear-gradient(180deg,#0b1020,#0d0d1a);border:1px solid rgba(247,183,49,0.3);border-radius:16px;padding:18px;margin:14px 0}
+  .mc-meter{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .mc-meter .lab{font-size:0.74rem;color:var(--text-dim);font-weight:700;white-space:nowrap}
+  .mc-track{flex:1;height:12px;background:#06060c;border:1px solid rgba(255,255,255,0.12);border-radius:999px;overflow:hidden}
+  .mc-fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent7),var(--accent5));transition:width .4s}
+  .mc-fill.full{background:linear-gradient(90deg,var(--accent5),var(--bug))}
+  .mc-pinned{display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-height:30px;margin-bottom:8px;font-size:.72rem;color:var(--text-dim)}
+  .mc-table{background:#06060c;border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:12px;min-height:96px;display:flex;gap:8px;flex-wrap:wrap;align-content:flex-start}
+  .mc-block{border:1px solid rgba(255,255,255,0.16);background:#0b0b14;border-radius:10px;padding:7px 10px;font-size:0.7rem;color:#cdd6f4;transition:all .35s}
+  .mc-block.rule{border-color:rgba(167,139,250,0.6);color:#c9b8ff;font-weight:700}
+  .mc-block.big{border-color:rgba(247,183,49,0.5);color:var(--accent5)}
+  .mc-block.pin{border-color:rgba(217,119,87,0.8);color:#ffb59a;font-weight:800;background:rgba(217,119,87,0.12)}
+  .mc-lost{margin-top:10px;font-size:0.72rem;color:var(--text-dim);min-height:20px}
+  .mc-lost .gone{color:#ff8b8b;text-decoration:line-through;margin-right:8px}
+  .mc-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .mc-controls button{border:1px solid rgba(247,183,49,0.45);background:var(--surface2);color:var(--accent5);font-weight:700;font-size:0.76rem;padding:8px 14px;border-radius:10px;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif}
+  .mc-controls button.pinbtn{border-color:rgba(217,119,87,0.6);color:#ffb59a}
+  .mc-controls button:hover{transform:translateY(-2px)}
+
+  /* ═══ 🔁 Loop do Agente ═══ */
+  .lpm{background:linear-gradient(180deg,#0b1020,#0d0d1a);border:1px solid rgba(167,139,250,0.4);border-radius:16px;padding:18px;margin:14px 0}
+  .lp-steps{display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:center;margin:12px 0}
+  .lp-step{border:1px solid rgba(255,255,255,0.14);background:#0b0b14;border-radius:10px;padding:8px 11px;font-size:0.7rem;color:var(--text-dim);transition:all .25s;white-space:nowrap}
+  .lp-step.on{border-color:rgba(167,139,250,0.8);color:#fff;background:rgba(167,139,250,0.12);box-shadow:0 0 12px rgba(167,139,250,0.25)}
+  .lp-step.err.on{border-color:rgba(255,71,87,0.8);background:rgba(255,71,87,0.12)}
+  .lp-step.ok.on{border-color:rgba(70,211,154,0.8);background:rgba(70,211,154,0.12)}
+  .lp-arrow{color:var(--text-dim);font-size:0.7rem}
+  .lp-console{background:#06060c;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 12px;font-size:0.7rem;color:#7ef0c4;min-height:120px;max-height:170px;overflow:auto;white-space:pre-wrap}
+  .lp-console .t{color:#c9b8ff}
+  .lp-result{margin-top:10px;background:#0b0b14;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px 12px;font-size:0.8rem;color:#cdd6f4;min-height:44px}
+  .lp-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
+  .lp-controls button{border:1px solid rgba(167,139,250,0.5);background:var(--surface2);color:#c9b8ff;font-weight:700;font-size:0.76rem;padding:8px 14px;border-radius:10px;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif}
+  .lp-controls button:hover{transform:translateY(-2px)}
+  .lp-controls button.vago{border-color:rgba(255,71,87,0.5);color:#ff8b8b}
+
+  /* ═══ anatomia do Claude Code ═══ */
+  .anat{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:14px 0}
+  .an{background:var(--surface2);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:14px 16px}
+  .an .an-t{font-weight:900;font-size:.95rem;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+  .an .an-t code{font-size:.8rem}
+  .an p{font-size:.82rem;color:var(--text-dim);line-height:1.5;margin:0}
+  .an .an-q{margin-top:8px;font-size:.76rem;color:var(--claude);font-weight:700}
+  .an.core{border-color:rgba(217,119,87,.45);background:rgba(217,119,87,.06)}
+
+  /* ═══ tabela CLAUDE.md × AGENTS.md ═══ */
+  table.who{width:100%;border-collapse:collapse;font-size:.88rem;margin:12px 0}
+  table.who th,table.who td{text-align:left;padding:10px 12px;border-top:1px solid rgba(255,255,255,.07);vertical-align:top}
+  table.who th{font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim)}
+  table.who td:first-child{font-weight:800}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:700px){.two{grid-template-columns:1fr}}
+  .in-out{border-radius:12px;padding:12px 14px;border:1px solid rgba(255,255,255,.06)}
+  .in-out.ok{background:rgba(6,214,160,.06)} .in-out.no{background:rgba(255,107,107,.06)}
+  .in-out h5{font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+  .in-out.ok h5{color:var(--accent7)} .in-out.no h5{color:var(--accent2)}
+  .in-out li{font-size:.85rem;color:var(--text-dim);margin-left:18px;line-height:1.6}
+
+  /* ═══ mercado ═══ */
+  .agents-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:14px 0}
+  .agent-card{background:#0b0b14;border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:16px;transition:all .2s}
+  .agent-card:hover{transform:translateY(-3px);border-color:rgba(167,139,250,0.5)}
+  .agent-card.star{border-color:rgba(217,119,87,0.55);background:linear-gradient(180deg,rgba(217,119,87,0.08),#0b0b14)}
+  .agent-card h4{margin:0 0 4px;font-size:1rem}
+  .agent-card .who{font-size:0.7rem;color:var(--text-dim);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+  .agent-card p{margin:8px 0 0;font-size:0.8rem;color:var(--text-dim);line-height:1.55}
+  .agent-card .file{display:inline-block;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:.7rem;background:var(--code-bg);padding:2px 8px;border-radius:6px;color:var(--accent5)}
+
+  /* ═══ ⚖️ Vago × Spec ═══ */
+  .psm{background:linear-gradient(180deg,#0b1020,#0d0d1a);border:1px solid rgba(97,218,251,0.3);border-radius:16px;padding:18px;margin:14px 0}
+  .ps-toggle{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .ps-toggle button{border:1px solid rgba(255,255,255,0.16);background:var(--surface2);color:var(--text-dim);font-weight:700;font-size:0.76rem;padding:8px 14px;border-radius:10px;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif}
+  .ps-toggle button.active.vago{border-color:rgba(255,71,87,0.6);color:#ff8b8b;background:rgba(255,71,87,0.08)}
+  .ps-toggle button.active.spec{border-color:rgba(70,211,154,0.6);color:#46d39a;background:rgba(70,211,154,0.08)}
+  .ps-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+  @media (max-width:680px){.ps-grid{grid-template-columns:1fr}}
+  .ps-code{background:#06060c;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:12px;font-size:0.7rem;color:#cdd6f4;white-space:pre-wrap;line-height:1.7;min-height:150px}
+  .ps-out{background:#0b0b14;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:12px;min-height:150px}
+  .ps-out ul{margin:6px 0 0;padding-left:18px}
+  .ps-out li{font-size:0.78rem;color:var(--text-dim);margin-bottom:6px;line-height:1.5}
+  .ps-out li b{color:var(--text)}
+  .ps-out .tag-ok{color:#46d39a;font-weight:800}
+  .ps-out .tag-bad{color:#ff8b8b;font-weight:800}
+
+  /* ═══ 🕵️ Caça ao Intruso ═══ */
+  .cim{background:linear-gradient(180deg,#0b1020,#0d0d1a);border:1px solid rgba(255,71,87,0.3);border-radius:16px;padding:18px;margin:14px 0}
+  .ci-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+  .ci-score{font-size:0.78rem;color:var(--text-dim);font-weight:700}
+  .ci-score b{color:#46d39a}
+  .ci-diff{background:#06060c;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:8px 0;overflow-x:auto}
+  .ci-line{display:block;width:100%;text-align:left;border:0;background:transparent;color:#8b93b0;font-size:0.7rem;padding:3px 14px;cursor:pointer;white-space:pre;transition:background .15s;line-height:1.65}
+  .ci-line:hover{background:rgba(255,255,255,0.05)}
+  .ci-line.add{color:#7ef0c4}
+  .ci-line.del{color:#ff8b8b}
+  .ci-line.file{color:#c9b8ff;font-weight:700;cursor:default}
+  .ci-line.found{background:rgba(255,71,87,0.14);color:#ff8b8b;font-weight:700}
+  .ci-line.shake{animation:cishake .3s}
+  @keyframes cishake{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+
+  .ritual{display:grid;gap:8px;margin:12px 0}
+  .rit{display:grid;grid-template-columns:36px 1fr;gap:12px;background:var(--surface2);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px 14px;font-size:.9rem}
+  .rit .r-n{font-family:'JetBrains Mono',monospace;font-weight:800;color:var(--accent5);font-size:1.1rem}
+  .rit p{color:var(--text-dim);font-size:.84rem;margin:2px 0 0}
+  .ap{background:rgba(255,71,87,.05);border:1px solid rgba(255,71,87,.2);border-radius:14px;padding:14px 18px;margin:10px 0}
+  .ap h4{font-size:.98rem;margin-bottom:6px}
+  .ap p{font-size:.88rem;color:var(--text-dim)}
+  .ap p b{color:var(--accent7)}
+  @media (prefers-reduced-motion: reduce){.pw-chip,.pw-cand,.mc-block,.lp-step,.agent-card,.ps-toggle button,.ci-line{transition:none;animation:none}}
+</style>
+</head>
+<body data-page="Cap 0 — Como um agente pensa">
+
+<div class="bg-grid"></div>
+<div class="bg-orbs"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+<div class="progress-track"><div class="progress-bar"></div></div>
+
+<button type="button" class="cap-sound-mini" data-cap-audio aria-pressed="true" aria-label="Alternar modo mudo do capítulo">🔇 Modo mudo ativado</button>
+<button class="menu-toggle" onclick="openSidebar()" aria-label="Abrir menu">☰</button>
+<div class="sidebar-overlay"></div>
+<nav class="sidebar-nav">
+  <button class="sidebar-close" onclick="closeSidebar()" aria-label="Fechar">✕</button>
+  <div class="sidebar-header">
+    <h3>🧠 Cap 0 · pré</h3>
+    <a class="sidebar-back" href="../../">← voltar ao hub</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Leia antes do Sáb 1</div>
+    <div class="sidebar-link" onclick="goTo('s-porque')"><span class="dot" style="background:var(--java)"></span> Por que abrir o capô</div>
+    <div class="sidebar-link" onclick="goTo('s-treinamento')"><span class="dot"></span> 🚚 Como o modelo aprende</div>
+    <div class="sidebar-link" onclick="goTo('s-finetuning')"><span class="dot"></span> 🎛️ Fine-tuning</div>
+    <div class="sidebar-link" onclick="goTo('s-llm')"><span class="dot" style="background:var(--ai)"></span> 🔮 O LLM por dentro</div>
+    <div class="sidebar-link" onclick="goTo('s-contexto')"><span class="dot" style="background:var(--accent5)"></span> 📦 Contexto &amp; alucinação</div>
+    <div class="sidebar-link" onclick="goTo('s-rag')"><span class="dot"></span> 🔎 RAG: buscar fontes</div>
+    <div class="sidebar-link" onclick="goTo('s-agente')"><span class="dot" style="background:var(--ai)"></span> 🦾 Do chat ao agente</div>
+    <div class="sidebar-link" onclick="goTo('s-harness')"><span class="dot"></span> 🧰 Harness</div>
+    <div class="sidebar-link" onclick="goTo('s-anatomia')"><span class="dot" style="background:var(--claude)"></span> 🧩 Anatomia do agente</div>
+    <div class="sidebar-link" onclick="goTo('s-mcp')"><span class="dot"></span> 🔌 MCP</div>
+    <div class="sidebar-link" onclick="goTo('s-memoria')"><span class="dot" style="background:var(--claude)"></span> 📄 CLAUDE.md × AGENTS.md</div>
+    <div class="sidebar-link" onclick="goTo('s-mercado')"><span class="dot" style="background:var(--accent4)"></span> 🗺️ Como comparar agentes</div>
+    <div class="sidebar-link" onclick="goTo('s-sdd')"><span class="dot" style="background:var(--spring)"></span> 📝 SDD e o ritual de revisão</div>
+    <div class="sidebar-link" onclick="goTo('s-anti')"><span class="dot" style="background:var(--bug)"></span> 🐛 Erros recorrentes</div>
+    <div class="sidebar-link" onclick="goTo('s-prancheta')"><span class="dot" style="background:var(--accent6)"></span> 📐 Desenhe o loop</div>
+    <div class="sidebar-link" onclick="goTo('s-resumo')"><span class="dot" style="background:var(--spring)"></span> Resumo e o que trazer</div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-icons" data-motion="float">🧠 🤖 ☕</div>
+  <span class="hero-badge" style="background:linear-gradient(135deg,var(--claude),var(--ai))">Capítulo 0 · leitura antes do Sábado 1 · leia e pratique no seu ritmo</span>
+  <h1>Como um agente pensa</h1>
+  <p class="subtitle">Comece do zero em IA: o que é um modelo, como ele aprende e como produz uma resposta. Depois, descubra como orientar um agente a trabalhar no seu projeto e conferir o resultado, com exemplos simples de cadastro de produtos.</p>
+  <div class="cap-sound"><button type="button" data-cap-audio aria-pressed="true">🔇 Modo mudo ativado</button><p id="cap-audio-note">Na sala, deixe assim e acompanhe a voz do professor. Animações, jogos e legendas continuam funcionando.</p></div>
+  <div class="hero-stack">
+    <span class="stack-chip" style="border-color:rgba(167,139,250,.45);color:var(--ai)">🔮 LLM</span>
+    <span class="stack-chip" style="border-color:rgba(247,183,49,.4);color:var(--accent5)">📦 contexto</span>
+    <span class="stack-chip" style="border-color:rgba(167,139,250,.45);color:var(--ai)">🔁 loop do agente</span>
+    <span class="stack-chip" style="border-color:rgba(217,119,87,.45);color:var(--claude)"><img src="../../assets/svg/claude.svg" alt="" width="16" height="16"> CLAUDE.md · AGENTS.md</span>
+    <span class="stack-chip" style="border-color:rgba(109,179,63,.45);color:var(--spring)">📝 Especificações (SDD)</span>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- ═══ POR QUÊ ═══ -->
+  <section class="step-section" id="s-porque">
+    <div class="step-header">
+      <div class="step-number sn-java">0</div>
+      <div><div class="step-title">Por que abrir o capô</div><div class="step-sub">Conheça as palavras, depois acompanhe a história.</div></div>
+    </div>
+    <div class="card">
+      <div class="teoria-box"><div class="tb-k">📖 PRIMEIRO, OS NOMES</div><h4>Você não precisa conhecer IA para acompanhar</h4><p>Pense num assistente que ajuda a escrever e revisar um cadastro de produtos. Ele recebe seu pedido, produz uma resposta e pode usar ferramentas para trabalhar nos arquivos. Vamos entender cada peça antes de pedir que ele faça algo sozinho.</p></div>
+      <div class="glossary-start">
+        <div><b>IA — inteligência artificial</b><br>Nome amplo para sistemas que realizam tarefas como reconhecer padrões, gerar texto ou ajudar a tomar decisões. Aqui vamos estudar modelos de linguagem.</div>
+        <div><b>Modelo</b><br>Um sistema de cálculos ajustado durante o treinamento. Ele usa padrões aprendidos para produzir saídas, como uma resposta em texto.</div>
+        <div><b>Prompt</b><br>A mensagem ou instrução que você envia: “Explique este código” é um prompt. Ele faz parte das informações usadas na resposta.</div>
+        <div><b>Spec — especificação</b><br>Um texto que descreve o que deve acontecer e como conferir. Exemplo: “Não salvar produto com preço negativo; verificar com -500 centavos”. Vamos construir uma mais adiante.</div>
+      </div>
+      <p><strong>Agente</strong> é o sistema que combina modelo, ferramentas e um ciclo de ações. <strong>Projeto</strong> é o conjunto de arquivos do programa; quando esses arquivos estão organizados com histórico de versões, você também ouvirá “repositório”.</p>
+      <div class="learning-route"><b>Nosso caminho:</b> conhecer os nomes → ver o treinamento → acompanhar uma resposta → entender contexto e erros → usar ferramentas → escrever uma especificação → revisar a entrega.</div>
+      <p style="margin-top:16px">Nos exemplos, o preço é um inteiro em centavos: <code>1000</code> significa R$ 10,00. Negativos serão recusados; zero será permitido. <strong>Teste</strong> é uma verificação: escolher uma entrada e comparar o resultado com o que esperamos.</p>
+      <div class="quiz"><div class="quiz-q">🔥 O cadastro aceitou um produto de preço negativo. O agente disse “testes passando”. O que você faz?</div><div class="quiz-options"><button class="quiz-opt" onclick="checkQuiz(this,false)">Aceito: o teste verde prova tudo.</button><button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Confiro a regra, o código alterado e um teste com preço negativo.</button><button class="quiz-opt" onclick="checkQuiz(this,false)">Troco de ferramenta sem investigar.</button></div><div class="quiz-feedback" data-correct="Essa é uma investigação verificável." data-wrong="Esse passo não mostra por que o erro ocorreu." data-explain="O teste pode ter usado apenas um preço válido. Precisamos observar o caso que viola a regra, antes de concluir a causa."></div></div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+<section class="step-section" id="s-treinamento"><div class="step-header"><div class="step-number sn-yellow">🚚</div><div><div class="step-title">Antes da conversa: como o modelo aprende</div><div class="step-sub">Dados de exemplo, ajustes internos e uso do modelo são etapas diferentes</div></div></div><div class="card"><div class="teoria-box"><h4>Como ele aprendeu a completar frases?</h4><p>O aplicativo é a interface onde você conversa; o modelo é o sistema que produz a resposta. Uma interface pode oferecer modelos diferentes. Antes de você fazer uma pergunta, existe uma fase de <strong>treinamento</strong>. O modelo pratica com exemplos e um algoritmo ajusta seus cálculos. Depois, durante o uso, ele recebe sua mensagem e produz uma resposta. Vamos separar as duas situações.</p></div>
+<div class="lab" id="lab-treino" data-lab="treino"><div class="lab-tag">A GARAGEM E A FÁBRICA</div><h3>Uma viagem pelo treinamento</h3><p class="lab-fine">O caminhão representa uma família; os livros representam exemplos de treinamento. As dimensões não medem parâmetros, dados de treinamento, memória ou desempenho. Não representam “toda a internet”.</p><noscript>Treinamento usa exemplos para ajustar parâmetros. Depois há ajustes de comportamento e avaliações. Durante o uso, o modelo gera respostas com o contexto, sem ser treinado novamente a cada mensagem.</noscript><div class="truck-garage" role="group" aria-label="Escolha uma família de modelos"><button type="button" class="truck-choice" data-truck="0" aria-pressed="true"><svg viewBox="0 0 340 140" aria-hidden="true"><g transform="translate(59.49999999999999 43.75) scale(0.65)"><rect x="15" y="18" width="217" height="86" rx="7" fill="#467e83" stroke="#ecddf5" stroke-width="2"/><path d="M238 53h47l35 30v31h-82z" fill="#467e83" stroke="#ecddf5" stroke-width="2"/><path d="M250 61h30l22 21h-52z" fill="#b9e9ef"/><rect x="9" y="101" width="317" height="12" rx="3" fill="#d0c8d8"/><rect class="truck-book" x="30" y="40" width="17" height="51" rx="2" fill="#efca7f"/><path d="M34 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="54" y="45" width="17" height="46" rx="2" fill="#d5b8f5"/><path d="M58 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="78" y="50" width="17" height="41" rx="2" fill="#a1d8c3"/><path d="M82 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="102" y="40" width="17" height="51" rx="2" fill="#efca7f"/><path d="M106 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="126" y="45" width="17" height="46" rx="2" fill="#d5b8f5"/><path d="M130 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="150" y="50" width="17" height="41" rx="2" fill="#a1d8c3"/><path d="M154 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="174" y="40" width="17" height="51" rx="2" fill="#efca7f"/><path d="M178 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="198" y="45" width="17" height="46" rx="2" fill="#d5b8f5"/><path d="M202 50v31" stroke="#39324a" opacity=".4"/><circle cx="66" cy="115" r="18" fill="#161b29" stroke="#aeb7c4" stroke-width="5"/><circle cx="199" cy="115" r="18" fill="#161b29" stroke="#aeb7c4" stroke-width="5"/><circle cx="283" cy="115" r="18" fill="#161b29" stroke="#aeb7c4" stroke-width="5"/><circle cx="67" cy="115" r="6" fill="#9c8cad"/><circle cx="283" cy="115" r="6" fill="#9c8cad"/></g></svg><b>Haiku</b><small>Rapidez</small></button><button type="button" class="truck-choice" data-truck="1" aria-pressed="false"><svg viewBox="0 0 340 140" aria-hidden="true"><g transform="translate(33.99999999999999 24.999999999999993) scale(0.8)"><rect x="15" y="18" width="217" height="86" rx="7" fill="#7770ae" stroke="#ecddf5" stroke-width="2"/><path d="M238 53h47l35 30v31h-82z" fill="#7770ae" stroke="#ecddf5" stroke-width="2"/><path d="M250 61h30l22 21h-52z" fill="#b9e9ef"/><rect x="9" y="101" width="317" height="12" rx="3" fill="#d0c8d8"/><rect class="truck-book" x="30" y="40" width="17" height="51" rx="2" fill="#efca7f"/><path d="M34 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="54" y="45" width="17" height="46" rx="2" fill="#d5b8f5"/><path d="M58 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="78" y="50" width="17" height="41" rx="2" fill="#a1d8c3"/><path d="M82 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="102" y="40" width="17" height="51" rx="2" fill="#efca7f"/><path d="M106 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="126" y="45" width="17" height="46" rx="2" fill="#d5b8f5"/><path d="M130 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="150" y="50" width="17" height="41" rx="2" fill="#a1d8c3"/><path d="M154 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="174" y="40" width="17" height="51" rx="2" fill="#efca7f"/><path d="M178 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="198" y="45" width="17" height="46" rx="2" fill="#d5b8f5"/><path d="M202 50v31" stroke="#39324a" opacity=".4"/><circle cx="66" cy="115" r="18" fill="#161b29" stroke="#aeb7c4" stroke-width="5"/><circle cx="199" cy="115" r="18" fill="#161b29" stroke="#aeb7c4" stroke-width="5"/><circle cx="283" cy="115" r="18" fill="#161b29" stroke="#aeb7c4" stroke-width="5"/><circle cx="67" cy="115" r="6" fill="#9c8cad"/><circle cx="283" cy="115" r="6" fill="#9c8cad"/></g></svg><b>Sonnet</b><small>Equilíbrio</small></button><button type="button" class="truck-choice" data-truck="2" aria-pressed="false"><svg viewBox="0 0 340 140" aria-hidden="true"><g transform="translate(8.500000000000007 6.250000000000005) scale(0.95)"><rect x="15" y="18" width="217" height="86" rx="7" fill="#b27c46" stroke="#ecddf5" stroke-width="2"/><path d="M238 53h47l35 30v31h-82z" fill="#b27c46" stroke="#ecddf5" stroke-width="2"/><path d="M250 61h30l22 21h-52z" fill="#b9e9ef"/><rect x="9" y="101" width="317" height="12" rx="3" fill="#d0c8d8"/><rect class="truck-book" x="30" y="40" width="17" height="51" rx="2" fill="#efca7f"/><path d="M34 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="54" y="45" width="17" height="46" rx="2" fill="#d5b8f5"/><path d="M58 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="78" y="50" width="17" height="41" rx="2" fill="#a1d8c3"/><path d="M82 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="102" y="40" width="17" height="51" rx="2" fill="#efca7f"/><path d="M106 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="126" y="45" width="17" height="46" rx="2" fill="#d5b8f5"/><path d="M130 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="150" y="50" width="17" height="41" rx="2" fill="#a1d8c3"/><path d="M154 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="174" y="40" width="17" height="51" rx="2" fill="#efca7f"/><path d="M178 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="198" y="45" width="17" height="46" rx="2" fill="#d5b8f5"/><path d="M202 50v31" stroke="#39324a" opacity=".4"/><circle cx="66" cy="115" r="18" fill="#161b29" stroke="#aeb7c4" stroke-width="5"/><circle cx="199" cy="115" r="18" fill="#161b29" stroke="#aeb7c4" stroke-width="5"/><circle cx="283" cy="115" r="18" fill="#161b29" stroke="#aeb7c4" stroke-width="5"/><circle cx="67" cy="115" r="6" fill="#9c8cad"/><circle cx="283" cy="115" r="6" fill="#9c8cad"/></g></svg><b>Opus</b><small>Trabalho complexo</small></button><button type="button" class="truck-choice" data-truck="3" aria-pressed="false"><svg viewBox="0 0 340 140" aria-hidden="true"><g transform="translate(0 0) scale(1)"><rect x="15" y="18" width="217" height="86" rx="7" fill="#945c7c" stroke="#ecddf5" stroke-width="2"/><path d="M238 53h47l35 30v31h-82z" fill="#945c7c" stroke="#ecddf5" stroke-width="2"/><path d="M250 61h30l22 21h-52z" fill="#b9e9ef"/><rect x="9" y="101" width="317" height="12" rx="3" fill="#d0c8d8"/><rect class="truck-book" x="30" y="40" width="17" height="51" rx="2" fill="#efca7f"/><path d="M34 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="54" y="45" width="17" height="46" rx="2" fill="#d5b8f5"/><path d="M58 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="78" y="50" width="17" height="41" rx="2" fill="#a1d8c3"/><path d="M82 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="102" y="40" width="17" height="51" rx="2" fill="#efca7f"/><path d="M106 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="126" y="45" width="17" height="46" rx="2" fill="#d5b8f5"/><path d="M130 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="150" y="50" width="17" height="41" rx="2" fill="#a1d8c3"/><path d="M154 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="174" y="40" width="17" height="51" rx="2" fill="#efca7f"/><path d="M178 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="198" y="45" width="17" height="46" rx="2" fill="#d5b8f5"/><path d="M202 50v31" stroke="#39324a" opacity=".4"/><circle cx="66" cy="115" r="18" fill="#161b29" stroke="#aeb7c4" stroke-width="5"/><circle cx="199" cy="115" r="18" fill="#161b29" stroke="#aeb7c4" stroke-width="5"/><circle cx="283" cy="115" r="18" fill="#161b29" stroke="#aeb7c4" stroke-width="5"/><circle cx="67" cy="115" r="6" fill="#9c8cad"/><circle cx="283" cy="115" r="6" fill="#9c8cad"/></g></svg><b>Fable</b><small>Projetos exigentes</small></button></div><h4 class="lab-title" data-lab-title></h4><div class="truck-road"><span class="road-label">ENCENAÇÃO DO PROCESSO · <span id="truck-name">HAIKU</span></span><div class="hero-truck" id="hero-truck"><svg viewBox="0 0 340 140" aria-hidden="true"><g transform="translate(59.49999999999999 43.75) scale(0.65)"><rect x="15" y="18" width="217" height="86" rx="7" fill="#467e83" stroke="#ecddf5" stroke-width="2"/><path d="M238 53h47l35 30v31h-82z" fill="#467e83" stroke="#ecddf5" stroke-width="2"/><path d="M250 61h30l22 21h-52z" fill="#b9e9ef"/><rect x="9" y="101" width="317" height="12" rx="3" fill="#d0c8d8"/><rect class="truck-book" x="30" y="40" width="17" height="51" rx="2" fill="#efca7f"/><path d="M34 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="54" y="45" width="17" height="46" rx="2" fill="#d5b8f5"/><path d="M58 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="78" y="50" width="17" height="41" rx="2" fill="#a1d8c3"/><path d="M82 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="102" y="40" width="17" height="51" rx="2" fill="#efca7f"/><path d="M106 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="126" y="45" width="17" height="46" rx="2" fill="#d5b8f5"/><path d="M130 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="150" y="50" width="17" height="41" rx="2" fill="#a1d8c3"/><path d="M154 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="174" y="40" width="17" height="51" rx="2" fill="#efca7f"/><path d="M178 50v31" stroke="#39324a" opacity=".4"/><rect class="truck-book" x="198" y="45" width="17" height="46" rx="2" fill="#d5b8f5"/><path d="M202 50v31" stroke="#39324a" opacity=".4"/><circle cx="66" cy="115" r="18" fill="#161b29" stroke="#aeb7c4" stroke-width="5"/><circle cx="199" cy="115" r="18" fill="#161b29" stroke="#aeb7c4" stroke-width="5"/><circle cx="283" cy="115" r="18" fill="#161b29" stroke="#aeb7c4" stroke-width="5"/><circle cx="67" cy="115" r="6" fill="#9c8cad"/><circle cx="283" cy="115" r="6" fill="#9c8cad"/></g></svg></div><div class="truck-packets" aria-hidden="true"><i>📘</i><i>📄</i><i>⌨</i></div><div class="truck-factory"><span id="factory-icon">🏭</span><b id="factory-title">Treinamento</b><small id="factory-note">Dados → cálculos ajustados</small></div></div><div class="train-state" id="train-state"></div><div id="parameter-map" class="parameter-map" hidden></div><div class="lab-narration"><b data-lab-speaker></b><p data-lab-line></p></div><div class="lab-detail" data-lab-detail></div><div class="lab-controls"><button type="button" data-lab-play disabled>▶ Ouvir / assistir</button><button type="button" data-lab-back>← Voltar</button><button type="button" data-lab-next>Próximo passo →</button><button type="button" data-lab-reset disabled>↺ Recomeçar</button><span data-lab-progress></span></div></div>
+<div class="ct-concepts"><div><b>Treinamento</b><p>Aprender com exemplos: o algoritmo modifica parâmetros, números internos que influenciam o comportamento do modelo.</p></div><div><b>Uso ou inferência</b><p>Produzir uma resposta com o modelo já treinado e com as informações disponíveis naquela interação.</p></div><div><b>Consulta a fontes</b><p>Buscar um arquivo ou uma página por uma ferramenta. Ter essa informação no contexto não é a mesma coisa que treinar novamente o modelo.</p></div></div>
+<p>A Anthropic descreve pré-treinamento com dados diversos e ajustes posteriores para o comportamento de assistente. A mistura de dados e os métodos dependem da versão. Isso não significa acesso a toda informação existente. <a href="https://www.anthropic.com/transparency/model-report" target="_blank" rel="noopener noreferrer">Relatórios de treinamento ↗</a></p>
+<p class="lab-fine">Famílias consultadas em 04/09/2026: <a href="https://www.anthropic.com/claude/haiku">Haiku</a>, <a href="https://www.anthropic.com/claude/sonnet">Sonnet</a>, <a href="https://www.anthropic.com/claude/opus">Opus</a> e <a href="https://www.anthropic.com/claude/fable">Fable</a>. Os rótulos resumem propostas de uso; não garantem acerto nem uma ordem universal de capacidade.</p>
+<details class="ct-solution"><summary>👀 Conferiu? Treinar e responder são a mesma coisa?</summary><p>Não. Treinar ajusta o modelo. Responder usa o modelo com o contexto atual. Um documento recém-lido pode ajudar na resposta sem se tornar uma nova lembrança permanente nos parâmetros.</p></details></div></section><div class="section-connector"><div class="line"></div></div>
+<section class="step-section" id="s-finetuning"><div class="step-header"><div class="step-number sn-yellow">🎛️</div><div><div class="step-title">Fine-tuning: um ajuste adicional</div><div class="step-sub">Treinar com exemplos é diferente de fornecer informação para uma resposta</div></div></div><div class="card"><div class="teoria-box"><h4>Consultar uma informação ou mudar o modelo?</h4><p>O cadastro ganhou mensagens de atendimento: “quero saber o preço” e “não consigo salvar”. Você quer classificá-las como <code>DÚVIDA</code> ou <code>PROBLEMA</code>. Primeiro pode tentar instruções claras e alguns exemplos no pedido. Se isso não atender ao objetivo, uma opção a avaliar é o <strong>fine-tuning</strong>, ou ajuste fino.</p><p>Fine-tuning é treinamento adicional de um modelo já treinado, com exemplos selecionados. Ele ajusta parâmetros do modelo ou parâmetros adicionais, conforme a técnica. Não é simplesmente anexar um documento a uma conversa.</p></div>
+<div class="peca" id="peca-tuning" data-peca="tuning"><div class="p-label">DOIS CAMINHOS PARA COMPARAR</div><h3>Catálogo de hoje ou exemplos para treinar?</h3><div class="p-controls"><button type="button" data-tuning="consulta">Consultar o preço de hoje</button><button type="button" data-tuning="treino">Adaptar a classificação</button></div><div class="p-columns"><div class="p-route" id="tuning-input"></div><div class="p-route" id="tuning-output"></div></div><div class="p-memory" id="tuning-memory"></div><div class="p-controls"><button type="button" id="tuning-eval" hidden>Avaliar em mensagens novas</button><button type="button" id="tuning-reset">Recomeçar comparação</button></div><div class="p-narration"><b data-p-speaker></b><p data-p-line></p></div><div class="p-controls"><button type="button" class="p-voice" data-p-voice disabled>Ouvir explicação</button><span class="p-voice-note">O modo mudo do capítulo vale aqui também.</span></div><p class="lab-fine">Comparação ilustrativa. Nenhum modelo é treinado aqui; resultados não são medições de um provedor.</p></div><p>Treinar exige exemplos de qualidade e avaliação em dados separados. Não presuma que melhora qualquer tarefa. Informação que muda diariamente, como preço ou estoque, pede uma fonte atualizada; a consulta pode ser usada com um modelo ajustado também. <a href="https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/tune-models" target="_blank" rel="noopener noreferrer">Referência sobre ajuste de modelos ↗</a></p></div></section><div class="section-connector"><div class="line"></div></div>
+  <!-- ═══ LLM ═══ -->
+  <section class="step-section" id="s-llm">
+    <div class="step-header">
+      <div class="step-number" style="background:var(--ai)">🔮</div>
+      <div><div class="step-title">O LLM por dentro</div><div class="step-sub">Como o contexto ajuda o modelo a prever o próximo pedaço de texto</div></div>
+    </div>
+    <div class="card">
+      <p>
+        ChatGPT, Claude, Gemini: por trás de todos há um <strong>LLM</strong> (<em>Large Language Model</em>, ou grande modelo de linguagem) fazendo uma
+        geração de texto passo a passo: dado o contexto (as informações disponíveis nesta interação) e o que já foi escrito, o modelo calcula possibilidades para o <strong>próximo token</strong>.
+        Um token é um pedaço de texto: pode ser uma palavra, parte dela, um espaço ou sinal de pontuação. O sistema escolhe um, acrescenta à resposta e repete o processo.
+      </p>
+      <p style="margin-top:10px">
+        Pense num recurso de completar texto automaticamente, o autocomplete que considera a conversa inteira disponível. Na animação, acompanhe a pergunta de Lia,
+        o balão de Beto e a bancada da LLM. Depois mude o contexto e veja por que uma continuação plausível não é garantia de verdade.
+      </p>
+      <div id="llm-teatro" class="lt" aria-label="Animação didática: a oficina de falas">
+        <div class="lt-heading"><span>UM PEDACINHO DE CADA VEZ</span><h3>A oficina de falas</h3><p>Lia pergunta. Beto responde. Abra os bastidores do autocomplete.</p></div>
+        <div class="lt-scenes" role="group" aria-label="Escolha uma história">
+          <button type="button" data-scene="0" aria-pressed="true">01 · Hora do café</button>
+          <button type="button" data-scene="1" aria-pressed="false">02 · Mudou o contexto!</button>
+          <button type="button" data-scene="2" aria-pressed="false">03 · Parece verdade…</button>
+        </div>
+        <div class="lt-stage">
+          <div class="lt-person lt-lia"><div class="lt-bubble" id="lt-question"></div><div class="lt-avatar" aria-hidden="true"><div class="lt-hair"></div><div class="lt-face"><i></i><i></i><b></b></div><div class="lt-body"></div><div class="lt-arm"></div></div><strong>Lia</strong><span>traz o contexto</span></div>
+          <div class="lt-between" aria-hidden="true"><span>CONVERSA</span><div>·················</div><span>↓ vira entrada ↓</span></div>
+          <div class="lt-person lt-beto"><div class="lt-bubble" id="lt-answer"></div><div class="lt-avatar" aria-hidden="true"><div class="lt-hair"></div><div class="lt-face"><i></i><i></i><b></b></div><div class="lt-body"></div><div class="lt-arm"></div></div><strong>Beto</strong><span>fala gerada pela LLM</span></div>
+        </div>
+        <div class="lt-workshop">
+          <div class="lt-bot-wrap"><div class="lt-bot" aria-hidden="true"><div class="lt-antenna"></div><div class="lt-screen">•‿•</div><div class="lt-bot-feet">▰ ▰</div></div><strong>Tico · a LLM</strong><span>“O que pode vir agora?”</span></div>
+          <div class="lt-desk"><div class="lt-label">1 · LEIO O QUE JÁ TENHO</div><div class="lt-context" id="lt-context"></div><div class="lt-label">2 · CALCULO POSSIBILIDADES</div><div id="lt-options" class="lt-options"></div><div class="lt-label" id="lt-action">3 · ESCOLHO UM PEDAÇO E REPITO</div></div>
+        </div>
+        <div class="lt-caption" id="lt-caption" role="status" aria-live="polite"></div>
+        <div class="lt-voice" id="lt-voice" hidden><span class="lt-speaking" id="lt-speaking">Três personagens, três vozes</span><span id="lt-subtitle">Aperte Assistir para ouvir a conversa.</span></div>
+        <div class="lt-controls"><button type="button" id="lt-play">▶ Assistir</button><button type="button" id="lt-step">Um passo →</button><button type="button" id="lt-reset">↺ Recomeçar</button><button type="button" id="lt-sound" hidden aria-pressed="true">🔊 Vozes ligadas</button><span id="lt-progress"></span></div>
+        <p class="lt-footnote">Teatro didático: Beto representa a resposta do modelo. Os percentuais e as divisões em pedaços são ilustrativos, não uma medição real. Tokens podem ser palavras, partes de palavras, espaços ou pontuação. A escolha pode usar amostragem: nem sempre vence o mais provável.</p>
+        <noscript>Ative o JavaScript para assistir. O ciclo é: ler o contexto, calcular possibilidades para o próximo token, escolher um token, acrescentá-lo à resposta e repetir.</noscript>
+      </div>
+      <div class="teoria-box">
+        <div class="tb-k">📖 pausa teórica</div>
+        <h4>"Mas ele raciocina?"</h4>
+        <p>Para o nosso uso, a pergunta certa é outra: <strong>ele produz texto plausível</strong>. Prever muito bem exige capturar
+        padrões de linguagem e código (gramática, lógica, estilo e formas comuns de programar), então o resultado muitas vezes funciona como
+        raciocínio. O que importa nesta aula é conseguir verificar os passos e o resultado, em vez de aceitar a aparência de uma explicação.
+        Uma resposta plausível pode estar correta ou não; a aparência do texto, sozinha, não distingue os dois casos.</p>
+        <p>Consequência prática para quem revisa: <strong>o código do agente vem com a cara de quem sabe o que está fazendo, mesmo
+        quando não sabe</strong>. Você não pode usar a confiança do texto como sinal de qualidade. Só o critério (a spec, o
+        teste, o padrão do projeto) serve de sinal.</p>
+      </div>
+      <div class="jogo" id="jogo-tokens" data-game="tokens">
+        <div class="jg-kicker">EM SALA · JOGUE EM DUPLA</div><h3>Pilotando o próximo token</h3>
+        <p class="jg-intro">Vocês assumem o controle da geração: leiam o contexto, apliquem a regra da rodada e confirmem uma escolha. Só depois o mecanismo é revelado.</p><p class="jg-note">10 pontos por decisão correta, sem bônus de velocidade. Distribuições, bilhetes e divisões em pedaços são didáticos, não medições de uma LLM real. Cada dupla joga neste navegador. O placar é local à partida, sem sincronização entre dispositivos; ao recarregar, começa de novo.</p>
+        <div class="jg-bar">5 rodadas · 50 pontos · 5–8 minutos</div>
+        <button type="button" class="jg-primary" data-start>Começar o jogo</button><div class="jg-body"></div>
+        <noscript>Ative o JavaScript para jogar. Em sala, discutam as decisões em duplas e justifiquem as respostas.</noscript>
+      </div>
+      <div class="note" data-note="cap00/llm" data-title="Anotações — LLM" data-placeholder="Onde você já viu o agente 'completar bonito' sem saber? Que padrão do seu projeto ele nunca vai adivinhar sozinho?"></div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══ CONTEXTO ═══ -->
+  <section class="step-section" id="s-contexto">
+    <div class="step-header">
+      <div class="step-number sn-yellow">📦</div>
+      <div><div class="step-title">Contexto e alucinação</div><div class="step-sub">O que está na mesa, o que ficou de fora e o que precisa de prova</div></div>
+    </div>
+    <div class="card">
+      <div class="teoria-box">
+        <div class="tb-k">📖 a história antes do conceito</div>
+        <h4>“Mas eu já tinha explicado isso!”</h4>
+        <p>Você combinou que o cadastro recusaria preços negativos. O agente seguiu a regra, ajudou em outras tarefas e, muito depois,
+        entregou uma versão que aceita um produto com preço de -500 centavos. Sua primeira reação é: “ele esqueceu”.
+        Antes de repetir a instrução em letras maiúsculas, investigue: <strong>a regra ainda estava disponível?
+        Havia outra instrução contradizendo? Ou ela estava presente e mesmo assim foi descumprida?</strong></p>
+        <p>Agora imagine outro erro: ele sugere um método que não existe na classe do projeto. O contexto pode estar curto,
+        organizado e completo — e a sugestão ainda assim ser inventada. Os dois problemas se parecem na tela,
+        mas pedem diagnósticos diferentes. Vamos abrir os bastidores.</p>
+      </div>
+
+      <div id="contexto-teatro" class="lt ct" aria-label="Teatro: a mesa do Tico">
+        <div class="lt-heading"><span>O QUE ESTÁ NA MESA AGORA?</span><h3>A mesa do Tico</h3><p>Uma regra perdida, um resgate e um método suspeito.</p></div>
+        <div class="lt-scenes" role="group" aria-label="Escolha um ato do teatro de contexto">
+          <button type="button" data-ct-scene="0" aria-pressed="true">01 · A regra sumiu</button>
+          <button type="button" data-ct-scene="1" aria-pressed="false">02 · De volta à mesa</button>
+          <button type="button" data-ct-scene="2" aria-pressed="false">03 · Soa certo. É certo?</button>
+        </div>
+        <div class="ct-stage">
+          <div class="ct-dialogue"><strong id="ct-speaker">Lia</strong><p id="ct-line"></p></div>
+          <div class="ct-crew">
+            <div class="lt-person lt-lia" data-character="LIA"><div class="lt-avatar" aria-hidden="true"><div class="lt-hair"></div><div class="lt-face"><i></i><i></i><b></b></div><div class="lt-body"></div><div class="lt-arm"></div></div><strong>Lia</strong><span>dirige e revisa</span></div>
+            <div class="lt-bot-wrap" data-character="LLM"><div class="lt-bot" aria-hidden="true"><div class="lt-antenna"></div><div class="lt-screen">•‿•</div><div class="lt-bot-feet">▰ ▰</div></div><strong>Tico</strong><span>abre os bastidores</span></div>
+            <div class="lt-person lt-beto" data-character="BETO"><div class="lt-avatar" aria-hidden="true"><div class="lt-hair"></div><div class="lt-face"><i></i><i></i><b></b></div><div class="lt-body"></div><div class="lt-arm"></div></div><strong>Beto</strong><span>experimenta</span></div>
+          </div>
+        </div>
+        <div class="ct-desk">
+          <div class="ct-desk-title"><strong>CONTEXTO ATUAL</strong><span id="ct-capacity-label"></span></div>
+          <div id="ct-capacity" class="ct-capacity" aria-hidden="true"></div>
+          <div id="ct-cards" class="ct-cards"></div>
+          <div class="ct-shelf"><b>🗂️ FORA DA MESA</b><span id="ct-shelf"></span></div>
+        </div>
+        <div class="ct-observation"><span id="ct-status"></span><p id="ct-result"></p></div>
+        <div class="lt-controls"><button type="button" id="ct-play">▶ Assistir</button><button type="button" id="ct-step" title="Avanço manual, sem áudio">Um passo →</button><button type="button" id="ct-reset">↺ Recomeçar</button><button type="button" id="ct-sound" aria-pressed="true" hidden>🔊 Vozes ligadas</button><span id="ct-progress"></span></div>
+        <p class="lt-footnote">Diff significa a comparação do código antes e depois da alteração. Encenação: a mesa representa o contexto disponível nesta etapa. As oito unidades do medidor são ilustrativas, não tokens reais. O resumo que perde uma regra é um cenário possível, não o comportamento obrigatório de todo agente. As falas também estão escritas nos balões.</p>
+        <noscript>O ciclo apresentado é: selecionar o contexto, preservar regras em arquivos, relê-las quando necessário e verificar as respostas com fontes, execução e revisão.</noscript>
+      </div>
+
+      <div class="ct-explain">
+        <div class="tb-k">📦 1 · a mesa não é a biblioteca</div>
+        <h4>Treinamento, contexto e arquivos são coisas diferentes</h4>
+        <p>O modelo traz padrões aprendidos no treinamento. Para responder agora, ele também usa o conteúdo fornecido
+        na interação. No agente, essa entrada pode incluir instruções, mensagens e resultados de ferramentas.
+        <strong>Ter um arquivo no projeto não significa que seu conteúdo já esteja no contexto.</strong>
+        Ler o arquivo é uma ação; o resultado da leitura pode então alimentar a próxima resposta.</p>
+        <div class="ct-concepts">
+          <div><b>📚 Padrões aprendidos</b><p>Conhecimento incorporado ao modelo durante treinamento. Não é uma consulta automática à versão atual do seu projeto.</p></div>
+          <div><b>🧾 Contexto atual</b><p>Informação disponibilizada para esta geração: pedido, instruções, trechos da conversa, arquivos lidos e saídas de ferramentas.</p></div>
+          <div><b>🗂️ Fontes persistentes</b><p>Arquivos, specs e registros que continuam no disco. Podem ser consultados novamente; precisam ser encontrados e carregados.</p></div>
+        </div>
+        <p>A janela tem um limite, que varia por modelo e configuração. Não existe uma quantidade universal de mensagens
+        ou de arquivos que “cabe”. Um log enorme pode custar mais contexto que muitas mensagens curtas.
+        <strong>Caber também não garante que a informação seja bem utilizada.</strong></p>
+      </div>
+
+      <div class="ct-explain">
+        <div class="tb-k">🧭 2 · diagnosticar antes de repetir</div>
+        <h4>Três maneiras de uma instrução deixar de ajudar</h4>
+        <div class="ct-concepts">
+          <div><b>Não entrou</b><p>A regra estava num arquivo que não foi lido. Peça a leitura do arquivo relevante e confira qual restrição foi identificada.</p></div>
+          <div><b>Não foi preservada</b><p>Uma sessão longa pode ser resumida ou ter partes removidas, conforme a ferramenta. Confira se o resumo reteve as decisões e os limites da tarefa.</p></div>
+          <div><b>Entrou, mas não foi seguida</b><p>Instruções ambíguas, conflitantes ou pouco destacadas podem atrapalhar. O modelo também pode errar mesmo com a regra clara. Revise e teste.</p></div>
+        </div>
+        <p>Compactar é trocar um histórico detalhado por uma representação menor. Pode ajudar a continuar o trabalho,
+        mas o resumo é uma seleção. <strong>“Implementamos Produtos” não preserva “não aceitar preço negativo”.</strong>
+        Por isso, decisões importantes merecem registro verificável fora da conversa.</p>
+        <div class="ct-callout"><b>Evite duas conclusões automáticas:</b> “o modelo apagou tudo que era antigo” e
+        “se eu mandar o repositório inteiro, ele não erra”. O mecanismo de contexto depende da ferramenta, e quantidade não substitui seleção.</div>
+      </div>
+
+      <div class="ct-explain">
+        <div class="tb-k">📄 3 · persistir, carregar, conferir</div>
+        <h4>O arquivo de instruções é um ponto de recuperação</h4><p>Um arquivo <code>.md</code> guarda texto em Markdown, com marcações simples como <code>#</code> para títulos. A pasta <code>.specs/</code> reúne as especificações das tarefas neste curso. Mais adiante, você vai criar essa pasta na <a href="#lab-sdd">IDE simulada</a>.</p>
+        <p>Um arquivo de instruções guarda orientações gerais do projeto. No Claude Code, <code>CLAUDE.md</code> fornece instruções persistentes e entra no contexto.
+        Ele <strong>consome tokens</strong> e orienta o modelo; não é uma garantia de cumprimento.
+        Confirme o carregamento e mantenha as regras específicas, curtas e coerentes.
+        <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener noreferrer">Como o Claude Code carrega instruções ↗</a></p>
+        <p>No nosso fluxo, convenções recorrentes ficam no arquivo de instruções usado pelo agente;
+        o objetivo e os critérios de aceite (condições para aceitar o resultado) de uma tarefa ficam na spec. Ao retomar um trabalho, peça para ler
+        as fontes relevantes e explicar as restrições antes de propor mudanças.</p>
+        <div class="code-block"><div class="code-header"><span class="filename">Um pedido que recompõe o contexto</span><span class="lang-badge md">prompt</span></div>
+<pre><span class="cm"># Fontes e escopo</span>
+Leia o arquivo de instruções do projeto,
+.specs/cadastrar-produto.md e ProdutoService.java.
+
+<span class="cm"># Antes de alterar</span>
+Liste as regras que se aplicam ao cadastro.
+Se houver conflito ou informação faltando, aponte.
+Proponha uma mudança limitada a esta tarefa.
+
+<span class="cm"># Evidência de pronto</span>
+Mostre o diff e os resultados das verificações.
+Explique como conferiu que um preço negativo é recusado.</pre>
+        </div>
+        <p>Nos exemplos deste capítulo, o preço é um número inteiro em centavos: <code>1000</code> significa R$ 10,00. A regra é recusar negativos; zero é permitido. Confira três entradas: <code>-500</code>, <code>0</code> e <code>1000</code>. <strong>Um teste com preço positivo não prova que negativos serão recusados.</strong></p>
+      </div>
+
+      <div class="ct-explain">
+        <div class="tb-k">🎭 4 · quando a resposta inventa</div>
+        <h4>Alucinação não é só “esquecer a conversa”</h4>
+        <p>Chamamos de alucinação, aqui, uma resposta que apresenta conteúdo inventado ou sem sustentação como se fosse
+        correto. O modelo pode combinar nomes e padrões conhecidos e produzir um método, uma opção ou uma explicação
+        convincente. Ele também pode reconhecer a incerteza: <strong>inventar não é inevitável, mas é um risco a verificar.</strong></p>
+        <p>Imagine que a classe <code>ProdutoService</code> tenha apenas os métodos <code>cadastrar</code> e <code>listar</code>. O agente sugere <code>salvarComDescontoAutomatico()</code>. O nome soa útil, mas esse método não existe nessa classe do exemplo. Abrir o arquivo e compilar permite conferir. Se for necessário criar descontos, primeiro precisamos definir a regra.</p>
+        <p>Para ler os exemplos: <strong>método</strong> é uma operação do código; <strong>biblioteca/dependência</strong> é código pronto usado pelo projeto; <strong>compilar</strong> verifica e traduz o código Java, mas não testa todos os comportamentos. <strong>Diff</strong> é a comparação entre o código anterior e o alterado.</p><div class="ct-table-wrap"><table class="ct-table"><thead><tr><th>O que veio errado?</th><th>Como conferir?</th><th>O que não basta?</th></tr></thead><tbody>
+          <tr><td>Dependência ou método inventado</td><td>Documentação da versão e resolução/compilação.</td><td>O nome parecer familiar.</td></tr>
+          <tr><td>Configuração não suportada</td><td>Documentação, inicialização e comportamento observado.</td><td>A compilação passar.</td></tr>
+          <tr><td>Regra de negócio incorreta</td><td>Spec e testes com casos válidos e inválidos.</td><td>Só o caminho feliz funcionar.</td></tr>
+          <tr><td>Alteração fora do pedido</td><td>Comparar os arquivos alterados com o escopo da tarefa.</td><td>A aplicação subir.</td></tr>
+        </tbody></table></div>
+        <p>Consultar fontes e fornecer contexto pertinente ajuda. Ainda assim, verifique se a fonte sustenta a afirmação
+        e se os testes medem a regra certa. Um teste gerado a partir da mesma suposição errada pode apenas repetir o erro.</p>
+      </div>
+
+      <div class="ct-explain ct-lab">
+        <div class="tb-k">🔬 agora é você · escolha a evidência</div>
+        <h4>O código compilou. Você aprova?</h4>
+        <p>O agente aceitou preço negativo. A especificação proíbe esse cadastro, mas o único teste usa preço positivo e passou. Qual é a próxima ação mais útil?</p>
+        <div class="quiz"><div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Aprovar: testes verdes confirmam todas as regras.</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Revisar a condição, testar preço negativo e conferir que ele não foi salvo.</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Mandar o repositório inteiro sem explicar o que precisa ser conferido.</button>
+        </div><div class="quiz-feedback" data-correct="A evidência precisa testar a regra certa." data-wrong="Esse sinal não responde à restrição da spec." data-explain="Um teste com 1000 centavos não verifica a recusa de -500. Confira a mensagem e a lista de produtos após a tentativa."></div></div>
+        <h4 style="margin-top:22px">Monte um contexto útil para uma falha real</h4>
+        <p>Escolha um erro do seu projeto. Registre: <strong>a tarefa</strong>, <strong>a regra que não pode ser violada</strong>,
+        <strong>os arquivos ou trechos necessários</strong> e <strong>a evidência que confirmará a correção</strong>.</p>
+        <details class="ct-solution"><summary>👀 Ver um exemplo de raciocínio</summary><p>“CadastrarProduto aceita preço negativo”. Levar:
+        spec da operação, método que cadastra o produto, teste atual e mensagem do erro. Evitar: logs de outros serviços.
+        Verificar: teste para preço negativo, outro para zero e outro para preço positivo e diff limitado à operação.
+        Se o agente afirmar algo sobre uma biblioteca, consultar a documentação da versão usada.</p></details>
+      </div>
+      <div class="jogo" id="jogo-detetives" data-game="detective">
+        <div class="jg-kicker">EM SALA · JOGUE EM DUPLA</div><h3>Detetives do contexto</h3>
+        <p class="jg-intro">Uma entrega suspeita, cinco fontes e apenas três consultas. Montem o dossiê, escolham o diagnóstico e proponham a próxima ação.</p><p class="jg-note">O limite de três fontes simula tempo de revisão; não é uma janela real de tokens. Confirmou? A escolha fica fechada até terminar a partida. Cada dupla joga neste navegador. O placar é local à partida, sem sincronização entre dispositivos; ao recarregar, começa de novo.</p>
+        <div class="jg-bar">3 casos · 30 pontos · 8–12 minutos</div>
+        <button type="button" class="jg-primary" data-start>Começar o jogo</button><div class="jg-body"></div>
+        <noscript>Ative o JavaScript para jogar. Em sala, discutam as decisões em duplas e justifiquem as respostas.</noscript>
+      </div>
+      <div class="note" data-note="cap00/contexto" data-title="Meu diagnóstico de contexto e evidência" data-placeholder="Tarefa:\nRegra que preciso preservar:\nFontes/trechos que o agente precisa ler:\nInformação ausente ou conflitante:\nComo vou verificar a resposta:"></div>
+      <div class="ct-callout"><b>Para a próxima seção:</b> uma LLM sozinha produz uma resposta. Um agente pode ler arquivos,
+      consultar fontes e executar verificações. Essas ferramentas ajudam a obter evidência — mas você ainda precisa julgar se a evidência é suficiente.</div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══ AGENTE ═══ -->
+  <section class="step-section" id="s-rag"><div class="step-header"><div class="step-number sn-yellow">🔎</div><div><div class="step-title">RAG: responder consultando fontes</div><div class="step-sub">Buscar → selecionar → colocar no contexto → responder e verificar</div></div></div><div class="card"><div class="teoria-box"><h4>O modelo sabe o regulamento da nossa loja?</h4><p>O modelo não tem como adivinhar uma regra que só existe nos documentos da empresa. <strong>RAG</strong> significa <em>Retrieval-Augmented Generation</em>, ou geração aumentada por recuperação: buscar trechos relevantes, colocá-los no contexto e gerar a resposta com esse apoio.</p><p>Pense em responder uma prova consultando o material permitido. É preciso encontrar a página certa e interpretar o que ela diz. Um documento antigo pode estar bem escrito e ainda assim levar ao resultado errado.</p></div>
+<div class="peca" id="peca-rag" data-peca="rag"><div class="p-label">JOGO · ENCONTRE A EVIDÊNCIA</div><h3>Quanto custa o caderno com o cupom?</h3><div class="p-question">Cliente: “Quero um caderno com o cupom ESTUDO. Qual o preço final, sem frete?”<br><small>Estamos em setembro de 2026. O produto é elegível ao cupom.</small></div><div class="p-track"><div class="p-node active" data-rag-node="0"><b>🔎</b>Buscar</div><div class="p-node" data-rag-node="1"><b>📄</b>Selecionar trechos</div><div class="p-node" data-rag-node="2"><b>📦</b>Montar contexto</div><div class="p-node" data-rag-node="3"><b>💬</b>Responder e conferir</div></div><button type="button" id="rag-search">Buscar nos documentos</button><div class="p-docs" id="rag-docs"></div><div class="p-controls"><button type="button" id="rag-context" disabled>Levar 2 fontes para o contexto</button><button type="button" id="rag-answer" disabled>Gerar resposta simulada</button><button type="button" id="rag-reset">Recomeçar investigação</button></div><div class="p-console" id="rag-result">A resposta ainda não foi gerada. Primeiro precisamos de fontes.</div><div class="p-feedback" id="rag-feedback" role="status"></div><div class="p-narration"><b data-p-speaker></b><p data-p-line></p></div><div class="p-controls"><button type="button" class="p-voice" data-p-voice disabled>Ouvir explicação</button><span class="p-voice-note">O modo mudo do capítulo vale aqui também.</span></div><p class="lab-fine">Busca e resposta são simuladas. A dupla faz a seleção para observar o mecanismo; sistemas reais podem selecionar trechos automaticamente, com diferentes técnicas.</p></div><p>A busca pode falhar, recuperar material desatualizado ou não encontrar a resposta. Confira relevância, vigência e se a conclusão é sustentada pelo trecho. RAG não altera os parâmetros a cada consulta e não elimina alucinações. <a href="https://www.anthropic.com/engineering/contextual-retrieval" target="_blank" rel="noopener noreferrer">Referência sobre recuperação de contexto ↗</a></p></div></section><div class="section-connector"><div class="line"></div></div><section class="step-section" id="s-agente"><div class="step-header"><div class="step-number sn-yellow">🦾</div><div><div class="step-title">Do chat ao agente</div><div class="step-sub">Ler, editar, testar — e usar o resultado para decidir o próximo passo</div></div></div><div class="card"><div class="teoria-box"><div class="tb-k">📖 A HISTÓRIA CONTINUA</div><h4>O cadastro aceitou um preço negativo. Quem vai corrigir?</h4><p>Uma resposta em texto pode sugerir um <code>if</code>, mas alguém ainda precisa abrir o arquivo, aplicar a mudança e testá-la. Quando a IA tem ferramentas para realizar essas ações, ela pode participar de um ciclo: <strong>agir, observar o resultado e decidir o próximo passo</strong>.</p><p>A diferença não é a aparência da tela. Uma interface de chat também pode oferecer ferramentas. O que importa aqui é o acesso disponível: apenas responder, ou também ler arquivos, editar e executar verificações.</p></div><div id="agente-teatro" class="lt ct" aria-label="Teatro: Tico ganha ferramentas">
+        <div class="lt-heading"><span>UM PEDIDO, FERRAMENTAS E EVIDÊNCIAS</span><h3>Tico ganha ferramentas</h3><p>O cadastro parece pronto. Mas o que foi realmente testado?</p></div>
+        <div class="lt-scenes" role="group" aria-label="Escolha uma história do agente">
+          <button type="button" data-at-scene="0" aria-pressed="true">01 · Ganhando ferramentas</button>
+          <button type="button" data-at-scene="1" aria-pressed="false">02 · O verde que enganou</button>
+          
+        </div>
+        <div class="ct-stage">
+          <div class="ct-dialogue"><strong id="at-speaker">Lia</strong><p id="at-line"></p></div>
+          <div class="ct-crew">
+            <div class="lt-person lt-lia" data-character="LIA"><div class="lt-avatar" aria-hidden="true"><div class="lt-hair"></div><div class="lt-face"><i></i><i></i><b></b></div><div class="lt-body"></div><div class="lt-arm"></div></div><strong>Lia</strong><span>dirige e revisa</span></div>
+            <div class="lt-bot-wrap" data-character="LLM"><div class="lt-bot" aria-hidden="true"><div class="lt-antenna"></div><div class="lt-screen">•‿•</div><div class="lt-bot-feet">▰ ▰</div></div><strong>Tico</strong><span>abre os bastidores</span></div>
+            <div class="lt-person lt-beto" data-character="BETO"><div class="lt-avatar" aria-hidden="true"><div class="lt-hair"></div><div class="lt-face"><i></i><i></i><b></b></div><div class="lt-body"></div><div class="lt-arm"></div></div><strong>Beto</strong><span>experimenta</span></div>
+          </div>
+        </div>
+        <div class="ct-desk">
+          <div class="ct-desk-title"><strong>FERRAMENTA / ETAPA</strong><span id="at-capacity-label"></span></div>
+          <div id="at-capacity" class="ct-capacity" aria-hidden="true"></div>
+          <div id="at-cards" class="ct-cards"></div>
+          <div class="ct-shelf"><b>🧪 LABORATÓRIO SIMULADO</b><span id="at-shelf"></span></div>
+        </div>
+        <div class="ct-observation"><span id="at-status"></span><p id="at-result"></p></div>
+        <div class="lt-controls"><button type="button" id="at-play">▶ Assistir</button><button type="button" id="at-step" title="Avanço manual, sem áudio">Um passo →</button><button type="button" id="at-reset">↺ Recomeçar</button><button type="button" id="at-sound" aria-pressed="true" hidden>🔊 Vozes ligadas</button><span id="at-progress"></span></div>
+        <p class="lt-footnote">Encenação local: as ferramentas e saídas são ilustrativas. Nenhum Java é executado aqui. Os controles permitem pausar, repetir e avançar sem áudio. O aluno revisa o plano como combinado pedagógico da aula; permissões reais dependem da configuração do agente.</p>
+        <noscript>O agente lê, planeja, edita, testa e usa o resultado para decidir o próximo passo. A revisão verifica o pedido e as evidências.</noscript>
+      </div>
+<div class="ct-explain"><h4>O que cada ferramenta devolve?</h4><p><strong>Ferramenta</strong> é um recurso que realiza uma ação e devolve o resultado. Um comando, como <code>./mvnw test</code>, é uma instrução para o computador executar os testes do projeto Java com Maven. Veremos o comando no setup; aqui basta entender o que ele verifica.</p><div class="ct-concepts"><div><b>📖 Ler</b><p>Traz o conteúdo de um arquivo para a investigação. Permite conferir como o cadastro funciona hoje.</p></div><div><b>✏️ Editar</b><p>Altera o código. A alteração ainda é uma proposta que precisa de verificação.</p></div><div><b>🖥️ Executar</b><p>Roda um comando e devolve uma saída: sucesso, falha, mensagem e resultados dos testes.</p></div></div><p>O agente não precisa seguir sempre a mesma sequência. Se um arquivo não existe, deve localizar o correto. Se a regra não diz se zero é permitido, precisa esclarecer. Se o teste falha, o resultado orienta a investigação.</p></div>
+<div class="ct-explain"><h4>Um if que dá para acompanhar</h4><p>Aqui, <code>if</code> significa “se”: o bloco é executado quando a condição é verdadeira. O preço usa centavos inteiros. <code>-500</code> é negativo, <code>0</code> é permitido e <code>1000</code> representa R$ 10,00. Neste trecho de método Java, a verificação vem antes de salvar:</p><div class="code-block"><div class="code-header"><span class="filename">Trecho de ProdutoService.java</span><span class="lang-badge">exemplo</span></div><pre><span class="kw">if</span> (precoEmCentavos <span class="op">&lt;</span> <span class="num">0</span>) {
+    <span class="kw">return</span> <span class="str">"Preço inválido"</span>;
+}
+<span class="cm">// Só chegamos aqui quando o preço não é negativo.</span>
+produtos.add(produto);
+<span class="kw">return</span> <span class="str">"Produto cadastrado"</span>;</pre></div><p><code>return</code> encerra este método. <code>produtos.add(produto)</code> adiciona o produto à lista do exemplo. Se a condição fosse <code>&lt;= 0</code>, bloquearia zero também. É por isso que testar o limite importa.</p></div>
+<div class="ct-explain"><h4>Plano, autorização e conclusão são decisões diferentes</h4><p><strong>Plano:</strong> quais alterações fazer e como conferir. <strong>Permissão:</strong> quais ações a ferramenta pode executar. <strong>Revisão:</strong> se a entrega cumpre o pedido.</p><p>No exercício da aula, você revisa o plano antes da execução. Isso é um combinado do curso. Na ferramenta real, pedidos de confirmação variam conforme o modo e as permissões configuradas; não aparecem obrigatoriamente antes de toda edição.</p><p><a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener noreferrer">Documentação de permissões do Claude Code ↗</a></p><p>“Terminei” é um relato. Para aceitar, confira qual teste rodou, o resultado e o diff — a comparação entre o código anterior e o novo. Se faltou acesso a uma ferramenta, a entrega precisa explicitar essa limitação.</p></div><div class="jogo" id="jogo-agente" data-game="agent"><div class="jg-kicker">EM SALA · DECIDA EM DUPLA</div><h3>Você dirige o agente</h3><p class="jg-intro">Escolha o próximo passo diante de um arquivo não lido, um teste verde incompleto e uma falha. Antes de confirmar, diga à sua dupla o que espera descobrir.</p><p class="jg-note">Simulação local, sem executar comandos. 10 pontos por decisão. Cada dupla joga no próprio navegador; recarregar zera a partida.</p><div class="jg-bar">4 rodadas · 40 pontos · 5–8 minutos</div><button type="button" class="jg-primary" data-start>Começar o jogo</button><div class="jg-body"></div></div><div class="note" data-note="cap00/agente" data-title="Como vou verificar o cadastro" data-placeholder="Qual regra quero garantir? Qual teste revela o erro? O que preciso observar além da mensagem?"></div></div></section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══ ANATOMIA DO CLAUDE CODE ═══ -->
+  <section class="step-section" id="s-harness"><div class="step-header"><div class="step-number sn-yellow">🧰</div><div><div class="step-title">Harness: o programa que coordena o agente</div><div class="step-sub">O modelo solicita; o sistema encaminha, observa e continua</div></div></div><div class="card"><div class="teoria-box"><h4>Quem transforma o pedido do modelo em uma ação?</h4><p>Quando o modelo solicita “ler ProdutoService.java”, ele produz uma chamada de ferramenta. Outro programa precisa receber essa chamada, conferir os controles aplicáveis, encaminhar a execução e devolver o resultado para o modelo.</p><p>Esse programa ao redor do modelo é chamado de <strong>harness</strong>. Ele organiza o ciclo de execução e pode cuidar de contexto, registro de ações, limites e tratamento de falhas. É parte do sistema do agente; não é outro nome para o modelo.</p></div>
+<div class="peca" id="peca-harness" data-peca="harness"><div class="p-label">ABRA OS BASTIDORES</div><h3>O pedido vai e o resultado volta</h3><label class="p-radio"><input type="checkbox" id="harness-access" checked> Neste cenário, permitir leitura do arquivo</label><div class="p-boundary"><strong>HARNESS · coordena a passagem entre as peças</strong><div class="p-track"><div class="p-node active" data-h-node="0"><b>🧠</b>Modelo</div><div class="p-node" data-h-node="1"><b>🚦</b>Controles e roteamento</div><div class="p-node" data-h-node="2"><b>📖</b>Ferramenta de leitura</div><div class="p-node" data-h-node="3"><b>📦</b>Resultado no contexto</div></div></div><div class="p-console" id="harness-log"></div><div class="p-controls"><button type="button" id="harness-next">Próxima etapa →</button><button type="button" id="harness-reset">Recomeçar ciclo</button><span id="harness-progress"></span></div><div class="p-narration"><b data-p-speaker></b><p data-p-line></p></div><div class="p-controls"><button type="button" class="p-voice" data-p-voice disabled>Ouvir explicação</button><span class="p-voice-note">O modo mudo do capítulo vale aqui também.</span></div><p class="lab-fine">Simulação: a caixa agrupa a coordenação do ciclo; não significa que o modelo é implementado dentro do mesmo processo. Nenhum arquivo é lido de verdade.</p></div><p>O nome pode abranger componentes diferentes em cada sistema. A ideia central aqui é separar quem produz a solicitação de quem coordena e executa a ação. Mesmo com bons controles, o conteúdo devolvido e a resposta precisam de revisão. <a href="https://www.anthropic.com/engineering/managed-agents" target="_blank" rel="noopener noreferrer">Um exemplo de organização de harness e ferramentas ↗</a></p></div></section><div class="section-connector"><div class="line"></div></div><section class="step-section" id="s-anatomia"><div class="step-header"><div class="step-number sn-yellow">🧩</div><div><div class="step-title">Anatomia do agente</div><div class="step-sub">As peças aparecem quando resolvem uma necessidade</div></div></div><div class="card"><div class="teoria-box"><h4>“Corrija o preço negativo.” O que precisa existir ao redor desse pedido?</h4><p>Não basta uma caixa de texto. O agente precisa de informações sobre a tarefa, ferramentas para agir e critérios para conferir o resultado. Comece pelas quatro peças abaixo; abra as demais quando a situação pedir.</p></div><details class="ct-solution"><summary>1 · Instruções do projeto</summary><p>Convenções que se repetem: onde testar, como representar preços e como limitar alterações. São texto que orienta o trabalho; não substituem controles de acesso.</p></details><details class="ct-solution"><summary>2 · Spec da tarefa</summary><p>Um pequeno documento sobre esta mudança: recusar preço negativo, aceitar zero, preservar a listagem e verificar três casos. A pasta .specs/ é a convenção deste curso, não uma exigência de toda ferramenta.</p></details><details class="ct-solution"><summary>3 · Ferramentas e resultados</summary><p>Ler ProdutoService.java, editar a condição e executar os testes. Cada ação deve produzir algo observável para decidir o próximo passo.</p></details><details class="ct-solution"><summary>4 · Plano e revisão</summary><p>Você examina a proposta, depois compara o resultado com a regra. Uma lista de testes sem execução ainda é um plano de verificação.</p></details><h4 style="margin-top:24px">Quando a necessidade cresce</h4><details class="ct-solution"><summary>“Repito a mesma orientação em várias tarefas” → Skill</summary><p>Reúna um procedimento reutilizável. Exemplo: revisar um cadastro, verificando campos obrigatórios, preço e listagem. A skill orienta; não prova que os passos foram executados.</p></details><details class="ct-solution"><summary>“Quero checar uma regra automaticamente” → Verificação e hook</summary><p>Um teste pode verificar preços negativos. Um hook pode disparar um comando em um evento suportado pela ferramenta. Primeiro escreva uma verificação útil; depois decida onde acioná-la.</p></details><details class="ct-solution"><summary>“Preciso consultar outro sistema” → Integração</summary><p>Uma ferramenta externa pode trazer dados ou documentação. MCP é um padrão de comunicação usado para integrar ferramentas. A integração precisa estar disponível e autorizada; o nome sozinho não concede acesso.</p></details><details class="ct-solution"><summary>“Há uma investigação independente” → Subagente</summary><p>Uma parte do trabalho pode ser delegada com objetivo e contexto próprios. Sua conclusão também precisa de evidência; delegar não garante uma revisão melhor.</p></details><details class="ct-solution"><summary>“A sessão ficou longa” → Gestão de contexto</summary><p>Selecione fontes relevantes e confira o que foi preservado. Ler um arquivo também ocupa contexto; passar o caminho ajuda a selecionar, mas não torna seu conteúdo gratuito.</p></details><div class="ct-callout"><b>👥 Qual peça resolve?</b> Em dupla: onde guardar como testar o projeto? Onde registrar que somente esta tarefa permite zero? E o que investigar quando uma ferramenta nega acesso ao banco?</div><details class="ct-solution"><summary>👀 Comparar os argumentos</summary><p>“Toda vez precisamos explicar como testar”: instrução ou skill, conforme seja uma regra curta ou um procedimento. “Só este cadastro aceita zero”: spec da tarefa. “Acesso ao banco foi negado”: permissões e conexão, não uma frase mais insistente no prompt. Justifique a escolha.</p></details><div class="ct-explain" id="s-mcp"><h4>MCP: uma conexão padronizada</h4><p><strong>MCP</strong> significa <em>Model Context Protocol</em>. É um padrão de comunicação entre uma aplicação de IA e servidores que disponibilizam ferramentas, informações e outros recursos. Um servidor é um programa que atende solicitações; pode estar na mesma máquina ou em outro lugar.</p><p>No nosso exemplo, a aplicação possui um <strong>cliente MCP</strong>, que se comunica com o <strong>servidor do catálogo</strong>. O servidor oferece uma ferramenta para consultar produtos. Conectar não concede automaticamente acesso a qualquer operação: permissões e configuração continuam valendo.</p>
+<div class="peca" id="peca-mcp" data-peca="mcp"><div class="p-label">CONECTAR · DESCOBRIR · CONSULTAR</div><h3>Um catálogo do outro lado</h3><div class="p-track"><div class="p-node active" data-mcp-node="0"><b>💬</b>Aplicação de IA</div><div class="p-node" data-mcp-node="1"><b>🔌</b>Cliente MCP</div><div class="p-node" data-mcp-node="2"><b>🗄️</b>Servidor do catálogo</div><div class="p-node" data-mcp-node="3"><b>🏷️</b>Fonte de produtos</div></div><div class="p-controls"><button type="button" id="mcp-connect">Conectar catálogo</button><button type="button" id="mcp-call">Consultar produto 1</button></div><div class="p-console" id="mcp-output"></div><div class="p-narration"><b data-p-speaker></b><p data-p-line></p></div><div class="p-controls"><button type="button" class="p-voice" data-p-voice disabled>Ouvir explicação</button><span class="p-voice-note">O modo mudo do capítulo vale aqui também.</span></div><p class="lab-fine">Conexão ilustrativa e dados fixos. Nenhum servidor MCP real ou banco de dados é acessado nesta página.</p></div><p>Uma ferramenta pode existir sem MCP. Uma aplicação pode usar uma ferramenta MCP para buscar documentos num fluxo de RAG, mas RAG também funciona sem MCP. O protocolo padroniza a conversa; não garante que o dado seja correto. <a href="https://modelcontextprotocol.io/docs/learn/architecture" target="_blank" rel="noopener noreferrer">Arquitetura oficial do MCP ↗</a></p></div></div></section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══ CLAUDE.md × AGENTS.md ═══ -->
+  <section class="step-section" id="s-memoria"><div class="step-header"><div class="step-number sn-yellow">📄</div><div><div class="step-title">CLAUDE.md e AGENTS.md</div><div class="step-sub">Orientações que você consegue localizar, carregar e conferir</div></div></div><div class="card"><div class="teoria-box"><h4>O que você não quer explicar de novo a cada tarefa?</h4><p>No nosso cadastro, o preço usa centavos, os testes têm um comando e mudanças precisam respeitar o pedido. Essas orientações podem ficar em um arquivo do projeto. A regra de uma alteração específica fica na spec dessa tarefa.</p></div><p>O arquivo usado depende do agente. Neste material, mantemos <code>CLAUDE.md</code> e <code>AGENTS.md</code> como pontos de entrada para as instruções. Ao usar uma ferramenta, confira quais arquivos ela carregou e qual escopo se aplica. Não suponha que qualquer arquivo do repositório foi lido.</p><div class="code-block"><div class="code-header"><span class="filename">Exemplo curto de instruções do projeto</span><span class="lang-badge">exemplo</span></div><pre><span class="cm"># Cadastro de Produtos</span>
+- Use Java e Spring conforme as versões do projeto.
+- Preços são inteiros em centavos: 1000 = R$ 10,00.
+- Leia a spec da tarefa antes de propor mudanças.
+- Use ./mvnw test para executar os testes.
+- Preserve alterações existentes que não pertencem à tarefa.
+- Ao concluir, mostre os arquivos alterados e as verificações.</pre></div><p><strong>Stack</strong> é o conjunto de tecnologias do projeto, como Java e Spring. <strong>Convenção</strong> é um acordo que a equipe quer manter. Não há um número mágico de linhas. Prefira instruções relevantes, específicas e sem repetição. “Código bonito” não diz o que conferir; “não alterar a listagem nesta tarefa” é um limite observável.</p><p>Se uma instrução não foi seguida, investigue carregamento, escopo, conflitos e a implementação. Reescrever a frase pode ajudar, mas o erro não prova que ela estava mal escrita.</p><p><a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener noreferrer">Como o Claude Code carrega instruções ↗</a></p>
+<div class="jogo" id="jogo-regras"><div class="jg-kicker">EM SALA · ORGANIZE AS INFORMAÇÕES</div><h3>Arrume a casa</h3><p>Escolha o destino de cada cartão. Instruções gerais, spec desta tarefa, documentação de referência ou configuração segura de credenciais?</p><p class="jg-note">Uma API permite que programas se comuniquem. Uma chave de API é uma credencial de acesso; seu valor não deve entrar nas instruções do projeto.</p><div id="regras-cards"></div><button type="button" id="regras-check" class="jg-primary">Conferir organização</button><div id="regras-result" role="status" class="jg-feedback"></div></div>
+<div class="note" data-note="cap00/memoria" data-title="Meu rascunho de instruções" data-placeholder="Como testar:
+Convenção que preciso preservar:
+Como limitar mudanças:
+Como conferir a entrega:"></div></div></section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══ MERCADO ═══ -->
+  <section class="step-section" id="s-mercado"><div class="step-header"><div class="step-number sn-yellow">🗺️</div><div><div class="step-title">Como comparar agentes</div><div class="step-sub">Avalie o trabalho produzido com a mesma tarefa</div></div></div><div class="card"><p>Você pode encontrar agentes no terminal, no editor ou em uma interface de conversa. Para acompanhar o curso, procure um fluxo que permita ler o projeto, propor mudanças, executar verificações e revisar o diff.</p><div class="ct-concepts"><div><b>Integração</b><p>Consegue trabalhar no projeto usado pela turma e mostrar os arquivos alterados?</p></div><div><b>Controle</b><p>Você entende quais ações estão permitidas e como interromper ou limitar uma tarefa?</p></div><div><b>Evidência</b><p>É possível distinguir o que foi proposto do que foi executado e verificar os resultados?</p></div></div><p>Em aula, compare ferramentas com a mesma tarefa curta: recusar um preço negativo sem mudar a listagem. Observe leitura do contexto, clareza do plano, tamanho do diff e testes executados. Não conclua que uma ferramenta é sempre melhor a partir de uma única tentativa.</p><div class="ct-callout">Disponibilidade de recursos, planos e limites muda. Confira as condições oficiais da ferramenta escolhida antes da aula. O objetivo aqui é aprender um procedimento de trabalho que você consiga repetir.</div></div></section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══ SDD ═══ -->
+  <section class="step-section" id="s-sdd"><div class="step-header"><div class="step-number sn-yellow">📝</div><div><div class="step-title">SDD e o ritual de revisão</div><div class="step-sub">Do pedido ao critério de pronto, com um cadastro simples</div></div></div><div class="card"><div class="teoria-box"><div class="tb-k">📖 DA CONVERSA PARA UM DOCUMENTO</div><h4>Spec, especificação, SDD e .specs/: cada nome tem uma função</h4><p>Uma <strong>especificação</strong> descreve o resultado esperado e como verificar. <strong>Spec</strong> é a abreviação em inglês. Pode começar com poucas linhas: objetivo, regras e exemplos que mostrem quando deu certo.</p><p><strong>SDD</strong> significa <em>Spec-Driven Development</em>: desenvolvimento orientado por especificações. Neste curso, escrevemos e revisamos o combinado antes da implementação, e depois usamos o documento para conferir o resultado.</p><p><code>.specs/</code> é a pasta escolhida para organizar esses textos. A barra final indica pasta; o ponto faz parte do nome. Não é um comando, não instala uma biblioteca e não faz o agente ler automaticamente. <code>cadastrar-produto.md</code> será um arquivo dentro dela. <strong>Markdown</strong> é texto simples com marcações: <code>#</code> indica um título.</p></div>
+<div class="lab" id="lab-sdd" data-lab="sdd"><div class="lab-tag">JOGO GUIADO · A SUA PRIMEIRA SPEC</div><h3>Da conversa à pasta .specs/</h3><noscript>O exercício cria .specs/cadastrar-produto.md, registra regras e testes, pede a leitura da especificação e revisa o plano antes da implementação.</noscript><p class="lab-fine">Você dirige os próximos passos. A IDE e o chat abaixo são simulados, sem conexão com uma IA e sem acesso aos arquivos do seu computador. Escolhas incorretas explicam o problema e permitem tentar de novo.</p><h4 class="lab-title" data-lab-title></h4><div class="ide"><div class="ide-top"><i></i><i></i><i></i><span>IDE da turma · cadastro-produtos</span></div><div class="ide-workspace"><div class="ide-tree" id="sdd-tree"></div><div class="ide-editor"><div class="ide-tab" id="sdd-tab">Boas-vindas</div><pre class="ide-doc" id="sdd-doc"></pre></div></div><div class="ide-chat"><b>MINI CHAT · VOCÊ ↔ AGENTE</b><div class="ide-command" id="sdd-command" hidden></div><div id="sdd-compose"><label for="sdd-prompt">Seu pedido ao agente</label><p class="lab-fine">Você pode reformular o pedido. Este exercício sempre usa o cadastro de produtos: negativo é recusado e zero é permitido.</p><textarea id="sdd-prompt">Quero trabalhar com SDD. Antes de codificar, ajude a criar .specs/cadastrar-produto.md. O cadastro deve recusar preços negativos e permitir zero. Primeiro escreva a especificação e apresente o plano.</textarea><button type="button" id="sdd-send" disabled>Enviar pedido →</button></div><div id="sdd-choices" class="ide-choices"></div><div id="sdd-feedback" class="ide-feedback" role="status"></div></div></div><div class="lab-narration"><b data-lab-speaker></b><p data-lab-line></p></div><div class="lab-detail" data-lab-detail></div><div class="lab-controls"><button type="button" data-lab-play disabled>▶ Ouvir / assistir</button><button type="button" data-lab-back>← Voltar</button><button type="button" data-lab-next>Próximo passo →</button><button type="button" data-lab-reset disabled>↺ Recomeçar</button><span data-lab-progress></span></div><p class="lab-fine">Na árvore, <code>src/</code> representa a pasta do código; <code>pom.xml</code> é o arquivo de configuração do projeto Maven. O botão de voz lê a explicação deste passo. O avanço acontece pelas suas decisões no mini chat. Recomeçar limpa somente esta simulação.</p></div>
+<div class="teoria-box"><h4>“Melhore o cadastro.” Melhore em qual sentido?</h4><p>Beto quer aceitar mais produtos. Lia quer impedir preços inválidos. Sem esclarecer, a mesma frase pode levar a mudanças opostas. A spec registra o combinado e torna a revisão possível.</p><p>SDD, neste curso, é trabalhar a partir de uma especificação: descrever o comportamento esperado, propor um plano, executar e revisar o resultado. O documento ajuda a orientar; não garante que a implementação esteja correta.</p></div>
+<div class="ct-concepts"><div><b>1 · Esclarecer</b><p>Zero é permitido? Sim. Negativo? Não. Listagem muda? Não.</p></div><div><b>2 · Planejar e executar</b><p>Ler o cadastro; adicionar a verificação antes de salvar; testar três valores.</p></div><div><b>3 · Revisar</b><p>Comparar a condição, os casos executados e os arquivos alterados com a spec.</p></div></div><div class="code-block"><div class="code-header"><span class="filename">Spec curta — cadastrar-produto.md</span><span class="lang-badge">exemplo</span></div><pre><span class="cm"># Contexto</span>
+Existe um cadastro e uma lista de produtos.
+O preço é um número inteiro em centavos.
+
+<span class="cm"># Tarefa</span>
+Recusar preço negativo antes de salvar o produto.
+
+<span class="cm"># Regras e limites</span>
+Zero é permitido. Preço positivo também.
+Não alterar a listagem nem adicionar bibliotecas.
+
+<span class="cm"># Evidência de pronto</span>
+Testar -500, 0 e 1000 centavos.
+Conferir que o produto recusado não entrou na lista.
+Mostrar o diff e o resultado dos testes.</pre></div><details class="ct-solution"><summary>👀 Compare com um plano possível</summary><p>1. Ler o método de cadastro e os testes existentes. 2. Adicionar a condição antes de salvar. 3. Testar os três valores e observar a lista após a recusa. 4. Executar os testes existentes e revisar o diff. Se a implementação real exigir outro arquivo, explicar por quê antes de ampliar o escopo.</p></details>
+<h4 style="margin-top:24px">O ritual de revisão</h4><ol class="jg-review"><li><b>O que foi executado?</b> Confira o comando e o resultado, não apenas “deu certo”.</li><li><b>Que casos foram testados?</b> Positivo sozinho não demonstra recusa do negativo.</li><li><b>O código cumpre a regra?</b> Observe a condição e se a validação ocorre antes de salvar.</li><li><b>Houve mudança fora do pedido?</b> Confira a listagem, configurações e bibliotecas.</li><li><b>Consigo explicar?</b> Diga o que acontece com -500, 0 e 1000 sem repetir a justificativa do agente.</li></ol>
+<div class="jogo" id="revisao-produto"><div class="jg-kicker">EM SALA · APROVA OU DEVOLVE?</div><h3>Três problemas numa entrega</h3><p>A spec acima vale para esta entrega. Clique nos trechos que violam o combinado. Os trechos representam alterações em métodos existentes; não são um programa Java completo.</p><div id="review-lines"></div><div id="review-feedback" class="jg-feedback" role="status">0 / 3 problemas encontrados.</div><button type="button" id="review-reset">Recomeçar revisão</button></div>
+<div class="note" data-note="cap00/sdd" data-title="Meu pedido de correção" data-placeholder="Encontrei...
+Isso viola...
+Corrija somente...
+Confira com estes casos..."></div></div></section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══ ANTI-PATTERNS ═══ -->
+  <section class="step-section" id="s-anti"><div class="step-header"><div class="step-number sn-yellow">🐛</div><div><div class="step-title">Cinco erros recorrentes ao usar agentes</div><div class="step-sub">Pequenos incidentes, evidências e correções limitadas</div></div></div><div class="card"><p>Em cada incidente, discuta: qual é o problema, qual evidência sustenta o diagnóstico e qual é a menor correção útil?</p><div class="ct-explain"><h4>1 · O método inventado</h4><p>A resposta usa salvarComDescontoAutomatico(), mas esse método não existe no arquivo consultado.</p><details class="ct-solution"><summary>👀 Ver investigação possível</summary><p>Confira a classe e a mensagem do compilador. Use o método existente adequado ou esclareça a nova regra antes de criar outro.</p></details></div><div class="ct-explain"><h4>2 · A pequena correção virou reforma</h4><p>Você pediu recusar preço negativo; a entrega também reescreveu a listagem e mudou o visual.</p><details class="ct-solution"><summary>👀 Ver investigação possível</summary><p>Compare o diff com o escopo. Remova apenas as mudanças indevidas desta tarefa, preservando o trabalho anterior. Evite mandar “desfazer tudo” sem identificar o que será perdido.</p></details></div><div class="ct-explain"><h4>3 · O verde insuficiente</h4><p>O teste com 1000 passou. Ninguém tentou -500 ou zero.</p><details class="ct-solution"><summary>👀 Ver investigação possível</summary><p>Adicione os casos que faltam e observe se o produto recusado fica fora da lista. O sucesso só sustenta o que foi verificado.</p></details></div><div class="ct-explain"><h4>4 · A dívida de compreensão</h4><p>O cadastro funciona, mas você não sabe explicar por que existe um return antes de salvar.</p><details class="ct-solution"><summary>👀 Ver investigação possível</summary><p>Percorra o método com três entradas. O return encerra o método; no caso negativo, a linha que salva não deve ser executada.</p></details></div><div class="ct-explain"><h4>5 · A regra descumprida</h4><p>A regra de preço estava combinada, mas a entrega aceita negativos.</p><details class="ct-solution"><summary>👀 Ver investigação possível</summary><p>Não conclua automaticamente que “a mesa encheu”. Confira se a regra foi carregada, preservada e seguida. Corrija com base na evidência.</p></details></div></div></section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══ PRANCHETA ═══ -->
+  <section class="step-section" id="s-prancheta">
+    <div class="step-header">
+      <div class="step-number sn-purple">📐</div>
+      <div><div class="step-title">Desenhe o loop</div><div class="step-sub">Primeira prancheta do curso. Cada exercício vai ter uma.</div></div>
+    </div>
+    <div class="card">
+      <p>Ao longo do curso você desenha o que está construindo, antes e depois de pedir ao agente. Use o cadastro de produto como história: desenhe o
+      agente no centro, as ferramentas que ele usa no seu projeto (ler, editar, rodar) e o que alimenta a mesa dele
+      (<code>CLAUDE.md</code>, a spec, a conversa). Use a paleta <strong>SDD</strong>; ligue puxando o ● de um nó até o outro; dê
+      rótulo às setas com duplo clique. Fica salvo neste navegador e aparece na <a href="../../prancheta/" style="color:var(--accent4)">Prancheta</a> do curso.</p>
+      <div class="desenhe"><span class="d-em">📐</span><span><b>Desenhe:</b> o agente, ler ProdutoService.java, editar a condição e testar preços; a regra entrando no contexto; o resultado do teste retornando ao agente; você revisando se -500 foi recusado e zero foi aceito. Depois clique em ▶ para ver a mensagem andar na ordem que você ligou.</span></div>
+      <div data-arch="cap00/loop-do-agente" data-palette="sdd,free" data-title="O loop do agente, do meu jeito" data-height="420">
+        <script type="application/json">{"nodes":[
+          {"id":"v","t":"voce","x":20,"y":180,"l":"Você"},
+          {"id":"s","t":"spec","x":210,"y":180,"l":"Spec"},
+          {"id":"a","t":"agente","x":420,"y":180,"l":"Agente"},
+          {"id":"c","t":"claudemd","x":420,"y":40,"l":"CLAUDE.md"},
+          {"id":"p","t":"plan","x":420,"y":320,"l":"Plan"},
+          {"id":"r","t":"review","x":640,"y":180,"l":"Review"},
+          {"id":"g","t":"group","x":600,"y":20,"w":280,"h":130,"l":"Ferramentas"},
+          {"id":"t1","t":"box","x":615,"y":60,"w":120,"h":58,"l":"ler arquivo"},
+          {"id":"t2","t":"box","x":745,"y":60,"w":120,"h":58,"l":"rodar mvn"}
+        ],"edges":[
+          {"id":"1","a":"v","b":"s","l":"escreve"},
+          {"id":"2","a":"s","b":"a","l":"lê"},
+          {"id":"3","a":"c","b":"a","l":"carregar instruções"},
+          {"id":"4","a":"a","b":"p","l":"propõe"},
+          {"id":"5","a":"p","b":"v","l":"seu OK?"},
+          {"id":"6","a":"a","b":"t1","l":"","s":"dash"},
+          {"id":"7","a":"a","b":"t2","l":"","s":"dash"},
+          {"id":"8","a":"a","b":"r","l":"diff"},
+          {"id":"9","a":"r","b":"s","l":"corrige"}
+        ]}</script>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══ RESUMO ═══ -->
+  <section class="step-section" id="s-resumo">
+    <div class="step-header">
+      <div class="step-number sn-spring">✓</div>
+      <div><div class="step-title">Do primeiro conceito à primeira especificação</div><div class="step-sub">Explique o ciclo com suas palavras e leve uma regra verificável</div></div>
+    </div>
+    <div class="card"><div class="p-fit-table"><table class="p-final-table"><thead><tr><th>Peça</th><th>O que faz?</th><th>No nosso exemplo</th></tr></thead><tbody><tr><td>Harness</td><td>Coordena o ciclo e as ferramentas.</td><td>Encaminha a leitura e devolve o arquivo ao modelo.</td></tr><tr><td>MCP</td><td>Padroniza uma conexão.</td><td>Aplicação consulta a ferramenta do catálogo.</td></tr><tr><td>RAG</td><td>Busca fontes para alimentar a resposta.</td><td>Preço e regulamento entram no contexto.</td></tr><tr><td>Fine-tuning</td><td>Ajusta o modelo por treinamento adicional.</td><td>Exemplos de classificação orientam um ajuste.</td></tr></tbody></table></div><p>Essas peças podem trabalhar juntas. Não são quatro nomes para a mesma coisa nem quatro alternativas que se excluem.</p>
+      <div class="keyword-grid">
+        <div class="keyword-chip"><span class="emoji">🔮</span><span class="kw-name">LLM</span><span class="kw-desc">Prevê o plausível. Confiança do texto não é sinal de qualidade; critério é.</span></div>
+        <div class="keyword-chip"><span class="emoji">📦</span><span class="kw-name">Contexto</span><span class="kw-desc">Mesa finita. Regra de projeto mora em arquivo; respostas precisam de evidência e revisão.</span></div>
+        <div class="keyword-chip"><span class="emoji">🦾</span><span class="kw-name">Agente</span><span class="kw-desc">LLM + ferramentas + loop. Termina quando ele acha que terminou.</span></div>
+        <div class="keyword-chip"><span class="emoji">📄</span><span class="kw-name">CLAUDE.md / AGENTS.md</span><span class="kw-desc">Convenções recorrentes e como verificar. Regras da tarefa ficam na spec.</span></div>
+        <div class="keyword-chip"><span class="emoji">📝</span><span class="kw-name">SDD</span><span class="kw-desc">Descrever o comportamento → plano → execução → evidência → revisão.</span></div>
+      </div>
+      <div class="learning-route"><b>Consegue explicar sem decorar?</b> Como treinar difere de responder? Que informação entrou no contexto? O que sua spec promete? Que teste confirma essa promessa? Use o cadastro de produtos para responder.</div><div class="quiz" style="margin-top:16px">
+        <div class="quiz-q"><span class="q-emoji">🎫</span> O agente terminou e disse "Pronto, testes passando ✨". Qual é o seu próximo passo?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Aceitar: ele rodou os testes</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Pedir "revisa aí" ao próprio agente e aceitar o veredito</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Rodar o ritual: testes no meu terminal, diff, casos testados, regra de preço, mudanças fora do pedido e explicar em voz alta</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">Mandar a próxima tarefa, tempo é dinheiro</button>
+        </div>
+        <div class="quiz-feedback" data-correct="É isso." data-wrong="Não." data-explain="'testes passando' é a palavra dele. O ritual existe porque a palavra dele não vale como evidência, e porque o que ele fez além do pedido só aparece no diff."></div>
+      </div>
+      <h4 style="margin:18px 0 6px">📦 Traga para o dia 05/09</h4>
+      <p style="margin-bottom:6px"><span data-progress="cap00/trazer/"></span></p>
+      <ul class="chk-list">
+        <li><label class="chk"><input type="checkbox" data-persist="cap00/trazer/setup"><span><span class="chk-t">Setup completo (Sábado 0)</span><span class="chk-d">Java 21, IntelliJ, Docker com Postgres, Claude Code logado. <a href="../../setup/" style="color:var(--accent4)">Checklist aqui.</a></span></span></label></li>
+        <li><label class="chk"><input type="checkbox" data-persist="cap00/trazer/claudemd"><span><span class="chk-t">Rascunho do seu <code>CLAUDE.md</code> na caixa de anotações desta página</span><span class="chk-d">Quatro seções: stack, comandos, convenções, como verificar. No Sáb 1 você compara com o do professor e fecha o seu.</span></span></label></li>
+        <li><label class="chk"><input type="checkbox" data-persist="cap00/trazer/prancheta"><span><span class="chk-t">A prancheta do loop desenhada</span></span></label></li>
+        <li><label class="chk"><input type="checkbox" data-persist="cap00/trazer/duvida"><span><span class="chk-t">Uma dúvida real sobre alguma vez em que a IA te entregou algo errado</span><span class="chk-d">A abertura do Sáb 1 começa com elas.</span></span></label></li>
+      </ul>
+      <div class="center" style="margin-top:18px">
+        <a href="../01-sdd-na-pratica-spring-hexagonal/" style="display:inline-block;padding:12px 28px;background:linear-gradient(135deg,var(--java),var(--claude));color:var(--bg);text-decoration:none;font-weight:900;border-radius:50px;letter-spacing:1px">Sábado 1 — SDD na prática: Spring hexagonal, do papel ao Postgres →</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <strong style="color:var(--java)">Backend Moderno, Agentes de IA e Cloud</strong> · Capítulo 0 ·
+  <a href="../../">← voltar ao hub</a> ·
+  <a href="https://github.com/kelsonvictr" target="_blank" rel="noopener">github.com/kelsonvictr</a>
+</footer>
+
+<script src="./cap-audio.js?v=1" defer></script>
+<script src="../../assets/audio/cap00/manifest.js?v=2" defer></script>
+<script src="./llm-teatro.js?v=5" defer></script>
+<script src="./contexto-cenas.js?v=2" defer></script>
+<script src="../../assets/audio/contexto-cap00/audio/contexto-manifest.js?v=2" defer></script>
+<script src="./contexto-teatro.js?v=3" defer></script>
+<script src="./jogos.js?v=3" defer></script>
+<script src="./agente-cenas.js?v=1" defer></script>
+<script src="../../assets/audio/agente-cap00/audio/agente-manifest.js?v=1" defer></script>
+<script src="./agente-teatro.js?v=3" defer></script>
+<script src="./oficina-revisao.js?v=1" defer></script>
+<script src="./laboratorios-cenas.js?v=1" defer></script>
+<script src="../../assets/audio/laboratorios-cap00/audio/manifest.js?v=1" defer></script>
+<script src="./laboratorios.js?v=3" defer></script>
+<script src="./pecas-ia-cenas.js?v=1" defer></script>
+<script src="../../assets/audio/pecas-ia-cap00/audio/manifest.js?v=1" defer></script>
+<script src="./pecas-ia.js?v=1" defer></script>
+<script src="../../shared/scripts.js" defer></script>
+<script src="../../shared/lab-kit.js?v=3" defer></script>
+<script type="module" src="../../shared/motion-fx.js?v=3"></script>
+
+</body>
+</html>

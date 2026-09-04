@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Cards de divulgação (gerador) — Java Avançado &amp; Dev com Agentes de IA</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+  /* ===========================================================
+     GERADOR DE CARDS — P&B moderno, acento laranja (Java)
+     Foto recortada do prof sobreposta. Foco: MERCADO + Claude Code.
+     Uso: cards.html?s=1..8&fmt=feed|story
+     =========================================================== */
+  *{margin:0;padding:0;box-sizing:border-box}
+  .mono{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+  :root{
+    --w:1080px; --h:1350px;
+    --ink:#0a0a0b; --paper:#f6f6f7; --mute:#9a9aa2; --line:rgba(255,255,255,.12);
+    --o:#f89820; --o2:#ffc068;
+  }
+  body.story{--h:1920px}
+  html,body{height:100%}
+  body{background:#000;display:flex;align-items:center;justify-content:center;
+    font-family:'Nunito',sans-serif;color:var(--paper)}
+
+  .card{position:relative;width:var(--w);height:var(--h);overflow:hidden;
+    background:var(--ink);display:flex;flex-direction:column}
+  .card::before{content:'';position:absolute;inset:0;z-index:0;
+    background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:92px 92px}
+  .card::after{content:'';position:absolute;inset:0;z-index:0;
+    background:radial-gradient(65% 42% at 50% -10%,rgba(248,152,32,.16),transparent 70%),
+               radial-gradient(55% 32% at 50% 110%,rgba(248,152,32,.12),transparent 70%)}
+
+  /* ===== topo ===== */
+  .top{position:relative;z-index:4;padding:62px 80px 0;display:flex;align-items:center;gap:24px}
+  .top .logo{height:62px;width:auto}
+  .badge{margin-left:auto;text-align:right;border:2px solid var(--o);border-radius:16px;
+    padding:14px 22px;background:rgba(248,152,32,.08);line-height:1.18}
+  .badge .b2{display:block;font-size:1.7rem;font-weight:900;color:var(--paper);letter-spacing:.3px}
+  .badge .b1{display:block;font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:700;
+    letter-spacing:1.5px;color:var(--mute)}
+
+  /* ===== foto recortada do prof ===== */
+  .figure{position:absolute;right:-120px;bottom:0;height:76%;width:auto;
+    object-fit:contain;object-position:bottom right;z-index:1;
+    filter:grayscale(1) contrast(1.06) brightness(.98) drop-shadow(0 20px 50px rgba(0,0,0,.55));
+    -webkit-mask-image:linear-gradient(to top,transparent 0,#000 13%);
+    mask-image:linear-gradient(to top,transparent 0,#000 13%)}
+  .card.story .figure{height:54%;right:-90px}
+  /* glow laranja atrás da foto */
+  .figglow{position:absolute;right:2%;bottom:4%;width:48%;height:62%;z-index:0;
+    background:radial-gradient(circle at 60% 50%,rgba(248,152,32,.18),transparent 65%);filter:blur(20px)}
+
+  /* ===== miolo ===== */
+  .body{position:relative;z-index:3;flex:1;display:flex;flex-direction:column;justify-content:center;
+    padding:40px 80px;text-align:left}
+  .body.has-fig .punch,.body.has-fig .lead,.body.has-fig .sub,.body.has-fig .pr,.body.has-fig .flow,.body.has-fig .stats{max-width:600px}
+  .label{font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700;letter-spacing:5px;
+    text-transform:uppercase;color:var(--o);margin-bottom:28px}
+  .rule{width:130px;height:9px;background:var(--o);border-radius:5px;margin:0 0 32px}
+  .punch{font-weight:900;line-height:1.0;font-size:7rem;letter-spacing:-2.5px}
+  .punch.sm{font-size:5.6rem;line-height:1.03}
+  .punch.xs{font-size:4.6rem;line-height:1.05}
+  .punch .o{color:var(--o)}
+  .sub{font-family:'JetBrains Mono',monospace;font-weight:500;font-size:2rem;letter-spacing:1px;margin-top:26px}
+  .sub .s{color:var(--o);margin:0 4px}
+  .lead{font-size:2.2rem;color:var(--mute);max-width:880px;line-height:1.4;margin-top:30px}
+  .punch-mini{font-size:2.7rem;font-weight:900;line-height:1.12;letter-spacing:-.5px;margin-top:38px;color:var(--paper)}
+  .punch-mini .o{color:var(--o)}
+  .lead strong{color:var(--paper);font-weight:800}
+  .lead .o{color:var(--o);font-weight:800}
+
+  .logos{display:flex;flex-wrap:wrap;gap:18px;margin-top:54px}
+  .logos .lg{display:inline-flex;align-items:center;gap:15px;padding:16px 26px;border-radius:18px;
+    background:rgba(255,255,255,.05);border:1px solid var(--line);font-weight:800;font-size:1.55rem}
+  .logos .lg img{width:46px;height:46px;filter:brightness(0) invert(1);opacity:.92}
+  .logos .lg.aws img{width:62px;height:auto}
+
+  /* ===== CAPA (slide 1) ===== */
+  .body.cap{justify-content:space-between;padding-top:34px;padding-bottom:30px;text-align:left}
+  .cap-top{display:flex;flex-direction:column}
+  .cap-h{font-weight:900;font-size:6.8rem;line-height:.96;letter-spacing:-2.5px}
+  .cap-ia{font-size:3rem;font-weight:900;margin-top:20px;letter-spacing:-.5px;line-height:1.1}
+  .cap-ia .o{color:var(--o)}
+  .cap-8{margin-top:30px;display:inline-flex;align-items:center;gap:16px;flex-wrap:wrap;
+    font-size:2.2rem;font-weight:800;color:var(--paper)}
+  .cap-8 b{color:#000;background:var(--o);padding:8px 20px;border-radius:14px;font-size:2.7rem;font-weight:900;
+    box-shadow:0 10px 30px rgba(248,152,32,.35)}
+  .logos.colored{margin-top:30px}
+  .logos.colored .lg img{filter:none;opacity:1}
+  /* feature inferior: bio (esq) + foto GRANDE (dir) */
+  .cap-feature{position:relative;display:flex;align-items:center;flex:1;margin-top:10px}
+  .cap-bio{position:relative;z-index:2;max-width:455px}
+  .cap-name{display:block;font-size:2.5rem;font-weight:900;line-height:1.05}
+  .cap-role{display:block;font-size:1.5rem;color:var(--o);font-weight:800;margin-top:6px}
+  .cap-bio-txt{display:block;font-size:1.5rem;color:var(--mute);line-height:1.38;margin-top:16px}
+  .cap-bio-txt b{color:var(--paper);font-weight:900}
+  .cap-photo-big{position:absolute;right:-46px;bottom:0;height:600px;width:auto;z-index:1;
+    object-fit:contain;object-position:bottom right;
+    filter:saturate(1.05) contrast(1.03) drop-shadow(0 18px 50px rgba(0,0,0,.6));
+    -webkit-mask-image:linear-gradient(to top,transparent 0,#000 8%);
+    mask-image:linear-gradient(to top,transparent 0,#000 8%)}
+  /* glow laranja atrás da foto grande */
+  .cap-feature::before{content:'';position:absolute;right:2%;bottom:4%;width:44%;height:72%;z-index:0;
+    background:radial-gradient(circle at 60% 45%,rgba(248,152,32,.20),transparent 65%);filter:blur(26px)}
+  body.story .cap-h{font-size:7.6rem}
+  body.story .cap-ia{font-size:3.4rem}
+  body.story .cap-photo-big{height:720px}
+
+  /* ===== slide com FIGURA COLORIDA grande (estilo capa) ===== */
+  .colorfig .figure{filter:saturate(1.06) contrast(1.04) drop-shadow(0 18px 50px rgba(0,0,0,.6));
+    height:auto;width:480px;right:-26px;bottom:0;
+    -webkit-mask-image:linear-gradient(to top,transparent 0,#000 8%);
+    mask-image:linear-gradient(to top,transparent 0,#000 8%)}
+  .card.story.colorfig .figure{width:560px;height:auto;right:-20px}
+  .colorfig .figglow{right:0;bottom:3%;width:52%;height:66%}
+  .body.s2 .punch,.body.s2 .lead,.body.s2 .label{max-width:560px}
+
+  /* ===== slide 4: orbital "engenharia de contexto" ===== */
+  .body.s4{align-items:center;text-align:center}
+  .s4bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;
+    opacity:.12;filter:grayscale(1) brightness(.6) blur(2px);
+    -webkit-mask-image:radial-gradient(120% 78% at 50% 46%,#000 28%,transparent 86%);
+    mask-image:radial-gradient(120% 78% at 50% 46%,#000 28%,transparent 86%)}
+  .orbit{position:relative;width:580px;height:580px;margin:14px auto 6px}
+  .orbit-lines{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+  .orbit::before{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:330px;height:330px;border-radius:50%;z-index:0;
+    background:radial-gradient(circle,rgba(217,119,87,.30),transparent 64%);filter:blur(8px)}
+  .orbit-core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;text-align:center}
+  .orbit-core img{width:230px;height:auto;filter:drop-shadow(0 12px 34px rgba(217,119,87,.55))}
+  .orbit-core .cc{display:block;font-weight:900;font-size:1.55rem;margin-top:2px;letter-spacing:-.3px}
+  .orbit-core .cc .o{color:var(--o)}
+  .onode{position:absolute;transform:translate(-50%,-50%);z-index:3;white-space:nowrap;
+    font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.5rem;
+    padding:13px 22px;border-radius:14px;background:#13131c;border:1.5px solid var(--o);
+    color:var(--paper);box-shadow:0 8px 24px rgba(0,0,0,.55)}
+  .body.story .orbit{width:620px;height:620px}
+
+  .bigicons{display:flex;gap:56px;align-items:center;margin-bottom:18px}
+  .bigicons img{width:200px;height:200px;filter:drop-shadow(0 14px 36px rgba(0,0,0,.5))}
+  .bigicons img.aws{width:300px;height:auto}
+
+  /* chips de tópicos (slide Claude Code) */
+  .chips{display:flex;flex-wrap:wrap;gap:16px;margin-top:42px;max-width:640px}
+  .chips span{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.6rem;
+    padding:14px 24px;border-radius:14px;border:1px solid var(--o);color:var(--paper);background:rgba(248,152,32,.08)}
+
+  /* mock de entrevista */
+  .ivw{margin-top:40px;max-width:640px;background:#000;border:1px solid var(--line);border-radius:22px;overflow:hidden}
+  .ivw .h{padding:18px 26px;border-bottom:1px solid var(--line);font-family:'JetBrains Mono',monospace;
+    font-size:1.2rem;color:var(--mute);letter-spacing:1px}
+  .ivw .h b{color:var(--o)}
+  .ivw .q{padding:24px 26px;font-size:2rem;font-weight:800;line-height:1.3}
+  .ivw .q .o{color:var(--o)}
+
+  /* mini PR */
+  .pr{margin-top:40px;max-width:760px;background:#000;border:1px solid var(--line);border-radius:22px;overflow:hidden}
+  .pr .h{padding:18px 26px;border-bottom:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:1.25rem;color:var(--mute)}
+  .pr .h b{color:var(--paper)}
+  .pr .c{padding:24px 26px;font-size:1.7rem;line-height:1.4}
+  .pr .c .who{font-weight:900;font-size:1.25rem;color:var(--mute);letter-spacing:1px;margin-bottom:8px}
+  .pr .c .srp{color:var(--o);font-weight:900}
+
+  .flow{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-top:42px;
+    font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.9rem}
+  .flow span{padding:14px 24px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.04)}
+  .flow i{color:var(--o);font-style:normal;font-size:2rem}
+
+  /* professor */
+  .prof-photo{width:360px;height:360px;border-radius:50%;object-fit:cover;
+    filter:grayscale(1) contrast(1.05);border:6px solid var(--o);box-shadow:0 26px 70px rgba(0,0,0,.6)}
+  .stats{display:flex;gap:58px;margin-top:44px}
+  .stats b{display:block;font-size:3.8rem;font-weight:900;color:var(--o)}
+  .stats span{font-size:1.4rem;color:var(--mute)}
+
+  /* cta */
+  .embreve{font-weight:900;font-size:4rem;letter-spacing:8px;color:var(--o);margin-bottom:14px}
+  .selo{display:inline-flex;align-items:center;gap:14px;margin-top:38px;padding:20px 32px;border-radius:18px;
+    background:rgba(255,255,255,.05);border:1px solid var(--line);font-weight:800;font-size:1.75rem}
+  .selo b{color:var(--o);font-size:2rem}
+  .pill{display:inline-flex;align-items:center;margin-top:42px;padding:26px 50px;border-radius:60px;
+    font-weight:900;font-size:1.9rem;color:#000;background:var(--o)}
+
+  /* rodapé */
+  .foot{position:relative;z-index:4;padding:0 80px 64px;display:flex;align-items:center;gap:18px;
+    font-size:1.3rem;color:var(--mute);font-weight:800}
+  .foot .br{color:var(--paper)}
+  .foot .sep{width:8px;height:8px;border-radius:50%;background:var(--o)}
+  .foot .end{margin-left:auto;font-family:'JetBrains Mono',monospace;color:var(--o);font-size:1.45rem;letter-spacing:1px}
+
+  body.story .top{padding-top:120px}
+  body.story .foot{padding-bottom:140px}
+  body.story .punch{font-size:7.6rem}
+  body.story .punch.sm{font-size:6rem}
+  body.story .punch.xs{font-size:5rem}
+</style>
+</head>
+<body>
+  <div class="card" id="card">
+    <img class="s4bg" id="s4bg" style="display:none" alt="">
+    <div class="figglow" id="figglow" style="display:none"></div>
+    <img class="figure" id="figure" style="display:none" alt="">
+    <div class="top">
+      <img class="logo" src="../assets/svg/logo-full.svg" alt="programa AI">
+      <div class="badge"><span class="b2">📍 Presencial</span><span class="b1">ou remoto via Zoom</span></div>
+    </div>
+    <div class="body" id="body"></div>
+    <div class="foot" id="foot"></div>
+  </div>
+
+<script>
+  const S = n => `../assets/svg/${n}.svg`;
+  const lg = (n,t,c='') => `<span class="lg ${c}"><img src="${S(n)}" alt="">${t}</span>`;
+  const logosRow = `<div class="logos">
+      ${lg('java','Java 21')}${lg('spring','Spring')}${lg('rabbitmq-mono','RabbitMQ')}
+      ${lg('kafka','Kafka')}${lg('aws','AWS','aws')}${lg('claude','Claude Code')}</div>`;
+
+  // foto recortada (cutout). fallback p/ foto original se não houver recorte.
+  const FIG = f => `../assets/prof/${f}`;
+
+  const SLIDES = [
+    { fig:'', // 1 CAPA (layout próprio)
+      html:`<div class="cap-top">
+        <div class="rule"></div>
+        <h1 class="cap-h">JAVA<br>AVANÇADO</h1>
+        <div class="cap-ia">&amp; Dev com <span class="o">Agentes de IA</span></div>
+        <div class="cap-8">Formação completa em <b>8 sábados</b></div>
+        <div class="logos colored">
+          ${lg('java','Java')}${lg('spring','Spring')}${lg('rabbitmq','RabbitMQ')}${lg('kafka','Kafka')}${lg('aws','AWS','aws')}${lg('claude','Claude Code')}
+        </div>
+      </div>
+      <div class="cap-feature">
+        <div class="cap-bio">
+          <span class="cap-name">Prof. Kelson Almeida</span>
+          <span class="cap-role">Dev Sênior · Prof. Universitário</span>
+          <span class="cap-bio-txt">Mais de <b>200 devs formados</b> em cursos presenciais — muitos hoje em grandes empresas do Brasil e do exterior.</span>
+        </div>
+        <img class="cap-photo-big" src="${FIG('cut-prof1.png')}" alt="Prof. Kelson Almeida">
+      </div>` },
+
+    { fig:'cut-prof3.png', colorFig:true, bodyCls:'s2', // 2 A REAL SOBRE IA & EMPREGO
+      html:`<div class="label">a real sobre IA &amp; emprego</div>
+        <h2 class="punch sm">A IA não vai<br>te substituir.<br><span class="o">Quem orquestra IA, vai.</span></h2>
+        <p class="lead">Aqui você vira <strong>esse</strong> dev: aprende a <strong>orquestrar agentes de IA</strong> — Claude Code, specs, contexto — e a <strong>revisar</strong> o que eles geram.</p>` },
+
+    { fig:'', // 3 ENTREVISTA (vibe coding)
+      html:`<div class="label">spoiler da entrevista técnica</div>
+        <h2 class="punch sm">Não existe entrevista<br>de <span class="o">vibe coding.</span></h2>
+        <p class="lead">A IA escreve o código — mas a vaga ainda exige o que ela não decide por você: <strong>arquitetura, engenharia e padrões de projeto</strong>.</p>
+        <div class="ivw mono">
+          <div class="h">// entrevistador</div>
+          <div class="q">"Onde você usaria <span class="o">Strategy</span> — e onde isso vira <span class="o">over-engineering</span>?"</div>
+        </div>
+        <p class="punch-mini">Vibe coding faz o protótipo.<br><span class="o">Engenharia passa na entrevista.</span></p>` },
+
+    { fig:'', bg:'prof4.png', bodyCls:'s4', // 4 CLAUDE CODE / engenharia de contexto
+      html:`<div class="label">engenharia de contexto</div>
+        <h2 class="punch xs">Não é prompt.<br>É <span class="o">orquestrar o agente.</span></h2>
+        <div class="orbit">
+          <svg class="orbit-lines" viewBox="0 0 660 660" preserveAspectRatio="xMidYMid meet">
+            <g stroke="rgba(248,152,32,.45)" stroke-width="2.5" stroke-dasharray="3 9" stroke-linecap="round">
+              <line x1="330" y1="330" x2="330" y2="60"/>
+              <line x1="330" y1="330" x2="541" y2="162"/>
+              <line x1="330" y1="330" x2="593" y2="390"/>
+              <line x1="330" y1="330" x2="447" y2="573"/>
+              <line x1="330" y1="330" x2="213" y2="573"/>
+              <line x1="330" y1="330" x2="67"  y2="390"/>
+              <line x1="330" y1="330" x2="119" y2="162"/>
+            </g>
+          </svg>
+          <div class="orbit-core">
+            <img src="${FIG('claudecode.png')}" alt="Claude Code">
+            <span class="cc">Claude <span class="o">Code</span></span>
+          </div>
+          <div class="onode" style="left:50%;top:9.1%">CLAUDE.md</div>
+          <div class="onode" style="left:82%;top:24.5%">.specs</div>
+          <div class="onode" style="left:89.8%;top:59.1%">hooks</div>
+          <div class="onode" style="left:67.7%;top:86.8%">subagents</div>
+          <div class="onode" style="left:32.3%;top:86.8%">context</div>
+          <div class="onode" style="left:10.2%;top:59.1%">MCP</div>
+          <div class="onode" style="left:18%;top:24.5%">skills</div>
+        </div>
+        <p class="punch-mini">Você monta o contexto.<br><span class="o">A IA entrega de verdade.</span></p>` },
+
+    { fig:'', // 5 EVENTOS
+      html:`<div class="label">arquitetura orientada a eventos</div>
+        <div class="bigicons"><img src="${S('rabbitmq')}" alt=""><img src="${S('kafka')}" alt=""></div>
+        <h2 class="punch sm">Quando um sistema fala,<br><span class="o">o outro escuta.</span></h2>
+        <p class="lead"><strong>RabbitMQ</strong> e <strong>Kafka</strong> na prática — e o <strong>quadro de decisão</strong> "quando usar qual" que te destaca no mercado.</p>` },
+
+    { fig:'', // 6 NUVEM
+      html:`<div class="label">serverless na nuvem</div>
+        <div class="bigicons"><img class="aws" src="${S('aws-white')}" alt=""></div>
+        <h2 class="punch sm">Serverless que roda em<br><span class="o">produção de verdade.</span></h2>
+        <p class="lead">API Gateway, <strong>Lambda</strong>, <strong>SQS/SNS</strong>, <strong>DynamoDB</strong>, <strong>S3</strong> — o mesmo stack de quem opera a conta.</p>` },
+
+    { fig:'cut-prof2.png', colorFig:true, // 7 PROFESSOR
+      html:`<div class="label">quem te ensina</div>
+        <h2 class="punch sm">Prof. Kelson<br><span class="o">Almeida</span></h2>
+        <p class="lead">MSc · Senior Software Engineer · <strong>Professor Universitário</strong>. Forma devs que hoje estão em grandes empresas — muitos indicados por ele.</p>
+        <div class="stats">
+          <div><b>~200</b><span>devs formados</span></div>
+          <div><b>+12</b><span>turmas</span></div>
+          <div><b>+10</b><span>anos de eng.</span></div>
+        </div>` },
+
+    { fig:'', // 8 CTA
+      html:`<div class="embreve">EM BREVE</div>
+        <h2 class="punch sm">Uma formação completa<br><span class="o">em 8 sábados.</span></h2>
+        <p class="lead">Do Java de sênior aos eventos e à nuvem — dirigindo agentes de IA o tempo todo.</p>
+        <div class="selo">São <b>8 sábados</b> · presencial <b>ou remoto via Zoom</b></div>
+        <div class="pill">Fique de olho — as vagas abrem em breve</div>` },
+  ];
+
+  const qs = new URLSearchParams(location.search);
+  const idx = Math.min(Math.max(parseInt(qs.get('s')||'1'),1),SLIDES.length)-1;
+  const story = (qs.get('fmt')||'feed')==='story';
+  if (story) document.body.classList.add('story');
+  document.getElementById('card').classList.toggle('story', story);
+
+  const sl = SLIDES[idx];
+  const body = document.getElementById('body');
+  body.className = 'body' + (sl.fig ? ' has-fig' : '') + (idx===0 ? ' cap' : '') + (sl.bodyCls ? ' '+sl.bodyCls : '');
+  document.getElementById('card').classList.toggle('colorfig', !!sl.colorFig);
+  body.innerHTML = sl.html;
+
+  const s4bg = document.getElementById('s4bg');
+  if (sl.bg){ s4bg.src = FIG(sl.bg); s4bg.style.display = ''; } else { s4bg.style.display = 'none'; }
+
+  if (sl.fig){
+    const fig = document.getElementById('figure');
+    fig.src = FIG(sl.fig);
+    fig.onerror = () => {                  // fallback: usa a foto original (com máscara)
+      const orig = sl.fig.replace('cut-','');
+      if (fig.src.indexOf(orig) === -1) fig.src = FIG(orig);
+      else fig.style.display = 'none';
+    };
+    fig.style.display = '';
+    document.getElementById('figglow').style.display = '';
+  }
+
+  const last = idx===SLIDES.length-1;
+  document.getElementById('foot').innerHTML =
+    `<span class="br">Java Avançado · Dev com Agentes de IA</span><span class="sep"></span>` +
+    (last ? `<span class="end">${idx+1}/${SLIDES.length}</span>`
+          : `<span>EM BREVE</span><span class="end">arraste &rarr;</span>`);
+</script>
+</body>
+</html>

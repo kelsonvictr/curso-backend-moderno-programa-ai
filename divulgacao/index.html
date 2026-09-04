@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Java de Mercado: Eventos, AWS &amp; Agentes de IA — em breve</title>
+<meta name="description" content="Formação avançada de engenharia backend: eventos, AWS serverless e desenvolvimento com agentes de IA. 8 sábados. Em breve.">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/styles.css">
+<style>
+  /* ===========================================================
+     CARROSSEL DE DIVULGAÇÃO — Java de Mercado
+     Standalone, autoexplicativo: setas, dots, swipe, teclado,
+     autoplay com barra de progresso. Respeita prefers-reduced-motion.
+     =========================================================== */
+  html,body{height:100%}
+  body{overflow:hidden;background:var(--bg)}
+
+  .cx{position:fixed;inset:0;overflow:hidden}
+  .cx-track{display:flex;height:100%;will-change:transform;
+    transition:transform .8s cubic-bezier(.22,1,.36,1)}
+  .slide{flex:0 0 100%;height:100%;position:relative;
+    display:flex;align-items:center;justify-content:center;
+    padding:64px 28px;overflow:hidden}
+  .slide-inner{position:relative;z-index:2;max-width:860px;width:100%;text-align:center}
+
+  /* fundo de cada slide: gradiente de marca + brilhos radiais */
+  .slide::before{content:'';position:absolute;inset:0;z-index:0;opacity:.16}
+  .slide::after{content:'';position:absolute;inset:0;z-index:1;
+    background:radial-gradient(900px 600px at 50% 18%,rgba(255,255,255,.05),transparent 60%)}
+  .s-capa::before     {background:radial-gradient(circle at 25% 25%,var(--java),transparent 55%),radial-gradient(circle at 80% 80%,var(--claude),transparent 55%)}
+  .s-inversao::before {background:radial-gradient(circle at 30% 30%,var(--claude),transparent 55%),radial-gradient(circle at 75% 75%,var(--ai),transparent 55%)}
+  .s-eventos::before  {background:radial-gradient(circle at 25% 30%,var(--rabbit),transparent 55%),radial-gradient(circle at 78% 75%,var(--kafka),transparent 55%)}
+  .s-nuvem::before    {background:radial-gradient(circle at 30% 25%,var(--aws),transparent 55%),radial-gradient(circle at 75% 80%,var(--apigw),transparent 55%)}
+  .s-ia::before       {background:radial-gradient(circle at 28% 30%,var(--claude),transparent 55%),radial-gradient(circle at 80% 78%,var(--accent),transparent 55%)}
+  .s-prof::before     {background:radial-gradient(circle at 28% 30%,var(--spring),transparent 55%),radial-gradient(circle at 80% 78%,var(--accent4),transparent 55%)}
+  .s-cta::before      {background:radial-gradient(circle at 50% 30%,var(--java),transparent 50%),radial-gradient(circle at 50% 90%,var(--claude),transparent 55%);opacity:.22}
+
+  /* tipografia dos slides */
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:800;
+    letter-spacing:3px;text-transform:uppercase;color:var(--text-dim);
+    border:1px solid rgba(255,255,255,.14);padding:7px 18px;border-radius:50px;margin-bottom:26px;
+    background:rgba(255,255,255,.03)}
+  .punch{font-family:'Nunito',sans-serif;font-weight:900;line-height:1.05;
+    font-size:clamp(2.3rem,7vw,5rem);letter-spacing:-1px;margin-bottom:8px}
+  .punch .grad{background:linear-gradient(120deg,var(--g1,var(--java)),var(--g2,var(--claude)));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .scribble{font-family:'Caveat',cursive;font-weight:700;
+    font-size:clamp(1.5rem,4.5vw,2.6rem);color:var(--accent-c,var(--claude));margin:-2px 0 18px;display:block}
+  .lead{font-size:clamp(1.05rem,2.4vw,1.4rem);color:var(--text-dim);max-width:680px;margin:0 auto;line-height:1.55}
+  .lead strong{color:var(--text)}
+
+  /* fileira de logos */
+  .logos{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin:30px 0 0}
+  .logos .lg{display:inline-flex;align-items:center;gap:9px;padding:10px 18px;border-radius:50px;
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10);
+    font-weight:800;font-size:.92rem}
+  .logos .lg img{width:24px;height:24px}
+  .logos .lg.aws img{width:32px}
+
+  /* logo gigante centralizado (slides temáticos) */
+  .bigicon{font-size:clamp(3.4rem,11vw,6.5rem);line-height:1;margin-bottom:22px;display:flex;gap:22px;justify-content:center;align-items:center}
+  .bigicon img{width:clamp(64px,14vw,120px);height:clamp(64px,14vw,120px);filter:drop-shadow(0 10px 30px rgba(0,0,0,.5))}
+  .bigicon img.aws{width:clamp(86px,18vw,156px);height:auto}
+
+  /* mock "PR review" mini (slide inversão) */
+  .mini-pr{margin:26px auto 0;max-width:520px;text-align:left;background:#0f1320cc;backdrop-filter:blur(4px);
+    border:1px solid rgba(255,255,255,.10);border-radius:14px;overflow:hidden;font-family:'JetBrains Mono',monospace}
+  .mini-pr .top{display:flex;align-items:center;gap:8px;padding:9px 14px;background:rgba(217,119,87,.10);border-bottom:1px solid rgba(255,255,255,.07);font-size:.74rem;color:var(--text-dim)}
+  .mini-pr .top b{color:var(--claude)}
+  .mini-pr .cmt{padding:13px 15px;font-family:'Nunito',sans-serif;font-size:.9rem}
+  .mini-pr .cmt .who{font-weight:800;font-size:.82rem;margin-bottom:3px}
+  .mini-pr .cmt code{background:var(--code-bg);color:var(--accent2);padding:1px 6px;border-radius:5px;font-size:.8rem}
+
+  /* professor */
+  .prof-photo{width:clamp(150px,30vw,220px);height:clamp(150px,30vw,220px);border-radius:50%;
+    object-fit:cover;margin:0 auto 22px;display:block;border:4px solid rgba(255,255,255,.12);
+    box-shadow:0 18px 50px rgba(0,0,0,.5),0 0 0 8px rgba(109,179,63,.10)}
+  .prof-stats{display:flex;gap:26px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+  .prof-stats .st{text-align:center}
+  .prof-stats .st b{display:block;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:900;color:var(--text);
+    background:linear-gradient(120deg,var(--spring),var(--accent4));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .prof-stats .st span{font-size:.78rem;color:var(--text-dim);letter-spacing:.5px}
+
+  /* CTA */
+  .cta-badge{display:inline-block;font-weight:900;font-size:clamp(2rem,6vw,3.4rem);letter-spacing:3px;
+    background:linear-gradient(120deg,var(--java),var(--claude));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
+  .cta-pill{display:inline-flex;align-items:center;gap:10px;margin-top:24px;padding:14px 30px;border-radius:50px;
+    font-weight:900;font-size:1.05rem;color:var(--bg);background:linear-gradient(120deg,var(--java),var(--claude));
+    box-shadow:0 14px 40px rgba(217,119,87,.35)}
+  .cta-sub{margin-top:18px;color:var(--text-dim);font-size:.92rem}
+
+  /* selo "8 sábados" reutilizável */
+  .selo{display:inline-flex;align-items:center;gap:10px;margin-top:26px;padding:10px 22px;border-radius:14px;
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);font-weight:800}
+  .selo b{color:var(--java);font-size:1.15rem}
+
+  /* ===== entrada animada do slide ativo ===== */
+  .slide .slide-inner > *{opacity:0;transform:translateY(26px)}
+  .slide.is-active .slide-inner > *{animation:cxIn .7s cubic-bezier(.22,1,.36,1) forwards}
+  .slide.is-active .slide-inner > *:nth-child(1){animation-delay:.05s}
+  .slide.is-active .slide-inner > *:nth-child(2){animation-delay:.16s}
+  .slide.is-active .slide-inner > *:nth-child(3){animation-delay:.27s}
+  .slide.is-active .slide-inner > *:nth-child(4){animation-delay:.38s}
+  .slide.is-active .slide-inner > *:nth-child(5){animation-delay:.49s}
+  .slide.is-active .slide-inner > *:nth-child(6){animation-delay:.60s}
+  @keyframes cxIn{to{opacity:1;transform:translateY(0)}}
+
+  /* ===== controles ===== */
+  .cx-bar{position:fixed;top:0;left:0;right:0;height:4px;z-index:30;background:rgba(255,255,255,.06)}
+  .cx-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--java),var(--claude))}
+  .cx-bar i.run{animation:cxFill var(--dur,7s) linear forwards}
+  @keyframes cxFill{from{width:0}to{width:100%}}
+
+  .cx-arrow{position:fixed;top:50%;transform:translateY(-50%);z-index:30;
+    width:54px;height:54px;border-radius:50%;border:1px solid rgba(255,255,255,.14);
+    background:rgba(18,18,30,.55);backdrop-filter:blur(6px);color:var(--text);
+    font-size:1.8rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:background .2s,transform .2s}
+  .cx-arrow:hover{background:var(--surface3);transform:translateY(-50%) scale(1.08)}
+  .cx-arrow.prev{left:18px} .cx-arrow.next{right:18px}
+
+  .cx-dots{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:30;
+    display:flex;gap:10px}
+  .cx-dot{width:10px;height:10px;border-radius:50%;border:none;cursor:pointer;padding:0;
+    background:rgba(255,255,255,.22);transition:all .3s}
+  .cx-dot.active{background:linear-gradient(120deg,var(--java),var(--claude));width:30px;border-radius:6px}
+
+  .cx-counter{position:fixed;bottom:28px;right:22px;z-index:30;font-family:'JetBrains Mono',monospace;
+    font-size:.82rem;color:var(--text-dim)}
+  .cx-counter b{color:var(--text)}
+  .cx-home{position:fixed;top:16px;right:18px;z-index:30;text-decoration:none;color:var(--text-dim);
+    font-size:.8rem;font-weight:700;border:1px solid rgba(255,255,255,.12);padding:7px 14px;border-radius:50px;
+    background:rgba(18,18,30,.5);transition:color .2s,border-color .2s}
+  .cx-home:hover{color:var(--text);border-color:rgba(255,255,255,.3)}
+
+  @media (max-width:620px){
+    .cx-arrow{width:44px;height:44px;font-size:1.4rem}
+    .cx-arrow.prev{left:8px}.cx-arrow.next{right:8px}
+    .slide{padding:54px 18px}
+    .cx-counter{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .cx-track{transition:none}
+    .slide .slide-inner > *{opacity:1;transform:none;animation:none}
+    .cx-bar i.run{animation:none;width:100%}
+  }
+</style>
+</head>
+<body>
+
+<div class="cx-bar"><i></i></div>
+<a class="cx-home" href="../">site do curso ↗</a>
+
+<div class="cx">
+  <div class="cx-track">
+
+    <!-- 1 · CAPA -->
+    <section class="slide s-capa is-active" style="--g1:var(--java);--g2:var(--claude);--accent-c:var(--claude)">
+      <div class="slide-inner">
+        <span class="kicker">Programa AI · Formação Avançada · continuidade do Fullstack</span>
+        <h1 class="punch"><span class="grad">Java de Mercado</span></h1>
+        <span class="scribble">Eventos, AWS &amp; Agentes de IA 🤖</span>
+        <p class="lead">Engenharia backend de verdade — trabalhando como um <strong>sênior em 2026</strong>.</p>
+        <div class="logos">
+          <span class="lg" style="color:var(--java)"><img src="../assets/svg/java.svg" alt="Java"> Java 21</span>
+          <span class="lg" style="color:var(--spring)"><img src="../assets/svg/spring.svg" alt="Spring"> Spring</span>
+          <span class="lg" style="color:var(--rabbit)"><img src="../assets/svg/rabbitmq.svg" alt="RabbitMQ"> RabbitMQ</span>
+          <span class="lg" style="color:var(--kafka)"><img src="../assets/svg/kafka.svg" alt="Kafka"> Kafka</span>
+          <span class="lg aws" style="color:var(--aws)"><img src="../assets/svg/aws.svg" alt="AWS"> AWS</span>
+          <span class="lg" style="color:var(--claude)"><img src="../assets/svg/claude.svg" alt="Claude"> Claude Code</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 · A INVERSÃO -->
+    <section class="slide s-inversao" style="--g1:var(--claude);--g2:var(--ai);--accent-c:var(--ai)">
+      <div class="slide-inner">
+        <span class="kicker">o diferencial</span>
+        <h2 class="punch">Escrever código virou commodity.<br><span class="grad">Julgamento, não.</span></h2>
+        <p class="lead">A IA já escreve a sintaxe. Aqui você aprende o que ela não faz: <strong>reconhecer código bom e cobrar isso</strong>. O Claude gera; <strong>você revisa</strong>.</p>
+        <div class="mini-pr">
+          <div class="top">PedidoService.java · PR de <b>🤖 claude-code</b></div>
+          <div class="cmt">
+            <div class="who">🧑‍💻 Você · revisor</div>
+            Uma classe validando, salvando, mandando e-mail e gerando nota fiscal? Isso viola <code>SRP</code>. Refatora.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 · EVENTOS -->
+    <section class="slide s-eventos" style="--g1:var(--rabbit);--g2:var(--kafka);--accent-c:var(--rabbit)">
+      <div class="slide-inner">
+        <span class="kicker">Bloco 2 · Arquitetura orientada a eventos</span>
+        <div class="bigicon">
+          <img src="../assets/svg/rabbitmq.svg" alt="RabbitMQ">
+          <img src="../assets/svg/kafka.svg" alt="Kafka">
+        </div>
+        <h2 class="punch">Quando um sistema fala,<br><span class="grad">o outro escuta.</span></h2>
+        <p class="lead"><strong>RabbitMQ</strong> e <strong>Kafka</strong> na prática — filas, pub/sub, dead-letter, idempotência — e o <strong>quadro de decisão</strong> "quando usar qual" que te separa no mercado.</p>
+      </div>
+    </section>
+
+    <!-- 4 · NUVEM -->
+    <section class="slide s-nuvem" style="--g1:var(--aws);--g2:#ffd29a;--accent-c:var(--aws)">
+      <div class="slide-inner">
+        <span class="kicker">Bloco 3 · Serverless na nuvem</span>
+        <div class="bigicon"><img class="aws" src="../assets/svg/aws.svg" alt="AWS"></div>
+        <h2 class="punch">Serverless que roda em<br><span class="grad">produção de verdade.</span></h2>
+        <p class="lead">API Gateway, <strong>Lambda</strong>, <strong>SQS/SNS</strong>, <strong>DynamoDB</strong> e <strong>S3</strong> — o mesmo stack de quem opera a conta. Você termina com um sistema event-driven no portfólio.</p>
+      </div>
+    </section>
+
+    <!-- 5 · AGENTES DE IA -->
+    <section class="slide s-ia" style="--g1:var(--claude);--g2:var(--accent);--accent-c:var(--claude)">
+      <div class="slide-inner">
+        <span class="kicker">a trilha que atravessa o curso inteiro</span>
+        <div class="bigicon"><img src="../assets/svg/claude.svg" alt="Claude">🤖</div>
+        <h2 class="punch">A IA escreve.<br><span class="grad">Você decide se presta.</span></h2>
+        <p class="lead">Você aprende <strong>SDD</strong> com Claude Code: <strong>spec → plan → execute → review</strong>. Dirigir e criticar o agente vira a sua vantagem — em qualquer empresa, em qualquer stack.</p>
+      </div>
+    </section>
+
+    <!-- 6 · PROFESSOR -->
+    <section class="slide s-prof" style="--g1:var(--spring);--g2:var(--accent4);--accent-c:var(--spring)">
+      <div class="slide-inner">
+        <img class="prof-photo" src="../assets/prof/image.png" alt="Prof. Kelson Almeida">
+        <h2 class="punch" style="font-size:clamp(1.8rem,5vw,3rem)"><span class="grad">Prof. Kelson Almeida</span></h2>
+        <p class="lead">MSc · Senior Software Engineer (NTT Data @ Itaú) · professor na UNIESP. O stack de nuvem do curso espelha sistemas de produção que ele opera.</p>
+        <div class="prof-stats">
+          <div class="st"><b>~200</b><span>devs formados</span></div>
+          <div class="st"><b>5</b><span>turmas do Fullstack</span></div>
+          <div class="st"><b>+10</b><span>anos de engenharia</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 · CTA -->
+    <section class="slide s-cta" style="--g1:var(--java);--g2:var(--claude);--accent-c:var(--claude)">
+      <div class="slide-inner">
+        <span class="cta-badge">EM BREVE</span>
+        <h2 class="punch" style="font-size:clamp(2rem,6vw,3.6rem)">Uma formação completa<br><span class="grad">em 8 sábados.</span></h2>
+        <p class="lead">Do Java de sênior aos eventos e à nuvem — dirigindo agentes de IA do primeiro ao último dia.</p>
+        <div class="selo">📅 <span>São <b>8 sábados</b> · presencial · mão na massa o dia inteiro</span></div>
+        <div class="logos" style="margin-top:24px">
+          <span class="lg"><img src="../assets/svg/java.svg" alt=""></span>
+          <span class="lg"><img src="../assets/svg/spring.svg" alt=""></span>
+          <span class="lg"><img src="../assets/svg/rabbitmq.svg" alt=""></span>
+          <span class="lg"><img src="../assets/svg/kafka.svg" alt=""></span>
+          <span class="lg aws"><img src="../assets/svg/aws.svg" alt=""></span>
+          <span class="lg"><img src="../assets/svg/claude.svg" alt=""></span>
+        </div>
+        <div class="cta-pill">🔔 Fique de olho — as vagas abrem em breve</div>
+        <p class="cta-sub">Programa AI · UNIESP · continuidade do curso Fullstack</p>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<button class="cx-arrow prev" aria-label="Anterior">‹</button>
+<button class="cx-arrow next" aria-label="Próximo">›</button>
+<div class="cx-dots" role="tablist"></div>
+<div class="cx-counter"><b class="cur">1</b> / <span class="tot">7</span></div>
+
+<script>
+(function(){
+  const track   = document.querySelector('.cx-track');
+  const slides  = [...document.querySelectorAll('.slide')];
+  const dotsBox = document.querySelector('.cx-dots');
+  const bar     = document.querySelector('.cx-bar i');
+  const curEl   = document.querySelector('.cx-counter .cur');
+  const N = slides.length;
+  const DUR = 7000; // ms por slide
+  let i = 0, timer = null;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelector('.cx-counter .tot').textContent = N;
+
+  // dots
+  slides.forEach((_, idx) => {
+    const d = document.createElement('button');
+    d.className = 'cx-dot' + (idx===0?' active':'');
+    d.setAttribute('aria-label', 'Slide ' + (idx+1));
+    d.addEventListener('click', () => go(idx, true));
+    dotsBox.appendChild(d);
+  });
+  const dots = [...dotsBox.children];
+
+  function go(n, manual){
+    i = (n + N) % N;
+    track.style.transform = 'translateX(' + (-i * 100) + '%)';
+    slides.forEach((s, idx) => s.classList.toggle('is-active', idx===i));
+    dots.forEach((d, idx) => d.classList.toggle('active', idx===i));
+    curEl.textContent = i + 1;
+    history.replaceState(null, '', '#' + (i + 1));
+    restartBar();
+    if (manual) resetTimer();
+  }
+  function next(){ go(i+1); }
+  function prev(){ go(i-1); }
+
+  function restartBar(){
+    if (reduce) return;
+    bar.classList.remove('run');
+    bar.style.setProperty('--dur', DUR + 'ms');
+    void bar.offsetWidth;        // força reflow p/ reiniciar a animação
+    bar.classList.add('run');
+  }
+  function resetTimer(){
+    clearInterval(timer);
+    timer = setInterval(next, DUR);
+  }
+
+  // controles
+  document.querySelector('.cx-arrow.next').addEventListener('click', () => go(i+1, true));
+  document.querySelector('.cx-arrow.prev').addEventListener('click', () => go(i-1, true));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') go(i+1, true);
+    if (e.key === 'ArrowLeft')  go(i-1, true);
+  });
+
+  // swipe (touch)
+  let x0 = null;
+  track.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, {passive:true});
+  track.addEventListener('touchend', e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 45) (dx < 0 ? go(i+1,true) : go(i-1,true));
+    x0 = null;
+  }, {passive:true});
+
+  // pausa ao interagir com o mouse parado em cima
+  const cx = document.querySelector('.cx');
+  cx.addEventListener('mouseenter', () => clearInterval(timer));
+  cx.addEventListener('mouseleave', () => resetTimer());
+
+  // start (slides usam flex:0 0 100%; o track translada de 100% em 100%)
+  const fromHash = parseInt((location.hash || '').replace('#','')) - 1;
+  if (fromHash >= 0 && fromHash < N){ go(fromHash); } else { restartBar(); }
+  if (!reduce) resetTimer();
+})();
+</script>
+</body>
+</html>

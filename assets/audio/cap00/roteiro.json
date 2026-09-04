@@ -1,0 +1,274 @@
+{
+  "0-0": [
+    {
+      "role": "LIA",
+      "text": "Beto, o que você quer beber no café da manhã?"
+    },
+    {
+      "role": "LLM",
+      "text": "Olá! Eu sou o Tico, a LLM dos bastidores. Vamos abrir o autocomplete? Aqui, eu monto a fala do Beto, um pedacinho de cada vez."
+    },
+    {
+      "role": "BETO",
+      "text": "Eu quero..."
+    }
+  ],
+  "0-1": [
+    {
+      "role": "LLM",
+      "text": "A pergunta e o começo da resposta entram juntos. Isso é o contexto."
+    }
+  ],
+  "0-2": [
+    {
+      "role": "LLM",
+      "text": "Um, uma, dois... Nesta cena, escolho: um."
+    }
+  ],
+  "0-3": [
+    {
+      "role": "BETO",
+      "text": "um"
+    }
+  ],
+  "0-4": [
+    {
+      "role": "LLM",
+      "text": "Agora eu leio: eu quero um. E lembro da pista: café da manhã."
+    }
+  ],
+  "0-5": [
+    {
+      "role": "LLM",
+      "text": "Café, chá ou suco? Com essa pista, café ficou na frente."
+    }
+  ],
+  "0-6": [
+    {
+      "role": "BETO",
+      "text": "café"
+    }
+  ],
+  "0-7": [
+    {
+      "role": "LLM",
+      "text": "Café já entrou na frase. Que pedacinho combina depois?"
+    }
+  ],
+  "0-8": [
+    {
+      "role": "LLM",
+      "text": "Quentinho! A frase está ganhando forma."
+    }
+  ],
+  "0-9": [
+    {
+      "role": "BETO",
+      "text": "quentinho"
+    }
+  ],
+  "0-10": [
+    {
+      "role": "LLM",
+      "text": "Mais uma rodada. Até a pontuação faz parte da geração."
+    }
+  ],
+  "0-11": [
+    {
+      "role": "LLM",
+      "text": "Escolho um ponto. Frase encerrada!"
+    }
+  ],
+  "0-12": [],
+  "0-13": [
+    {
+      "role": "BETO",
+      "text": "Eu quero um café quentinho."
+    },
+    {
+      "role": "LLM",
+      "text": "Pronto! Escolhi um pedaço, encaixei na resposta e li tudo de novo. É esse ciclo que a animação mostra. Os números são ilustrativos: na prática, a escolha também pode usar amostragem."
+    }
+  ],
+  "1-0": [
+    {
+      "role": "LIA",
+      "text": "Beto, acabou o café! Só temos chá. O que você quer beber?"
+    },
+    {
+      "role": "LLM",
+      "text": "Opa! A Lia mudou a pista. O começo é o mesmo, mas agora não tem café. Será que a resposta muda?"
+    },
+    {
+      "role": "BETO",
+      "text": "Eu quero..."
+    }
+  ],
+  "1-1": [
+    {
+      "role": "LLM",
+      "text": "Eu quero... Esse começo você já conhece."
+    }
+  ],
+  "1-2": [
+    {
+      "role": "LLM",
+      "text": "Escolho: um. Até aqui, tudo igual."
+    }
+  ],
+  "1-3": [
+    {
+      "role": "BETO",
+      "text": "um"
+    }
+  ],
+  "1-4": [
+    {
+      "role": "LLM",
+      "text": "Olhe a pergunta lá em cima: só temos chá!"
+    }
+  ],
+  "1-5": [
+    {
+      "role": "LLM",
+      "text": "Viu a virada? Agora é chá! A nova pista mudou as possibilidades."
+    }
+  ],
+  "1-6": [
+    {
+      "role": "BETO",
+      "text": "chá"
+    }
+  ],
+  "1-7": [],
+  "1-8": [
+    {
+      "role": "LLM",
+      "text": "Escolho: de."
+    }
+  ],
+  "1-9": [
+    {
+      "role": "BETO",
+      "text": "de"
+    }
+  ],
+  "1-10": [
+    {
+      "role": "LLM",
+      "text": "De quê? Repare: a Lia não disse o sabor."
+    }
+  ],
+  "1-11": [
+    {
+      "role": "LLM",
+      "text": "Camomila parece combinar. Mas esse sabor não veio da Lia!"
+    }
+  ],
+  "1-12": [
+    {
+      "role": "BETO",
+      "text": "camomila"
+    }
+  ],
+  "1-13": [
+    {
+      "role": "LLM",
+      "text": "Falta encerrar a frase."
+    }
+  ],
+  "1-14": [
+    {
+      "role": "LLM",
+      "text": "E um ponto para terminar."
+    }
+  ],
+  "1-15": [],
+  "1-16": [
+    {
+      "role": "BETO",
+      "text": "Eu quero um chá de camomila."
+    },
+    {
+      "role": "LLM",
+      "text": "Contexto muda a resposta! Mas repare no detalhe: a Lia só falou chá. Camomila foi um acréscimo. Uma continuação plausível não é uma informação confirmada."
+    }
+  ],
+  "2-0": [
+    {
+      "role": "LIA",
+      "text": "Beto, qual é o código secreto do meu armário?"
+    },
+    {
+      "role": "LLM",
+      "text": "Atenção à pegadinha: a Lia não contou o segredo! Vamos encenar uma falha: completar a frase mesmo sem saber a resposta."
+    },
+    {
+      "role": "BETO",
+      "text": "O código é..."
+    }
+  ],
+  "2-1": [
+    {
+      "role": "LLM",
+      "text": "A frase pede um número. Mas o contexto não contém o código!"
+    }
+  ],
+  "2-2": [
+    {
+      "role": "LLM",
+      "text": "Aqui, sai o pedaço: quatro, dois. É só um palpite!"
+    }
+  ],
+  "2-3": [
+    {
+      "role": "BETO",
+      "text": "quatro, dois"
+    }
+  ],
+  "2-4": [
+    {
+      "role": "LLM",
+      "text": "Quarenta e dois já entrou. Isso não torna o palpite verdadeiro."
+    }
+  ],
+  "2-5": [
+    {
+      "role": "LLM",
+      "text": "Depois vem: um, sete. Números plausíveis, informação inventada."
+    }
+  ],
+  "2-6": [
+    {
+      "role": "BETO",
+      "text": "um, sete"
+    }
+  ],
+  "2-7": [
+    {
+      "role": "LLM",
+      "text": "A frase vai terminar. Será que podemos confiar?"
+    }
+  ],
+  "2-8": [
+    {
+      "role": "LLM",
+      "text": "Ponto final. Soou convincente, não foi?"
+    }
+  ],
+  "2-9": [],
+  "2-10": [
+    {
+      "role": "BETO",
+      "text": "O código é... quatro, dois, um, sete."
+    },
+    {
+      "role": "LIA",
+      "text": "Ei! Eu nunca te contei esse código!"
+    },
+    {
+      "role": "LLM",
+      "text": "Pegou a falha! Completar texto não é descobrir um segredo. A resposta adequada seria: não tenho essa informação. Modelos podem reconhecer esse limite, mas também podem alucinar. Por isso, verifique!"
+    }
+  ]
+}

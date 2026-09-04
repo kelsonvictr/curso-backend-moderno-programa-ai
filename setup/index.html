@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sábado 0 — Prepare o ambiente | Backend Moderno, Agentes de IA e Cloud</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/styles.css">
+<link rel="stylesheet" href="../shared/components.css">
+<link rel="stylesheet" href="../shared/animations.css">
+<link rel="stylesheet" href="../shared/lab-kit.css?v=3">
+<style>
+  .hero-progress{display:flex;justify-content:center;margin-top:18px}
+  .hero-progress [data-progress]{background:var(--surface2);padding:10px 18px;border-radius:50px;border:1px solid rgba(255,255,255,.08);font-size:0.9rem}
+  .req-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:14px}
+  .req{background:var(--surface2);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px}
+  .req .r-em{font-size:1.6rem;display:block;margin-bottom:6px}
+  .req .r-t{font-weight:900;margin-bottom:4px}
+  .req .r-d{font-size:0.8rem;color:var(--text-dim);line-height:1.5}
+  .why{display:flex;gap:10px;align-items:flex-start;font-size:0.88rem;color:var(--text-dim);margin:8px 0 12px}
+  .why b{color:var(--text)}
+  .expect{font-size:0.78rem;color:var(--text-dim);margin:-6px 0 12px 4px}
+  .expect b{color:var(--accent7)}
+  .later{opacity:.85}
+  .later .step-number{background:var(--aws)}
+  .badge-later{display:inline-block;background:rgba(255,153,0,.12);color:var(--aws);border:1px solid rgba(255,153,0,.3);font-size:0.66rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:50px;margin-left:8px;vertical-align:middle}
+  .zone3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+  @media(max-width:700px){.zone3{grid-template-columns:1fr}}
+  .z{border-radius:14px;padding:16px;border:1px solid rgba(255,255,255,.06)}
+  .z .z-em{font-size:1.8rem}
+  .z .z-t{font-weight:900;margin:4px 0}
+  .z .z-d{font-size:0.82rem;color:var(--text-dim);line-height:1.5}
+  .z1{background:rgba(69,183,209,.08)} .z2{background:rgba(248,152,32,.10)} .z3{background:rgba(247,183,49,.08)}
+</style>
+</head>
+<body data-page="Sábado 0 — Setup">
+
+<div class="bg-grid"></div>
+<div class="bg-orbs"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+<div class="progress-track"><div class="progress-bar"></div></div>
+
+<button class="menu-toggle" onclick="openSidebar()" aria-label="Abrir menu">☰</button>
+<div class="sidebar-overlay"></div>
+<nav class="sidebar-nav">
+  <button class="sidebar-close" onclick="closeSidebar()" aria-label="Fechar">✕</button>
+  <div class="sidebar-header">
+    <h3>🧰 Sábado 0 — Setup</h3>
+    <a class="sidebar-back" href="../">← voltar ao hub</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Antes do dia 05/09</div>
+    <div class="sidebar-link" onclick="goTo('s-como')"><span class="dot" style="background:var(--accent4)"></span> Como o curso funciona</div>
+    <div class="sidebar-link" onclick="goTo('s-java')"><span class="dot" style="background:var(--java)"></span> 1 · Java 21</div>
+    <div class="sidebar-link" onclick="goTo('s-ide')"><span class="dot" style="background:var(--accent6)"></span> 2 · IDE</div>
+    <div class="sidebar-link" onclick="goTo('s-git')"><span class="dot" style="background:var(--accent2)"></span> 3 · Git + GitHub</div>
+    <div class="sidebar-link" onclick="goTo('s-docker')"><span class="dot" style="background:var(--docker)"></span> 4 · Docker + brokers</div>
+    <div class="sidebar-link" onclick="goTo('s-claude')"><span class="dot" style="background:var(--claude)"></span> 5 · Claude Code</div>
+    <div class="sidebar-link" onclick="goTo('s-teste')"><span class="dot" style="background:var(--spring)"></span> 6 · Teste final</div>
+    <div class="sidebar-link" onclick="goTo('s-zoom')"><span class="dot" style="background:var(--accent4)"></span> 7 · Remoto (Zoom)</div>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Só antes do Sáb 6 (24/10)</div>
+    <div class="sidebar-link" onclick="goTo('s-aws')"><span class="dot" style="background:var(--aws)"></span> 8 · Conta AWS + CLI + SAM</div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-icons" data-motion="float">🧰 ☕ 🐳 🤖</div>
+  <span class="hero-badge" style="background:linear-gradient(135deg,var(--accent4),var(--spring))">Sábado 0 · faça antes de 05/09</span>
+  <h1>Prepare o ambiente</h1>
+  <p class="subtitle">
+    São <strong style="color:var(--text)">4 horas por sábado</strong>. Não dá pra gastar 40 minutos instalando Docker
+    na sala. Tudo abaixo é feito em casa, no <strong style="color:var(--java)">seu notebook</strong> — e cada item
+    fica marcado neste navegador.
+  </p>
+  <div class="hero-progress"><span data-progress="setup/core/"></span></div>
+</section>
+
+<div class="container">
+
+  <!-- ══════════ COMO FUNCIONA ══════════ -->
+  <section class="step-section" id="s-como">
+    <div class="step-header">
+      <div class="step-number" style="background:var(--accent4)">📐</div>
+      <div><div class="step-title">Como o curso funciona</div><div class="step-sub">Sala invertida: a teoria é sua, em casa; a sala é pra exercitar julgamento</div></div>
+    </div>
+    <div class="card">
+      <p>Cada capítulo deste site tem <strong>três zonas</strong>. Se você chegar no sábado sem a primeira, vai
+      assistir os outros trabalharem.</p>
+      <div class="zone3">
+        <div class="z z1"><div class="z-em">📖</div><div class="z-t">Antes da aula</div><div class="z-d">Você lê o capítulo (~1h) e mexe nos simuladores. É a teoria densa. No classcontent tem o vídeo e o podcast da aula.</div></div>
+        <div class="z z2"><div class="z-em">🏫</div><div class="z-t">Em sala (4h)</div><div class="z-d">Labs de julgamento: você dirige o agente, revisa PR, defende/refuta. Cada lab tem um entregável. Presencial ou pelo Zoom.</div></div>
+        <div class="z z3"><div class="z-em">🏠</div><div class="z-t">Até o próximo sábado</div><div class="z-d">O seu repositório contínuo (o serviço de Pedidos) evolui em casa, dirigido por você com o Claude Code. Não é opcional.</div></div>
+      </div>
+      <div class="req-grid">
+        <div class="req"><span class="r-em">💻</span><div class="r-t">Seu notebook</div><div class="r-d">A escola não fornece máquina, de propósito: o ambiente fica configurado pra você seguir em casa. Mínimo confortável: 16 GB de RAM (Docker + IDE + brokers).</div></div>
+        <div class="req"><span class="r-em">🤖</span><div class="r-t">Claude Pro (obrigatório)</div><div class="r-d">Dá acesso ao Claude Code, que o professor usa em aula. ChatGPT Plus (Codex) é aceito, mas o material mostra o fluxo do Claude Code.</div></div>
+        <div class="req"><span class="r-em">☁️</span><div class="r-t">Conta AWS (só no Bloco 3)</div><div class="r-d">Conta própria, free tier. Precisa de cartão. Fica pra tarefa de casa do Sáb 5 (17/10) — seção 8, no fim desta página.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ══════════ 1 · JAVA ══════════ -->
+  <section class="step-section" id="s-java">
+    <div class="step-header">
+      <div class="step-number sn-java">1</div>
+      <div><div class="step-title">Java 21 (LTS)</div><div class="step-sub">records, sealed e pattern matching exigem 21+</div></div>
+    </div>
+    <div class="card">
+      <div class="why">🎯 <span><b>Por quê 21 e não 17:</b> <code>record</code> e <code>sealed</code> existem desde o 17, mas o
+      <code>switch</code> com pattern matching (que usamos no Sáb 1) só é final no 21. Se você já tem 21+, só confira a versão.</span></div>
+
+      <div class="os-group">
+        <div class="os-tabs"><button class="os-tab" data-os="mac">macOS</button><button class="os-tab" data-os="linux">Linux</button><button class="os-tab" data-os="win">Windows</button></div>
+        <div class="os-pane" data-os="mac">
+          <div class="code-block"><div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">SDKMAN — gerencia várias versões de Java</span><span class="lang-badge bash">bash</span></div>
+<pre>curl -s "https://get.sdkman.io" | bash
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+sdk install java 21.0.4-tem      <span class="cm"># Temurin 21 (Eclipse Adoptium)</span>
+sdk default java 21.0.4-tem</pre></div>
+          <p class="expect">Alternativa: <code>brew install --cask temurin@21</code>. Se listar versões com <code>sdk list java</code>, escolha qualquer <b>21.x-tem</b>.</p>
+        </div>
+        <div class="os-pane" data-os="linux" hidden>
+          <div class="code-block"><div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">SDKMAN</span><span class="lang-badge bash">bash</span></div>
+<pre>curl -s "https://get.sdkman.io" | bash
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+sdk install java 21.0.4-tem
+sdk default java 21.0.4-tem</pre></div>
+          <p class="expect">Ubuntu/Debian também aceita <code>sudo apt install openjdk-21-jdk</code>.</p>
+        </div>
+        <div class="os-pane" data-os="win" hidden>
+          <div class="code-block"><div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">PowerShell (winget vem no Windows 10/11)</span><span class="lang-badge bash">powershell</span></div>
+<pre>winget install EclipseAdoptium.Temurin.21.JDK</pre></div>
+          <p class="expect">Feche e reabra o terminal depois — o <code>PATH</code> só atualiza em sessão nova.</p>
+        </div>
+      </div>
+
+      <div class="code-block"><div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">confira</span><span class="lang-badge terminal">terminal</span></div>
+<pre>java -version
+<span class="cm">openjdk version "21.0.4" 2024-07-16 LTS   ← o número que importa é o 21</span></pre></div>
+      <div class="warning"><span class="warning-icon">⚠️</span><div class="warning-content"><strong>Erro previsível:</strong> aparece <code>17</code> ou <code>11</code> mesmo depois de instalar. É o <code>JAVA_HOME</code> antigo ou outro Java na frente no <code>PATH</code>. No SDKMAN, <code>sdk default java 21.0.4-tem</code> resolve; no Windows, confira <em>Variáveis de ambiente → JAVA_HOME</em>.</div></div>
+
+      <ul class="chk-list">
+        <li><label class="chk"><input type="checkbox" data-persist="setup/core/java"><span><span class="chk-t"><code>java -version</code> mostra 21 ou superior</span><span class="chk-d">Maven/Gradle vêm embutidos no projeto (wrapper), não precisa instalar.</span></span></label></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ══════════ 2 · IDE ══════════ -->
+  <section class="step-section" id="s-ide">
+    <div class="step-header">
+      <div class="step-number sn-purple">2</div>
+      <div><div class="step-title">IDE</div><div class="step-sub">IntelliJ IDEA Community é o recomendado</div></div>
+    </div>
+    <div class="card">
+      <div class="why">🎯 <span><b>Por quê IntelliJ:</b> é o que o mercado Java usa e o que o professor projeta. VS Code com o
+      <em>Extension Pack for Java</em> funciona, mas você vai traduzir atalhos sozinho.</span></div>
+      <p style="font-size:0.9rem">Baixe o <strong>IntelliJ IDEA Community</strong> (grátis) em <code>jetbrains.com/idea</code>. No primeiro
+      projeto, confira que o SDK aponta pro Java 21: <em>File → Project Structure → SDK</em>.</p>
+      <div class="warning"><span class="warning-icon">⌨️</span><div class="warning-content"><strong>Ligaduras de fonte.</strong> A fonte padrão da IDE
+      desenha <code>-&gt;</code> como uma seta única. É só visual: a seta do <code>switch</code> e das lambdas são <strong>dois
+      caracteres</strong>, <code>-</code> e <code>&gt;</code>. Se isso te incomoda, desligue em <em>Settings → Editor → Font → Enable ligatures</em>.</div></div>
+      <ul class="chk-list">
+        <li><label class="chk"><input type="checkbox" data-persist="setup/core/ide"><span><span class="chk-t">IDE instalada e abrindo um projeto Java 21</span><span class="chk-d">Crie um projeto vazio "hello" e rode um <code>main</code> que imprime algo. Só pra provar que compila.</span></span></label></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ══════════ 3 · GIT ══════════ -->
+  <section class="step-section" id="s-git">
+    <div class="step-header">
+      <div class="step-number sn-red">3</div>
+      <div><div class="step-title">Git + GitHub</div><div class="step-sub">o repositório contínuo do curso vive lá</div></div>
+    </div>
+    <div class="card">
+      <div class="why">🎯 <span><b>Por quê:</b> no Sáb 1 você cria o repositório <code>pedidos</code>, que evolui até o capstone. A tarefa de casa
+      é sempre um commit. E o agente trabalha melhor num diretório versionado (ele lê o <code>git diff</code>).</span></div>
+      <div class="code-block"><div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">confira</span><span class="lang-badge terminal">terminal</span></div>
+<pre>git --version
+<span class="cm">git version 2.4x.x</span>
+git config --global user.name "Seu Nome"
+git config --global user.email "voce@exemplo.com"</pre></div>
+      <ul class="chk-list">
+        <li><label class="chk"><input type="checkbox" data-persist="setup/core/git"><span><span class="chk-t"><code>git --version</code> responde e nome/e-mail configurados</span></span></label></li>
+        <li><label class="chk"><input type="checkbox" data-persist="setup/core/github"><span><span class="chk-t">Conta no GitHub com SSH ou token funcionando</span><span class="chk-d">Teste: crie um repositório vazio e faça um <code>git push</code> qualquer. Se pedir senha e recusar, é token/SSH.</span></span></label></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ══════════ 4 · DOCKER ══════════ -->
+  <section class="step-section" id="s-docker">
+    <div class="step-header">
+      <div class="step-number sn-docker">4</div>
+      <div><div class="step-title">Docker + os brokers locais</div><div class="step-sub">Postgres agora; RabbitMQ e Kafka a partir do Sáb 4 — mas testa tudo hoje</div></div>
+    </div>
+    <div class="card">
+      <div class="why">🎯 <span><b>Por quê:</b> Testcontainers (Sáb 3) sobe um Postgres real dentro do teste; RabbitMQ (Sáb 4) e Kafka
+      (Sáb 5) rodam na sua máquina. Tudo via Docker. Se o Docker não funciona, metade do curso trava.</span></div>
+      <p style="font-size:0.9rem">Instale o <strong>Docker Desktop</strong> (<code>docker.com</code>). No Windows ele exige WSL 2 — o instalador
+      avisa. Depois, salve este arquivo numa pasta <code>infra/</code> (vai ser a mesma do seu repositório):</p>
+      <div class="code-block"><div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">infra/docker-compose.yml</span><span class="lang-badge docker">yaml</span></div>
+<pre><span class="kw">services</span>:
+  <span class="kw">postgres</span>:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: pedidos
+      POSTGRES_PASSWORD: pedidos
+      POSTGRES_DB: pedidos
+    ports: [<span class="st">"5432:5432"</span>]
+
+  <span class="kw">rabbitmq</span>:
+    image: rabbitmq:3-management     <span class="cm"># painel web em localhost:15672 (guest/guest)</span>
+    ports: [<span class="st">"5672:5672"</span>, <span class="st">"15672:15672"</span>]
+
+  <span class="kw">kafka</span>:
+    image: apache/kafka:3.9.0        <span class="cm"># nó único KRaft, já ouve em localhost:9092</span>
+    ports: [<span class="st">"9092:9092"</span>]</pre></div>
+      <div class="code-block"><div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">suba e confira</span><span class="lang-badge terminal">terminal</span></div>
+<pre>cd infra
+docker compose up -d
+docker compose ps
+<span class="cm">NAME               STATUS          PORTS</span>
+<span class="cm">infra-postgres-1   Up 10 seconds   0.0.0.0:5432-&gt;5432/tcp</span>
+<span class="cm">infra-rabbitmq-1   Up 10 seconds   0.0.0.0:5672-&gt;5672/tcp, 0.0.0.0:15672-&gt;15672/tcp</span>
+<span class="cm">infra-kafka-1      Up 10 seconds   0.0.0.0:9092-&gt;9092/tcp</span></pre></div>
+      <p class="expect">Abra <b>http://localhost:15672</b> (guest / guest): é o painel do RabbitMQ. Se abriu, o Docker está saudável. Depois, <code>docker compose down</code> pra desligar.</p>
+      <div class="warning"><span class="warning-icon">⚠️</span><div class="warning-content"><strong>Erro previsível:</strong> <code>port is already allocated</code> na 5432. Você tem um Postgres instalado
+      direto na máquina. Ou pare esse serviço, ou troque a porta do compose pra <code>"5433:5432"</code> (e lembre disso na URL do Spring).</div></div>
+      <ul class="chk-list">
+        <li><label class="chk"><input type="checkbox" data-persist="setup/core/docker"><span><span class="chk-t"><code>docker compose ps</code> mostra os 3 serviços <em>Up</em></span><span class="chk-d">E o painel do RabbitMQ abre em localhost:15672.</span></span></label></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ══════════ 5 · CLAUDE CODE ══════════ -->
+  <section class="step-section" id="s-claude">
+    <div class="step-header">
+      <div class="step-number sn-claude">5</div>
+      <div><div class="step-title">Claude Code</div><div class="step-sub">o agente que você vai dirigir — obrigatório</div></div>
+    </div>
+    <div class="card">
+      <div class="why">🎯 <span><b>Por quê Claude Code e não o chat:</b> ele roda no <em>seu</em> terminal, dentro do <em>seu</em> repositório. Lê os
+      arquivos, edita, roda os testes, faz commit. É um agente, não um autocomplete. Todo lab do curso é "escreva a spec, deixe
+      ele gerar, revise".</span></div>
+
+      <p style="font-size:0.9rem"><strong>1. Assinatura.</strong> Claude Code vem com o <strong>Claude Pro</strong> (claude.ai). Assine antes de instalar;
+      o login pede.</p>
+      <p style="font-size:0.9rem;margin-top:8px"><strong>2. Instalação.</strong></p>
+      <div class="os-group">
+        <div class="os-tabs"><button class="os-tab" data-os="mac">macOS / Linux</button><button class="os-tab" data-os="win">Windows (PowerShell)</button><button class="os-tab" data-os="npm">via npm (qualquer SO)</button></div>
+        <div class="os-pane" data-os="mac">
+          <div class="code-block"><div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">instalador nativo</span><span class="lang-badge bash">bash</span></div>
+<pre>curl -fsSL https://claude.ai/install.sh | bash</pre></div>
+        </div>
+        <div class="os-pane" data-os="win" hidden>
+          <div class="code-block"><div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">PowerShell</span><span class="lang-badge bash">powershell</span></div>
+<pre>irm https://claude.ai/install.ps1 | iex</pre></div>
+        </div>
+        <div class="os-pane" data-os="npm" hidden>
+          <div class="code-block"><div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">precisa de Node 18+</span><span class="lang-badge bash">bash</span></div>
+<pre>npm install -g @anthropic-ai/claude-code</pre></div>
+        </div>
+      </div>
+      <p style="font-size:0.9rem;margin-top:8px"><strong>3. Login e primeiro contato.</strong> Entre numa pasta <em>vazia</em> e chame o agente:</p>
+      <div class="code-block"><div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">terminal</span><span class="lang-badge terminal">terminal</span></div>
+<pre>mkdir hello-agente &amp;&amp; cd hello-agente
+claude
+<span class="cm"># na primeira vez ele abre o navegador pra você logar com a conta do Claude Pro</span>
+<span class="cm"># dentro do Claude Code, o comando /login refaz isso se precisar</span></pre></div>
+      <p style="font-size:0.9rem">Agora dê a <strong>primeira ordem</strong> — e repare que ela já tem cara de spec (o que, e o que <em>não</em>):</p>
+      <div class="terminal" style="margin:10px 0">
+        <div class="terminal-header"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">claude · hello-agente</span></div>
+        <div class="terminal-body"><span class="prompt">&gt;</span> Crie um record Java 21 chamado Pedido com id (String) e total (BigDecimal). Só o arquivo Pedido.java, sem build, sem testes, sem nada além disso.</div>
+      </div>
+      <p class="expect">Esperado: ele cria <b>um</b> arquivo e para. Se ele criou <code>pom.xml</code>, README e três classes, você acabou de ver o
+      primeiro motivo do curso existir: o agente faz mais do que pediram quando a spec deixa. Já dá pra treinar a revisão.</p>
+
+      <div class="tip"><span class="tip-icon">🔁</span><div class="tip-content"><strong>Usa ChatGPT Plus?</strong> Instale o Codex CLI
+      (<code>npm install -g @openai/codex</code>, depois <code>codex</code> e login com a conta Plus). O material mostra os comandos do Claude Code;
+      as equivalências que importam: o arquivo de memória do projeto chama <code>AGENTS.md</code> em vez de <code>CLAUDE.md</code>,
+      e o fluxo spec → plan → execute → review é idêntico. Você vai traduzir alguns detalhes sozinho.</div></div>
+
+      <ul class="chk-list">
+        <li><label class="chk"><input type="checkbox" data-persist="setup/core/claude-assinatura"><span><span class="chk-t">Assinatura ativa (Claude Pro, ou ChatGPT Plus)</span></span></label></li>
+        <li><label class="chk"><input type="checkbox" data-persist="setup/core/claude-login"><span><span class="chk-t"><code>claude</code> abre no terminal e o login está feito</span></span></label></li>
+        <li><label class="chk"><input type="checkbox" data-persist="setup/core/claude-hello"><span><span class="chk-t">O record <code>Pedido</code> foi gerado (e você olhou o que veio além dele)</span></span></label></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ══════════ 6 · TESTE FINAL ══════════ -->
+  <section class="step-section" id="s-teste">
+    <div class="step-header">
+      <div class="step-number sn-spring">6</div>
+      <div><div class="step-title">Teste final: o combo inteiro</div><div class="step-sub">5 minutos que evitam 40 na sala</div></div>
+    </div>
+    <div class="card">
+      <p style="font-size:0.9rem">Na mesma pasta <code>hello-agente</code>, peça ao agente um projeto mínimo que use tudo o que você instalou:</p>
+      <div class="terminal" style="margin:10px 0">
+        <div class="terminal-header"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">claude · hello-agente</span></div>
+        <div class="terminal-body"><span class="prompt">&gt;</span> Transforme isto num projeto Maven Java 21 mínimo com um teste JUnit 5 para o record Pedido. Rode os testes e me mostre o resultado. Não adicione Spring nem outras dependências.</div>
+      </div>
+      <p class="expect">Esperado: <b>BUILD SUCCESS</b> e <b>Tests run: 1, Failures: 0</b>. Se o Maven wrapper baixou dependências, sua rede e seu Java estão ok. Abra a pasta na IDE e veja o teste verde lá também.</p>
+      <ul class="chk-list">
+        <li><label class="chk"><input type="checkbox" data-persist="setup/core/teste-final"><span><span class="chk-t">Teste verde no terminal e na IDE</span><span class="chk-d">Pode apagar a pasta depois. O que fica é a certeza de que sábado você começa trabalhando.</span></span></label></li>
+      </ul>
+      <div class="note" data-note="setup/duvidas" data-title="O que travou no setup (traga pro sábado)" data-placeholder="Ex.: Docker no Windows pediu WSL 2 e não sei se ficou certo; java -version mostra 17 no terminal da IDE…"></div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ══════════ 7 · ZOOM ══════════ -->
+  <section class="step-section" id="s-zoom">
+    <div class="step-header">
+      <div class="step-number" style="background:var(--accent4)">7</div>
+      <div><div class="step-title">Se você vai participar remoto (Zoom)</div><div class="step-sub">o mesmo acompanhamento, se a sua ponta funcionar</div></div>
+    </div>
+    <div class="card">
+      <ul class="chk-list">
+        <li><label class="chk"><input type="checkbox" data-persist="setup/zoom/duas-telas"><span><span class="chk-t">Duas telas (ou uma tela grande)</span><span class="chk-d">Uma pro Zoom com a tela do professor, outra pra IDE + terminal do agente. Em uma tela só, você vai passar a aula alternando janela.</span></span></label></li>
+        <li><label class="chk"><input type="checkbox" data-persist="setup/zoom/compartilhar"><span><span class="chk-t">Sabe compartilhar a tela do terminal</span><span class="chk-d">Nos labs de revisão o professor vai pedir pra ver o seu diff. Teste o compartilhamento antes.</span></span></label></li>
+        <li><label class="chk"><input type="checkbox" data-persist="setup/zoom/mic"><span><span class="chk-t">Microfone e fone ok</span><span class="chk-d">Defender/refutar é falado. Sem mic, você só assiste.</span></span></label></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ══════════ 8 · AWS (depois) ══════════ -->
+  <section class="step-section later" id="s-aws">
+    <div class="step-header">
+      <div class="step-number">8</div>
+      <div><div class="step-title">Conta AWS + CLI + SAM <span class="badge-later">só antes do Sáb 6 · 24/10</span></div><div class="step-sub">não precisa agora — mas precisa estar pronto no dia</div></div>
+    </div>
+    <div class="card">
+      <div class="why">🎯 <span><b>Por quê conta própria:</b> o sistema serverless que você monta no Bloco 3 é seu, fica no seu portfólio, e você
+      aprende a operar (e a não estourar) a conta — que é o que o mercado paga. Free tier cobre tudo o que o curso usa se você desligar o que criou.</span></div>
+      <ol style="color:var(--text-dim);font-size:0.9rem;line-height:1.9;margin-left:20px">
+        <li>Crie a conta em <code>aws.amazon.com</code> (pede cartão; a cobrança do curso, se houver, é de centavos).</li>
+        <li><strong>Ative MFA no usuário root</strong> e nunca mais use o root no dia a dia.</li>
+        <li><strong>Budget alarm</strong> em <em>Billing → Budgets</em>: US$ 5/mês com alerta por e-mail. É o seu cinto de segurança.</li>
+        <li>Crie um usuário IAM <code>dev-curso</code> com <em>AdministratorAccess</em> (é conta de estudo) e gere <em>access keys</em> pra CLI.</li>
+        <li>Instale a <strong>AWS CLI</strong> e o <strong>AWS SAM CLI</strong> (docs oficiais têm instalador por SO).</li>
+      </ol>
+      <div class="code-block"><div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">confira</span><span class="lang-badge terminal">terminal</span></div>
+<pre>aws configure                  <span class="cm"># cola as access keys; região: us-east-1</span>
+aws sts get-caller-identity    <span class="cm"># tem que devolver o ARN do usuário dev-curso</span>
+sam --version
+<span class="cm">SAM CLI, version 1.1xx.x</span></pre></div>
+      <ul class="chk-list">
+        <li><label class="chk"><input type="checkbox" data-persist="setup/aws/conta"><span><span class="chk-t">Conta criada, MFA no root, budget alarm de US$ 5</span></span></label></li>
+        <li><label class="chk"><input type="checkbox" data-persist="setup/aws/cli"><span><span class="chk-t"><code>aws sts get-caller-identity</code> responde com o usuário IAM</span></span></label></li>
+        <li><label class="chk"><input type="checkbox" data-persist="setup/aws/sam"><span><span class="chk-t"><code>sam --version</code> responde</span></span></label></li>
+      </ul>
+      <p style="margin-top:8px"><span data-progress="setup/aws/"></span></p>
+    </div>
+  </section>
+
+  <section class="step-section">
+    <div class="card" style="text-align:center;background:linear-gradient(135deg,rgba(248,152,32,.10),rgba(217,119,87,.06));border-color:rgba(248,152,32,.22)">
+      <h3 style="font-size:1.3rem;margin-bottom:6px">Ambiente pronto? Então o Sábado 1 é seu.</h3>
+      <p class="text-dim" style="max-width:560px;margin:0 auto 16px">Leia o Capítulo 0 (como um agente pensa) e a zona 📖 do Sábado 1 antes do dia 05/09.</p>
+      <p style="margin-bottom:16px"><span data-progress="setup/core/"></span></p>
+      <a href="../capitulos/01-sdd-na-pratica-spring-hexagonal/" style="display:inline-block;padding:12px 28px;background:linear-gradient(135deg,var(--java),var(--claude));color:var(--bg);text-decoration:none;font-weight:900;border-radius:50px;letter-spacing:1px">☕ Ir para o Sábado 01 →</a>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <strong style="color:var(--java)">Backend Moderno, Agentes de IA e Cloud</strong> · Sábado 0 ·
+  <a href="../">← voltar ao hub</a> ·
+  <a href="https://github.com/kelsonvictr" target="_blank" rel="noopener">github.com/kelsonvictr</a>
+</footer>
+
+<script src="../shared/scripts.js" defer></script>
+<script src="../shared/lab-kit.js?v=3" defer></script>
+<script type="module" src="../shared/motion-fx.js?v=3"></script>
+<script>
+  /* abas por sistema operacional — detecta o SO e lembra a escolha */
+  (function(){
+    var ua = navigator.userAgent, guess = /Windows/.test(ua) ? 'win' : /Linux/.test(ua) && !/Android/.test(ua) ? 'linux' : 'mac';
+    document.querySelectorAll('.os-group').forEach(function(g){
+      var tabs = g.querySelectorAll('.os-tab'), panes = g.querySelectorAll('.os-pane');
+      function pick(os){
+        var has = [].some.call(tabs, function(t){ return t.dataset.os === os; });
+        if (!has) os = tabs[0].dataset.os;
+        tabs.forEach(function(t){ t.classList.toggle('on', t.dataset.os === os); });
+        panes.forEach(function(p){ p.hidden = p.dataset.os !== os; });
+      }
+      tabs.forEach(function(t){ t.addEventListener('click', function(){ pick(t.dataset.os); }); });
+      pick(guess);
+    });
+  })();
+</script>
+</body>
+</html>

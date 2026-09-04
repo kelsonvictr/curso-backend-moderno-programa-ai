@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sáb 1 — O SO do sênior + Java moderno | Backend Moderno, Agentes de IA e Cloud</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../shared/styles.css">
+<link rel="stylesheet" href="../../shared/components.css">
+<link rel="stylesheet" href="../../shared/animations.css">
+<link rel="stylesheet" href="../../shared/lab-kit.css">
+<style>
+  /* ligaduras OFF também nos widgets mono desta página (a regra global só cobre pre/code) */
+  .sim, .sim *, .sdd-flow, .sdd-flow *{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+
+  /* ===== Fluxo SDD ===== */
+  .sdd-flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;justify-content:center;margin:14px 0}
+  .sdd-node{flex:1;min-width:150px;background:var(--surface2);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:16px 14px;text-align:center;transition:all 0.4s}
+  .sdd-node.active{transform:translateY(-4px);box-shadow:0 0 28px var(--glow-claude);border-color:rgba(217,119,87,0.4)}
+  .sdd-node .who{font-size:0.62rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:800;margin-bottom:6px}
+  .sdd-node.human .who{color:var(--spring)} .sdd-node.agent .who{color:var(--claude)}
+  .sdd-node .em{font-size:1.7rem;line-height:1;display:block;margin-bottom:6px}
+  .sdd-node h4{font-size:0.98rem;margin-bottom:4px}
+  .sdd-node p{font-size:0.74rem;color:var(--text-dim);line-height:1.4}
+  .sdd-sep{flex:0 0 26px;display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:1.1rem}
+  @media(max-width:680px){.sdd-sep{flex-basis:100%;transform:rotate(90deg);height:18px}}
+
+  /* ===== Simulador "Record cabe aqui?" ===== */
+  .sim{background:var(--surface2);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:22px;margin:18px 0}
+  .sim-title{font-weight:900;font-size:1.05rem;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+  .sim-sub{font-size:0.82rem;color:var(--text-dim);margin-bottom:16px}
+  .sim-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media(max-width:640px){.sim-cards{grid-template-columns:1fr}}
+  .sim-card{background:var(--code-bg);border:1.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;cursor:pointer;transition:all 0.25s;text-align:left}
+  .sim-card:hover{transform:translateY(-3px);border-color:var(--claude)}
+  .sim-card .sc-scn{font-size:0.72rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;font-weight:800;margin-bottom:6px}
+  .sim-card .sc-name{font-weight:800;font-size:0.95rem;margin-bottom:8px}
+  .sim-card code{font-family:'JetBrains Mono',monospace;font-size:0.74rem;color:var(--accent5);display:block;line-height:1.5;background:none;padding:0}
+  .sim-card .sc-verdict{margin-top:10px;font-weight:900;font-size:0.85rem;opacity:0;max-height:0;overflow:hidden;transition:all 0.3s}
+  .sim-card.revealed .sc-verdict{opacity:1;max-height:200px}
+  .sim-card.ok{border-color:rgba(6,214,160,0.4)} .sim-card.ok .sc-verdict{color:var(--accent7)}
+  .sim-card.no{border-color:rgba(255,107,107,0.4)} .sim-card.no .sc-verdict{color:var(--accent2)}
+  .sim-card .sc-why{display:block;font-weight:600;font-size:0.76rem;color:var(--text-dim);margin-top:4px;line-height:1.45}
+  .sim-hint{font-size:0.78rem;color:var(--text-dim);margin-top:14px;text-align:center}
+
+  /* ===== contexto: o que entra / não entra ===== */
+  .ctx{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+  @media(max-width:640px){.ctx{grid-template-columns:1fr}}
+  .ctx-col{border-radius:14px;padding:14px 16px;border:1px solid rgba(255,255,255,.06)}
+  .ctx-col.in{background:rgba(6,214,160,.06);border-color:rgba(6,214,160,.25)}
+  .ctx-col.out{background:rgba(255,107,107,.06);border-color:rgba(255,107,107,.25)}
+  .ctx-col h5{font-size:0.8rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+  .ctx-col.in h5{color:var(--accent7)} .ctx-col.out h5{color:var(--accent2)}
+  .ctx-col li{font-size:0.85rem;color:var(--text-dim);margin-left:18px;line-height:1.6}
+
+  .lead{font-size:1.02rem}
+  .spec-rules li{color:var(--text-dim);line-height:1.8}
+  .spec-rules li b{color:var(--text)}
+</style>
+</head>
+<body data-page="Sábado 01 — SO do sênior + Java moderno">
+
+<div class="bg-grid"></div>
+<div class="bg-orbs"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+<div class="progress-track"><div class="progress-bar"></div></div>
+
+<!-- ═══════════════ SIDEBAR ═══════════════ -->
+<button class="menu-toggle" onclick="openSidebar()" aria-label="Abrir menu">☰</button>
+<div class="sidebar-overlay"></div>
+<nav class="sidebar-nav">
+  <button class="sidebar-close" onclick="closeSidebar()" aria-label="Fechar">✕</button>
+  <div class="sidebar-header">
+    <h3>☕ Sábado 01 · 05/09</h3>
+    <a class="sidebar-back" href="../../">← voltar ao hub</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">📖 Antes da aula</div>
+    <div class="sidebar-link" onclick="goTo('s-inversao')"><span class="dot" style="background:var(--java)"></span> Por que você está aqui</div>
+    <div class="sidebar-link" onclick="goTo('s-sdd')"><span class="dot" style="background:var(--claude)"></span> SDD: como se trabalha aqui</div>
+    <div class="sidebar-link" onclick="goTo('s-spec')"><span class="dot" style="background:var(--claude)"></span> Sua primeira spec</div>
+    <div class="sidebar-link" onclick="goTo('s-java')"><span class="dot" style="background:var(--java)"></span> Java que um sênior espera</div>
+    <div class="sidebar-link" onclick="goTo('s-antipattern')"><span class="dot" style="background:var(--bug)"></span> Anti-pattern do dia</div>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏫 Em sala (4h)</div>
+    <div class="sidebar-link" onclick="goTo('s-roteiro')"><span class="dot" style="background:var(--java)"></span> Roteiro da tarde</div>
+    <div class="sidebar-link" onclick="goTo('s-lab1')"><span class="dot" style="background:var(--accent4)"></span> Lab 1 · Dirigir</div>
+    <div class="sidebar-link" onclick="goTo('s-lab2')"><span class="dot" style="background:var(--accent6)"></span> Lab 2 · Revisar PR</div>
+    <div class="sidebar-link" onclick="goTo('s-lab3')"><span class="dot" style="background:var(--spring)"></span> Lab 3 · Monte a arquitetura</div>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">🏠 Até 19/09</div>
+    <div class="sidebar-link" onclick="goTo('s-casa')"><span class="dot" style="background:var(--accent5)"></span> Tarefa de casa</div>
+    <div class="sidebar-link" onclick="goTo('s-resumo')"><span class="dot" style="background:var(--spring)"></span> Resumo</div>
+  </div>
+</nav>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero">
+  <div class="hero-icons" data-motion="float">☕ 🤖</div>
+  <span class="hero-badge" style="background:linear-gradient(135deg,var(--java),var(--claude))">Sábado 01 · 05/09 · 13h30–17h30 · Bloco 1 — Fundamentos</span>
+  <h1>O sistema operacional do sênior<br>+ Java moderno</h1>
+  <p class="subtitle">
+    Hoje você não aprende sintaxe — você aprende a <strong style="color:var(--claude)">dirigir e criticar</strong> o agente
+    com <strong style="color:var(--text)">SDD</strong>, a reconhecer o <strong style="color:var(--java)">Java que um sênior espera ver</strong>,
+    e faz nascer o <strong style="color:var(--text)">serviço de Pedidos</strong> que atravessa o curso inteiro.
+  </p>
+  <div class="hero-stack">
+    <span class="stack-chip" style="border-color:rgba(217,119,87,0.45);color:var(--claude)"><img src="../../assets/svg/claude.svg" alt="" width="16" height="16"> Claude Code</span>
+    <span class="stack-chip" style="border-color:rgba(217,119,87,0.35);color:var(--claude)">SDD · CLAUDE.md</span>
+    <span class="stack-chip" style="border-color:rgba(248,152,32,0.4);color:var(--java)"><img src="../../assets/svg/java.svg" alt="" width="16" height="16"> records · sealed</span>
+    <span class="stack-chip" style="border-color:rgba(248,152,32,0.3);color:var(--java)">pattern matching</span>
+  </div>
+</section>
+
+<div class="container">
+
+  <nav class="zone-bar" aria-label="zonas do capítulo">
+    <a class="z-antes" href="#z-antes">📖 Antes da aula</a>
+    <a class="z-sala" href="#z-sala">🏫 Em sala · 4h</a>
+    <a class="z-casa" href="#z-casa">🏠 Até 19/09</a>
+  </nav>
+
+  <!-- ╔═══════════════════════════════════════════════╗
+       ║   📖  ZONA 1 — ANTES DA AULA                   ║
+       ╚═══════════════════════════════════════════════╝ -->
+  <div class="zone-head zone-antes" id="z-antes">
+    <div class="zh-em">📖</div>
+    <div>
+      <div class="zh-k">Zona 1 · em casa · antes de 05/09</div>
+      <h2>Antes da aula</h2>
+      <div class="zh-s">A teoria densa mora aqui. Leia, mexa nos simuladores, escreva sua spec. Na sala a gente não vai reler isto — vai usar.</div>
+    </div>
+    <div class="zh-side"><div class="zh-time">~1h</div><div class="text-dim" style="font-size:0.72rem">+ setup feito</div></div>
+  </div>
+
+  <!-- ═══ 1 · PROVOCAÇÃO ═══ -->
+  <section class="step-section" id="s-inversao">
+    <div class="step-header">
+      <div class="step-number sn-java">1</div>
+      <div><div class="step-title">Por que você está aqui</div><div class="step-sub">Escrever código virou commodity — julgamento, não</div></div>
+    </div>
+
+    <div class="card">
+      <p class="lead">
+        Você já programa em Java e Spring. Então vamos ser diretos: a partir de agora,
+        <strong>a IA escreve a sintaxe por você</strong>. Isso não é ameaça — é a régua nova. O que o mercado
+        passa a pagar é a habilidade de <strong style="color:var(--claude)">olhar um trecho de código e dizer, com vocabulário
+        técnico, por que ele é bom ou ruim</strong> — e cobrar isso de quem (ou do que) escreveu.
+      </p>
+      <p style="margin-top:12px">
+        Por isso este curso inverte o seu papel. Você não vai "codar com ajuda da IA". O
+        <strong style="color:var(--claude)">Claude Code gera</strong>; <strong style="color:var(--spring)">você revisa</strong>
+        contra SOLID, padrões e arquitetura. E o efeito colateral é cruel no bom sentido: revisar criticamente
+        exige entender <em>mais</em> do que digitar no piloto automático.
+      </p>
+
+      <div class="quiz" style="margin-top:18px">
+        <div class="quiz-q"><span class="q-emoji">🧪</span> Você pediu ao agente um <strong>&nbsp;DTO imutável&nbsp;</strong> de Pedido. Qual destes está, de fato, imutável?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">class Pedido { public List&lt;Item&gt; itens; }</button>
+          <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">record Pedido(String id, BigDecimal total) {}</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">record Pedido(List&lt;Item&gt; itens) {}</button>
+          <button class="quiz-opt" onclick="checkQuiz(this,false)">class Pedido { private int total; public void setTotal(int t){…} }</button>
+        </div>
+        <div class="quiz-feedback"
+             data-correct="Boa."
+             data-wrong="Olha o detalhe:"
+             data-explain="campo público e setter são mutáveis na cara. A pegadinha é o record com List: o record protege os campos, mas se você devolve a MESMA List que recebeu, quem tem a referência muda a lista por dentro. Imutabilidade de verdade exige cópia defensiva (List.copyOf). Esse tipo de detalhe é o que você vai cobrar do agente.">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══ 2 · SDD ═══ -->
+  <section class="step-section" id="s-sdd">
+    <div class="step-header">
+      <div class="step-number sn-claude">2</div>
+      <div><div class="step-title">SDD: como se trabalha aqui</div><div class="step-sub">Spec-Driven Development — a spec é onde mora o seu julgamento</div></div>
+    </div>
+
+    <div class="card">
+      <p>
+        <strong>SDD (Spec-Driven Development)</strong> é o método que atravessa os 8 sábados. Em vez de pedir
+        "faz um endpoint de pedido" e torcer, você escreve uma <strong>spec</strong> — o quê, e os
+        <strong>critérios de qualidade</strong> — e conduz o agente por um ciclo:
+      </p>
+
+      <div class="sdd-flow" data-seq="1300">
+        <div class="sdd-node human" data-seq-step><span class="em">📝</span><div class="who">você</div><h4>Spec</h4><p>o quê + critérios de qualidade</p></div>
+        <div class="sdd-sep">→</div>
+        <div class="sdd-node agent" data-seq-step><span class="em">🧠</span><div class="who">agente</div><h4>Plan</h4><p>propõe a abordagem (modelo forte)</p></div>
+        <div class="sdd-sep">→</div>
+        <div class="sdd-node agent" data-seq-step><span class="em">⚙️</span><div class="who">agente</div><h4>Execute</h4><p>gera o código (modelo rápido)</p></div>
+        <div class="sdd-sep">→</div>
+        <div class="sdd-node human" data-seq-step><span class="em">🔍</span><div class="who">você</div><h4>Review</h4><p>critica linha a linha e manda corrigir</p></div>
+      </div>
+
+      <div class="concept">
+        <div class="concept-title">A spec carrega a sua intenção</div>
+        <p>Uma spec ruim ("crie um serviço de pedido") devolve código genérico. Uma spec de sênior carrega
+        as <strong>restrições</strong> que separam bom de ruim. Repare na diferença:</p>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">.specs/pedido.md</span><span class="lang-badge md">spec</span></div>
+<pre><span class="cm"># Domínio: Pedido</span>
+<span class="cm">## Regras</span>
+- Pedido é <span class="kw">imutável</span> depois de criado (record + cópia defensiva das listas).
+- Total é derivado dos itens, nunca armazenado; nunca negativo.
+- Violação de regra lança exceção de domínio, não retorna null.
+- O pacote de domínio não conhece Spring, JPA nem web.
+<span class="cm">## Definição de pronto</span>
+- Teste de unidade cobrindo item inválido e pedido vazio.
+- Nenhum setter público no domínio.</pre>
+      </div>
+
+      <p style="margin-top:6px">
+        Com essa spec, quando o agente devolver um <code>Pedido</code> com setter público ou um método
+        retornando <code>null</code>, <strong>você tem onde se apoiar pra rejeitar</strong>. A spec virou o seu
+        contrato de revisão.
+      </p>
+
+      <div class="concept" style="margin-top:18px">
+        <div class="concept-title">CLAUDE.md — a memória do projeto</div>
+        <p>O <code>CLAUDE.md</code> na raiz do projeto é lido pelo agente em toda sessão. É onde moram as
+        regras que valem pra <strong>tudo</strong> — pra você não repetir em cada prompt:</p>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">CLAUDE.md</span><span class="lang-badge md">md</span></div>
+<pre><span class="cm"># Serviço de Pedidos — convenções</span>
+- Java 21, Maven. Domínio <span class="kw">imutável</span>: records + cópia defensiva. Sem setter no domínio.
+- Dinheiro é BigDecimal. Erro de domínio = exceção própria (ex.: PedidoFechadoException). Nunca null.
+- Camadas: Controller -&gt; Service -&gt; Repository. Dependências apontam pra dentro (domínio não importa framework).
+- Testes: JUnit 5. Toda regra de domínio tem teste. Não criar arquivo fora do que a spec pede.
+- Antes de codar, leia a spec em .specs/ e proponha um plano curto. Só execute depois do meu OK.</pre>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">🧠</span>
+        <div class="tip-content">
+          <strong>Contexto é um recurso escasso.</strong> O que entra no <code>CLAUDE.md</code> e na spec
+          molda o output; o que você joga no prompt sem necessidade só dilui. Parte do julgamento de sênior é
+          saber <strong>o que NÃO colocar no contexto</strong>:
+        </div>
+      </div>
+      <div class="ctx">
+        <div class="ctx-col in"><h5>✅ Entra</h5><ul>
+          <li>Convenções que valem pro projeto inteiro (<code>CLAUDE.md</code>)</li>
+          <li>A spec da tarefa atual, com critérios verificáveis</li>
+          <li>Os 2–3 arquivos que a tarefa toca (o agente lê o resto se precisar)</li>
+          <li>O erro real, colado inteiro, quando algo quebra</li>
+        </ul></div>
+        <div class="ctx-col out"><h5>🚫 Não entra</h5><ul>
+          <li>"Cole o repositório inteiro" — dilui e custa contexto</li>
+          <li>Histórico de conversa velha sobre outra tarefa</li>
+          <li>Adjetivos ("faz bonito", "robusto") no lugar de critério</li>
+          <li>Segredos, chaves, dumps de banco</li>
+        </ul></div>
+      </div>
+
+      <div class="tip" style="background:rgba(217,119,87,0.07);border-color:rgba(217,119,87,0.22)">
+        <span class="tip-icon">🪞</span>
+        <div class="tip-content" style="color:var(--text-dim)">
+          <strong style="color:var(--claude)">Meta:</strong> este site que você está lendo foi construído assim.
+          A pasta <code>.specs/</code> dele é a spec; o <code>CLAUDE.md</code> dele é esta memória; o log de decisões é o review
+          acumulado. Em aula a gente abre os três.
+        </div>
+      </div>
+      <div class="tip" style="margin-top:10px">
+        <span class="tip-icon">🔁</span>
+        <div class="tip-content">
+          <strong>Usa Codex (ChatGPT Plus)?</strong> Mesmo ciclo. O arquivo de memória chama <code>AGENTS.md</code>.
+        </div>
+      </div>
+
+      <h4 style="margin:22px 0 4px">🏗️ Desenhe o fluxo SDD com as suas mãos</h4>
+      <p class="text-dim" style="font-size:0.88rem;margin-bottom:6px">O canvas abaixo é seu e fica salvo neste navegador. Monte o ciclo (quem faz o quê, e o que
+      alimenta o agente). Depois clique em <strong>▶ Animar mensagem</strong> e veja a intenção andar. Se travar, <strong>✨ Exemplo</strong> carrega um modelo.</p>
+      <div data-arch="cap01/sdd" data-palette="sdd" data-title="Meu fluxo SDD" data-height="360">
+        <script type="application/json">{"nodes":[
+          {"id":"v","t":"voce","x":20,"y":150,"l":"Você"},
+          {"id":"s","t":"spec","x":200,"y":150,"l":"Spec"},
+          {"id":"p","t":"plan","x":380,"y":150,"l":"Plan"},
+          {"id":"e","t":"execute","x":560,"y":150,"l":"Execute"},
+          {"id":"r","t":"review","x":740,"y":150,"l":"Review"},
+          {"id":"c","t":"claudemd","x":380,"y":30,"l":"CLAUDE.md"},
+          {"id":"sp","t":"specs","x":200,"y":30,"l":".specs/"},
+          {"id":"a","t":"agente","x":470,"y":270,"l":"Agente"}
+        ],"edges":[
+          {"id":"1","a":"v","b":"s","l":"escreve"},
+          {"id":"2","a":"s","b":"p","l":""},
+          {"id":"3","a":"p","b":"e","l":"seu OK"},
+          {"id":"4","a":"e","b":"r","l":"PR"},
+          {"id":"5","a":"r","b":"s","l":"corrige a spec"},
+          {"id":"6","a":"c","b":"a","l":"toda sessão"},
+          {"id":"7","a":"sp","b":"a","l":"por tarefa"}
+        ]}</script>
+      </div>
+
+      <div class="note" data-note="cap01/sdd" data-title="Anotações — SDD e contexto" data-placeholder="O que muda no jeito que você pede código hoje? O que você colocaria no CLAUDE.md do seu projeto atual?"></div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══ 2b · SUA PRIMEIRA SPEC ═══ -->
+  <section class="step-section" id="s-spec">
+    <div class="step-header">
+      <div class="step-number sn-claude">🧪</div>
+      <div><div class="step-title">Sua primeira spec: o domínio <code>Pedido</code></div><div class="step-sub">Escreva aqui em casa. Sábado você cola no Claude Code e o agente gera.</div></div>
+    </div>
+    <div class="card">
+      <p>
+        O serviço de Pedidos nasce hoje e vai até a AWS no Sáb 8. O primeiro tijolo é o domínio: <code>Pedido</code>,
+        <code>ItemPedido</code> e <code>StatusPedido</code>. Escreva a spec que faria um sênior aprovar o resultado
+        sem retrabalho. O "lint" ao lado é só um espelho: ele não sabe se a spec é <em>boa</em>, sabe se ela é
+        <em>verificável</em> — que é o mínimo.
+      </p>
+      <ul class="spec-rules" style="margin:10px 0 6px 22px">
+        <li><b>Estrutura:</b> Pedido tem id, clienteId, itens e status. Item tem sku, quantidade, preço unitário.</li>
+        <li><b>Regras que você quer garantir:</b> imutabilidade, total derivado, exceções de domínio, transições de status, sem framework no domínio.</li>
+        <li><b>Definição de pronto:</b> quais testes provam que está certo. O que o agente <b>não</b> deve criar.</li>
+      </ul>
+      <div class="speclint" data-note="cap01/spec-pedido" data-title="Spec do domínio Pedido (Lab 1)">
+<script type="text/plain"># Domínio: Pedido (serviço de Pedidos)
+
+## O que é
+- Pedido: id, clienteId, lista de ItemPedido, StatusPedido (ABERTO, PAGO, CANCELADO).
+- ItemPedido: sku, quantidade, precoUnitario.
+
+## Regras (o que NÃO pode)
+- Pedido e ItemPedido são records. Listas com cópia defensiva (List.copyOf). Nenhum setter.
+- quantidade > 0 e precoUnitario > 0 (BigDecimal). Violar lança ItemInvalidoException, nunca null.
+- total() é derivado dos itens, nunca armazenado.
+- adicionarItem(item) devolve um NOVO Pedido. Se status != ABERTO, lança PedidoFechadoException.
+- pagar(): só ABERTO -> PAGO. cancelar(): só ABERTO -> CANCELADO. Outra transição: exceção de domínio.
+- O pacote de domínio não importa Spring, JPA nem nada de web.
+
+## Definição de pronto
+- Testes JUnit 5: item inválido, adicionar item em pedido pago, total com 2 itens, transições válidas e inválidas.
+- Só o pacote de domínio e os testes. Não criar controller, repository, README nem dependências além de JUnit.
+</script>
+      </div>
+      <div class="try-first" style="margin-top:6px">
+        <span class="try-first-icon">🚨</span>
+        <div class="try-first-content"><strong>Escreva a sua antes de clicar em "Começar do esqueleto".</strong> O esqueleto é o modelo do professor —
+        serve pra comparar, não pra copiar. Na sala, a diferença entre a sua e a dele é o assunto.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══ 3 · JAVA MODERNO ═══ -->
+  <section class="step-section" id="s-java">
+    <div class="step-header">
+      <div class="step-number sn-java">3</div>
+      <div><div class="step-title">O Java que um sênior espera ver</div><div class="step-sub">O vocabulário que você vai cobrar do agente</div></div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-bottom:8px">☕ Imutabilidade &amp; <code>record</code></h3>
+      <p>O default de um domínio bem feito é <strong>imutável</strong>: criou, não muda. Menos bug de estado
+      compartilhado, seguro entre threads (importa muito quando chegarmos em eventos). Antes do Java 16 isso
+      custava boilerplate; hoje é uma linha.</p>
+
+      <div class="code-block">
+        <div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">Antes — POJO na mão (~40 linhas)</span><span class="lang-badge java">java</span></div>
+<pre><span class="kw">public final class</span> <span class="tp">ItemPedido</span> {
+  <span class="kw">private final</span> <span class="tp">String</span> sku;
+  <span class="kw">private final</span> <span class="kw">int</span> quantidade;
+  <span class="kw">public</span> <span class="tp">ItemPedido</span>(<span class="tp">String</span> sku, <span class="kw">int</span> quantidade) { <span class="kw">this</span>.sku = sku; <span class="kw">this</span>.quantidade = quantidade; }
+  <span class="kw">public</span> <span class="tp">String</span> getSku() { <span class="kw">return</span> sku; }
+  <span class="kw">public</span> <span class="kw">int</span> getQuantidade() { <span class="kw">return</span> quantidade; }
+  <span class="cm">// + equals(), hashCode(), toString() na mão...</span>
+}</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">Agora — record (equals/hashCode/toString de graça)</span><span class="lang-badge java">java</span></div>
+<pre><span class="kw">public record</span> <span class="tp">ItemPedido</span>(<span class="tp">String</span> sku, <span class="kw">int</span> quantidade, <span class="tp">BigDecimal</span> precoUnitario) {
+  <span class="kw">public</span> <span class="tp">ItemPedido</span> {                                   <span class="cm">// compact constructor: valida na entrada</span>
+    <span class="kw">if</span> (quantidade &lt;= 0) <span class="kw">throw new</span> <span class="tp">ItemInvalidoException</span>(<span class="st">"quantidade"</span>);
+  }
+}</pre>
+      </div>
+
+      <div class="warning">
+        <span class="warning-icon">⚠️</span>
+        <div class="warning-content">
+          <strong>Record não é imutável "de graça" quando tem coleção.</strong> Se um campo é
+          <code>List&lt;ItemPedido&gt;</code>, o record guarda a referência — quem passou a lista pode mudá-la depois.
+          Imutabilidade real pede <strong>cópia defensiva</strong> no compact constructor:
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">Pedido.java — cópia defensiva + total derivado</span><span class="lang-badge java">java</span></div>
+<pre><span class="kw">public record</span> <span class="tp">Pedido</span>(<span class="tp">String</span> id, <span class="tp">String</span> clienteId, <span class="tp">List</span>&lt;<span class="tp">ItemPedido</span>&gt; itens, <span class="tp">StatusPedido</span> status) {
+  <span class="kw">public</span> <span class="tp">Pedido</span> {
+    itens = <span class="tp">List</span>.copyOf(itens);                     <span class="cm">// imutável de verdade</span>
+  }
+  <span class="kw">public</span> <span class="tp">BigDecimal</span> total() {                       <span class="cm">// derivado, nunca armazenado</span>
+    <span class="kw">return</span> itens.stream()
+        .map(i -&gt; i.precoUnitario().multiply(<span class="tp">BigDecimal</span>.valueOf(i.quantidade())))
+        .reduce(<span class="tp">BigDecimal</span>.ZERO, <span class="tp">BigDecimal</span>::add);
+  }
+  <span class="kw">public</span> <span class="tp">Pedido</span> adicionarItem(<span class="tp">ItemPedido</span> item) {       <span class="cm">// devolve um NOVO pedido</span>
+    <span class="kw">if</span> (status != <span class="tp">StatusPedido</span>.ABERTO) <span class="kw">throw new</span> <span class="tp">PedidoFechadoException</span>(id);
+    <span class="kw">var</span> novos = <span class="kw">new</span> <span class="tp">ArrayList</span>&lt;&gt;(itens); novos.add(item);
+    <span class="kw">return new</span> <span class="tp">Pedido</span>(id, clienteId, novos, status);
+  }
+}</pre>
+      </div>
+      <div class="warning">
+        <span class="warning-icon">⌨️</span>
+        <div class="warning-content" style="color:var(--text-dim)">
+          A seta da lambda (<code>i -&gt; …</code>) e do <code>switch</code> é <strong>dois caracteres</strong>: <code>-</code> seguido de
+          <code>&gt;</code>. Sua IDE pode <em>desenhar</em> <code style="color:var(--text)">→</code> por causa de ligadura de fonte — é só visual.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-bottom:8px">🔒 <code>sealed</code> + pattern matching</h3>
+      <p>Quando um tipo só pode ter um conjunto <strong>fechado</strong> de variações (o resultado de um pagamento,
+      um evento), <code>sealed</code> diz isso ao compilador — e o <code>switch</code> com pattern matching fica
+      <strong>exaustivo</strong>: esqueceu um caso, não compila. Adeus <code>default</code> que esconde bug.</p>
+
+      <div class="code-block">
+        <div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">ResultadoPagamento.java</span><span class="lang-badge java">java</span></div>
+<pre><span class="kw">sealed interface</span> <span class="tp">ResultadoPagamento</span> <span class="kw">permits</span> <span class="tp">Aprovado</span>, <span class="tp">Recusado</span>, <span class="tp">Estornado</span> {}
+<span class="kw">record</span> <span class="tp">Aprovado</span>(<span class="tp">String</span> pedidoId, <span class="tp">BigDecimal</span> valor) <span class="kw">implements</span> <span class="tp">ResultadoPagamento</span> {}
+<span class="kw">record</span> <span class="tp">Recusado</span>(<span class="tp">String</span> pedidoId, <span class="tp">String</span> motivo)  <span class="kw">implements</span> <span class="tp">ResultadoPagamento</span> {}
+<span class="kw">record</span> <span class="tp">Estornado</span>(<span class="tp">String</span> pedidoId) <span class="kw">implements</span> <span class="tp">ResultadoPagamento</span> {}
+
+<span class="tp">String</span> descrever(<span class="tp">ResultadoPagamento</span> r) {
+  <span class="kw">return switch</span> (r) {                       <span class="cm">// exaustivo: o compilador cobra todos</span>
+    <span class="kw">case</span> <span class="tp">Aprovado</span> a  -&gt; <span class="st">"ok: "</span> + a.valor();
+    <span class="kw">case</span> <span class="tp">Recusado</span> re -&gt; <span class="st">"falhou: "</span> + re.motivo();
+    <span class="kw">case</span> <span class="tp">Estornado</span> e -&gt; <span class="st">"estornado"</span>;
+  };
+}</pre>
+      </div>
+      <p class="text-dim" style="font-size:0.88rem">Repare que isso já é um <em>evento</em> com três variantes. No Bloco 2, esse mesmo tipo vai
+      passar por uma fila. Sealed + record é o formato natural de mensagem.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-bottom:8px">🎯 <code>Optional</code> sem abuso, enum rico, stream com parcimônia</h3>
+      <p><code>Optional</code> é para <strong>retorno</strong> que pode não existir — não para campo, nem parâmetro.
+      Enum não precisa ser só uma etiqueta: pode carregar comportamento. E stream é ótimo até virar charada —
+      um <code>for</code> claro vence um pipeline ilegível.</p>
+
+      <div class="code-block">
+        <div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">bom-vs-abuso.java</span><span class="lang-badge java">java</span></div>
+<pre><span class="cm">// OK: retorno que pode não existir</span>
+<span class="tp">Optional</span>&lt;<span class="tp">Pedido</span>&gt; buscarPorId(<span class="tp">String</span> id);
+
+<span class="cm">// ABUSO: Optional como campo (não faça)</span>
+<span class="kw">private</span> <span class="tp">Optional</span>&lt;<span class="tp">String</span>&gt; cupom;   <span class="cm">// ❌</span>
+
+<span class="cm">// Enum rico: a transição de status mora no próprio status</span>
+<span class="kw">enum</span> <span class="tp">StatusPedido</span> {
+  ABERTO, PAGO, CANCELADO;
+  <span class="kw">boolean</span> podeIrPara(<span class="tp">StatusPedido</span> novo) {
+    <span class="kw">return this</span> == ABERTO &amp;&amp; (novo == PAGO || novo == CANCELADO);
+  }
+}</pre>
+      </div>
+
+      <div class="sim">
+        <div class="sim-title">🧭 Record cabe aqui?</div>
+        <div class="sim-sub">Clique em cada cenário e forme seu veredito ANTES de revelar. (record ≠ bala de prata)</div>
+        <div class="sim-cards">
+          <div class="sim-card ok" data-sim>
+            <div class="sc-scn">Cenário A</div>
+            <div class="sc-name">DTO de resposta da API</div>
+            <code>record PedidoResp(<br>&nbsp;&nbsp;String id, BigDecimal total)</code>
+            <div class="sc-verdict">✅ Cabe<span class="sc-why">Dado que entra e sai, sem comportamento e sem mutação. É o caso perfeito de record.</span></div>
+          </div>
+          <div class="sim-card no" data-sim>
+            <div class="sc-scn">Cenário B</div>
+            <div class="sc-name">Entidade JPA gerenciada</div>
+            <code>@Entity<br>class PedidoEntity { ... }</code>
+            <div class="sc-verdict">🚫 Não cabe<span class="sc-why">JPA exige construtor sem-arg e campos mutáveis pro proxy. Record é final e imutável — briga com o framework. (No Sáb 3, a entidade JPA vira um adapter; o domínio continua record.)</span></div>
+          </div>
+          <div class="sim-card ok" data-sim>
+            <div class="sc-scn">Cenário C</div>
+            <div class="sc-name">Evento de domínio</div>
+            <code>record PedidoCriado(<br>&nbsp;&nbsp;String id, Instant em)</code>
+            <div class="sc-verdict">✅ Cabe<span class="sc-why">Evento é um fato que aconteceu — imutável por natureza. Record é ideal (e brilha no Bloco 2).</span></div>
+          </div>
+        </div>
+        <div class="sim-hint">👆 "quando usar qual" é o músculo do curso — não decore a regra, entenda o trade-off</div>
+      </div>
+
+      <div class="note" data-note="cap01/java" data-title="Anotações — Java moderno" data-placeholder="Quais desses detalhes você já viu o agente errar? O que você vai cobrar na revisão de sábado?"></div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══ 4 · ANTI-PATTERN ═══ -->
+  <section class="step-section" id="s-antipattern">
+    <div class="step-header">
+      <div class="step-number" style="background:var(--bug)">🔍</div>
+      <div><div class="step-title">Anti-pattern do dia</div><div class="step-sub">O agente te entrega isto num PR. O que você aponta?</div></div>
+    </div>
+
+    <div class="bugzilla-card">
+      <div class="bugzilla-header">
+        <span class="bugzilla-emoji">🧟</span>
+        <div><div class="bugzilla-title">Anemic Domain Model</div><div class="bugzilla-sub">domínio sem comportamento, regra espalhada no service</div></div>
+      </div>
+      <div class="bugzilla-body">
+        <p>O agente devolveu um <code>Cliente</code> que é só um saco de getters/setters, e jogou TODA a regra
+        de negócio no service. Parece OO, mas é procedural fantasiado.</p>
+
+        <div class="code-block" style="margin-top:14px">
+          <div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">PR do agente — o que tem de errado?</span><span class="lang-badge java">java</span></div>
+<pre><span class="kw">class</span> <span class="tp">Cliente</span> {
+  <span class="kw">private</span> <span class="tp">String</span> nome; <span class="kw">private</span> <span class="kw">int</span> pontos;
+  <span class="kw">public</span> <span class="kw">void</span> setPontos(<span class="kw">int</span> p) { <span class="kw">this</span>.pontos = p; }   <span class="cm">// qualquer um muda</span>
+  <span class="kw">public</span> <span class="kw">int</span> getPontos() { <span class="kw">return</span> pontos; }
+}
+<span class="kw">class</span> <span class="tp">FidelidadeService</span> {
+  <span class="kw">void</span> pontuar(<span class="tp">Cliente</span> c, <span class="kw">int</span> compra) {
+    <span class="kw">if</span> (compra &gt; 0) c.setPontos(c.getPontos() + compra / 10);   <span class="cm">// regra fora do dono</span>
+  }
+}</pre>
+        </div>
+
+        <div class="try-first" style="margin-top:14px">
+          <span class="try-first-icon">🚨</span>
+          <div class="try-first-content">
+            <strong>PARE. Forme seu diagnóstico antes de abrir.</strong> Que princípio isso fere? Onde a regra
+            <em>deveria</em> morar? Como você instruiria o agente a refatorar — em uma frase?
+          </div>
+        </div>
+
+        <div class="toggler">
+          <div class="toggler-header" onclick="toggleSection(this)">
+            <span>👀 Ver o diagnóstico + a refatoração-modelo</span>
+            <span class="toggler-arrow">▼</span>
+          </div>
+          <div class="toggler-body">
+            <p><strong>Diagnóstico (nomeável):</strong> <em>Anemic Domain Model</em> — o dado (<code>Cliente</code>)
+            não protege o próprio estado e a regra de pontuação vive no service. Sintomas: setter público
+            deixando qualquer um corromper <code>pontos</code>; lógica de negócio (a fórmula) longe do dono do dado;
+            o service viola SRP ao acumular regra que era do domínio.</p>
+            <p style="margin-top:8px"><strong>Como dirigir o agente (1 frase):</strong> <em>"Mova a regra de pontuação
+            para dentro de Cliente como um método de comportamento, remova o setter de pontos e deixe o service só
+            orquestrando."</em></p>
+            <div class="code-block" style="margin-top:10px">
+              <div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">Cliente.java — domínio rico</span><span class="lang-badge java">java</span></div>
+<pre><span class="kw">class</span> <span class="tp">Cliente</span> {
+  <span class="kw">private</span> <span class="tp">String</span> nome; <span class="kw">private</span> <span class="kw">int</span> pontos;
+  <span class="kw">public</span> <span class="kw">void</span> pontuarPor(<span class="kw">int</span> compra) {        <span class="cm">// regra mora com o dado</span>
+    <span class="kw">if</span> (compra &gt; 0) <span class="kw">this</span>.pontos += compra / 10;
+  }
+  <span class="kw">public</span> <span class="kw">int</span> pontos() { <span class="kw">return</span> pontos; }      <span class="cm">// sem setter: estado protegido</span>
+}
+<span class="cm">// Service agora só orquestra: cliente.pontuarPor(compra);</span></pre>
+            </div>
+            <p style="margin-top:8px;color:var(--text-dim);font-size:0.88rem">Repare: não é "a resposta certa".
+            É o <strong>critério</strong> — comportamento junto do dado, estado protegido, service magro. Esse é o
+            vocabulário que você usa pra revisar qualquer PR, humano ou agente. Sáb 2 é inteiro sobre isso.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note" data-note="cap01/antipattern" data-title="Anotações — anemic model" data-placeholder="Seu diagnóstico em uma frase, ANTES de abrir o olhinho. Depois: bateu?"></div>
+  </section>
+
+  <!-- ╔═══════════════════════════════════════════════╗
+       ║   🏫  ZONA 2 — EM SALA                          ║
+       ╚═══════════════════════════════════════════════╝ -->
+  <div class="zone-head zone-sala" id="z-sala">
+    <div class="zh-em">🏫</div>
+    <div>
+      <div class="zh-k">Zona 2 · sábado 05/09 · presencial ou Zoom</div>
+      <h2>Em sala</h2>
+      <div class="zh-s">Nada de reler teoria. Quatro horas de dirigir o agente, revisar o que ele fez e desenhar o que você quer. Cada bloco tem um entregável.</div>
+    </div>
+    <div class="zh-side"><div class="zh-time">13h30 → 17h30</div><div class="text-dim" style="font-size:0.72rem">4h · 15 min de intervalo</div></div>
+  </div>
+
+  <!-- ═══ ROTEIRO ═══ -->
+  <section class="step-section" id="s-roteiro">
+    <div class="step-header">
+      <div class="step-number sn-java">⏱</div>
+      <div><div class="step-title">Roteiro da tarde</div><div class="step-sub">Marque conforme avança — fica salvo. <span data-progress="cap01/sala/"></span></div></div>
+    </div>
+    <ol class="roteiro">
+      <li class="rt-item">
+        <div class="rt-time">13:30<small>15 min</small></div>
+        <div class="rt-body"><h4>Provocação</h4><p>O PR do <code>PedidoService</code> que faz seis coisas (o mesmo do hub) e o quiz de imutabilidade. Quem aponta o que, e com que nome?</p></div>
+        <div class="rt-chk"><input type="checkbox" data-persist="cap01/sala/1" aria-label="feito"></div>
+      </li>
+      <li class="rt-item">
+        <div class="rt-time">13:45<small>45 min</small></div>
+        <div class="rt-body"><h4>SDD ao vivo</h4><p>O professor cria o repositório <code>pedidos</code> no projetor: <code>CLAUDE.md</code>, pasta <code>.specs/</code>, a primeira spec. Abre a <code>.specs/</code> deste site (dogfooding). Você acompanha criando o <strong>seu</strong> repositório.</p>
+          <div class="rt-out">📦 <span><b>Entregável:</b> repositório <code>pedidos</code> criado, com <code>CLAUDE.md</code> e <code>.specs/</code>, agente logado dentro dele.</span></div></div>
+        <div class="rt-chk"><input type="checkbox" data-persist="cap01/sala/2" aria-label="feito"></div>
+      </li>
+      <li class="rt-item">
+        <div class="rt-time">14:30<small>45 min</small></div>
+        <div class="rt-body"><h4>Lab 1 — Dirigir o agente <span class="rt-lab dirigir">🧭 dirigir</span></h4><p>Cola a spec de <code>Pedido</code> que você escreveu em casa. Plan → seu OK → execute → revisão linha a linha. Manda corrigir o que fugiu da spec.</p>
+          <div class="rt-out">📦 <span><b>Entregável:</b> commit <code>feat: dominio Pedido</code> com testes verdes + 3 pontos de revisão no 📓 Caderno.</span></div></div>
+        <div class="rt-chk"><input type="checkbox" data-persist="cap01/sala/3" aria-label="feito"></div>
+      </li>
+      <li class="rt-item break">
+        <div class="rt-time">15:15<small>15 min</small></div>
+        <div class="rt-body"><h4>Intervalo ☕</h4></div>
+        <div class="rt-chk"><input type="checkbox" data-persist="cap01/sala/4" aria-label="feito"></div>
+      </li>
+      <li class="rt-item">
+        <div class="rt-time">15:30<small>30 min</small></div>
+        <div class="rt-body"><h4>Java moderno em revisão</h4><p>Recap de 10 minutos e o simulador "Record cabe aqui?" na tela. Depois, os detalhes que separam aprovado de reprovado: cópia defensiva, switch exaustivo, <code>Optional</code> no lugar certo, <code>BigDecimal</code>.</p></div>
+        <div class="rt-chk"><input type="checkbox" data-persist="cap01/sala/5" aria-label="feito"></div>
+      </li>
+      <li class="rt-item">
+        <div class="rt-time">16:00<small>45 min</small></div>
+        <div class="rt-body"><h4>Lab 2 — Revisar o PR <span class="rt-lab revisar">🔬 revisar PR</span></h4><p>Um <code>Pedido</code> anêmico com seis problemas plantados. Você nomeia cada um, depois dirige a correção no seu próprio repositório (o agente aplica; você confere).</p>
+          <div class="rt-out">📦 <span><b>Entregável:</b> lista nomeada das violações no 📓 Caderno + commit da correção.</span></div></div>
+        <div class="rt-chk"><input type="checkbox" data-persist="cap01/sala/6" aria-label="feito"></div>
+      </li>
+      <li class="rt-item">
+        <div class="rt-time">16:45<small>20 min</small></div>
+        <div class="rt-body"><h4>Lab 3 — Monte a arquitetura <span class="rt-lab dirigir">🏗️ desenhar</span></h4><p>No canvas: o serviço de Pedidos como está hoje, e onde você acha que os eventos vão entrar. Salva sozinho.</p>
+          <div class="rt-out">📦 <span><b>Entregável:</b> o diagrama salvo (e exportado em SVG, se quiser no README).</span></div></div>
+        <div class="rt-chk"><input type="checkbox" data-persist="cap01/sala/7" aria-label="feito"></div>
+      </li>
+      <li class="rt-item">
+        <div class="rt-time">17:05<small>25 min</small></div>
+        <div class="rt-body"><h4>Fechamento</h4><p>O que fixou como critério de qualidade, a tarefa de casa até 19/09, dúvidas de quem está no Zoom.</p></div>
+        <div class="rt-chk"><input type="checkbox" data-persist="cap01/sala/8" aria-label="feito"></div>
+      </li>
+    </ol>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══ LAB 1 ═══ -->
+  <section class="step-section" id="s-lab1">
+    <div class="exercise guided">
+      <div class="exercise-header">
+        <span class="exercise-icon">🧭</span>
+        <div><div class="exercise-title">Lab 1 — Dirigir o agente: o domínio <code>Pedido</code></div><div class="exercise-sub">spec → plan → seu OK → execute → revisar linha a linha</div></div>
+      </div>
+      <p>Dentro do seu repositório <code>pedidos</code>, abra o Claude Code. <strong>Não digite o código você mesmo.</strong>
+      Salve a sua spec em <code>.specs/pedido.md</code> (a que você escreveu em casa — ela está no 📓 Caderno) e dê a ordem:</p>
+      <div class="terminal" style="margin:10px 0">
+        <div class="terminal-header"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">claude · pedidos</span></div>
+        <div class="terminal-body"><span class="prompt">&gt;</span> Leia .specs/pedido.md e o CLAUDE.md. Proponha um plano curto (arquivos e testes que vai criar). Não implemente ainda.</div>
+      </div>
+      <p>Leia o plano. <strong>É aqui que você corta o que ele inventou</strong> (um <code>PedidoService</code> que a spec não pediu,
+      um <code>PedidoRepository</code>, um README). Só depois:</p>
+      <div class="terminal" style="margin:10px 0">
+        <div class="terminal-header"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">claude · pedidos</span></div>
+        <div class="terminal-body"><span class="prompt">&gt;</span> Aprovado, sem o Service e sem o README. Implemente e rode os testes.</div>
+      </div>
+      <p><strong>Na revisão, cobre:</strong></p>
+      <ul class="spec-rules" style="margin:6px 0 12px 22px">
+        <li><code>Pedido</code> e <code>ItemPedido</code> são <code>record</code>? Tem <code>List.copyOf</code> no compact constructor?</li>
+        <li>As exceções são de <b>domínio</b> (<code>PedidoFechadoException</code>) ou genéricas (<code>IllegalStateException</code>)? A spec dizia o quê?</li>
+        <li><code>total()</code> é calculado ou virou campo? Dinheiro é <code>BigDecimal</code>?</li>
+        <li><code>adicionarItem</code> devolve <b>novo</b> Pedido ou mutou a lista?</li>
+        <li>Alguma importação de Spring/JPA no pacote de domínio?</li>
+        <li>O agente criou algo fora da spec? (Quase sempre cria.)</li>
+      </ul>
+      <div class="try-first">
+        <span class="try-first-icon">🚨</span>
+        <div class="try-first-content"><strong>Revise antes de abrir o olhinho.</strong> Anote no Caderno os 3 pontos que você mandou corrigir. É o entregável — e é o que a gente compara na sala.</div>
+      </div>
+      <div class="toggler">
+        <div class="toggler-header" onclick="toggleSection(this)">
+          <span>👀 Ver a spec-modelo e os pontos de revisão que costumam aparecer</span>
+          <span class="toggler-arrow">▼</span>
+        </div>
+        <div class="toggler-body">
+          <p><strong>Spec-modelo:</strong> é o esqueleto do editor de spec lá em cima (botão ✨). O que a torna boa não é o tamanho — é que
+          cada linha é <em>verificável</em>: dá pra olhar o código e dizer "cumpre" ou "não cumpre".</p>
+          <p style="margin-top:8px"><strong>O que o agente costuma fazer errado nessa tarefa</strong> (e que a sua revisão precisa pegar):</p>
+          <ol style="color:var(--text-dim);line-height:1.9;margin-left:18px">
+            <li>Usa <code>IllegalArgumentException</code> em vez da exceção de domínio nomeada. Nomear a exceção é parte do vocabulário do sistema.</li>
+            <li>Guarda <code>total</code> como campo do record "por performance". Não pediu, e agora tem dois lugares pra mesma verdade.</li>
+            <li>Esquece o <code>List.copyOf</code> — o record parece imutável e não é.</li>
+            <li>Coloca a transição de status num <code>if</code> no método em vez de perguntar ao enum (<code>status.podeIrPara(PAGO)</code>).</li>
+            <li>Cria <code>Service</code>, <code>Repository</code>, <code>README.md</code>, às vezes um <code>Dockerfile</code>. A spec dizia "só o domínio".</li>
+            <li>Testes que só cobrem o caminho feliz. A definição de pronto listava os casos de erro.</li>
+          </ol>
+          <p style="margin-top:8px;color:var(--text-dim);font-size:0.88rem">Cada item desses é uma frase de revisão: <em>"A spec pede exceção de domínio; troque
+          IllegalArgumentException por ItemInvalidoException."</em> Curta, nomeada, apontando pra spec. É assim que se dirige.</p>
+        </div>
+      </div>
+      <div class="note" data-note="cap01/lab1-revisao" data-title="Lab 1 — os 3 pontos que mandei o agente corrigir" data-placeholder="1. …&#10;2. …&#10;3. …"></div>
+    </div>
+  </section>
+
+  <!-- ═══ LAB 2 ═══ -->
+  <section class="step-section" id="s-lab2">
+    <div class="exercise solo">
+      <div class="exercise-header">
+        <span class="exercise-icon">🔬</span>
+        <div><div class="exercise-title">Lab 2 — Revisar o PR</div><div class="exercise-sub">aponte as violações, nominalmente · treino do formato avaliativo do Sáb 2</div></div>
+      </div>
+      <p>Outro agente (o de um colega, digamos) abriu este PR no serviço de Pedidos. Encontre <strong>pelo menos 4 problemas</strong> e
+      nomeie cada um (o nome importa — é o vocabulário que a avaliação cobra).</p>
+
+      <div class="code-block">
+        <div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">Pedido.java + PedidoService.java — PR do agente</span><span class="lang-badge java">java</span></div>
+<pre><span class="kw">public class</span> <span class="tp">Pedido</span> {
+  <span class="kw">private</span> <span class="tp">String</span> id;
+  <span class="kw">private</span> <span class="tp">List</span>&lt;<span class="tp">ItemPedido</span>&gt; itens = <span class="kw">new</span> <span class="tp">ArrayList</span>&lt;&gt;();
+  <span class="kw">private double</span> total;                                        <span class="cm">// 1</span>
+  <span class="kw">private</span> <span class="tp">String</span> status = <span class="st">"ABERTO"</span>;                            <span class="cm">// 2</span>
+  <span class="kw">public</span> <span class="tp">List</span>&lt;<span class="tp">ItemPedido</span>&gt; getItens() { <span class="kw">return</span> itens; }         <span class="cm">// 3</span>
+  <span class="kw">public void</span> setTotal(<span class="kw">double</span> t) { <span class="kw">this</span>.total = t; }
+  <span class="kw">public void</span> setStatus(<span class="tp">String</span> s) { <span class="kw">this</span>.status = s; }
+  <span class="cm">// getters...</span>
+}
+
+<span class="kw">public class</span> <span class="tp">PedidoService</span> {
+  <span class="kw">public</span> <span class="tp">Pedido</span> adicionarItem(<span class="tp">Pedido</span> p, <span class="tp">ItemPedido</span> i) {
+    <span class="kw">if</span> (i == <span class="bool">null</span>) <span class="kw">return</span> <span class="bool">null</span>;                                <span class="cm">// 4</span>
+    p.getItens().add(i);
+    p.setTotal(p.getTotal() + i.getPreco() * i.getQtd());        <span class="cm">// 5</span>
+    emailService.avisar(p);                                       <span class="cm">// 6</span>
+    <span class="kw">return</span> p;
+  }
+}</pre>
+      </div>
+
+      <div class="try-first">
+        <span class="try-first-icon">🚨</span>
+        <div class="try-first-content"><strong>Liste suas violações no Caderno antes de abrir.</strong> Dica: pense em quem é o dono da regra, tipo pra dinheiro, o que vaza pra fora, string onde devia ser tipo, null, e responsabilidades.</div>
+      </div>
+      <div class="note" data-note="cap01/lab2-violacoes" data-title="Lab 2 — violações que eu encontrei (nomeadas)" data-placeholder="1. linha X — nome da violação — por quê&#10;2. …"></div>
+
+      <div class="toggler">
+        <div class="toggler-header" onclick="toggleSection(this)">
+          <span>👀 Ver as violações esperadas</span>
+          <span class="toggler-arrow">▼</span>
+        </div>
+        <div class="toggler-body">
+          <ol style="color:var(--text-dim);line-height:1.9;margin-left:18px">
+            <li><strong>Anemic Domain Model</strong> (o PR inteiro): <code>Pedido</code> é um saco de setters; a regra de adicionar item e
+            calcular total vive no service. A regra tem que morar com o dado (<code>pedido.adicionarItem(i)</code>).</li>
+            <li><strong><code>double</code> para dinheiro</strong> (1, 5): erro de precisão clássico. Dinheiro é <code>BigDecimal</code>.</li>
+            <li><strong>Estado derivado armazenado</strong> (1, 5): <code>total</code> guardado e recalculado à mão — duas fontes da verdade, e uma delas vai
+            desatualizar. Total é <em>derivado</em> dos itens.</li>
+            <li><strong>Encapsulamento quebrado / coleção mutável vazada</strong> (3): <code>getItens()</code> devolve a <code>ArrayList</code> interna; qualquer
+            um faz <code>add</code> por fora. Devolva cópia imutável ou não devolva.</li>
+            <li><strong>Stringly typed</strong> (2): status como <code>String</code> aceita <code>"PAGOO"</code>. É um conjunto fechado: <code>enum</code> (ou sealed).</li>
+            <li><strong><code>null</code> como controle de fluxo</strong> (4): empurra <code>NullPointerException</code> pro chamador. Item nulo é violação de contrato: exceção.</li>
+            <li><strong>SRP quebrado / efeito colateral escondido</strong> (6): adicionar item <em>envia e-mail</em>. Não dá pra testar o método sem
+            mandar e-mail — e no Bloco 2 esse acoplamento vira o motivo de existir uma fila.</li>
+          </ol>
+          <p style="margin-top:8px;color:var(--text-dim);font-size:0.88rem">Achou 4+ e nomeou? É exatamente o formato do lab avaliativo do Sábado 2 — lá com SOLID inteiro no
+          checklist. Agora dirija a correção no seu repositório: <em>"Refatore para domínio rico conforme .specs/pedido.md; remova o e-mail
+          do adicionarItem."</em></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ LAB 3 ═══ -->
+  <section class="step-section" id="s-lab3">
+    <div class="exercise home" style="border-left-color:var(--spring)">
+      <div class="exercise-header">
+        <span class="exercise-icon">🏗️</span>
+        <div><div class="exercise-title">Lab 3 — Monte a arquitetura do serviço de Pedidos</div><div class="exercise-sub" style="color:var(--spring)">como está hoje · e onde os eventos vão entrar</div></div>
+      </div>
+      <p>Desenhe o serviço como ele existe depois do Lab 1 (cliente → API → controller → service → domínio → repositório → banco, com o teste
+      apontando pro domínio). Depois responda com setas: <strong>quando um pedido é pago, quem precisa saber?</strong> Estoque, e-mail, nota fiscal…
+      Desenhe as chamadas síncronas de hoje. No Sáb 4 você vai trocar essas setas por eventos — e vai comparar com este desenho.</p>
+      <div data-arch="cap01/pedidos-hoje" data-palette="app,eda" data-title="Serviço de Pedidos — Sáb 1" data-height="420">
+        <script type="application/json">{"nodes":[
+          {"id":"c","t":"cliente","x":10,"y":170,"l":"Cliente"},
+          {"id":"api","t":"api","x":160,"y":170,"l":"API REST"},
+          {"id":"ct","t":"controller","x":310,"y":170,"l":"PedidoController"},
+          {"id":"sv","t":"service","x":460,"y":170,"l":"PedidoService"},
+          {"id":"dm","t":"dominio","x":610,"y":60,"l":"Pedido"},
+          {"id":"rp","t":"repository","x":610,"y":280,"l":"PedidoRepository"},
+          {"id":"pg","t":"postgres","x":760,"y":280,"l":"Postgres"},
+          {"id":"ts","t":"teste","x":760,"y":60,"l":"PedidoTest"}
+        ],"edges":[
+          {"id":"1","a":"c","b":"api","l":"POST /pedidos"},
+          {"id":"2","a":"api","b":"ct","l":""},
+          {"id":"3","a":"ct","b":"sv","l":"DTO"},
+          {"id":"4","a":"sv","b":"dm","l":"adicionarItem"},
+          {"id":"5","a":"sv","b":"rp","l":"salvar"},
+          {"id":"6","a":"rp","b":"pg","l":"SQL"},
+          {"id":"7","a":"ts","b":"dm","l":"testa"}
+        ]}</script>
+      </div>
+      <div class="note" data-note="cap01/lab3-eventos" data-title="Lab 3 — quando o pedido é pago, quem precisa saber? O que acontece se um deles cair?" data-placeholder="Ex.: estoque, e-mail, NF. Se o e-mail cair hoje, o pedido…"></div>
+    </div>
+  </section>
+
+  <!-- ╔═══════════════════════════════════════════════╗
+       ║   🏠  ZONA 3 — ATÉ O PRÓXIMO SÁBADO             ║
+       ╚═══════════════════════════════════════════════╝ -->
+  <div class="zone-head zone-casa" id="z-casa">
+    <div class="zh-em">🏠</div>
+    <div>
+      <div class="zh-k">Zona 3 · em casa · duas semanas (12/09 não tem aula)</div>
+      <h2>Até o próximo sábado, 19/09</h2>
+      <div class="zh-s">O repositório evolui em casa, dirigido por você. Isso não é "extra": o Sáb 2 começa de onde isto termina.</div>
+    </div>
+    <div class="zh-side"><div class="zh-time">~3h</div><div class="text-dim" style="font-size:0.72rem">com o Claude Pro</div></div>
+  </div>
+
+  <section class="step-section" id="s-casa">
+    <div class="card">
+      <p style="margin-bottom:4px"><span data-progress="cap01/casa/"></span></p>
+      <ul class="chk-list">
+        <li><label class="chk"><input type="checkbox" data-persist="cap01/casa/repo"><span><span class="chk-t">Repositório <code>pedidos</code> no GitHub, com <code>CLAUDE.md</code> e <code>.specs/pedido.md</code></span><span class="chk-d">O mesmo da sala. Se ficou pela metade, termine. Inclua <code>infra/docker-compose.yml</code> do setup — a partir do Sáb 3 o Testcontainers sobe o Postgres.</span></span></label></li>
+        <li><label class="chk"><input type="checkbox" data-persist="cap01/casa/dominio"><span><span class="chk-t">Domínio <code>Pedido</code> gerado, revisado e com testes verdes</span><span class="chk-d">Todos os casos da definição de pronto. Nenhum setter, nenhuma importação de framework no domínio.</span></span></label></li>
+        <li><label class="chk"><input type="checkbox" data-persist="cap01/casa/pagamento"><span><span class="chk-t">Nova spec: <code>ResultadoPagamento</code> (sealed) e <code>Pedido.pagar(resultado)</code></span><span class="chk-d">Escreva a spec no editor do capítulo (ou direto em <code>.specs/</code>), dirija o agente, revise. Aprovado → PAGO; Recusado → continua ABERTO com motivo; Estornado só de PAGO. Switch exaustivo, sem <code>default</code>.</span></span></label></li>
+        <li><label class="chk"><input type="checkbox" data-persist="cap01/casa/claudemd"><span><span class="chk-t">Peça ao agente pra <em>propor</em> melhorias no seu <code>CLAUDE.md</code> — e rejeite pelo menos uma</span><span class="chk-d">Exercício de julgamento: ele vai sugerir regras genéricas. Quais servem ao <em>seu</em> projeto? Anote o que você rejeitou e por quê.</span></span></label></li>
+        <li><label class="chk"><input type="checkbox" data-persist="cap01/casa/caderno"><span><span class="chk-t">3 pontos de revisão anotados no 📓 Caderno pra trazer</span><span class="chk-d">Os do Lab 1 mais os da tarefa. É o aquecimento do Sáb 2: "o que o agente errou e como eu mandei corrigir".</span></span></label></li>
+        <li><label class="chk"><input type="checkbox" data-persist="cap01/casa/leitura"><span><span class="chk-t">Ler a zona 📖 do Sábado 2 (OO de verdade + SOLID) quando for publicada</span><span class="chk-d">Avisamos no grupo. Leva ~1h.</span></span></label></li>
+      </ul>
+      <div class="tip" style="margin-top:12px">
+        <span class="tip-icon">📦</span>
+        <div class="tip-content"><strong>O que trazer dia 19/09:</strong> o repositório com os commits, os 3 pontos de revisão no Caderno, e uma dúvida
+        real sobre onde uma regra de negócio deveria morar. O Sáb 2 é inteiro sobre domínio rico e SOLID — e começa com o seu código.</div>
+      </div>
+      <div class="note" data-note="cap01/casa-rejeitei" data-title="Tarefa — o que o agente sugeriu no CLAUDE.md e eu rejeitei (e por quê)" data-placeholder="Sugestão: … / Rejeitei porque: …"></div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══ RESUMO ═══ -->
+  <section class="step-section" id="s-resumo">
+    <div class="step-header">
+      <div class="step-number sn-spring">✓</div>
+      <div><div class="step-title">Resumo</div><div class="step-sub">O que você sai sabendo julgar</div></div>
+    </div>
+
+    <div class="card">
+      <div class="keyword-grid">
+        <div class="keyword-chip"><span class="emoji">🧭</span><span class="kw-name">A inversão</span><span class="kw-desc">O agente gera; você revisa. Julgamento &gt; digitação.</span></div>
+        <div class="keyword-chip"><span class="emoji">📝</span><span class="kw-name">SDD</span><span class="kw-desc">Spec verificável carrega seu julgamento; CLAUDE.md é a memória; contexto é escasso.</span></div>
+        <div class="keyword-chip"><span class="emoji">☕</span><span class="kw-name">Java moderno</span><span class="kw-desc">record + cópia defensiva, sealed + switch exaustivo, Optional sem abuso, enum rico, BigDecimal.</span></div>
+        <div class="keyword-chip"><span class="emoji">🔍</span><span class="kw-name">Revisar PR</span><span class="kw-desc">Apontar violações nominalmente: anemic model, coleção vazada, stringly typed, null, SRP.</span></div>
+      </div>
+
+      <div class="tip" style="margin-top:8px">
+        <span class="tip-icon">➡️</span>
+        <div class="tip-content">
+          <strong>Sábado 2 (19/09):</strong> OO de verdade + SOLID — encapsulamento real, composição vs herança, o duelo
+          <strong>domínio rico × anemic model</strong> que você acabou de farejar, e os cinco princípios como checklist de revisão de PR.
+          Primeiro lab avaliativo. E a primeira <em>skill</em> do Claude Code: o checklist virando ferramenta.
+        </div>
+      </div>
+
+      <div class="center" style="margin-top:18px">
+        <a href="../02-oo-de-verdade-e-solid/" style="display:inline-block;padding:12px 28px;background:linear-gradient(135deg,var(--java),var(--claude));color:var(--bg);text-decoration:none;font-weight:900;border-radius:50px;letter-spacing:1px">Próximo: Sábado 02 — OO de verdade + SOLID → <span style="opacity:0.7;font-size:0.8em">(em breve)</span></a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <strong style="color:var(--java)">Backend Moderno, Agentes de IA e Cloud</strong> · Sábado 01 ·
+  <a href="../../">← voltar ao hub</a> ·
+  <a href="https://github.com/kelsonvictr" target="_blank" rel="noopener">github.com/kelsonvictr</a>
+</footer>
+
+<script src="../../shared/scripts.js" defer></script>
+<script src="../../shared/lab-kit.js" defer></script>
+<script type="module" src="../../shared/motion-fx.js"></script>
+<script>
+  /* Simulador "Record cabe aqui?" — revela o veredito ao clicar (page-local, sem dependência) */
+  document.querySelectorAll('[data-sim]').forEach(card => {
+    card.addEventListener('click', () => card.classList.toggle('revealed'));
+  });
+</script>
+</body>
+</html>

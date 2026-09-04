@@ -1,0 +1,67 @@
+/* Contexto: componente independente, com o elenco visual da Oficina de falas. */
+.ct{--ct-accent:#efbf6c;border-color:#826338;grid-template-columns:1.05fr 1fr}
+.ct .lt-heading{background:radial-gradient(ellipse at top right,#86602c50,transparent 70%)}
+.ct .lt-heading>span{color:#f4cb89}
+.ct .lt-scenes button[aria-pressed=true],.ct .lt-controls button:first-child{background:#efca8b;color:#2b2117;border-color:#efca8b}
+.ct-stage{padding:18px 16px;border-block:1px solid #50412d;background:radial-gradient(ellipse at bottom,#714a2130,transparent 80%)}
+.ct-dialogue{min-height:144px;border:1px solid #6e5840;border-radius:16px;padding:13px 16px;background:#24202a}
+.ct-dialogue>strong{font-size:.7rem;color:#f7d49f;text-transform:uppercase;letter-spacing:1.2px}
+.ct-dialogue p{font-size:.86rem;line-height:1.6;margin:7px 0 0;color:#f5efe4}
+.ct-crew{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;align-items:end;min-height:178px}
+.ct .ct-crew .lt-bot-wrap{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;padding-bottom:1px}
+.ct .ct-crew .lt-bot-wrap>span{display:block;font-size:.65rem}
+.ct .ct-crew .lt-bot{margin:0 0 17px;width:74px;height:64px;border-radius:18px}
+.ct .ct-crew .lt-screen{line-height:32px;font-size:24px;margin:9px 6px}
+.ct .ct-crew .lt-bot-feet{font-size:16px;letter-spacing:5px;margin-top:0}
+.ct .lt-person>span{font-size:.65rem}
+.ct .lt-avatar{width:104px;height:125px;margin-top:10px}
+.ct-desk{border:1px solid #50412d;border-right:0;padding:18px 16px;background:#171923;display:flex;flex-direction:column;gap:12px}
+.ct-desk-title{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:.6rem;color:#e5d1b0;letter-spacing:1px}
+.ct-desk-title span{font-size:.6rem;letter-spacing:0;color:#b9b2bf}
+.ct-capacity{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
+.ct-capacity i{height:8px;border-radius:3px;background:#363341}
+.ct-capacity i.on{background:#e8bc78;animation:ct-light .4s ease-out both}
+.ct-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start;min-height:142px}
+.ct-tile{padding:10px;border-radius:9px;border:1px solid #56516a;background:#262434;color:#ddd9ec;font-size:.72rem;line-height:1.35;animation:ct-paper .4s ease-out both}
+.ct-tile.rule{border-color:#bba0ef;background:#3b304e;color:#e0c9ff}
+.ct-tile.task{border-color:#86bddf;background:#263e4b;color:#cfebfc}
+.ct-tile.noise{border-color:#83613d;background:#443423;color:#e3c598}
+.ct-tile.proof{border-color:#80c2a0;background:#254235;color:#c8efda}
+.ct-shelf{margin-top:auto;padding:10px;border:1px dashed #777080;border-radius:9px;display:flex;flex-direction:column;gap:5px;color:#b7b0c3;font-size:.7rem;line-height:1.5}
+.ct-shelf>b{font-size:.55rem;letter-spacing:1px;color:#d4bddf}
+.ct-observation{grid-column:1 / -1;padding:14px 20px;background:#252133;min-height:102px;border-top:1px solid #50412d}
+.ct-observation>span{font-size:.62rem;letter-spacing:1.4px;font-weight:900;color:#efcb8f}
+.ct-observation p{margin:6px 0 0;font-size:.85rem;line-height:1.6;white-space:pre-line;color:#eee9f7;font-variant-ligatures:none;font-feature-settings:'liga' 0,'clig' 0,'calt' 0}
+.ct[data-kind=error] .ct-observation{background:#3d252a}
+.ct[data-kind=error] .ct-observation>span{color:#ffadb3}
+.ct[data-kind=recovered] .ct-observation{background:#1f372e}
+.ct[data-kind=recovered] .ct-observation>span{color:#9ce0b8}
+.ct[data-kind=lost] .ct-cards{border:1px dashed #cf8c83;padding:8px;border-radius:10px}
+.ct [data-character]{border-radius:16px;padding-bottom:4px}
+.ct[data-speaker=LIA] [data-character=LIA],.ct[data-speaker=BETO] [data-character=BETO],.ct[data-speaker=LLM] [data-character=LLM]{background:#d3b57814;box-shadow:0 2px 0 #efca8b}
+.ct[data-speaker=LIA] .lt-lia .lt-face b,.ct[data-speaker=BETO] .lt-beto .lt-face b{background:#672e35;animation:lt-mouth .28s ease-in-out infinite}
+.ct[data-speaker=LLM] .lt-screen{animation:lt-voice-glow .65s ease-in-out infinite}
+.ct-explain{margin-top:30px;padding-top:24px;border-top:1px solid #353143}
+.ct-explain>h4{font-size:1.1rem!important;margin:8px 0 12px!important}
+.ct-explain p{line-height:1.85;margin:10px 0}
+.ct-explain a{color:#c5b2f4;text-decoration:underline;text-underline-offset:3px;font-size:.85rem}
+.ct-concepts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.ct-concepts>div{background:#1b1b2c;border:1px solid #40384f;border-radius:12px;padding:16px}
+.ct-concepts b{font-size:.85rem;color:#edd8b2}
+.ct-concepts p{font-size:.8rem;line-height:1.75;color:#beb9cf;margin:8px 0 0}
+.ct-callout{margin:18px 0 0;border-left:3px solid #efbf6c;padding:14px 18px;background:#bb8a2510;line-height:1.8;font-size:.86rem;color:#d8d0df}
+.ct-callout b{color:#f1ce94}
+.ct-table-wrap{overflow-x:auto;margin:16px 0}
+.ct-table{width:100%;border-collapse:collapse;font-size:.8rem;min-width:500px}
+.ct-table th,.ct-table td{text-align:left;padding:13px;border:1px solid #383346;line-height:1.7}
+.ct-table th{color:#eed1a1;background:#292337}
+.ct-table td{color:#ccc5dc}
+.ct-solution{border:1px solid #4f4562;border-radius:10px;padding:14px 18px;margin-top:14px}
+.ct-solution summary{cursor:pointer;color:#d1bafb;font-weight:800}
+.ct-solution summary:focus-visible{outline:2px solid #efca8b;outline-offset:5px}
+@keyframes ct-paper{from{opacity:0;transform:translateY(-10px) rotate(-2deg)}to{opacity:1;transform:none}}
+@keyframes ct-light{from{opacity:.3;transform:scaleX(.4)}to{opacity:1;transform:scaleX(1)}}
+@media(max-width:759px){.ct{display:block}.ct-desk{border-left:0}.ct-concepts{grid-template-columns:1fr}.ct .ct-crew .lt-bot-wrap{flex-wrap:nowrap}.ct-dialogue{min-height:135px}.ct .lt-avatar{transform:scale(.8);margin-inline:-7px;transform-origin:center bottom;width:93px}.ct-crew{gap:0}.ct .lt-person>strong{font-size:.85rem}.ct .lt-person>span,.ct .ct-crew .lt-bot-wrap>span{font-size:.55rem}.ct .ct-crew .lt-bot{width:61px;height:58px}.ct .lt-antenna{left:28px}.ct .ct-crew .lt-screen{font-size:20px}.ct-stage{padding:16px 10px}.ct .lt-scenes button{font-size:.62rem}.ct .lt-controls button{padding:8px;font-size:.7rem}}
+@media(prefers-reduced-motion:reduce){.ct *{animation:none!important;transition:none!important}}
+
+#agente-teatro .ct-capacity{grid-template-columns:repeat(5,1fr)}
