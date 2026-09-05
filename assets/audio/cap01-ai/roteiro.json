@@ -1,0 +1,116 @@
+{
+  "sem_contexto-0": [
+    {
+      "role": "LIA",
+      "text": "Tico, crie um endpoint para cadastrar pedidos."
+    }
+  ],
+  "sem_contexto-1": [
+    {
+      "role": "LLM",
+      "text": "Eu conheço muitos exemplos de APIs. Sem as regras deste projeto, preciso preencher os espaços com padrões prováveis."
+    }
+  ],
+  "sem_contexto-2": [
+    {
+      "role": "LLM",
+      "text": "Proposta genérica: Controller, Service, Repository JPA, entidade mutável e Lombok."
+    }
+  ],
+  "sem_contexto-3": [
+    {
+      "role": "BETO",
+      "text": "Compilou rápido, mas colocou JPA no domínio, usou double para dinheiro e inventou dependências."
+    }
+  ],
+  "sem_contexto-4": [
+    {
+      "role": "LLM",
+      "text": "Um agente rápido precisa de direção verificável. A tarefa diz o que fazer; as instruções dizem como este projeto trabalha; a spec registra o comportamento esperado."
+    }
+  ],
+  "com_contexto-0": [
+    {
+      "role": "LIA",
+      "text": "Leia as instruções do projeto e a spec de criar pedido. Proponha um plano. Não implemente ainda."
+    }
+  ],
+  "com_contexto-1": [
+    {
+      "role": "LLM",
+      "text": "Encontrei Java vinte e um, Maven wrapper, núcleo sem Spring, sem Lombok e testes antes de concluir."
+    }
+  ],
+  "com_contexto-2": [
+    {
+      "role": "LLM",
+      "text": "Abri ponto specs barra zero dois criar pedido. Preciso aceitar itens válidos, rejeitar pedido vazio e preservar o domínio sem framework."
+    }
+  ],
+  "com_contexto-3": [
+    {
+      "role": "LLM",
+      "text": "Plano: criar o port CriarPedido, o serviço, o port Pedidos e três testes. Sem Controller e sem JPA nesta etapa."
+    }
+  ],
+  "com_contexto-4": [
+    {
+      "role": "BETO",
+      "text": "O escopo está certo. Pode executar esse plano e parar depois dos testes."
+    }
+  ],
+  "com_contexto-5": [
+    {
+      "role": "LLM",
+      "text": "Criando o comando e o port de entrada. O serviço usa Pedido e depende apenas do port de saída."
+    }
+  ],
+  "com_contexto-6": [
+    {
+      "role": "LLM",
+      "text": "Executando os testes: dois itens calculam o total, pedido vazio é recusado e o objeto salvo é o devolvido."
+    }
+  ],
+  "com_contexto-7": [
+    {
+      "role": "LLM",
+      "text": "Toquei sete arquivos previstos. Testes verdes. Aqui está o diff e uma frase para cada decisão. Aguardo sua revisão."
+    }
+  ],
+  "com_contexto-8": [
+    {
+      "role": "LIA",
+      "text": "Em poucos minutos saiu estrutura, código e teste. Meu trabalho mudou de digitar tudo para decidir, orientar e revisar."
+    }
+  ],
+  "mudanca-0": [
+    {
+      "role": "BETO",
+      "text": "Agora adicione itens ao pedido, sem alterar o comportamento de criar pedido."
+    }
+  ],
+  "mudanca-1": [
+    {
+      "role": "LLM",
+      "text": "Vou ler as regras do projeto, a nova spec e as interfaces existentes antes de propor mudanças."
+    }
+  ],
+  "mudanca-2": [
+    {
+      "role": "LLM",
+      "text": "Plano: novo port AdicionarItem, serviço próprio e testes. CriarPedido não será modificado."
+    }
+  ],
+  "mudanca-3": [
+    {
+      "role": "LLM",
+      "text": "Os testes novos passaram e os testes de criar pedido continuam verdes."
+    }
+  ],
+  "mudanca-4": [
+    {
+      "role": "LIA",
+      "text": "Cada spec vira parte da memória do projeto. O próximo trabalho começa mais alinhado do que o anterior."
+    }
+  ]
+}

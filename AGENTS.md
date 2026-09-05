@@ -58,3 +58,12 @@ navegador. Qualquer novo player deve respeitar `window.CAP_AUDIO.isMuted()` e o 
 Nas metáforas de modelos, não atribua volumes de dados, parâmetros ou conhecimento universal a
 nomes comerciais. Caminhões e livros são ilustrações. Diferencie treinamento, pós-treinamento,
 avaliação e inferência; confirme nomes e características variáveis em fontes oficiais.
+
+## Cap 1 — IA como ferramenta de produtividade (2026-09-05)
+O primeiro dia precisa tornar visível o ganho de trabalhar com um agente bem dirigido. No Cap 1,
+ligue sempre o mesmo caso do Pedido 4711 a três camadas: fundamento acessível, estado mudando na
+tela e decisão praticada pelo aluno. Mostre a diferença entre prompt atual, instruções permanentes
+do projeto (`CLAUDE.md`/`AGENTS.md`) e spec da tarefa. A pasta `.specs/` deve nascer visualmente e
+deixar claro que é uma convenção versionada, lida porque o ritual manda, não uma fonte carregada
+automaticamente. O “uau” esperado é plano, código, testes e diff coerentes surgirem com rapidez,
+enquanto o humano continua responsável por escopo, autorização e revisão.

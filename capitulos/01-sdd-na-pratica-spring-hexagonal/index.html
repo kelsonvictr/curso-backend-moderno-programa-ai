@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="../../shared/components.css">
 <link rel="stylesheet" href="../../shared/animations.css">
 <link rel="stylesheet" href="../../shared/lab-kit.css?v=3">
+<link rel="stylesheet" href="./cap1-ai.css?v=1">
 <style>
   .lead{font-size:1.02rem}
   .story{font-family:'Caveat',cursive;font-size:1.35rem;line-height:1.5;color:var(--text);background:rgba(248,152,32,.06);border:1px solid rgba(248,152,32,.25);border-radius:16px;padding:20px 24px;margin:14px 0}
@@ -39,6 +40,7 @@
 <div class="progress-track"><div class="progress-bar"></div></div>
 
 <button class="menu-toggle" onclick="openSidebar()" aria-label="Abrir menu">☰</button>
+<button type="button" class="cap1-sound-mini" data-cap-audio aria-pressed="true" aria-label="Alternar modo mudo do capítulo">🔇 Modo mudo ativado</button>
 <div class="sidebar-overlay"></div>
 <nav class="sidebar-nav">
   <button class="sidebar-close" onclick="closeSidebar()" aria-label="Fechar">✕</button>
@@ -49,6 +51,9 @@
   <div class="sidebar-group">
     <div class="sidebar-group-title">📖 Antes da aula</div>
     <div class="sidebar-link" onclick="goTo('s-historia')"><span class="dot" style="background:var(--java)"></span> A história do pedido 4711</div>
+    <div class="sidebar-link" onclick="goTo('s-agente-produto')"><span class="dot" style="background:var(--claude)"></span> O agente em dois universos</div>
+    <div class="sidebar-link" onclick="goTo('s-specs-fluxo')"><span class="dot" style="background:var(--spring)"></span> A .specs/ ganha vida</div>
+    <div class="sidebar-link" onclick="goTo('s-jogos-contexto')"><span class="dot" style="background:var(--accent6)"></span> Jogos do contexto</div>
     <div class="sidebar-link" onclick="goTo('s-alvo')"><span class="dot" style="background:var(--accent4)"></span> O que vamos construir</div>
     <div class="sidebar-link" onclick="goTo('s-mapa')"><span class="dot" style="background:var(--accent4)"></span> O mapa da tarde</div>
   </div>
@@ -85,6 +90,7 @@
     <span class="stack-chip" style="border-color:rgba(36,150,237,.5);color:var(--docker)"><img src="../../assets/svg/docker.svg" alt="" width="16" height="16"> Docker</span>
     <span class="stack-chip" style="border-color:rgba(167,139,250,.45);color:var(--accent6)">⬡ hexagonal</span>
   </div>
+  <div class="cap1-sound"><button type="button" data-cap-audio aria-pressed="true">🔇 Modo mudo ativado</button><p id="cap1-audio-note">Na sala, acompanhe a voz do professor. Animações, jogos e legendas continuam funcionando.</p></div>
 </section>
 
 <div class="container">
@@ -105,7 +111,7 @@
       <h2>Antes da aula</h2>
       <div class="zh-s">Leia o <a href="../00-como-um-agente-pensa/" style="color:var(--accent4)">Capítulo 0</a> primeiro. Depois, esta zona: a história que motiva o dia, o que vamos construir e o mapa da tarde. A teoria pesada de cada tema está dentro dos atos, no lugar onde a prática pede.</div>
     </div>
-    <div class="zh-side"><div class="zh-time">~40 min</div><div class="text-dim" style="font-size:0.72rem">+ Cap 0 (~1h30)</div></div>
+    <div class="zh-side"><div class="zh-time">~70 min</div><div class="text-dim" style="font-size:0.72rem">+ Cap 0 (~1h30)</div></div>
   </div>
 
   <section class="step-section" id="s-historia">
@@ -144,9 +150,123 @@
 
   <div class="section-connector"><div class="line"></div></div>
 
+  <section class="step-section" id="s-agente-produto">
+    <div class="step-header">
+      <div class="step-number sn-purple">2</div>
+      <div><div class="step-title">O agente em dois universos</div><div class="step-sub">A mesma IA, a mesma velocidade — resultados muito diferentes</div></div>
+    </div>
+    <div class="card">
+      <div class="analogy"><span class="analogy-icon">🧭</span><div><strong>Um agente é como um motorista muito rápido.</strong> O prompt diz o destino desta viagem. As instruções do projeto explicam as regras do veículo e da estrada. A spec descreve a entrega desta vez. Sem esses três, velocidade não garante direção.</div></div>
+      <h3 style="margin-top:18px">Antes da “mágica”, entenda as três peças</h3>
+      <p>Esses arquivos não tornam o modelo onisciente. Eles colocam decisões úteis no contexto do agente para que o trabalho comece mais alinhado e possa ser revisado por critérios claros.</p>
+      <div class="ai-foundation">
+        <article class="ai-source prompt"><div class="as-icon">💬</div><h4>Prompt</h4><p><strong>O que fazer agora.</strong> Aponta para a tarefa, informa o limite desta etapa e pede o próximo resultado: por exemplo, apenas um plano.</p><code>Leia a spec 02. Planeje. Não implemente.</code></article>
+        <article class="ai-source rules"><div class="as-icon">🏠</div><h4>CLAUDE.md / AGENTS.md</h4><p><strong>Como este projeto trabalha.</strong> Stack, comandos, arquitetura e convenções que se repetem em várias tarefas.</p><code>Java 21 · ./mvnw test · núcleo sem JPA</code></article>
+        <article class="ai-source spec"><div class="as-icon">📋</div><h4>.specs/</h4><p><strong>O comportamento desta mudança.</strong> Contexto, regras, limites e critérios que depois serão comparados com testes e diff.</p><code>pedido vazio → recusar e não salvar</code></article>
+      </div>
+      <div class="ai-equation" aria-label="equação didática do fluxo"><span>pedido atual</span><b>+</b><span>regras do projeto</span><b>+</b><span>spec verificável</span><b>→</b><span>plano revisável</span></div>
+      <div class="warning"><span class="warning-icon">⚠️</span><div><strong>A pasta <code>.specs/</code> é uma convenção deste curso.</strong> Ela não é carregada automaticamente só por existir. O ritual registrado nas instruções manda o agente abrir a spec relevante antes de planejar.</div></div>
+      <p class="source-note">Precisão do exemplo: o Claude Code usa <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">CLAUDE.md como memória de projeto</a>; o Codex descobre <a href="https://learn.chatgpt.com/docs/agent-configuration/agents-md" target="_blank" rel="noopener">AGENTS.md por escopo e hierarquia</a>. A animação abaixo representa os dois agentes com o mesmo personagem para comparar o fluxo.</p>
+    </div>
+
+    <div class="agent-theater" id="cap1-agent-theater" data-ai-theater data-speaker="LIA" data-stage="prompt">
+      <div class="at-head">
+        <div><div class="p-label">TEATRO INTERATIVO · PEDIDO 4711</div><strong>Veja onde a produtividade nasce</strong></div>
+        <div class="at-scenes" role="group" aria-label="Escolher história">
+          <button type="button" data-ai-scene="sem_contexto" aria-pressed="true">1 · Sem contexto</button>
+          <button type="button" data-ai-scene="com_contexto" aria-pressed="false">2 · Projeto dirigido</button>
+          <button type="button" data-ai-scene="mudanca" aria-pressed="false">3 · Próxima mudança</button>
+        </div>
+      </div>
+      <div class="at-stage">
+        <aside class="at-cast" aria-label="Personagens">
+          <div class="at-person" data-person="LIA"><div class="at-avatar">👩🏽‍💻</div><div><b>Lia</b><span>faz o pedido</span></div></div>
+          <div class="at-person" data-person="BETO"><div class="at-avatar">👨🏾‍💻</div><div><b>Beto</b><span>revisa a entrega</span></div></div>
+          <div class="at-person" data-person="LLM"><div class="at-avatar">🤖</div><div><b>Tico</b><span>agente programador</span></div></div>
+        </aside>
+        <div class="at-workbench">
+          <div class="at-caption" aria-live="polite"><b data-at-speaker>Lia</b><h4 data-at-title>Uma ordem curta</h4><p data-at-line></p><small data-at-detail></small></div>
+          <div class="at-machine">
+            <div class="at-context">
+              <div class="at-panel-title">CONTEXTO DISPONÍVEL AGORA</div>
+              <div class="at-source-node" data-at-source="prompt">💬 prompt atual</div>
+              <div class="at-source-node" data-at-source="rules">🏠 CLAUDE.md / AGENTS.md</div>
+              <div class="at-source-node" data-at-source="spec">📋 .specs/02-criar-pedido.md</div>
+              <div class="at-source-node" data-at-source="plan">🧭 plano aprovado</div>
+              <div class="at-source-node" data-at-source="code">📂 código existente</div>
+              <div class="at-source-node" data-at-source="test">🧪 resultado dos testes</div>
+              <div class="at-source-node" data-at-source="review">🔎 diff para revisão</div>
+            </div>
+            <div class="at-output">
+              <div class="at-panel-title">TERMINAL DO AGENTE · SIMULAÇÃO</div>
+              <pre class="at-log" data-at-log></pre>
+              <div class="at-file-tree" aria-label="arquivos criados"><span>📄 CriarPedido.java</span><span>📄 CriarPedidoService.java</span><span>📄 Pedidos.java</span><span>🧪 criaComDoisItens()</span><span>🧪 recusaPedidoVazio()</span><span>🔎 diff revisável</span></div>
+            </div>
+          </div>
+          <div class="at-controls">
+            <button type="button" class="primary" data-at-play>▶ Assistir sem som</button>
+            <button type="button" data-at-prev>← Voltar</button>
+            <button type="button" data-at-next>Avançar →</button>
+            <button type="button" data-at-reset>↺ Recomeçar</button>
+            <span class="at-status" data-at-status>estado: prompt</span><span data-at-progress>1 / 5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="concept"><span class="concept-icon">✨</span><div><strong>O efeito “uau” não é o agente escrever muito.</strong> É você mudar uma decisão na spec, pedir um plano limitado e ver código, testes e diff surgirem coerentes sem reexplicar toda a arquitetura em cada conversa.</div></div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <section class="step-section" id="s-specs-fluxo">
+    <div class="step-header">
+      <div class="step-number sn-green">3</div>
+      <div><div class="step-title">A pasta <code>.specs/</code> ganha vida</div><div class="step-sub">Da pasta vazia até uma entrega que pode ser conferida</div></div>
+    </div>
+    <div class="card">
+      <p>Agora acompanhe a construção como se estivesse numa IDE. Repare que cada arquivo nasce para responder uma pergunta: <em>o que é este projeto?</em>, <em>qual mudança queremos?</em>, <em>como saberemos que terminou?</em></p>
+      <div class="spec-builder" data-spec-builder>
+        <div class="spec-ide">
+          <aside class="spec-tree"><b>EXPLORADOR</b><span>📂 pedidos/</span><span>　📂 src/</span><span>　📄 pom.xml</span><span data-spec-node hidden>　📂 .specs/</span><span data-spec-node hidden>　　📄 README.md</span><span data-spec-node hidden>　　📄 02-criar-pedido.md</span><span data-spec-node hidden>　📂 aplicacao/</span><span data-spec-node hidden>　　📄 CriarPedidoService.java</span><span data-spec-node hidden>　🧪 testes verdes</span></aside>
+          <div class="spec-editor"><div class="spec-tab" data-spec-tab>Projeto aberto</div><div class="spec-doc" data-spec-doc></div><div class="spec-terminal" data-spec-terminal></div></div>
+        </div>
+        <div class="spec-controls"><button type="button" data-spec-play>▶ Animar o fluxo</button><button type="button" data-spec-prev>← Voltar</button><button type="button" data-spec-next>Avançar →</button><button type="button" data-spec-reset>↺ Recomeçar</button><span data-spec-count>1 / 8 etapas</span></div>
+      </div>
+      <div class="tip"><span class="tip-icon">💡</span><div><strong>Documento antes do código não significa documentação pesada.</strong> Uma boa spec pode ser curta. Ela precisa deixar as decisões importantes e os exemplos de teste mais claros que um pedido solto no chat.</div></div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <section class="step-section" id="s-jogos-contexto">
+    <div class="step-header">
+      <div class="step-number sn-purple">4</div>
+      <div><div class="step-title">Agora você dirige o agente</div><div class="step-sub">Dois jogos para separar memória, tarefa e execução</div></div>
+    </div>
+    <div class="did-games">
+      <div class="did-game context-game" data-context-game>
+        <span class="score-pill" data-cg-score>0 acertos · 1/5</span>
+        <h4>🏠 Onde esta regra mora?</h4><p>Escolha o lugar que fará a informação aparecer no momento certo sem repetir tudo em cada conversa.</p>
+        <div class="game-card"><b data-cg-question></b><small data-cg-hint></small></div>
+        <div class="game-options"><button type="button" data-cg-choice="prompt">💬 Prompt atual</button><button type="button" data-cg-choice="rules">🏠 CLAUDE.md / AGENTS.md</button><button type="button" data-cg-choice="spec">📋 Spec da tarefa</button></div>
+        <div class="game-feedback" data-cg-feedback aria-live="polite"></div><button type="button" data-cg-next hidden>Próxima regra →</button>
+      </div>
+      <div class="did-game flow-game" data-flow-game>
+        <span class="score-pill" data-fg-score>0 / 8 etapas</span>
+        <h4>🧭 Monte o fluxo produtivo</h4><p>Clique na ordem correta. O objetivo não é decorar comandos: é saber o que precisa existir antes de autorizar uma edição.</p>
+        <div class="flow-slots" data-fg-slots aria-live="polite"></div>
+        <div class="flow-pool"><button type="button" data-fg-step="edit">Editar</button><button type="button" data-fg-step="instructions">Ler instruções</button><button type="button" data-fg-step="test">Testar</button><button type="button" data-fg-step="plan">Propor plano</button><button type="button" data-fg-step="spec">Ler a spec</button><button type="button" data-fg-step="diff">Revisar o diff</button><button type="button" data-fg-step="inspect">Inspecionar o código</button><button type="button" data-fg-step="approve">Receber o OK</button></div>
+        <div class="game-feedback" data-fg-feedback></div><button type="button" data-fg-reset>↺ Recomeçar</button>
+      </div>
+    </div>
+    <div class="concept"><span class="concept-icon">🧠</span><div><strong>Regra que precisa sobreviver:</strong> o agente ganha produtividade quando recebe contexto útil, trabalha dentro de um plano aprovado e devolve evidência para revisão. Nenhum arquivo elimina a responsabilidade de conferir o resultado.</div></div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
   <section class="step-section" id="s-alvo">
     <div class="step-header">
-      <div class="step-number sn-blue">2</div>
+      <div class="step-number sn-blue">5</div>
       <div><div class="step-title">O que vamos construir</div><div class="step-sub">O serviço de Pedidos no fim do Sábado 1, animado</div></div>
     </div>
     <div class="card">
@@ -184,7 +304,7 @@
 
   <section class="step-section" id="s-mapa">
     <div class="step-header">
-      <div class="step-number sn-blue">3</div>
+      <div class="step-number sn-blue">6</div>
       <div><div class="step-title">O mapa da tarde</div><div class="step-sub">Como ler os marcadores, e o que trazer</div></div>
     </div>
     <div class="card">
@@ -450,6 +570,21 @@
     └── CasosDeUsoConfig.java <i>@Bean CriarPedido criarPedido(Pedidos pedidos)</i></div>
     </div>
 
+    <div class="hex-journey" data-hex-journey>
+      <div class="at-head"><div><div class="p-label">FLUXO ANIMADO · ARQUITETURA HEXAGONAL</div><strong>Viaje junto com o Pedido 4711</strong></div><span class="score-pill">entrada → núcleo → saída</span></div>
+      <div class="hex-map" aria-label="Caminho do pedido pelo sistema">
+        <div class="hex-stop" data-hex-stop><b>📱</b>Cliente</div>
+        <div class="hex-stop" data-hex-stop><b>🎮</b>Controller</div>
+        <div class="hex-stop" data-hex-stop><b>🚪</b>Port entrada</div>
+        <div class="hex-stop" data-hex-stop><b>⚙️</b>Caso de uso</div>
+        <div class="hex-stop" data-hex-stop><b>💎</b>Domínio</div>
+        <div class="hex-stop" data-hex-stop><b>🚪</b>Port saída</div>
+        <div class="hex-stop" data-hex-stop><b>🐘</b>JPA + Postgres</div>
+      </div>
+      <div class="hex-message" data-hex-message aria-live="polite"></div>
+      <div class="hex-controls"><button type="button" data-hex-play>▶ Ver o pedido viajar</button><button type="button" data-hex-prev>← Voltar</button><button type="button" data-hex-next>Avançar →</button><button type="button" data-hex-reset>↺ Recomeçar</button><span data-hex-count>1 / 7</span></div>
+    </div>
+
     <ol class="passos">
       <li class="passo"><div class="p-n">1</div><div class="p-b"><span class="mode junto">👥 junto</span> Escrever <code>.specs/02-caso-de-uso-criar-pedido.md</code> (editor abaixo). Repare que a spec descreve <em>portas</em>, não classes Spring.</div></li>
       <li class="passo"><div class="p-n">2</div><div class="p-b"><span class="mode junto">👥 junto</span> Plano → cortar excessos (ele vai propor <code>PedidoDTO</code>, <code>PedidoMapper</code> e um <code>@Service</code>; nada disso é desta tarefa) → OK → execute.</div></li>
@@ -692,6 +827,10 @@ docker compose -f infra/docker-compose.yml exec postgres psql -U pedidos -c 'sel
 
 <script src="../../shared/scripts.js" defer></script>
 <script src="../../shared/lab-kit.js?v=3" defer></script>
+<script src="./cap1-audio.js?v=1" defer></script>
+<script src="./cap1-ai-cenas.js?v=1" defer></script>
+<script src="../../assets/audio/cap01-ai/audio/manifest.js?v=1" defer></script>
+<script src="./cap1-ai.js?v=1" defer></script>
 <script type="module" src="../../shared/motion-fx.js?v=3"></script>
 </body>
 </html>

@@ -361,3 +361,12 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
 - A regra central, o caso e o vocabulário atravessam as três camadas: a teoria constrói o modelo mental, a experiência visual revela o estado mudando e o quiz exige aplicar a regra em um caso novo.
 - Criada a skill portátil `capitulo-didatico-interativo`, disponível para Codex e Claude Code. Ela complementa `teatro-didatico-animado`, que continua responsável pelos detalhes de personagens, player e vozes locais.
 - O padrão mantém exemplos acessíveis a iniciantes no tema e preserva julgamento técnico avançado, inclui limite/erro plausível, feedback explicativo e validação sem áudio ou internet essencial.
+
+## 2026-09-05 — Cap 1 no nível didático do Cap 0
+- O Cap 1 passa a abrir com o Pedido 4711 em dois universos: uma ordem vaga produz defaults e retrabalho; instruções do projeto + spec + plano aprovado produzem código, testes e diff revisáveis. O “uau” é produtividade com direção humana, não volume de código.
+- Fundamentação separa prompt atual, `CLAUDE.md`/`AGENTS.md` e `.specs/`. O texto explicita que `.specs/` é convenção do curso e só entra no contexto quando o ritual manda ler. Referências oficiais da Anthropic e do Codex ficam junto ao conteúdo.
+- Teatro interativo em três histórias, com Lia, Beto e Tico, mostra contexto, plano, execução, testes, diff e evolução do projeto. São 19 falas ElevenLabs (143,5 s), salvas em `assets/audio/cap01-ai/`; o navegador não chama a API. Gerador reproduzível em `tooling/elevenlabs/generate-cap01-ai.mjs`.
+- A oficina de `.specs/` simula uma IDE em oito etapas: projeto vazio, pedido no chat, criação da pasta, README, spec verificável, plano, execução/testes e revisão. Arquivos aparecem progressivamente na árvore.
+- Dois jogos fixam onde cada informação mora e a ordem produtiva: instruções → spec → inspeção → plano → OK → edição → testes → diff. Um fluxo adicional leva o Pedido 4711 por cliente, Controller, ports, caso de uso, domínio e adapter JPA/Postgres.
+- O capítulo inicia mudo e compartilha essa preferência entre os players. Controles manuais, legendas, pausa, reinício, movimento reduzido e layout responsivo permanecem disponíveis sem áudio.
+- Validação: JS válido, HTML sem IDs repetidos, recursos locais presentes, 19 MP3 decodificados, console sem alertas. No navegador, uma história com voz chegou a 5/5; os jogos chegaram a 5/5 e 8/8; `.specs/` e o hexágono avançaram corretamente; layout inspecionado em 390 px e viewport restaurado ao fim.
