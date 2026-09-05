@@ -4,6 +4,28 @@
   const make=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
   const names={LIA:'Lia',BETO:'Beto',LLM:'Tico · o guia'};
   const spec='# Cadastro de produto\n\n## Contexto\nJá existe cadastro e listagem.\nPreço é inteiro em centavos.\n\n## Tarefa\nRecusar preço negativo antes de salvar.\n\n## Regras\nAceitar zero e valores positivos.\nPreservar a listagem.\nNão adicionar bibliotecas.\n\n## Critérios de aceite\n- -500: recusar e não salvar.\n- 0: aceitar.\n- 1000: aceitar.\nConferir os testes e o diff.\n';
+  const observations={
+    treino:[
+      ['Quatro famílias sem tarefa definida','Escolher pela necessidade da atividade','Uma família selecionada para avaliar','Comparar qualidade, tempo e custo na mesma tarefa','O maior caminhão é sempre a melhor escolha? Por quê?'],
+      ['Exemplos brutos e variados','Selecionar, preparar e combinar fontes','Conjunto de exemplos preparado','Registrar origem, licença, qualidade e recortes','Que problema aparece se os exemplos tiverem erros repetidos?'],
+      ['O modelo ainda erra a continuação','Prever um trecho e comparar com o alvo','Um erro mensurável para orientar ajustes','Repetir com muitos exemplos separados','O modelo está copiando um livro inteiro nesta etapa?'],
+      ['Parâmetros produzem uma previsão pior','Atualizar números internos a partir do erro','Parâmetros ligeiramente diferentes','Rodar novamente e medir se o erro diminuiu','O que mudou: uma frase guardada ou números internos?'],
+      ['Modelo completa texto, mas segue pedidos de forma irregular','Avaliar respostas e orientar comportamento','Respostas mais úteis e alinhadas ao pedido','Aplicar avaliações de segurança e utilidade','Pós-treinamento garante que toda resposta ficará correta?'],
+      ['Modelo ajustado, desempenho ainda desconhecido','Executar tarefas e critérios separados','Métricas com acertos e falhas por tarefa','Comparar versões nos mesmos casos','Um único teste verde prova qualidade geral?'],
+      ['Parâmetros já treinados + pedido atual','Gerar a próxima parte com o contexto disponível','Resposta nova produzida naquele momento','Conferir a saída e suas fontes','Esta conversa retreina o modelo?'],
+      ['Resposta pronta, ainda sem confiança automática','Revisar evidências, limites, custo e tarefa','Decisão humana sustentada por sinais observáveis','Reproduzir teste, fonte ou diff citado','Qual evidência faria você aceitar esta resposta?']
+    ],
+    sdd:[
+      ['Projeto aberto, intenção ainda solta','Escrever resultado, regra e limite no chat','Pedido inicial explícito','Reler se negativo, zero e escopo aparecem','O agente já deveria editar Java agora?'],
+      ['Pedido entendido, sem lugar persistente','Criar a pasta de especificações','Pasta .specs/ visível na árvore','Apontar a nova pasta no explorador','Criar a pasta já cria uma boa especificação?'],
+      ['.specs/ existe, mas está vazia','Criar o documento da funcionalidade','cadastrar-produto.md aparece','Abrir o arquivo pelo caminho combinado','Por que usar um arquivo por mudança?'],
+      ['Documento existe, regra ainda vaga','Escrever o que aceitar e recusar','Regra verificável registrada','Ler negativo, zero e positivo no texto','“Deixar robusto” permite saber o resultado correto?'],
+      ['Regra escrita, sem prova combinada','Definir entradas e saídas esperadas','Critérios de aceite concretos','Conferir -500, 0 e 1000 separadamente','Qual caso revela um uso errado de <=?'],
+      ['Spec pronta, agente ainda não a leu','Mandar ler o arquivo e propor um plano','Plano ligado ao documento relevante','Relacionar cada passo a uma regra da spec','Salvar um arquivo garante que o agente o leu?'],
+      ['Plano apresentado, nenhuma edição autorizada','Revisar escopo e dar o OK','Execução limitada ao combinado','Comparar plano com tarefa e arquivos previstos','Que item ampliaria o escopo sem necessidade?'],
+      ['Código e testes simulados concluídos','Conferir resultados e diff','Entrega revisável com evidências','Ver três casos e mudanças restritas ao cadastro','Teste verde basta se o diff removeu a listagem?']
+    ]
+  };
   document.querySelectorAll('[data-lab]').forEach(root=>{
     const kind=root.dataset.lab,frames=window.LAB_CENAS[kind],auto=kind==='treino';
     let step=0,playing=false,finished=false,audio=null,timer=null,generation=0,truck=0,prompt='';
@@ -21,6 +43,9 @@
     function render(){
       const f=frames[step];root.dataset.stage=f.stage;
       q('[data-lab-title]').textContent=f.title;q('[data-lab-speaker]').textContent=names[f.role];q('[data-lab-line]').textContent=f.text;q('[data-lab-detail]').textContent=f.detail;
+      const o=observations[kind][step];
+      ['before','action','after','proof'].forEach((field,i)=>{const target=q(`[data-lab-${field}]`);if(target)target.textContent=o[i];});
+      const question=q('[data-lab-question]');if(question)question.textContent=o[4];
       if(auto)drawTraining();else drawIDE();syncControls();
     }
     function complete(){

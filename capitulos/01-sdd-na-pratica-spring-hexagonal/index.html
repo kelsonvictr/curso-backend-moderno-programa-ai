@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="../../shared/components.css">
 <link rel="stylesheet" href="../../shared/animations.css">
 <link rel="stylesheet" href="../../shared/lab-kit.css?v=3">
-<link rel="stylesheet" href="./cap1-ai.css?v=1">
+<link rel="stylesheet" href="./cap1-ai.css?v=2">
 <link rel="stylesheet" href="./cap1-oficina.css?v=1">
 <style>
   .lead{font-size:1.02rem}
@@ -793,18 +793,33 @@ Não corrija nem faça commit. Entregue primeiro o relatório para revisão huma
     </div>
 
     <div class="hex-journey" data-hex-journey>
-      <div class="at-head"><div><div class="p-label">FLUXO ANIMADO · ARQUITETURA HEXAGONAL</div><strong>Viaje junto com o Pedido 4711</strong></div><span class="score-pill">entrada → núcleo → saída</span></div>
-      <div class="hex-map" aria-label="Caminho do pedido pelo sistema">
-        <div class="hex-stop" data-hex-stop><b>📱</b>Cliente</div>
-        <div class="hex-stop" data-hex-stop><b>🎮</b>Controller</div>
-        <div class="hex-stop" data-hex-stop><b>🚪</b>Port entrada</div>
-        <div class="hex-stop" data-hex-stop><b>⚙️</b>Caso de uso</div>
-        <div class="hex-stop" data-hex-stop><b>💎</b>Domínio</div>
-        <div class="hex-stop" data-hex-stop><b>🚪</b>Port saída</div>
-        <div class="hex-stop" data-hex-stop><b>🐘</b>JPA + Postgres</div>
+      <div class="at-head"><div><div class="p-label">LABORATÓRIO VISUAL · ARQUITETURA HEXAGONAL</div><strong>A bancada de tradução do Pedido 4711</strong></div><span class="score-pill">entrada → núcleo → saída</span></div>
+      <p class="hex-lab-instruction">Acompanhe o mesmo pedido mudando de representação. Antes de avançar, peça à turma para prever <strong>o que entra, o que sai e qual tecnologia pode aparecer</strong>. A bancada é silenciosa para acompanhar a voz do professor.</p>
+      <div class="hex-lab-scroll" tabindex="0" aria-label="Bancada com sete etapas; em telas estreitas, deslize horizontalmente">
+        <div class="hex-map" aria-label="Caminho do pedido pelo sistema">
+          <div class="hex-stop" data-hex-stop><b>📱</b>Cliente</div>
+          <div class="hex-stop" data-hex-stop><b>🎮</b>Controller</div>
+          <div class="hex-stop" data-hex-stop><b>🚪</b>Port entrada</div>
+          <div class="hex-stop" data-hex-stop><b>⚙️</b>Caso de uso</div>
+          <div class="hex-stop" data-hex-stop><b>💎</b>Domínio</div>
+          <div class="hex-stop" data-hex-stop><b>🚪</b>Port saída</div>
+          <div class="hex-stop" data-hex-stop><b>🐘</b>JPA + Postgres</div>
+        </div>
+        <div class="hex-lane" aria-label="O artefato atual se desloca entre as etapas">
+          <div class="hex-lane-rail" aria-hidden="true"></div>
+          <div class="hex-payload" data-hex-payload><span data-hex-icon>📦</span><div><small data-hex-kind></small><code data-hex-code></code></div></div>
+        </div>
       </div>
-      <div class="hex-message" data-hex-message aria-live="polite"></div>
-      <div class="hex-controls"><button type="button" data-hex-play>▶ Ver o pedido viajar</button><button type="button" data-hex-prev>← Voltar</button><button type="button" data-hex-next>Avançar →</button><button type="button" data-hex-reset>↺ Recomeçar</button><span data-hex-count>1 / 7</span></div>
+      <div class="hex-tech-tray" aria-label="Tecnologias presentes na etapa"><span data-hex-tech="http">🌐 HTTP + JSON</span><span data-hex-tech="core">💎 Java do núcleo</span><span data-hex-tech="jpa">🐘 JPA + SQL</span><b data-hex-boundary></b></div>
+      <div class="hex-workbench" aria-label="Transformação observável desta etapa">
+        <div class="hex-state-card"><small>ANTES</small><strong data-hex-before></strong></div>
+        <div class="hex-transform"><span>🤖</span><small>TRADUÇÃO / DECISÃO</small><strong data-hex-action></strong></div>
+        <div class="hex-state-card after"><small>DEPOIS</small><strong data-hex-after></strong></div>
+        <div class="hex-state-card proof"><small>COMO PROVAR</small><strong data-hex-proof></strong></div>
+      </div>
+      <div class="hex-message" aria-live="polite"><b data-hex-title></b><p data-hex-explanation></p><strong class="hex-predict" data-hex-question></strong></div>
+      <div class="hex-db-row" data-hex-db aria-hidden="true"><span>pedidos</span><code>id: 4711</code><code>status: ABERTO</code><code>total: 37.80</code><b>✓ linha persistida</b></div>
+      <div class="hex-controls"><button type="button" data-hex-play>▶ Encene as traduções</button><button type="button" data-hex-prev>← Voltar</button><button type="button" data-hex-next>Avançar →</button><button type="button" data-hex-reset>↺ Recomeçar</button><span data-hex-count>1 / 7</span></div>
     </div>
 
     <div class="card" data-hex-check style="margin-top:14px">
@@ -1090,7 +1105,7 @@ docker compose -f infra/docker-compose.yml exec postgres psql -U pedidos -c 'sel
 <script src="./cap1-audio.js?v=1" defer></script>
 <script src="./cap1-ai-cenas.js?v=1" defer></script>
 <script src="../../assets/audio/cap01-ai/audio/manifest.js?v=1" defer></script>
-<script src="./cap1-ai.js?v=1" defer></script>
+<script src="./cap1-ai.js?v=2" defer></script>
 <script src="./cap1-oficina.js?v=2" defer></script>
 <script type="module" src="../../shared/motion-fx.js?v=3"></script>
 </body>

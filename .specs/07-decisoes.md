@@ -388,3 +388,10 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
 - Cronograma ajustado para 240 minutos: 15 + 35 + 35 + 15 de intervalo + 55 + 45 + 30 + 10. O agente executa Maven, Docker e cenários HTTP; o humano revisa permissões, plano, testes e diff.
 - Fontes oficiais consultadas em 05/09/2026: JetBrains (terminal embutido), Spring (Initializr/Docker), Anthropic (Claude Code), OpenAI (Codex CLI), Google (Antigravity CLI) e o artigo original de Alistair Cockburn.
 - Validação final: HTML sem IDs duplicados ou recursos locais ausentes; JavaScript válido; cópia integral de prompt conferida; fluxo do IntelliJ, roteiro do hexágono e quiz 6/6 exercitados; largura de 390 px sem overflow horizontal; `git diff --check` limpo.
+
+## 2026-09-05 — Skill laboratorio-visual-didatico aplicada aos Caps 0 e 1
+- O Cap 0 preserva as bancadas existentes e explicita a transformação em seus dois laboratórios principais. Cada um dos oito estados agora mostra antes, ação, depois, forma de provar e pergunta de previsão. A narração local existente continua opcional; nenhum áudio novo foi gerado.
+- O Cap 1 substitui o destaque abstrato de sete caixas por uma bancada de tradução. O artefato percorre as mesmas etapas e muda visualmente de HTTP/JSON para DTO, contrato de entrada, caso de uso, objeto de domínio, contrato de saída e entidade persistida.
+- A bancada do Pedido 4711 marca a fronteira atual, a tecnologia presente e o detalhe deixado para trás. No último passo, uma linha do Postgres surge como evidência da persistência.
+- Todos os passos são derivados apenas do índice atual, por isso voltar e reiniciar remontam o estado sem depender da animação anterior. Reprodução automática pausa ao sair da tela, ocultar a página ou iniciar outro teatro.
+- A atividade do Cap 1 é silenciosa e acompanha a voz do professor. Mantidos controles manuais, texto equivalente, foco de teclado, movimento reduzido e rolagem interna em telas estreitas.

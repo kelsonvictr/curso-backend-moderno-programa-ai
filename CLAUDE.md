@@ -164,3 +164,15 @@ Code, Codex CLI ou Google Antigravity CLI; os prompts precisam funcionar nas tr�
 - Prompts do professor devem trazer contexto, tarefa, limites, evidência esperada e ponto de pausa.
 - Hexagonal começa pelo dentro/fora; só depois nomeia domínio, aplicação, ports e adapters.
 - O hexágono é um recurso visual para mostrar várias portas, não a quantidade de camadas.
+
+## Laboratórios visuais observáveis nos Caps 0 e 1 (2026-09-05)
+Use a skill `laboratorio-visual-didatico` quando um mecanismo precisar ficar visível e reconstruível
+passo a passo. Cada estado deve responder: **antes, ação, depois, como provar e o que prever**.
+
+- No Cap 0, os laboratórios de treinamento e SDD exibem esse painel em todos os oito passos.
+- No Cap 1, a bancada do Pedido 4711 mostra o artefato mudando entre HTTP/JSON, DTO, port,
+  caso de uso, domínio, port de saída e JPA/Postgres.
+- Avançar, voltar e recomeçar sempre remontam o estado completo; reprodução automática é opcional.
+- Use poucas mudanças coordenadas e reserve a ênfase visual para a transformação estudada.
+- Toda metáfora precisa declarar seu limite e toda etapa precisa oferecer uma evidência observável.
+- Laboratórios devem funcionar silenciosamente, por teclado, com movimento reduzido e em tela estreita.

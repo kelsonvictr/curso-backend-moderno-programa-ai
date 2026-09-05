@@ -103,18 +103,31 @@
   });
 
   const hexSteps=[
-    ['Cliente','📱','POST /pedidos chega como HTTP. HTTP ainda é um detalhe externo.'],
-    ['Controller','🎮','O adapter REST converte JSON em um comando que o núcleo entende.'],
-    ['Port de entrada','🚪','CriarPedido é a porta: descreve o caso de uso sem conhecer HTTP.'],
-    ['Caso de uso','⚙️','CriarPedidoService orquestra o domínio e pede persistência pelo port de saída.'],
-    ['Domínio','💎','Pedido protege as regras. Não importa Spring, JPA, JSON ou banco.'],
-    ['Port de saída','🚪','Pedidos expressa “salvar” na linguagem do núcleo, sem escolher tecnologia.'],
-    ['Adapter JPA','🐘','O adapter traduz Pedido para JPA e conversa com o Postgres. A resposta volta pelo mesmo caminho.']
+    {title:'1. Cliente',icon:'📱',kind:'HTTP + JSON',code:'POST /pedidos\n{"clienteId": 12}',before:'Uma intenção fora do sistema',action:'O cliente monta uma requisição HTTP',after:'Método, rota e JSON chegam à borda',proof:'Inspecionar a requisição recebida',question:'Previsão: o domínio precisa conhecer POST ou JSON?',tech:'http',boundary:'FORA DO SISTEMA',explanation:'HTTP é a forma de entrada escolhida pelo cliente. Ainda não chegamos às regras de negócio.'},
+    {title:'2. Controller · adapter de entrada',icon:'🎮',kind:'DTO de entrada',code:'PedidoRequest(clienteId=12)',before:'JSON e detalhes de HTTP',action:'Validar formato e converter para Java',after:'Comando que a aplicação entende',proof:'Teste do Controller confere o mapeamento',question:'Previsão: qual detalhe deve ficar para trás ao entrar no núcleo?',tech:'http',boundary:'BORDA DE ENTRADA',explanation:'O Controller é tradutor. Ele recebe a linguagem da web e prepara a linguagem do caso de uso.'},
+    {title:'3. Port de entrada',icon:'🚪',kind:'Contrato do caso de uso',code:'CriarPedido.executar(comando)',before:'Comando Java vindo do adapter',action:'Atravessar uma interface do núcleo',after:'Caso de uso acionado sem conhecer HTTP',proof:'A interface não importa Spring nem classes web',question:'Previsão: trocar REST por uma fila exige mudar este port?',tech:'core',boundary:'ENTRADA DO NÚCLEO',explanation:'A porta diz o que a aplicação faz. Quem está fora escolhe como chamar essa porta.'},
+    {title:'4. Caso de uso',icon:'⚙️',kind:'Orquestração',code:'CriarPedidoService',before:'Comando aceito pelo port',action:'Coordenar domínio e pedir persistência',after:'Pedido criado e pronto para salvar',proof:'Teste do caso de uso usa um port falso',question:'Previsão: o caso de uso precisa abrir conexão com o banco?',tech:'core',boundary:'APLICAÇÃO',explanation:'O caso de uso organiza a sequência. Ele conversa com o domínio e com portas, sem escolher banco ou protocolo.'},
+    {title:'5. Domínio',icon:'💎',kind:'Objeto de negócio',code:'Pedido · ABERTO · R$ 37,80',before:'Dados ainda sem regra garantida',action:'Aplicar invariantes e calcular o estado',after:'Pedido válido com estado ABERTO',proof:'Teste Java puro cobre as regras do Pedido',question:'Previsão: que import de JPA deveria existir aqui?',tech:'core',boundary:'CENTRO DO HEXÁGONO',explanation:'Aqui moram as regras que precisam sobreviver à troca de framework, banco ou interface.'},
+    {title:'6. Port de saída',icon:'🚪',kind:'Necessidade do núcleo',code:'Pedidos.salvar(pedido)',before:'Pedido válido em memória',action:'Expressar a necessidade de salvar',after:'Contrato de persistência acionado',proof:'A interface diz “salvar”, sem SQL ou EntityManager',question:'Previsão: quem decide se o contrato será atendido por JPA?',tech:'core',boundary:'SAÍDA DO NÚCLEO',explanation:'O núcleo declara do que precisa. Um adapter externo assume a responsabilidade de realizar essa conversa.'},
+    {title:'7. Adapter JPA + Postgres',icon:'🐘',kind:'Entidade de persistência',code:'pedido(id=4711, ABERTO, 37.80)',before:'Pedido e contrato sem tecnologia',action:'Mapear para JPA e executar a persistência',after:'Linha salva; ID 4711 retorna ao núcleo',proof:'Teste de integração consulta a linha no banco',question:'Previsão: se o banco mudar, qual peça concentra a troca?',tech:'jpa',boundary:'BORDA DE SAÍDA',explanation:'O adapter traduz a linguagem do núcleo para JPA e SQL. A resposta percorre o caminho de volta.'}
   ];
   document.querySelectorAll('[data-hex-journey]').forEach(root=>{
     const q=s=>root.querySelector(s);let step=0,playing=false,timer=null;
-    function render(){root.querySelectorAll('[data-hex-stop]').forEach((x,i)=>{x.classList.toggle('active',i===step);x.classList.toggle('done',i<step);});q('[data-hex-message]').innerHTML=`<b>${step+1}. ${hexSteps[step][0]}</b><br>${hexSteps[step][2]}`;q('[data-hex-count]').textContent=`${step+1} / ${hexSteps.length}`;q('[data-hex-prev]').disabled=step===0;q('[data-hex-next]').disabled=step===hexSteps.length-1;q('[data-hex-play]').textContent=playing?'Ⅱ Pausar':'▶ Ver o pedido viajar';}
-    function pause(){playing=false;clearTimeout(timer);render();}function tick(){if(!playing)return;if(step===hexSteps.length-1){pause();return;}step++;render();timer=setTimeout(tick,1800);}
-    q('[data-hex-play]').addEventListener('click',()=>{if(playing){pause();return;}if(step===hexSteps.length-1)step=0;playing=true;render();timer=setTimeout(tick,700);});q('[data-hex-prev]').addEventListener('click',()=>{pause();step=Math.max(0,step-1);render();});q('[data-hex-next]').addEventListener('click',()=>{pause();step=Math.min(hexSteps.length-1,step+1);render();});q('[data-hex-reset]').addEventListener('click',()=>{pause();step=0;render();});render();
+    const fields=['icon','kind','code','before','action','after','proof','title','explanation','question','boundary'];
+    function render(scroll=false){
+      const current=hexSteps[step];root.style.setProperty('--hex-progress',step);
+      root.querySelectorAll('[data-hex-stop]').forEach((x,i)=>{x.classList.toggle('active',i===step);x.classList.toggle('done',i<step);});
+      fields.forEach(field=>{const target=q(`[data-hex-${field}]`);if(target)target.textContent=current[field];});
+      root.querySelectorAll('[data-hex-tech]').forEach(chip=>{const selected=chip.dataset.hexTech===current.tech;chip.classList.toggle('active',selected);chip.classList.toggle('left',chip.dataset.hexTech==='http'&&step>1);});
+      q('[data-hex-db]').classList.toggle('visible',step===hexSteps.length-1);q('[data-hex-db]').setAttribute('aria-hidden',String(step!==hexSteps.length-1));
+      q('[data-hex-count]').textContent=`${step+1} / ${hexSteps.length}`;q('[data-hex-prev]').disabled=step===0;q('[data-hex-next]').disabled=step===hexSteps.length-1;q('[data-hex-play]').textContent=playing?'Ⅱ Pausar':step===hexSteps.length-1?'↺ Encene novamente':'▶ Encene as traduções';
+      if(scroll)root.querySelectorAll('[data-hex-stop]')[step].scrollIntoView({block:'nearest',inline:'center',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+    }
+    function pause(){playing=false;clearTimeout(timer);timer=null;render();}
+    function go(next,scroll=true){pause();step=Math.max(0,Math.min(hexSteps.length-1,next));render(scroll);}
+    function tick(){if(!playing)return;if(step===hexSteps.length-1){pause();return;}step++;render(true);timer=setTimeout(tick,2600);}
+    q('[data-hex-play]').addEventListener('click',()=>{if(playing){pause();return;}if(step===hexSteps.length-1)step=0;document.dispatchEvent(new CustomEvent('teatro:play',{detail:'hex-journey'}));playing=true;render(true);timer=setTimeout(tick,900);});
+    q('[data-hex-prev]').addEventListener('click',()=>go(step-1));q('[data-hex-next]').addEventListener('click',()=>go(step+1));q('[data-hex-reset]').addEventListener('click',()=>go(0));
+    document.addEventListener('teatro:play',event=>{if(event.detail!=='hex-journey')pause();});document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});new IntersectionObserver(entries=>{if(!entries[0].isIntersecting)pause();}).observe(root);render();
   });
 })();
