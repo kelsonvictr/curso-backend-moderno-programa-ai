@@ -672,12 +672,15 @@
   }
   function initCaderno() {
     if (document.body.hasAttribute('data-no-caderno')) return;
+    const livreUrl = document.body.dataset.cadernoLivre || '';
+    const livreAction = livreUrl ? '<a class="lk-btn sm cad-free-link" href="' + esc(livreUrl) + '" target="_blank" rel="noopener">✍️ Abrir caderno livre</a>' : '';
     const fab = document.createElement('button'); fab.type = 'button'; fab.className = 'cad-fab'; fab.setAttribute('aria-label', 'Abrir caderno');
     fab.innerHTML = '📓 <span>Caderno</span><span class="cad-count" hidden>0</span>';
     cadEl = document.createElement('div'); cadEl.className = 'cad-drawer';
     cadEl.innerHTML =
       '<div class="cad-head"><div><div class="cad-title">📓 Meu caderno</div><div class="cad-sub">anotações e specs de todos os capítulos · salvos neste navegador</div></div><button type="button" class="cad-close" aria-label="Fechar">✕</button></div>' +
       '<div class="cad-actions">' +
+        livreAction +
         '<button type="button" class="lk-btn sm" data-act="copy">📋 Copiar Markdown</button>' +
         '<button type="button" class="lk-btn sm ghost" data-act="md">⬇ Baixar .md</button>' +
         '<button type="button" class="lk-btn sm ghost" data-act="backup">⬇ Backup (JSON)</button>' +

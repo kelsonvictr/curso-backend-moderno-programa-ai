@@ -1,0 +1,257 @@
+/* =========================================================
+   Caderno de Engenharia — estilos do motor (shared/caderno.js)
+   Identidade herdada da prancheta impressa (mapa-engenharia):
+   papel claro quadriculado + tinta técnica + caneta do aluno.
+   ========================================================= */
+
+/* ── tinta do aluno: caneta azul (o gabarito do prof é laranja) ── */
+.cad{
+  --papel:#ffffff;
+  --grade:#eef1fa;
+  --tinta:#1f2a4d;        /* impresso (azul-marinho de prancheta) */
+  --tinta-soft:#5b6689;
+  --tinta-faint:#aab3cf;
+  --caneta:#1d4ed8;       /* o que o ALUNO escreve/desenha */
+  --miss:#7c3aed;
+  --carimbo:#b91c1c;
+  --ok:#047857;
+  --get:#0369a1; --post:#047857; --put:#b45309; --del:#b91c1c;
+}
+
+/* mono do caderno: SEMPRE sem ligaduras (=> não vira ⇒) */
+.cad .cad-mono, .cad code, .cad .cad-blank.mono{
+  font-family:'JetBrains Mono',monospace;
+  font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+}
+
+/* ═══════════ topo fixo (fora do papel) ═══════════ */
+.cad-top{
+  position:sticky;top:0;z-index:50;
+  background:rgba(10,10,18,0.88);backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(124,92,255,0.25);
+  padding:10px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+}
+.cad-top .cad-marca{display:flex;align-items:center;gap:10px;font-weight:900;color:var(--text)}
+.cad-top .cad-marca .emoji{font-size:1.4rem}
+.cad-top .cad-marca small{display:block;font-size:0.62rem;font-weight:800;letter-spacing:1.5px;
+  text-transform:uppercase;color:#c9b8ff}
+.cad-progresso{display:flex;gap:6px;align-items:center;margin-left:auto}
+.cad-prog-chip{width:34px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:0.62rem;font-weight:900;color:var(--text-dim);background:var(--surface2);
+  border:1px solid rgba(255,255,255,0.14);cursor:pointer;transition:all .25s}
+.cad-prog-chip:hover{transform:translateY(-2px)}
+.cad-prog-chip.feito{background:var(--accent7);border-color:var(--accent7);color:#0a0a12}
+.cad-salvo{font-size:0.7rem;font-weight:800;color:var(--text-dim);min-width:64px;text-align:right;
+  transition:color .3s}
+.cad-salvo.on{color:var(--accent7)}
+.cad-toolbar{display:flex;gap:8px;flex-wrap:wrap}
+.cad-bt{border:1px solid rgba(255,255,255,0.16);background:var(--surface2);color:var(--text);
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:0.72rem;padding:8px 13px;
+  border-radius:999px;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;
+  align-items:center;gap:6px}
+.cad-bt:hover{transform:translateY(-2px);border-color:var(--accent6)}
+.cad-bt.primario{background:linear-gradient(135deg,var(--accent6),#8b91ff);color:#0a0a12;border:0}
+.cad-bt.perigo:hover{border-color:var(--bug);color:#ff8b8b}
+
+/* ═══════════ o papel ═══════════ */
+.cad-mesa{max-width:980px;margin:26px auto 60px;padding:0 16px;position:relative;z-index:1}
+.cad-folha{
+  background:var(--papel);border-radius:10px;color:var(--tinta);
+  font-family:'Nunito',sans-serif;
+  box-shadow:0 14px 50px rgba(0,0,0,0.5);
+  background-image:
+    linear-gradient(var(--grade) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grade) 1px,transparent 1px);
+  background-size:22px 22px;
+  border:1px solid #cbd5e1;
+  padding:26px clamp(16px,4vw,42px) 34px;
+  position:relative;overflow:hidden;
+}
+.cad-moldura{position:absolute;inset:10px;border:2px solid var(--tinta);border-radius:6px;
+  pointer-events:none}
+.cad-moldura::after{content:"";position:absolute;inset:4px;border:1px solid var(--tinta)}
+.cad-folha-inner{position:relative;padding:14px 10px 0}
+
+/* cabeçalho da folha */
+.cad-cab{display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--tinta);
+  padding-bottom:12px;margin-bottom:8px;flex-wrap:wrap}
+.cad-cab .emoji{font-size:2rem}
+.cad-kicker{font-size:0.64rem;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--tinta-soft)}
+.cad-h1{font-size:clamp(1.25rem,3.6vw,1.8rem);font-weight:900;line-height:1.15;color:var(--tinta)}
+.cad-h1 .fina{font-weight:600;color:var(--tinta-soft)}
+
+/* carimbo técnico (identidade) */
+.cad-carimbo{margin-left:auto;border:2px solid var(--tinta);display:grid;
+  grid-template-columns:auto auto;background:#fff;font-size:0.62rem;min-width:250px}
+.cad-carimbo .cel{border:1px solid var(--tinta);padding:4px 10px}
+.cad-carimbo .rot{font-size:0.5rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;
+  color:var(--tinta-soft);display:block}
+.cad-carimbo .val{font-weight:900;font-size:0.7rem}
+.cad-carimbo input{border:0;border-bottom:1.5px solid var(--tinta-soft);background:transparent;
+  font-family:'Caveat',cursive;font-size:1.05rem;font-weight:700;color:var(--caneta);
+  width:130px;outline:none;padding:0 2px}
+@media (max-width:640px){.cad-carimbo{margin-left:0;width:100%}}
+
+/* ═══════════ missões ═══════════ */
+.cad-missao{position:relative;border:2px solid var(--tinta);border-radius:12px;margin:22px 0;
+  background:rgba(255,255,255,0.72);scroll-margin-top:86px}
+.cad-missao-cab{display:flex;align-items:center;gap:10px;padding:10px 16px;
+  background:var(--tinta);color:#fff;border-radius:9px 9px 0 0;flex-wrap:wrap}
+.cad-selo{background:var(--miss);color:#fff;font-weight:900;font-size:0.68rem;
+  border-radius:999px;padding:4px 12px;white-space:nowrap}
+.cad-selo::before{content:"✏️ ";font-size:0.72rem}
+.cad-missao-titulo{font-weight:900;font-size:clamp(0.95rem,2.6vw,1.15rem)}
+.cad-missao-sub{flex-basis:100%;font-size:0.74rem;font-weight:600;opacity:0.85}
+.cad-missao-corpo{padding:16px 18px 18px;display:flex;flex-direction:column;gap:14px}
+.cad-missao.carimbada{border-color:var(--carimbo)}
+.cad-missao.carimbada .cad-missao-cab{background:linear-gradient(135deg,var(--tinta),#3d2a2a)}
+
+/* rodapé da missão: o botão de carimbar */
+.cad-missao-pe{display:flex;justify-content:flex-end;padding:0 18px 14px}
+.cad-carimbar{border:2px dashed var(--carimbo);background:transparent;color:var(--carimbo);
+  font-family:'Nunito',sans-serif;font-weight:900;font-size:0.78rem;border-radius:10px;
+  padding:9px 18px;cursor:pointer;transition:all .2s}
+.cad-carimbar:hover{background:rgba(185,28,28,0.06);transform:translateY(-2px)}
+
+/* o carimbo em si */
+.cad-stamp{position:absolute;top:8px;right:14px;transform:rotate(-8deg);
+  border:3px double var(--carimbo);color:var(--carimbo);border-radius:8px;
+  padding:4px 12px;text-align:center;background:rgba(255,255,255,0.85);
+  font-weight:900;line-height:1.15;pointer-events:auto;cursor:pointer;z-index:3;
+  box-shadow:0 2px 10px rgba(185,28,28,0.18)}
+.cad-stamp .g{font-size:0.78rem;letter-spacing:1px}
+.cad-stamp .p{font-size:0.55rem;font-weight:800;opacity:0.85}
+.cad-stamp.batendo{animation:cadStamp .45s cubic-bezier(.2,.9,.3,1.3) both}
+@keyframes cadStamp{
+  0%{transform:rotate(-8deg) scale(2.4);opacity:0}
+  60%{transform:rotate(-8deg) scale(0.92);opacity:1}
+  100%{transform:rotate(-8deg) scale(1)}
+}
+
+/* ═══════════ widgets ═══════════ */
+.cad-nota{font-size:0.86rem;line-height:1.65;color:var(--tinta-soft)}
+.cad-nota b,.cad-nota strong{color:var(--tinta)}
+.cad-nota code{font-size:0.78rem;background:#eef1fa;border-radius:5px;padding:1px 6px;color:var(--tinta)}
+
+/* — checklist — */
+.cad-check{display:flex;gap:10px;align-items:baseline;font-size:0.86rem;line-height:1.6;
+  padding:4px 0;cursor:pointer;border-radius:8px}
+.cad-check:hover{background:rgba(29,78,216,0.04)}
+.cad-check .cx{flex-shrink:0;width:17px;height:17px;border:2px solid var(--tinta-soft);
+  border-radius:4px;position:relative;top:2px;transition:border-color .2s}
+.cad-check.on .cx{border-color:var(--caneta)}
+.cad-check.on .cx::after{content:"✗";position:absolute;left:1px;top:-6px;
+  font-family:'Caveat',cursive;font-size:1.35rem;font-weight:700;color:var(--caneta)}
+.cad-check code{font-size:0.78rem;background:#eef1fa;border-radius:5px;padding:1px 6px}
+
+/* — blanks (a caneta do aluno) — */
+.cad-linha{font-size:0.86rem;line-height:2.15;color:var(--tinta)}
+.cad-linha code{font-size:0.78rem;background:#eef1fa;border-radius:5px;padding:1px 6px}
+.cad-blank{border:0;border-bottom:2px solid var(--tinta-faint);background:transparent;
+  font-family:'Caveat',cursive;font-size:1.15rem;font-weight:700;color:var(--caneta);
+  outline:none;padding:0 4px;text-align:center;transition:border-color .2s;min-width:40px}
+.cad-blank:focus{border-color:var(--caneta)}
+.cad-blank.mono{font-family:'JetBrains Mono',monospace;font-size:0.78rem;font-weight:700;
+  text-align:left}
+
+/* — texto livre — */
+.cad-texto{width:100%;border:0;background:
+  repeating-linear-gradient(transparent,transparent 31px,var(--tinta-faint) 31px,var(--tinta-faint) 32px);
+  font-family:'Caveat',cursive;font-size:1.25rem;font-weight:700;color:var(--caneta);
+  line-height:32px;outline:none;resize:none;overflow:hidden;padding:0 4px;min-height:64px}
+
+/* — wordbank — */
+.cad-wb-slots{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;
+  padding:6px 0}
+.cad-wb-fixa{display:flex;flex-direction:column;align-items:center;gap:5px;width:104px;text-align:center}
+.cad-wb-bola{width:44px;height:44px;border-radius:50%;border:2.5px solid var(--tinta);
+  display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1rem;background:#fff}
+.cad-wb-rot{font-size:0.62rem;font-weight:700;color:var(--tinta-soft);line-height:1.3}
+.cad-wb-seta{color:var(--tinta-faint);font-weight:900;font-size:1.1rem;align-self:flex-start;margin-top:12px}
+.cad-slot{min-height:44px;width:104px;border:2.5px dashed var(--tinta-faint);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  font-family:'Caveat',cursive;font-size:1rem;font-weight:700;color:var(--caneta);
+  cursor:pointer;transition:all .2s;padding:4px 6px;line-height:1.1}
+.cad-slot.alvo{border-color:var(--caneta);background:rgba(29,78,216,0.06)}
+.cad-slot.cheio{border-style:solid;border-color:var(--caneta)}
+.cad-wb-banco{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;border-top:2px dashed var(--tinta-faint);
+  padding-top:12px;margin-top:6px}
+.cad-wb-banco .rot{flex-basis:100%;text-align:center;font-size:0.62rem;font-weight:900;
+  letter-spacing:1px;text-transform:uppercase;color:var(--tinta-soft)}
+.cad-palavra{border:2px solid var(--caneta);background:#fff;border-radius:999px;padding:6px 14px;
+  font-family:'Caveat',cursive;font-size:1.05rem;font-weight:700;color:var(--caneta);
+  cursor:grab;transition:all .2s;user-select:none}
+.cad-palavra:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(29,78,216,0.2)}
+.cad-palavra.pega{outline:3px solid rgba(29,78,216,0.35);outline-offset:2px}
+.cad-palavra.usada{display:none}
+
+/* — desenho (canvas de traço) — */
+.cad-des{border:2px dashed var(--tinta-faint);border-radius:12px;overflow:hidden;background:#fff}
+.cad-des-cab{display:flex;align-items:center;gap:8px;padding:7px 12px;
+  border-bottom:1.5px dashed var(--tinta-faint);flex-wrap:wrap}
+.cad-des-cab .rot{font-size:0.66rem;font-weight:900;text-transform:uppercase;letter-spacing:0.6px;
+  color:var(--tinta-soft);margin-right:auto}
+.cad-cor{width:24px;height:24px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;
+  transition:transform .15s;padding:0}
+.cad-cor:hover{transform:scale(1.15)}
+.cad-cor.ativa{border-color:var(--tinta);box-shadow:0 0 0 2px #fff inset}
+.cad-des-bt{border:1.5px solid var(--tinta-faint);background:#fff;border-radius:8px;
+  font-family:'Nunito',sans-serif;font-size:0.66rem;font-weight:800;color:var(--tinta-soft);
+  padding:4px 10px;cursor:pointer;transition:all .15s}
+.cad-des-bt:hover{border-color:var(--tinta);color:var(--tinta)}
+.cad-des-area{position:relative}
+.cad-des-fundo{position:absolute;inset:0;pointer-events:none;padding:10px 14px;
+  font-size:0.74rem;color:var(--tinta-soft);line-height:1.6}
+.cad-des-fundo .cad-verbo{font-weight:700;font-size:0.7rem;color:#fff;border-radius:5px;
+  padding:2px 8px;font-family:'JetBrains Mono',monospace;
+  font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+.cad-des-canvas{display:block;width:100%;touch-action:none;cursor:crosshair}
+
+/* — termo de aceite — */
+.cad-aceite{width:100%;border-collapse:collapse;font-size:0.8rem}
+.cad-aceite th{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.6px;color:var(--tinta-soft);
+  border-bottom:2.5px solid var(--tinta);padding:6px 8px;text-align:left}
+.cad-aceite td{border-bottom:1.5px solid var(--grade);padding:7px 8px;font-weight:700;vertical-align:middle}
+.cad-aceite .via{font-size:0.6rem;font-weight:900;white-space:nowrap}
+.cad-aceite .via.mao{color:var(--get)} .cad-aceite .via.junto{color:var(--miss)}
+.cad-aceite .via.cmd{color:var(--post)}
+.cad-aceite .cinco{display:flex;gap:4px}
+.cad-aceite .cinco .cx{width:15px;height:15px;border:2px solid var(--tinta-soft);border-radius:3px;
+  cursor:pointer;position:relative;transition:border-color .15s}
+.cad-aceite .cinco .cx.on{border-color:var(--caneta)}
+.cad-aceite .cinco .cx.on::after{content:"✗";position:absolute;left:0;top:-7px;
+  font-family:'Caveat',cursive;font-size:1.2rem;font-weight:700;color:var(--caneta)}
+.cad-ass{position:relative;width:150px;height:38px;border-bottom:2px solid var(--tinta-soft)}
+.cad-ass canvas{display:block;width:100%;height:100%;touch-action:none;cursor:crosshair}
+.cad-ass .limpa{position:absolute;right:-4px;top:-6px;border:0;background:transparent;
+  color:var(--tinta-faint);font-size:0.72rem;cursor:pointer;font-weight:900;padding:2px}
+.cad-ass .limpa:hover{color:var(--carimbo)}
+@media (max-width:700px){
+  .cad-aceite{font-size:0.7rem}
+  .cad-ass{width:110px}
+}
+
+/* rodapé da folha */
+.cad-pe-folha{margin-top:26px;border-top:2px dashed var(--tinta-faint);padding-top:14px;
+  display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.cad-frase{font-family:'Caveat',cursive;font-size:1.5rem;font-weight:700;color:var(--tinta);line-height:1.1}
+.cad-frase b{color:var(--miss)}
+.cad-aviso-backup{margin-left:auto;font-size:0.68rem;color:var(--tinta-soft);font-weight:700;
+  max-width:340px;line-height:1.5}
+
+/* ═══════════ impressão (A4 retrato, a folha DELE preenchida) ═══════════ */
+@media print{
+  @page{size:A4 portrait;margin:10mm}
+  body{background:#fff !important}
+  .bg-grid,.bg-orbs,.cad-top,.cad-carimbar,.cad-missao-pe,.cad-des-cab .cad-cor,
+  .cad-des-bt,.cad-wb-banco,.cad-ass .limpa,.cad-aviso-backup{display:none !important}
+  .cad-mesa{max-width:none;margin:0;padding:0}
+  .cad-folha{box-shadow:none;border:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .cad-missao{page-break-inside:avoid}
+  .cad-stamp{box-shadow:none}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .cad-stamp.batendo,.cad-prog-chip,.cad-bt,.cad-palavra,.cad-carimbar{animation:none;transition:none}
+}

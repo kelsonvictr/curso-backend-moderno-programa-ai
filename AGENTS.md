@@ -67,3 +67,15 @@ do projeto (`CLAUDE.md`/`AGENTS.md`) e spec da tarefa. A pasta `.specs/` deve na
 deixar claro que é uma convenção versionada, lida porque o ritual manda, não uma fonte carregada
 automaticamente. O “uau” esperado é plano, código, testes e diff coerentes surgirem com rapidez,
 enquanto o humano continua responsável por escopo, autorização e revisão.
+
+## Caderno livre por capítulo (2026-09-05)
+Os capítulos oferecem um `caderno.html` independente, inspirado no Cap 11 do
+`novo-material-fullstack`, para anotações livres durante a aula. Use o motor compartilhado em
+`shared/caderno.js` e `shared/caderno.css`, com configuração local em `caderno-config.js`.
+
+- O caderno deve ter texto pautado em branco e área de desenho, sem perguntas obrigatórias.
+- Cada capítulo usa um `id` próprio no `localStorage`, evitando misturar as anotações.
+- Preserve salvamento automático, impressão, backup/restauração em JSON e exportação em PNG.
+- Ofereça acesso pela sidebar, pela abertura do capítulo e pelo Caderno guiado do `lab-kit`.
+- O Caderno guiado continua reunindo notas das atividades; o caderno livre é um complemento.
+- Mantenha o recurso local e funcional sem internet durante a aula.

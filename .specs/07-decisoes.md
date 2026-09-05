@@ -370,3 +370,11 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
 - Dois jogos fixam onde cada informação mora e a ordem produtiva: instruções → spec → inspeção → plano → OK → edição → testes → diff. Um fluxo adicional leva o Pedido 4711 por cliente, Controller, ports, caso de uso, domínio e adapter JPA/Postgres.
 - O capítulo inicia mudo e compartilha essa preferência entre os players. Controles manuais, legendas, pausa, reinício, movimento reduzido e layout responsivo permanecem disponíveis sem áudio.
 - Validação: JS válido, HTML sem IDs repetidos, recursos locais presentes, 19 MP3 decodificados, console sem alertas. No navegador, uma história com voz chegou a 5/5; os jogos chegaram a 5/5 e 8/8; `.specs/` e o hexágono avançaram corretamente; layout inspecionado em 390 px e viewport restaurado ao fim.
+
+## 2026-09-05 — Caderno livre nos Caps 0 e 1
+- O Cap 11 de `novo-material-fullstack` foi adotado como referência para uma folha livre de aula: texto pautado em branco, área de desenho e controles de persistência/exportação.
+- O motor foi compartilhado em `shared/caderno.js` e `shared/caderno.css`; `html2canvas` fica versionado localmente em `shared/vendor/`, sem CDN ou rede durante a aula.
+- Cap 0 e Cap 1 têm páginas e configurações próprias. Os IDs `backend-moderno-cap00` e `backend-moderno-cap01` isolam seus dados no `localStorage`.
+- O acesso aparece na sidebar, na abertura visual do capítulo e dentro do Caderno guiado existente. O drawer do `lab-kit` foi preservado para notas ligadas às atividades.
+- Recursos disponíveis: salvamento automático, nome do aluno, desenho com três cores, desfazer/limpar, impressão, backup e restauração em JSON, exportação em PNG e reinício com confirmação.
+- Validação visual em desktop e 390 px: papel responsivo, sem overflow horizontal; recursos locais e controles acessíveis carregados sem erros no console.

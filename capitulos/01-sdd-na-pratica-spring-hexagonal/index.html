@@ -33,7 +33,7 @@
   .check-rev li b{color:var(--text)}
 </style>
 </head>
-<body data-page="Sábado 01 — SDD na prática: Spring hexagonal">
+<body data-page="Sábado 01 — SDD na prática: Spring hexagonal" data-caderno-livre="./caderno.html">
 
 <div class="bg-grid"></div>
 <div class="bg-orbs"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
@@ -50,6 +50,7 @@
   </div>
   <div class="sidebar-group">
     <div class="sidebar-group-title">📖 Antes da aula</div>
+    <a class="sidebar-link" href="./caderno.html" target="_blank" rel="noopener">📓 Meu caderno livre ↗</a>
     <div class="sidebar-link" onclick="goTo('s-historia')"><span class="dot" style="background:var(--java)"></span> A história do pedido 4711</div>
     <div class="sidebar-link" onclick="goTo('s-agente-produto')"><span class="dot" style="background:var(--claude)"></span> O agente em dois universos</div>
     <div class="sidebar-link" onclick="goTo('s-specs-fluxo')"><span class="dot" style="background:var(--spring)"></span> A .specs/ ganha vida</div>
@@ -91,6 +92,7 @@
     <span class="stack-chip" style="border-color:rgba(167,139,250,.45);color:var(--accent6)">⬡ hexagonal</span>
   </div>
   <div class="cap1-sound"><button type="button" data-cap-audio aria-pressed="true">🔇 Modo mudo ativado</button><p id="cap1-audio-note">Na sala, acompanhe a voz do professor. Animações, jogos e legendas continuam funcionando.</p></div>
+  <a class="cad-livre-cta" href="./caderno.html" target="_blank" rel="noopener"><span class="cad-livre-icon">📓</span><span><strong>Meu caderno livre</strong><small>Anote decisões e rascunhe arquiteturas ↗</small></span></a>
 </section>
 
 <div class="container">
@@ -826,7 +828,7 @@ docker compose -f infra/docker-compose.yml exec postgres psql -U pedidos -c 'sel
 </footer>
 
 <script src="../../shared/scripts.js" defer></script>
-<script src="../../shared/lab-kit.js?v=3" defer></script>
+<script src="../../shared/lab-kit.js?v=4" defer></script>
 <script src="./cap1-audio.js?v=1" defer></script>
 <script src="./cap1-ai-cenas.js?v=1" defer></script>
 <script src="../../assets/audio/cap01-ai/audio/manifest.js?v=1" defer></script>
