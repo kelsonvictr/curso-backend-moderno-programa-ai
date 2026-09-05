@@ -88,6 +88,7 @@
   .start-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   @media(max-width:720px){.start-grid{grid-template-columns:1fr}}
   .start-card{display:flex;gap:16px;align-items:center;text-decoration:none;color:inherit;cursor:pointer;height:100%}
+  .start-card.cap1-start{grid-column:1/-1;background:linear-gradient(135deg,rgba(248,152,32,0.12),rgba(217,119,87,0.08));border-color:rgba(248,152,32,0.38)}
   .start-card .big{font-size:2.6rem;line-height:1}
   .start-card .go{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:50px;font-weight:800;font-size:0.8rem;color:var(--bg);flex-shrink:0}
 </style>
@@ -187,6 +188,15 @@
           <p style="color:var(--text-dim);font-size:0.86rem">LLM, contexto, o loop do agente, anatomia do Claude Code, <code>CLAUDE.md</code> × <code>AGENTS.md</code>, SDD e o ritual de revisão. Com simuladores.</p>
         </div>
         <span class="go" style="background:linear-gradient(135deg,var(--claude),var(--ai))">Ler →</span>
+      </a>
+      <a href="capitulos/01-sdd-na-pratica-spring-hexagonal/" class="card start-card cap1-start">
+        <div class="big" data-motion="float">☕</div>
+        <div style="flex:1;min-width:0">
+          <span style="display:inline-block;background:var(--spring);color:var(--bg);font-size:0.6rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:50px;margin-bottom:6px">3º · material da aula disponível</span>
+          <h3 style="margin-bottom:4px;font-size:1.1rem">Cap 1 — SDD na prática com Spring hexagonal</h3>
+          <p style="color:var(--text-dim);font-size:0.86rem">Instalações, IntelliJ, prompts para o professor, <code>AGENTS.md</code>, <code>CLAUDE.md</code>, oficina de <code>.specs/</code>, arquitetura hexagonal e Postgres no Docker.</p>
+        </div>
+        <span class="go" style="background:linear-gradient(135deg,var(--java),var(--claude))">Abrir aula →</span>
       </a>
     </div>
   </section>
