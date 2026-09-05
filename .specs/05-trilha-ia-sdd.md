@@ -19,11 +19,11 @@ julgamento; o código é consequência.
 | **Nuvem** (Sáb 6–8) | Workflow de duas fases (**plan com modelo forte / execute com modelo rápido**), skills de projeto, dirigir o agente num sistema serverless real ponta a ponta |
 
 ## Pontos de ensino por sábado (onde a trilha "aparece" no capítulo)
-- **Sáb 0 (setup, em casa):** Claude Code instalado e logado com Claude Pro (ou Codex com ChatGPT
-  Plus — nota de equivalência, o material segue em Claude Code).
-- **Sáb 1:** o setup e o SDD são *o tema do dia*, não pano de fundo. Mostrar `CLAUDE.md`, o ciclo
-  spec→plan→execute→review, e o que entra/não entra no contexto. O prof cria o `CLAUDE.md` e a
-  primeira spec do serviço de Pedidos ao vivo.
+- **Sáb 0 (setup, em casa):** um agente CLI instalado e autenticado: Claude Code, Codex CLI ou
+  Google Antigravity CLI. O Cap 1 usa prompts portáveis e `AGENTS.md` como contrato comum.
+- **Sáb 1:** o setup e o SDD são *o tema do dia*, não pano de fundo. Mostrar `AGENTS.md`, a ponte
+  `CLAUDE.md`, o ciclo spec→plan→execute→review e o que entra/não entra no contexto. O prof cria o
+  contrato portátil e a primeira spec do serviço de Pedidos ao vivo.
 - **Sáb 2:** o checklist SOLID de revisão vira a primeira **skill** (`revisar-solid`).
 - **Sáb 3:** TDD com agente (aluno escreve o teste, agente implementa até passar).
 - **Sáb 4:** a spec passa a **produzir arquitetura** (modelar o fluxo de eventos em spec antes de

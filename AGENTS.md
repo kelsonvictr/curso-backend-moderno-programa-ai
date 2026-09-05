@@ -79,3 +79,16 @@ Os capítulos oferecem um `caderno.html` independente, inspirado no Cap 11 do
 - Ofereça acesso pela sidebar, pela abertura do capítulo e pelo Caderno guiado do `lab-kit`.
 - O Caderno guiado continua reunindo notas das atividades; o caderno livre é um complemento.
 - Mantenha o recurso local e funcional sem internet durante a aula.
+
+## Cap 1 — bancada única no IntelliJ (2026-09-05)
+O lab começa com um projeto mínimo gerado manualmente no Spring Initializr. Depois disso, professor
+e alunos trabalham no IntelliJ com um agente aberto no terminal embutido. Cada aluno escolhe Claude
+Code, Codex CLI ou Google Antigravity CLI; os prompts precisam funcionar nas três ferramentas.
+
+- Use `AGENTS.md` como contrato comum e `CLAUDE.md` com `@AGENTS.md` para o Claude Code.
+- Maven não é instalado nem digitado manualmente pelo aluno: o agente usa o Wrapper do projeto.
+- Postgres não é instalado localmente: o agente cria e opera o Docker Compose após autorização.
+- Cada prática segue diagnóstico → spec → plano → OK → execução → testes → diff → revisão humana.
+- Prompts do professor devem trazer contexto, tarefa, limites, evidência esperada e ponto de pausa.
+- Hexagonal começa pelo dentro/fora; só depois nomeia domínio, aplicação, ports e adapters.
+- O hexágono é um recurso visual para mostrar várias portas, não a quantidade de camadas.

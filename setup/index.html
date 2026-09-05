@@ -54,7 +54,7 @@
     <div class="sidebar-link" onclick="goTo('s-ide')"><span class="dot" style="background:var(--accent6)"></span> 2 · IDE</div>
     <div class="sidebar-link" onclick="goTo('s-git')"><span class="dot" style="background:var(--accent2)"></span> 3 · Git + GitHub</div>
     <div class="sidebar-link" onclick="goTo('s-docker')"><span class="dot" style="background:var(--docker)"></span> 4 · Docker + brokers</div>
-    <div class="sidebar-link" onclick="goTo('s-claude')"><span class="dot" style="background:var(--claude)"></span> 5 · Claude Code</div>
+    <div class="sidebar-link" onclick="goTo('s-claude')"><span class="dot" style="background:var(--claude)"></span> 5 · Um agente CLI</div>
     <div class="sidebar-link" onclick="goTo('s-teste')"><span class="dot" style="background:var(--spring)"></span> 6 · Teste final</div>
     <div class="sidebar-link" onclick="goTo('s-zoom')"><span class="dot" style="background:var(--accent4)"></span> 7 · Remoto (Zoom)</div>
   </div>
@@ -90,11 +90,11 @@
       <div class="zone3">
         <div class="z z1"><div class="z-em">📖</div><div class="z-t">Antes da aula</div><div class="z-d">Você lê o capítulo (~1h) e mexe nos simuladores. É a teoria densa. No classcontent tem o vídeo e o podcast da aula.</div></div>
         <div class="z z2"><div class="z-em">🏫</div><div class="z-t">Em sala (4h)</div><div class="z-d">Labs de julgamento: você dirige o agente, revisa PR, defende/refuta. Cada lab tem um entregável. Presencial ou pelo Zoom.</div></div>
-        <div class="z z3"><div class="z-em">🏠</div><div class="z-t">Até o próximo sábado</div><div class="z-d">O seu repositório contínuo (o serviço de Pedidos) evolui em casa, dirigido por você com o Claude Code. Não é opcional.</div></div>
+        <div class="z z3"><div class="z-em">🏠</div><div class="z-t">Até o próximo sábado</div><div class="z-d">O seu repositório contínuo (o serviço de Pedidos) evolui em casa, dirigido por você com um agente CLI. Não é opcional.</div></div>
       </div>
       <div class="req-grid">
         <div class="req"><span class="r-em">💻</span><div class="r-t">Seu notebook</div><div class="r-d">A escola não fornece máquina, de propósito: o ambiente fica configurado pra você seguir em casa. Mínimo confortável: 16 GB de RAM (Docker + IDE + brokers).</div></div>
-        <div class="req"><span class="r-em">🤖</span><div class="r-t">Claude Pro (obrigatório)</div><div class="r-d">Dá acesso ao Claude Code, que o professor usa em aula. ChatGPT Plus (Codex) é aceito, mas o material mostra o fluxo do Claude Code.</div></div>
+        <div class="req"><span class="r-em">🤖</span><div class="r-t">Um agente CLI</div><div class="r-d">Escolha Claude Code, Codex CLI ou Google Antigravity CLI. O Cap 1 oferece os mesmos prompts para as três ferramentas.</div></div>
         <div class="req"><span class="r-em">☁️</span><div class="r-t">Conta AWS (só no Bloco 3)</div><div class="r-d">Conta própria, free tier. Precisa de cartão. Fica pra tarefa de casa do Sáb 5 (17/10) — seção 8, no fim desta página.</div></div>
       </div>
     </div>
@@ -242,20 +242,17 @@ docker compose ps
 
   <div class="section-connector"><div class="line"></div></div>
 
-  <!-- ══════════ 5 · CLAUDE CODE ══════════ -->
+  <!-- ══════════ 5 · AGENTE CLI ══════════ -->
   <section class="step-section" id="s-claude">
     <div class="step-header">
       <div class="step-number sn-claude">5</div>
-      <div><div class="step-title">Claude Code</div><div class="step-sub">o agente que você vai dirigir — obrigatório</div></div>
+      <div><div class="step-title">Escolha um agente CLI</div><div class="step-sub">Claude Code, Codex CLI ou Google Antigravity CLI — um deles é suficiente</div></div>
     </div>
     <div class="card">
-      <div class="why">🎯 <span><b>Por quê Claude Code e não o chat:</b> ele roda no <em>seu</em> terminal, dentro do <em>seu</em> repositório. Lê os
-      arquivos, edita, roda os testes, faz commit. É um agente, não um autocomplete. Todo lab do curso é "escreva a spec, deixe
-      ele gerar, revise".</span></div>
+      <div class="why">🎯 <span><b>Por que um agente no terminal:</b> ele roda dentro do repositório aberto no IntelliJ, lê arquivos,
+      edita e executa os testes. Todo lab segue “escreva a spec, aprove o plano, deixe o agente executar e revise a evidência”.</span></div>
 
-      <p style="font-size:0.9rem"><strong>1. Assinatura.</strong> Claude Code vem com o <strong>Claude Pro</strong> (claude.ai). Assine antes de instalar;
-      o login pede.</p>
-      <p style="font-size:0.9rem;margin-top:8px"><strong>2. Instalação.</strong></p>
+      <p style="font-size:0.9rem"><strong>Opção A — Claude Code.</strong> Use sua conta Claude compatível e faça a instalação:</p>
       <div class="os-group">
         <div class="os-tabs"><button class="os-tab" data-os="mac">macOS / Linux</button><button class="os-tab" data-os="win">Windows (PowerShell)</button><button class="os-tab" data-os="npm">via npm (qualquer SO)</button></div>
         <div class="os-pane" data-os="mac">
@@ -271,7 +268,7 @@ docker compose ps
 <pre>npm install -g @anthropic-ai/claude-code</pre></div>
         </div>
       </div>
-      <p style="font-size:0.9rem;margin-top:8px"><strong>3. Login e primeiro contato.</strong> Entre numa pasta <em>vazia</em> e chame o agente:</p>
+      <p style="font-size:0.9rem;margin-top:8px"><strong>Primeiro contato.</strong> Abra uma pasta <code>hello-agente</code> no IntelliJ, abra o Terminal da IDE e chame o agente:</p>
       <div class="code-block"><div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">terminal</span><span class="lang-badge terminal">terminal</span></div>
 <pre>mkdir hello-agente &amp;&amp; cd hello-agente
 claude
@@ -279,20 +276,20 @@ claude
 <span class="cm"># dentro do Claude Code, o comando /login refaz isso se precisar</span></pre></div>
       <p style="font-size:0.9rem">Agora dê a <strong>primeira ordem</strong> — e repare que ela já tem cara de spec (o que, e o que <em>não</em>):</p>
       <div class="terminal" style="margin:10px 0">
-        <div class="terminal-header"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">claude · hello-agente</span></div>
+        <div class="terminal-header"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">agente · hello-agente</span></div>
         <div class="terminal-body"><span class="prompt">&gt;</span> Crie um record Java 21 chamado Pedido com id (String) e total (BigDecimal). Só o arquivo Pedido.java, sem build, sem testes, sem nada além disso.</div>
       </div>
       <p class="expect">Esperado: ele cria <b>um</b> arquivo e para. Se ele criou <code>pom.xml</code>, README e três classes, você acabou de ver o
       primeiro motivo do curso existir: o agente faz mais do que pediram quando a spec deixa. Já dá pra treinar a revisão.</p>
 
-      <div class="tip"><span class="tip-icon">🔁</span><div class="tip-content"><strong>Usa ChatGPT Plus?</strong> Instale o Codex CLI
-      (<code>npm install -g @openai/codex</code>, depois <code>codex</code> e login com a conta Plus). O material mostra os comandos do Claude Code;
-      as equivalências que importam: o arquivo de memória do projeto chama <code>AGENTS.md</code> em vez de <code>CLAUDE.md</code>,
-      e o fluxo spec → plan → execute → review é idêntico. Você vai traduzir alguns detalhes sozinho.</div></div>
+      <div class="tip"><span class="tip-icon">🔁</span><div class="tip-content"><strong>Opção B — Codex CLI.</strong> Instale com
+      <code>npm install -g @openai/codex</code>, inicie com <code>codex</code> e autentique. Ele usa <code>AGENTS.md</code>; os prompts do Cap 1 já estão preparados.</div></div>
+      <div class="tip"><span class="tip-icon">🛰️</span><div class="tip-content"><strong>Opção C — Google Antigravity CLI.</strong> No macOS/Linux,
+      use <code>curl -fsSL https://antigravity.google/cli/install.sh | bash</code>; inicie com <code>agy</code>. Ele também reconhece <code>AGENTS.md</code> no workspace.</div></div>
 
       <ul class="chk-list">
-        <li><label class="chk"><input type="checkbox" data-persist="setup/core/claude-assinatura"><span><span class="chk-t">Assinatura ativa (Claude Pro, ou ChatGPT Plus)</span></span></label></li>
-        <li><label class="chk"><input type="checkbox" data-persist="setup/core/claude-login"><span><span class="chk-t"><code>claude</code> abre no terminal e o login está feito</span></span></label></li>
+        <li><label class="chk"><input type="checkbox" data-persist="setup/core/claude-assinatura"><span><span class="chk-t">Conta compatível com o agente escolhido</span></span></label></li>
+        <li><label class="chk"><input type="checkbox" data-persist="setup/core/claude-login"><span><span class="chk-t"><code>claude</code>, <code>codex</code> ou <code>agy</code> abre no terminal do IntelliJ e está autenticado</span></span></label></li>
         <li><label class="chk"><input type="checkbox" data-persist="setup/core/claude-hello"><span><span class="chk-t">O record <code>Pedido</code> foi gerado (e você olhou o que veio além dele)</span></span></label></li>
       </ul>
     </div>
@@ -309,7 +306,7 @@ claude
     <div class="card">
       <p style="font-size:0.9rem">Na mesma pasta <code>hello-agente</code>, peça ao agente um projeto mínimo que use tudo o que você instalou:</p>
       <div class="terminal" style="margin:10px 0">
-        <div class="terminal-header"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">claude · hello-agente</span></div>
+        <div class="terminal-header"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">agente · hello-agente</span></div>
         <div class="terminal-body"><span class="prompt">&gt;</span> Transforme isto num projeto Maven Java 21 mínimo com um teste JUnit 5 para o record Pedido. Rode os testes e me mostre o resultado. Não adicione Spring nem outras dependências.</div>
       </div>
       <p class="expect">Esperado: <b>BUILD SUCCESS</b> e <b>Tests run: 1, Failures: 0</b>. Se o Maven wrapper baixou dependências, sua rede e seu Java estão ok. Abra a pasta na IDE e veja o teste verde lá também.</p>

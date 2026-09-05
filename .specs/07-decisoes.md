@@ -378,3 +378,13 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
 - O acesso aparece na sidebar, na abertura visual do capítulo e dentro do Caderno guiado existente. O drawer do `lab-kit` foi preservado para notas ligadas às atividades.
 - Recursos disponíveis: salvamento automático, nome do aluno, desenho com três cores, desfazer/limpar, impressão, backup e restauração em JSON, exportação em PNG e reinício com confirmação.
 - Validação visual em desktop e 390 px: papel responsivo, sem overflow horizontal; recursos locais e controles acessíveis carregados sem erros no console.
+
+## 2026-09-05 — Cap 1 como oficina integral no IntelliJ
+- Por pedido do professor, a prática passa a ocupar as quatro horas e usa uma única bancada: projeto mínimo gerado no Spring Initializr, aberto no IntelliJ, com Claude Code, Codex CLI ou Google Antigravity CLI no terminal embutido.
+- Requisitos visíveis no início: Java 21, IntelliJ, Git/GitHub, Docker Desktop e um agente CLI autenticado. Maven vem pelo Wrapper e Postgres pelo Docker; o aluno não instala os dois nem digita comandos Maven durante o lab.
+- `AGENTS.md` é o contrato comum para Codex e Antigravity. `CLAUDE.md` importa `@AGENTS.md`, evitando três versões divergentes das regras.
+- O material inclui oito prompts prontos para o professor: contrato, spec do domínio, implementação do domínio, explicação de hexagonal, núcleo de aplicação, adapters, prática AdicionarItem e auditoria final. Cada prompt declara limites, ponto de pausa e evidência.
+- Hexagonal foi reescrita de dentro para fora: regra de negócio, aplicação, adapters de entrada, ports, adapters de saída e direção das dependências. Inclui analogia com limite, roteiro visual em seis passos, viagem do Pedido 4711, quiz e Java mínimo.
+- Cronograma ajustado para 240 minutos: 15 + 35 + 35 + 15 de intervalo + 55 + 45 + 30 + 10. O agente executa Maven, Docker e cenários HTTP; o humano revisa permissões, plano, testes e diff.
+- Fontes oficiais consultadas em 05/09/2026: JetBrains (terminal embutido), Spring (Initializr/Docker), Anthropic (Claude Code), OpenAI (Codex CLI), Google (Antigravity CLI) e o artigo original de Alistair Cockburn.
+- Validação final: HTML sem IDs duplicados ou recursos locais ausentes; JavaScript válido; cópia integral de prompt conferida; fluxo do IntelliJ, roteiro do hexágono e quiz 6/6 exercitados; largura de 390 px sem overflow horizontal; `git diff --check` limpo.

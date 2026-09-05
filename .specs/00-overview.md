@@ -14,7 +14,7 @@ adaptado para sênior.
   17/10, 24/10, 31/10, 07/11 de 2026.
 - **Presencial em João Pessoa ou remoto ao vivo via Zoom.** Gravações, resumos e podcast no
   classcontent.digital.
-- **Assinatura obrigatória:** Claude Pro (Claude Code) ou ChatGPT Plus (Codex). O prof conduz em Claude Code.
+- **Agente obrigatório:** um CLI autenticado entre Claude Code, Codex CLI ou Google Antigravity CLI. O professor pode conduzir com um deles; os prompts do Cap 1 são portáveis.
 - 3 blocos: **Fundamentos de Engenharia** (Sáb 1–3) → **Eventos/Brokers** (Sáb 4–5) →
   **Eventos na Nuvem / Serverless AWS** (Sáb 6–8). Mapa completo em [`04-conteudo-curso.md`](04-conteudo-curso.md).
 - **Modelo de aula: sala invertida.** O capítulo é lido antes; as 4h em sala são labs de julgamento;

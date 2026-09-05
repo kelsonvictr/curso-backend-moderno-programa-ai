@@ -16,7 +16,7 @@
 | **Formato** | **8 sábados, 13h30 às 17h30** (4h cada, **32h**), presencial ou remoto ao vivo via Zoom |
 | **Datas (Turma 01)** | 05/09 · 19/09 · 26/09 · 10/10 · 17/10 · 24/10 · 31/10 · 07/11 de 2026 |
 | **Público** | Devs com Java/Spring Boot sólido (egressos do Fullstack ou não) |
-| **Pré-requisito** | Conforto com Java, Spring Boot, REST, Git e SQL básico; **assinatura Claude Pro** (ou ChatGPT Plus) |
+| **Pré-requisito** | Conforto com Java, Spring Boot, REST, Git e SQL básico; acesso a **um agente CLI**: Claude Code, Codex CLI ou Google Antigravity CLI |
 | **Modelo de aula** | **Sala invertida:** capítulo lido antes; 4h em sala são labs de julgamento; tarefa de casa entre sábados |
 | **Competência central avaliada** | **Julgamento de engenharia** — saber o que é bom, por quê, e dirigir/revisar o agente até lá |
 

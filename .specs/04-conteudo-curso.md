@@ -18,17 +18,17 @@ está em [`05-trilha-ia-sdd.md`](05-trilha-ia-sdd.md); a **avaliação** em [`06
 | **Encontros** | 8 sábados, **13h30 às 17h30** (4h, intervalos inclusos) — **32h** |
 | **Datas** | 05/09 · 19/09 · 26/09 · 10/10 · 17/10 · 24/10 · 31/10 · 07/11 (2026) |
 | **Modalidade** | Presencial (João Pessoa) **ou remoto ao vivo via Zoom** |
-| **Exigência** | Assinatura Claude Pro (Claude Code) ou ChatGPT Plus (Codex). O prof conduz em Claude Code. |
+| **Exigência** | Um agente CLI autenticado: Claude Code, Codex CLI ou Google Antigravity CLI. O fluxo do curso usa prompts portáveis e `AGENTS.md` como contrato comum. |
 | **Plataforma** | classcontent.digital (vídeos das aulas, resumos, podcast, MonitorIA) |
 
 Consequências diretas para o material:
 1. **Sala invertida.** O capítulo HTML é leitura **antes** da aula (com o vídeo/podcast do
    classcontent). Em sala, 4h de **exercício de julgamento** (dirigir, revisar, defender).
 2. **Tarefa de casa é parte do curso**, não extra. O artefato contínuo evolui entre sábados, com o
-   Claude Pro do próprio aluno. Sem isso o capstone não cabe.
+   agente CLI escolhido pelo aluno. Sem isso o capstone não cabe.
 3. **Aluno remoto** existe. Todo lab precisa ser autocontido, com entregável claro e sem depender do
    "prof passa na mesa".
-4. **Sábado 0 (setup)** vira página obrigatória: ninguém instala Docker/Claude Code/conta AWS "na hora"
+4. **Sábado 0 (setup)** vira página obrigatória: ninguém instala Docker/agente CLI/conta AWS "na hora"
    com 4h de aula.
 
 ## Estrutura de pastas (v2)

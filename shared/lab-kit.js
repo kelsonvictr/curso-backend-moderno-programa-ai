@@ -123,7 +123,7 @@
           '<div class="sl-side"><div class="sl-score"></div><ul class="sl-checks"></ul></div>' +
         '</div>' +
         '<div class="sl-actions">' +
-          '<button type="button" class="lk-btn" data-act="copy">📋 Copiar spec (pra colar no Claude Code)</button>' +
+          '<button type="button" class="lk-btn" data-act="copy">📋 Copiar spec para o agente</button>' +
           (starter ? '<button type="button" class="lk-btn ghost" data-act="starter">✨ Começar do esqueleto</button>' : '') +
           '<button type="button" class="lk-btn ghost" data-act="clear">🗑 Limpar</button>' +
         '</div>';
