@@ -104,3 +104,18 @@ passo a passo. Cada estado deve responder: **antes, ação, depois, como provar 
 - Use poucas mudanças coordenadas e reserve a ênfase visual para a transformação estudada.
 - Toda metáfora precisa declarar seu limite e toda etapa precisa oferecer uma evidência observável.
 - Laboratórios devem funcionar silenciosamente, por teclado, com movimento reduzido e em tela estreita.
+
+## Cap 1 — sequência linear para iniciantes (2026-09-18)
+Esta orientação substitui as antigas zonas/atos e o registro denso no Cap 1, por pedido do professor.
+O material deve permitir que o professor aprenda e conduza a explicação durante a própria aula.
+
+- Uma única sequência: preparar → GET /ola → AGENTS.md/CLAUDE.md → spec → cadastro em memória → PostgreSQL.
+- Initializr começa apenas com Spring Web e Java 21; JPA e driver entram juntos após o banco saudável.
+- Um único exemplo: CAFE-500, 2 unidades de 18.90, total 37.80; UUID real gerado. Pedido 4711 é apenas a referência histórica dos teatros antigos.
+- Na etapa de construção: domínio/testes → portas/caso de uso/memória → Controller/DTO/configuração. Explique cada termo antes do uso prático.
+- Prompts junto da explicação, com plano, OK, resultado esperado e instrução de recuperação. O agente executa o Maven Wrapper dentro do projeto aberto no IntelliJ.
+- Falas sugeridas e respostas comentadas no guia do professor, inicialmente visível. Simulações manuais de spec, pedido válido/inválido e troca de armazenamento; teatro narrado como revisão opcional após a prática.
+- Persistência exige prova com mesmo UUID após reiniciar a aplicação. Não confundir execução da simulação com execução Java real.
+- Preserve caderno livre e suas chaves antigas; progresso novo em cap01:guia:etapa:1..6. Som geral cap01:muted, inicialmente mudo para novos navegadores.
+- Não restaurar menus paralelos de teoria, atos e prompts. Aprofundamentos ficam expansíveis na etapa pertinente.
+- Detalhes e evidência da reorganização: .specs/10-cap1-guia-linear.md.

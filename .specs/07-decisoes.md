@@ -395,3 +395,9 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
 - A bancada do Pedido 4711 marca a fronteira atual, a tecnologia presente e o detalhe deixado para trás. No último passo, uma linha do Postgres surge como evidência da persistência.
 - Todos os passos são derivados apenas do índice atual, por isso voltar e reiniciar remontam o estado sem depender da animação anterior. Reprodução automática pausa ao sair da tela, ocultar a página ou iniciar outro teatro.
 - A atividade do Cap 1 é silenciosa e acompanha a voz do professor. Mantidos controles manuais, texto equivalente, foco de teclado, movimento reduzido e rolagem interna em telas estreitas.
+
+## 2026-09-18 — Cap 1 em seis etapas contínuas
+- Substituída a divisão concorrente de teoria/atos/prompts por uma leitura linear para iniciantes, com falas e respostas comentadas para o professor.
+- Primeiro projeto somente Spring Web, GET /ola antes do cadastro, domínio e memória antes de infraestrutura. JPA chega após PostgreSQL saudável.
+- Prompts e verificações ficam junto do conceito. Laboratórios manuais mostram pasta .specs, fluxo válido/inválido e durabilidade. Caderno, áudio local e compatibilidade de âncoras preservados.
+- Hub atualizado para anunciar a mesma sequência. Ver [10-cap1-guia-linear.md](10-cap1-guia-linear.md) para contrato e escopo da validação.

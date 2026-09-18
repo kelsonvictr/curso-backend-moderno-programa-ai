@@ -4,7 +4,7 @@ const CADERNO_CONFIG = {
   curso: 'Backend Moderno · Programa AI',
   capitulo: 'Capítulo 1',
   titulo: 'Meu caderno de SDD',
-  subtitulo: 'decisões do Pedido 4711',
+  subtitulo: 'minha API de pedidos, passo a passo',
   emoji: '📝',
   stack: 'Java 21 · Spring · Agentes',
   voltar: 'index.html',

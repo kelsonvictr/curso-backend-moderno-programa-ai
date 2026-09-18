@@ -1,1112 +1,395 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sáb 1 — SDD na prática: Spring hexagonal, do papel ao Postgres | Backend Moderno, Agentes de IA e Cloud</title>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../shared/styles.css">
-<link rel="stylesheet" href="../../shared/components.css">
-<link rel="stylesheet" href="../../shared/animations.css">
-<link rel="stylesheet" href="../../shared/lab-kit.css?v=3">
-<link rel="stylesheet" href="./cap1-ai.css?v=2">
-<link rel="stylesheet" href="./cap1-oficina.css?v=1">
-<style>
-  .lead{font-size:1.02rem}
-  .story{font-family:'Caveat',cursive;font-size:1.35rem;line-height:1.5;color:var(--text);background:rgba(248,152,32,.06);border:1px solid rgba(248,152,32,.25);border-radius:16px;padding:20px 24px;margin:14px 0}
-  .story b{color:var(--java)}
-  .layers{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
-  @media(max-width:700px){.layers{grid-template-columns:1fr}}
-  .lay{border-radius:14px;padding:14px 16px;border:1px solid rgba(255,255,255,.07);background:var(--surface2)}
-  .lay h5{font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
-  .lay.old h5{color:var(--accent2)} .lay.hex h5{color:var(--spring)}
-  .lay .stack{display:grid;gap:5px}
-  .lay .stack span{background:var(--code-bg);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:6px 10px;font-size:.8rem;font-family:'JetBrains Mono',monospace}
-  .lay .stack span.core{border-color:var(--java);color:var(--java)}
-  .lay .stack span.warn{border-color:rgba(255,107,107,.4);color:var(--accent2)}
-  .lay p{font-size:.82rem;color:var(--text-dim);margin-top:8px}
-  .cmp-tbl{width:100%;border-collapse:collapse;font-size:.86rem;margin:10px 0}
-  .cmp-tbl th,.cmp-tbl td{text-align:left;padding:8px 10px;border-top:1px solid rgba(255,255,255,.07);vertical-align:top}
-  .cmp-tbl th{font-size:.68rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim)}
-  .cmp-tbl td:first-child{color:var(--text-dim);font-weight:700}
-  .check-rev{list-style:none;margin:8px 0;padding:0;display:grid;gap:5px}
-  .check-rev li{font-size:.88rem;color:var(--text-dim);padding:6px 10px;background:var(--surface2);border-radius:8px;border-left:3px solid var(--accent6)}
-  .check-rev li b{color:var(--text)}
-</style>
-</head>
-<body data-page="Sábado 01 — SDD na prática: Spring hexagonal" data-caderno-livre="./caderno.html">
-
-<div class="bg-grid"></div>
-<div class="bg-orbs"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
-<div class="progress-track"><div class="progress-bar"></div></div>
-
-<button class="menu-toggle" onclick="openSidebar()" aria-label="Abrir menu">☰</button>
-<button type="button" class="cap1-sound-mini" data-cap-audio aria-pressed="true" aria-label="Alternar modo mudo do capítulo">🔇 Modo mudo ativado</button>
-<div class="sidebar-overlay"></div>
-<nav class="sidebar-nav">
-  <button class="sidebar-close" onclick="closeSidebar()" aria-label="Fechar">✕</button>
-  <div class="sidebar-header">
-    <h3>☕ Sábado 01 · 05/09</h3>
-    <a class="sidebar-back" href="../../">← voltar ao hub</a>
-  </div>
-  <div class="sidebar-group">
-    <div class="sidebar-group-title">📖 Antes da aula</div>
-    <a class="sidebar-link" href="./caderno.html" target="_blank" rel="noopener">📓 Meu caderno livre ↗</a>
-    <div class="sidebar-link" onclick="goTo('s-preparo')"><span class="dot" style="background:var(--docker)"></span> Instalações e IntelliJ</div>
-    <div class="sidebar-link" onclick="goTo('s-historia')"><span class="dot" style="background:var(--java)"></span> A história do pedido 4711</div>
-    <div class="sidebar-link" onclick="goTo('s-agente-produto')"><span class="dot" style="background:var(--claude)"></span> O agente em dois universos</div>
-    <div class="sidebar-link" onclick="goTo('s-specs-fluxo')"><span class="dot" style="background:var(--spring)"></span> A .specs/ ganha vida</div>
-    <div class="sidebar-link" onclick="goTo('s-jogos-contexto')"><span class="dot" style="background:var(--accent6)"></span> Jogos do contexto</div>
-    <div class="sidebar-link" onclick="goTo('s-alvo')"><span class="dot" style="background:var(--accent4)"></span> O que vamos construir</div>
-    <div class="sidebar-link" onclick="goTo('s-mapa')"><span class="dot" style="background:var(--accent4)"></span> O mapa da tarde</div>
-  </div>
-  <div class="sidebar-group">
-    <div class="sidebar-group-title">🏫 O lab (4h)</div>
-    <div class="sidebar-link" onclick="goTo('s-roteiro-prof')"><span class="dot" style="background:var(--accent6)"></span> Prompts do professor</div>
-    <div class="sidebar-link" onclick="goTo('ato-0')"><span class="dot" style="background:var(--java)"></span> Abertura</div>
-    <div class="sidebar-link" onclick="goTo('ato-1')"><span class="dot" style="background:var(--claude)"></span> Ato 1 · O contrato do projeto</div>
-    <div class="sidebar-link" onclick="goTo('ato-2')"><span class="dot" style="background:var(--java)"></span> Ato 2 · A spec do domínio</div>
-    <div class="sidebar-link" onclick="goTo('ato-3')"><span class="dot" style="background:var(--spring)"></span> Ato 3 · Hexagonal</div>
-    <div class="sidebar-link" onclick="goTo('ato-4')"><span class="dot" style="background:var(--docker)"></span> Ato 4 · Postgres e o adapter JPA</div>
-    <div class="sidebar-link" onclick="goTo('ato-5')"><span class="dot" style="background:var(--accent7)"></span> Ato 5 · Sozinho</div>
-    <div class="sidebar-link" onclick="goTo('ato-6')"><span class="dot" style="background:var(--accent5)"></span> Fechamento</div>
-  </div>
-  <div class="sidebar-group">
-    <div class="sidebar-group-title">🏠 Até 19/09</div>
-    <div class="sidebar-link" onclick="goTo('s-casa')"><span class="dot" style="background:var(--accent5)"></span> Tarefa de casa</div>
-  </div>
-</nav>
-
-<section class="hero">
-  <div class="hero-icons" data-motion="float">📝 ☕ 🐘</div>
-  <span class="hero-badge" style="background:linear-gradient(135deg,var(--java),var(--claude))">Sábado 01 · 05/09 · 13h30–17h30 · Bloco 1</span>
-  <h1>SDD na prática:<br>um backend Spring hexagonal, do papel ao Postgres</h1>
-  <p class="subtitle">
-    Você cria apenas o esqueleto no <strong>Spring Initializr</strong>, abre no <strong>IntelliJ</strong> e conduz todo o restante pelo
-    agente no terminal da própria IDE. Nada é implementado antes de ser <strong style="color:var(--claude)">especificado</strong>;
-    nada é aceito antes de ser <strong style="color:var(--spring)">testado e revisado</strong>.
-  </p>
-  <div class="hero-stack">
-    <span class="stack-chip" style="border-color:rgba(217,119,87,.45);color:var(--claude)"><img src="../../assets/svg/claude.svg" alt="" width="16" height="16"> Claude Code · Codex · Antigravity</span>
-    <span class="stack-chip" style="border-color:rgba(255,255,255,.25);color:var(--text)">💡 IntelliJ IDEA</span>
-    <span class="stack-chip" style="border-color:rgba(109,179,63,.45);color:var(--spring)"><img src="../../assets/svg/spring.svg" alt="" width="16" height="16"> Spring Boot 3</span>
-    <span class="stack-chip" style="border-color:rgba(248,152,32,.4);color:var(--java)"><img src="../../assets/svg/java.svg" alt="" width="16" height="16"> Java 21</span>
-    <span class="stack-chip" style="border-color:rgba(51,103,145,.6);color:#7fb3d5"><img src="../../assets/svg/postgresql.svg" alt="" width="16" height="16"> Postgres</span>
-    <span class="stack-chip" style="border-color:rgba(36,150,237,.5);color:var(--docker)"><img src="../../assets/svg/docker.svg" alt="" width="16" height="16"> Docker</span>
-    <span class="stack-chip" style="border-color:rgba(167,139,250,.45);color:var(--accent6)">⬡ hexagonal</span>
-  </div>
-  <div class="cap1-sound"><button type="button" data-cap-audio aria-pressed="true">🔇 Modo mudo ativado</button><p id="cap1-audio-note">Na sala, acompanhe a voz do professor. Animações, jogos e legendas continuam funcionando.</p></div>
-  <a class="cad-livre-cta" href="./caderno.html" target="_blank" rel="noopener"><span class="cad-livre-icon">📓</span><span><strong>Meu caderno livre</strong><small>Anote decisões e rascunhe arquiteturas ↗</small></span></a>
-</section>
-
-<div class="container">
-
-  <nav class="zone-bar" aria-label="zonas do capítulo">
-    <a class="z-antes" href="#z-antes">📖 Antes da aula</a>
-    <a class="z-sala" href="#z-sala">🏫 O lab · 4h</a>
-    <a class="z-casa" href="#z-casa">🏠 Até 19/09</a>
-  </nav>
-
-  <!-- ╔════════════════════════════════════╗
-       ║  📖 ANTES DA AULA                    ║
-       ╚════════════════════════════════════╝ -->
-  <div class="zone-head zone-antes" id="z-antes">
-    <div class="zh-em">📖</div>
-    <div>
-      <div class="zh-k">Zona 1 · em casa · antes de 05/09</div>
-      <h2>Antes da aula</h2>
-      <div class="zh-s">Leia o <a href="../00-como-um-agente-pensa/" style="color:var(--accent4)">Capítulo 0</a> primeiro. Depois, prepare o ambiente, gere o projeto-base e entenda o caso. A teoria de cada tema aparece no ponto em que a prática precisa dela.</div>
-    </div>
-    <div class="zh-side"><div class="zh-time">~90 min</div><div class="text-dim" style="font-size:0.72rem">+ Cap 0 (~1h30)</div></div>
-  </div>
-
-  <section class="step-section" id="s-preparo">
-    <div class="step-header">
-      <div class="step-number sn-docker">1</div>
-      <div><div class="step-title">Prepare a bancada antes da aula</div><div class="step-sub">O aluno instala as ferramentas uma vez; durante o lab, quem executa Maven, testes e Docker é o agente</div></div>
-    </div>
-    <div class="card">
-      <div class="setup-callout"><div class="sc-icon">🧰</div><div><h3>Chegue com cinco itens prontos</h3><p>Java 21, IntelliJ, Git, Docker Desktop e <strong>um</strong> agente CLI autenticado. O roteiro detalhado por sistema operacional continua no <a href="../../setup/" style="color:var(--accent4)">Sábado 0</a>.</p></div></div>
-      <div class="install-grid">
-        <article class="install-card required"><span class="ic-icon">☕</span><h4>Java 21</h4><p>Configure como Project SDK do IntelliJ. O terminal da IDE deve enxergar esse mesmo Java.</p></article>
-        <article class="install-card required"><span class="ic-icon">💡</span><h4>IntelliJ IDEA</h4><p>IDE da aula. O plugin Terminal já vem habilitado. Abra com <code>View → Tool Windows → Terminal</code>.</p></article>
-        <article class="install-card required"><span class="ic-icon">🌿</span><h4>Git + GitHub</h4><p>O agente usa o diff como evidência. Nome, e-mail e autenticação do GitHub precisam estar prontos.</p></article>
-        <article class="install-card required"><span class="ic-icon">🐳</span><h4>Docker Desktop</h4><p>Precisa estar aberto. O Postgres será um container reproduzível, sem instalação local.</p></article>
-        <article class="install-card choice"><span class="ic-icon">🤖</span><h4>Um agente CLI</h4><p>Escolha Claude Code, Codex CLI ou Google Antigravity CLI. Não precisa instalar os três.</p></article>
-      </div>
-      <div class="no-install"><span>🚫</span><p><b>Não instale Maven nem Postgres na máquina.</b> O ZIP do Initializr traz <code>mvnw</code>/<code>mvnw.cmd</code>; o agente usa esse wrapper. O Postgres vem da imagem oficial pelo Docker.</p></div>
-
-      <h3 style="margin-top:20px">Escolha o agente que vai morar no terminal do IntelliJ</h3>
-      <div class="agent-picker">
-        <article class="agent-option"><h4>Claude Code</h4><p>Boa escolha quando a turma segue <code>CLAUDE.md</code>. Instalação nativa para macOS/Linux:</p><pre>curl -fsSL https://claude.ai/install.sh | bash</pre><span class="agent-launch">iniciar: claude</span><br><a href="https://docs.anthropic.com/en/docs/claude-code/getting-started" target="_blank" rel="noopener">documentação oficial ↗</a></article>
-        <article class="agent-option"><h4>Codex CLI</h4><p>Usa <code>AGENTS.md</code>. Pela instalação npm, tenha Node.js disponível:</p><pre>npm install -g @openai/codex</pre><span class="agent-launch">iniciar: codex</span><br><a href="https://openai.com/index/codex-now-generally-available/" target="_blank" rel="noopener">documentação oficial ↗</a></article>
-        <article class="agent-option"><h4>Google Antigravity CLI</h4><p>O nome correto é <strong>Antigravity</strong>. Também reconhece <code>AGENTS.md</code> no workspace:</p><pre>curl -fsSL https://antigravity.google/cli/install.sh | bash</pre><span class="agent-launch">iniciar: agy</span><br><a href="https://antigravity.google/docs/cli/getting-started" target="_blank" rel="noopener">documentação oficial ↗</a></article>
-      </div>
-      <div class="tip"><span class="tip-icon">🪪</span><div class="tip-content"><strong>Uma regra para os três agentes.</strong> Usaremos <code>AGENTS.md</code> como contrato principal. No Claude Code, um <code>CLAUDE.md</code> curto importa <code>@AGENTS.md</code>. Assim a mesma regra do projeto serve às três ferramentas.</div></div>
-
-      <h3 style="margin-top:22px">Crie o único pedaço manual: o projeto-base</h3>
-      <ol class="passos">
-        <li class="passo"><div class="p-n">1</div><div class="p-b">Abra <a href="https://start.spring.io" target="_blank" rel="noopener" style="color:var(--accent4)">start.spring.io ↗</a>. Selecione <b>Maven</b>, <b>Java</b>, uma versão estável do Spring Boot, <b>Jar</b> e <b>Java 21</b>.</div></li>
-        <li class="passo"><div class="p-n">2</div><div class="p-b">Preencha grupo <code>br.com.pedidos</code>, artefato e nome <code>pedidos</code>. Pacote: <code>br.com.pedidos</code>.</div></li>
-        <li class="passo"><div class="p-n">3</div><div class="p-b">Adicione somente <b>Spring Web</b>, <b>Spring Data JPA</b>, <b>PostgreSQL Driver</b> e <b>Validation</b>. Não marque Lombok.</div></li>
-        <li class="passo"><div class="p-n">4</div><div class="p-b">Clique <b>Generate</b>, descompacte o ZIP e abra a pasta <code>pedidos/</code> no IntelliJ. Confirme SDK 21 e espere a importação terminar.</div></li>
-        <li class="passo"><div class="p-n">5</div><div class="p-b">Abra <b>View → Tool Windows → Terminal</b>. O prompt deve estar na raiz, ao lado de <code>pom.xml</code> e <code>mvnw</code>. Inicie <code>claude</code>, <code>codex</code> ou <code>agy</code>.</div></li>
-      </ol>
-
-      <div class="ide-flow" data-ide-flow>
-        <div class="ide-flow-head"><strong>O fluxo inteiro numa única tela</strong><span>Clique nas etapas</span></div>
-        <div class="ide-flow-rail" role="group" aria-label="Etapas do fluxo no IntelliJ">
-          <button type="button" data-ide-step><b>🌱</b>Initializr</button><button type="button" data-ide-step><b>💡</b>IntelliJ</button><button type="button" data-ide-step><b>⌨️</b>Terminal</button><button type="button" data-ide-step><b>🤖</b>Agente</button><button type="button" data-ide-step><b>⚙️</b>Execução</button><button type="button" data-ide-step><b>🔎</b>Revisão</button>
-        </div>
-        <div class="ide-flow-screen"><div class="ide-mini-tree"><b>pedidos/</b>
-├── pom.xml
-├── mvnw
-├── mvnw.cmd
-└── src/</div><div class="ide-flow-body"><div class="ide-flow-explain"><h4 data-ide-title></h4><p data-ide-text></p><span class="teacher-line" data-ide-say></span></div><div class="ide-mini-terminal" data-ide-terminal></div></div></div>
-      </div>
-
-      <h4 style="margin:18px 0 8px">Primeiro prompt: diagnóstico sem alterar arquivos</h4>
-      <div class="prompt-card" data-phase="verify">
-        <div class="prompt-head"><div><small>Prompt 0 · professor e turma</small><strong>Prove que a bancada funciona</strong></div><button type="button" class="copy-prompt" data-copy-prompt>📋 Copiar prompt</button></div>
-<pre class="prompt-text" data-prompt-text>Estamos na raiz do projeto Spring Boot "pedidos" aberto no IntelliJ.
-
-Nesta etapa, faça somente um diagnóstico. Não crie, edite, mova ou apague arquivos.
-1. Leia o pom.xml e confirme Java 21 e estas dependências: Web, Data JPA, PostgreSQL e Validation.
-2. Confirme que o Maven Wrapper existe. Execute os testes pelo wrapper adequado ao sistema operacional.
-3. Confirme a versão de Java usada pelo build.
-4. Confirme que o Docker responde, sem criar nem iniciar containers.
-5. Mostre git status e informe se já estamos num repositório.
-
-Entregue uma tabela: verificação, evidência observada e ação necessária. Se algo falhar, pare e explique o bloqueio. Não instale nada por conta própria.</pre>
-        <div class="prompt-foot"><span><b>O agente faz:</b> inspeção e comandos de diagnóstico.</span><span><b>O humano confere:</b> nenhum arquivo tocado e todos os itens verdes.</span></div>
-      </div>
-      <ul class="chk-list">
-        <li><label class="chk"><input type="checkbox" data-persist="cap01/antes/java-intellij"><span><span class="chk-t">IntelliJ aberto com Project SDK 21 e terminal na raiz do projeto</span></span></label></li>
-        <li><label class="chk"><input type="checkbox" data-persist="cap01/antes/docker"><span><span class="chk-t">Docker Desktop aberto e diagnóstico respondendo</span></span></label></li>
-        <li><label class="chk"><input type="checkbox" data-persist="cap01/antes/agente"><span><span class="chk-t">Um agente CLI autenticado: <code>claude</code>, <code>codex</code> ou <code>agy</code></span></span></label></li>
-        <li><label class="chk"><input type="checkbox" data-persist="cap01/antes/base"><span><span class="chk-t">Projeto <code>pedidos</code> gerado no Initializr e diagnóstico concluído</span></span></label></li>
-      </ul>
-      <p class="source-strip">Referências: <a href="https://www.jetbrains.com/help/idea/terminal-emulator.html" target="_blank" rel="noopener">terminal embutido do IntelliJ</a> · <a href="https://spring.io/guides/gs/spring-boot-docker/" target="_blank" rel="noopener">Spring Initializr e Docker</a> · documentação oficial dos três agentes nos cartões acima.</p>
-    </div>
-  </section>
-
-  <div class="section-connector"><div class="line"></div></div>
-
-  <section class="step-section" id="s-historia">
-    <div class="step-header">
-      <div class="step-number sn-java">2</div>
-      <div><div class="step-title">A história do pedido 4711</div><div class="step-sub">Por que passamos uma tarde inteira construindo o que "qualquer tutorial faz em vinte minutos"</div></div>
-    </div>
-    <div class="card">
-      <div class="story">
-        Era uma terça-feira comum quando o pedido <b>4711</b> entrou. Um cliente, três itens, cartão aprovado. O serviço fez o que
-        sempre fazia: salvou no banco, chamou o estoque, mandou o e-mail, gerou a nota. Só que naquela terça o servidor de e-mail
-        ficou fora do ar por quatro minutos. O pedido 4711 falhou inteiro. O estoque já tinha baixado. O cliente viu "erro" na tela e
-        comprou de novo. Dois pedidos, duas cobranças, uma reclamação, e um sábado do time de plantão.
-      </div>
-      <p class="lead">
-        Ninguém nesse sistema errou a sintaxe. Todo teste unitário passava. O erro era de <strong>julgamento</strong>: alguém decidiu,
-        provavelmente sem perceber, que mandar um e-mail fazia parte de criar um pedido. E alguém decidiu que o total de um pedido era um
-        <code>double</code> guardado numa coluna, e que o status era uma <code>String</code>. Decisões pequenas, tomadas por default,
-        que viraram incidente.
-      </p>
-      <p style="margin-top:12px">
-        Hoje a IA escreve a sintaxe. Ela também toma esses defaults, e toma exatamente os mesmos, porque aprendeu com milhares de
-        serviços iguais ao do pedido 4711. O que sobra para você é decidir <em>antes</em> de o código existir. É isso que <strong>SDD</strong>
-        significa na prática: a spec é o lugar onde a decisão é tomada; o código é consequência. E é isso que <strong>hexagonal</strong>
-        significa na prática: um jeito de organizar o serviço em que "mandar e-mail" e "salvar no Postgres" ficam do lado de fora, atrás
-        de uma porta, e o pedido no centro não sabe que eles existem.
-      </p>
-      <p style="margin-top:12px">
-        Nesta tarde construímos, do zero, o serviço que teria salvado o pedido 4711. Não o sistema inteiro: o primeiro tijolo, feito
-        do jeito certo. Ele cresce nos sete sábados seguintes até rodar na AWS. Cada decisão que hoje parece cerimônia demais para um
-        CRUD vai se pagar num sábado específico, e o capítulo diz qual.
-      </p>
-      <div class="note" data-note="cap01/historia" data-title="Anotações — o pedido 4711" data-placeholder="Você já viu um incidente parecido? Qual decisão 'por default' estava por trás?"></div>
-    </div>
-  </section>
-
-  <div class="section-connector"><div class="line"></div></div>
-
-  <section class="step-section" id="s-agente-produto">
-    <div class="step-header">
-      <div class="step-number sn-purple">3</div>
-      <div><div class="step-title">O agente em dois universos</div><div class="step-sub">A mesma IA, a mesma velocidade — resultados muito diferentes</div></div>
-    </div>
-    <div class="card">
-      <div class="analogy"><span class="analogy-icon">🧭</span><div><strong>Um agente é como um motorista muito rápido.</strong> O prompt diz o destino desta viagem. As instruções do projeto explicam as regras do veículo e da estrada. A spec descreve a entrega desta vez. Sem esses três, velocidade não garante direção.</div></div>
-      <h3 style="margin-top:18px">Antes da “mágica”, entenda as três peças</h3>
-      <p>Esses arquivos não tornam o modelo onisciente. Eles colocam decisões úteis no contexto do agente para que o trabalho comece mais alinhado e possa ser revisado por critérios claros.</p>
-      <div class="ai-foundation">
-        <article class="ai-source prompt"><div class="as-icon">💬</div><h4>Prompt</h4><p><strong>O que fazer agora.</strong> Aponta para a tarefa, informa o limite desta etapa e pede o próximo resultado: por exemplo, apenas um plano.</p><code>Leia a spec 02. Planeje. Não implemente.</code></article>
-        <article class="ai-source rules"><div class="as-icon">🏠</div><h4>CLAUDE.md / AGENTS.md</h4><p><strong>Como este projeto trabalha.</strong> Stack, comandos, arquitetura e convenções que se repetem em várias tarefas.</p><code>Java 21 · ./mvnw test · núcleo sem JPA</code></article>
-        <article class="ai-source spec"><div class="as-icon">📋</div><h4>.specs/</h4><p><strong>O comportamento desta mudança.</strong> Contexto, regras, limites e critérios que depois serão comparados com testes e diff.</p><code>pedido vazio → recusar e não salvar</code></article>
-      </div>
-      <div class="ai-equation" aria-label="equação didática do fluxo"><span>pedido atual</span><b>+</b><span>regras do projeto</span><b>+</b><span>spec verificável</span><b>→</b><span>plano revisável</span></div>
-      <div class="warning"><span class="warning-icon">⚠️</span><div><strong>A pasta <code>.specs/</code> é uma convenção deste curso.</strong> Ela não é carregada automaticamente só por existir. O ritual registrado nas instruções manda o agente abrir a spec relevante antes de planejar.</div></div>
-      <p class="source-note">Precisão do exemplo: o Claude Code usa <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">CLAUDE.md como memória de projeto</a>; o Codex descobre <a href="https://learn.chatgpt.com/docs/agent-configuration/agents-md" target="_blank" rel="noopener">AGENTS.md por escopo e hierarquia</a>; o <a href="https://antigravity.google/docs/cli/best-practices/" target="_blank" rel="noopener">Antigravity CLI reconhece AGENTS.md no workspace</a>. A animação usa o mesmo personagem para representar o fluxo comum.</p>
-    </div>
-
-    <div class="agent-theater" id="cap1-agent-theater" data-ai-theater data-speaker="LIA" data-stage="prompt">
-      <div class="at-head">
-        <div><div class="p-label">TEATRO INTERATIVO · PEDIDO 4711</div><strong>Veja onde a produtividade nasce</strong></div>
-        <div class="at-scenes" role="group" aria-label="Escolher história">
-          <button type="button" data-ai-scene="sem_contexto" aria-pressed="true">1 · Sem contexto</button>
-          <button type="button" data-ai-scene="com_contexto" aria-pressed="false">2 · Projeto dirigido</button>
-          <button type="button" data-ai-scene="mudanca" aria-pressed="false">3 · Próxima mudança</button>
-        </div>
-      </div>
-      <div class="at-stage">
-        <aside class="at-cast" aria-label="Personagens">
-          <div class="at-person" data-person="LIA"><div class="at-avatar">👩🏽‍💻</div><div><b>Lia</b><span>faz o pedido</span></div></div>
-          <div class="at-person" data-person="BETO"><div class="at-avatar">👨🏾‍💻</div><div><b>Beto</b><span>revisa a entrega</span></div></div>
-          <div class="at-person" data-person="LLM"><div class="at-avatar">🤖</div><div><b>Tico</b><span>agente programador</span></div></div>
-        </aside>
-        <div class="at-workbench">
-          <div class="at-caption" aria-live="polite"><b data-at-speaker>Lia</b><h4 data-at-title>Uma ordem curta</h4><p data-at-line></p><small data-at-detail></small></div>
-          <div class="at-machine">
-            <div class="at-context">
-              <div class="at-panel-title">CONTEXTO DISPONÍVEL AGORA</div>
-              <div class="at-source-node" data-at-source="prompt">💬 prompt atual</div>
-              <div class="at-source-node" data-at-source="rules">🏠 CLAUDE.md / AGENTS.md</div>
-              <div class="at-source-node" data-at-source="spec">📋 .specs/02-criar-pedido.md</div>
-              <div class="at-source-node" data-at-source="plan">🧭 plano aprovado</div>
-              <div class="at-source-node" data-at-source="code">📂 código existente</div>
-              <div class="at-source-node" data-at-source="test">🧪 resultado dos testes</div>
-              <div class="at-source-node" data-at-source="review">🔎 diff para revisão</div>
-            </div>
-            <div class="at-output">
-              <div class="at-panel-title">TERMINAL DO AGENTE · SIMULAÇÃO</div>
-              <pre class="at-log" data-at-log></pre>
-              <div class="at-file-tree" aria-label="arquivos criados"><span>📄 CriarPedido.java</span><span>📄 CriarPedidoService.java</span><span>📄 Pedidos.java</span><span>🧪 criaComDoisItens()</span><span>🧪 recusaPedidoVazio()</span><span>🔎 diff revisável</span></div>
-            </div>
-          </div>
-          <div class="at-controls">
-            <button type="button" class="primary" data-at-play>▶ Assistir sem som</button>
-            <button type="button" data-at-prev>← Voltar</button>
-            <button type="button" data-at-next>Avançar →</button>
-            <button type="button" data-at-reset>↺ Recomeçar</button>
-            <span class="at-status" data-at-status>estado: prompt</span><span data-at-progress>1 / 5</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="concept"><span class="concept-icon">✨</span><div><strong>O efeito “uau” não é o agente escrever muito.</strong> É você mudar uma decisão na spec, pedir um plano limitado e ver código, testes e diff surgirem coerentes sem reexplicar toda a arquitetura em cada conversa.</div></div>
-  </section>
-
-  <div class="section-connector"><div class="line"></div></div>
-
-  <section class="step-section" id="s-specs-fluxo">
-    <div class="step-header">
-      <div class="step-number sn-green">4</div>
-      <div><div class="step-title">A pasta <code>.specs/</code> ganha vida</div><div class="step-sub">Da pasta vazia até uma entrega que pode ser conferida</div></div>
-    </div>
-    <div class="card">
-      <p>Agora acompanhe a construção como se estivesse numa IDE. Repare que cada arquivo nasce para responder uma pergunta: <em>o que é este projeto?</em>, <em>qual mudança queremos?</em>, <em>como saberemos que terminou?</em></p>
-      <div class="spec-builder" data-spec-builder>
-        <div class="spec-ide">
-          <aside class="spec-tree"><b>EXPLORADOR</b><span>📂 pedidos/</span><span>　📂 src/</span><span>　📄 pom.xml</span><span data-spec-node hidden>　📂 .specs/</span><span data-spec-node hidden>　　📄 README.md</span><span data-spec-node hidden>　　📄 02-criar-pedido.md</span><span data-spec-node hidden>　📂 aplicacao/</span><span data-spec-node hidden>　　📄 CriarPedidoService.java</span><span data-spec-node hidden>　🧪 testes verdes</span></aside>
-          <div class="spec-editor"><div class="spec-tab" data-spec-tab>Projeto aberto</div><div class="spec-doc" data-spec-doc></div><div class="spec-terminal" data-spec-terminal></div></div>
-        </div>
-        <div class="spec-controls"><button type="button" data-spec-play>▶ Animar o fluxo</button><button type="button" data-spec-prev>← Voltar</button><button type="button" data-spec-next>Avançar →</button><button type="button" data-spec-reset>↺ Recomeçar</button><span data-spec-count>1 / 8 etapas</span></div>
-      </div>
-      <div class="tip"><span class="tip-icon">💡</span><div><strong>Documento antes do código não significa documentação pesada.</strong> Uma boa spec pode ser curta. Ela precisa deixar as decisões importantes e os exemplos de teste mais claros que um pedido solto no chat.</div></div>
-    </div>
-  </section>
-
-  <div class="section-connector"><div class="line"></div></div>
-
-  <section class="step-section" id="s-jogos-contexto">
-    <div class="step-header">
-      <div class="step-number sn-purple">5</div>
-      <div><div class="step-title">Agora você dirige o agente</div><div class="step-sub">Dois jogos para separar memória, tarefa e execução</div></div>
-    </div>
-    <div class="did-games">
-      <div class="did-game context-game" data-context-game>
-        <span class="score-pill" data-cg-score>0 acertos · 1/5</span>
-        <h4>🏠 Onde esta regra mora?</h4><p>Escolha o lugar que fará a informação aparecer no momento certo sem repetir tudo em cada conversa.</p>
-        <div class="game-card"><b data-cg-question></b><small data-cg-hint></small></div>
-        <div class="game-options"><button type="button" data-cg-choice="prompt">💬 Prompt atual</button><button type="button" data-cg-choice="rules">🏠 CLAUDE.md / AGENTS.md</button><button type="button" data-cg-choice="spec">📋 Spec da tarefa</button></div>
-        <div class="game-feedback" data-cg-feedback aria-live="polite"></div><button type="button" data-cg-next hidden>Próxima regra →</button>
-      </div>
-      <div class="did-game flow-game" data-flow-game>
-        <span class="score-pill" data-fg-score>0 / 8 etapas</span>
-        <h4>🧭 Monte o fluxo produtivo</h4><p>Clique na ordem correta. O objetivo não é decorar comandos: é saber o que precisa existir antes de autorizar uma edição.</p>
-        <div class="flow-slots" data-fg-slots aria-live="polite"></div>
-        <div class="flow-pool"><button type="button" data-fg-step="edit">Editar</button><button type="button" data-fg-step="instructions">Ler instruções</button><button type="button" data-fg-step="test">Testar</button><button type="button" data-fg-step="plan">Propor plano</button><button type="button" data-fg-step="spec">Ler a spec</button><button type="button" data-fg-step="diff">Revisar o diff</button><button type="button" data-fg-step="inspect">Inspecionar o código</button><button type="button" data-fg-step="approve">Receber o OK</button></div>
-        <div class="game-feedback" data-fg-feedback></div><button type="button" data-fg-reset>↺ Recomeçar</button>
-      </div>
-    </div>
-    <div class="concept"><span class="concept-icon">🧠</span><div><strong>Regra que precisa sobreviver:</strong> o agente ganha produtividade quando recebe contexto útil, trabalha dentro de um plano aprovado e devolve evidência para revisão. Nenhum arquivo elimina a responsabilidade de conferir o resultado.</div></div>
-  </section>
-
-  <div class="section-connector"><div class="line"></div></div>
-
-  <section class="step-section" id="s-alvo">
-    <div class="step-header">
-      <div class="step-number sn-blue">6</div>
-      <div><div class="step-title">O que vamos construir</div><div class="step-sub">O serviço de Pedidos no fim do Sábado 1, animado</div></div>
-    </div>
-    <div class="card">
-      <p>Um serviço com um único caso de uso completo, <strong>criar pedido</strong>, e um segundo que você faz sozinho, <strong>adicionar item</strong>.
-      Por baixo, a estrutura que vai aguentar o curso inteiro: um domínio que não conhece framework, casos de uso atrás de portas,
-      adapters de entrada (REST) e de saída (JPA para um Postgres num container). A bolinha é uma requisição andando.</p>
-      <div data-arch="cap01/alvo" data-readonly data-title="Serviço de Pedidos — como termina o Sábado 1" data-height="360">
-        <script type="application/json">{"nodes":[
-          {"id":"g1","t":"group","x":250,"y":15,"w":410,"h":330,"l":"o hexágono: aplicacao/ + dominio/"},
-          {"id":"c","t":"cliente","x":20,"y":150,"l":"curl / front"},
-          {"id":"rest","t":"controller","x":90,"y":40,"l":"PedidoController"},
-          {"id":"uc","t":"service","x":300,"y":150,"l":"CriarPedidoService"},
-          {"id":"pin","t":"box","x":300,"y":50,"l":"port CriarPedido"},
-          {"id":"dom","t":"dominio","x":480,"y":150,"l":"Pedido (record)"},
-          {"id":"pout","t":"box","x":480,"y":260,"l":"port Pedidos"},
-          {"id":"jpa","t":"repository","x":690,"y":260,"l":"PedidosJpaAdapter"},
-          {"id":"pg","t":"postgres","x":690,"y":60,"l":"Postgres (Docker)"},
-          {"id":"t","t":"teste","x":300,"y":260,"l":"CriarPedidoTest"}
-        ],"edges":[
-          {"id":"1","a":"c","b":"rest","l":"POST /pedidos"},
-          {"id":"2","a":"rest","b":"pin","l":"DTO → comando"},
-          {"id":"3","a":"pin","b":"uc","l":"implementa"},
-          {"id":"4","a":"uc","b":"dom","l":"cria"},
-          {"id":"5","a":"uc","b":"pout","l":"salvar"},
-          {"id":"6","a":"pout","b":"jpa","l":"implementa"},
-          {"id":"7","a":"jpa","b":"pg","l":"SQL"},
-          {"id":"8","a":"t","b":"uc","l":"sem Spring","s":"dash"}
-        ]}</script>
-      </div>
-      <p class="text-dim center" style="font-size:.8rem;margin-top:8px">☝️ repare na seta tracejada: o teste do caso de uso não precisa de Spring nem de banco. Isso é o hexagonal se pagando pela primeira vez, ainda hoje.</p>
-    </div>
-  </section>
-
-  <div class="section-connector"><div class="line"></div></div>
-
-  <section class="step-section" id="s-mapa">
-    <div class="step-header">
-      <div class="step-number sn-blue">7</div>
-      <div><div class="step-title">O mapa da tarde</div><div class="step-sub">Como ler os marcadores, e o que trazer</div></div>
-    </div>
-    <div class="card">
-      <p>O lab ocupa as quatro horas: abertura, cinco atos de construção e fechamento. Cada passo diz quem está dirigindo:</p>
-      <ul style="list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px">
-        <li><span class="mode junto">👥 junto com o prof</span> <span style="color:var(--text-dim);font-size:.9rem">o professor cola um prompt no agente aberto dentro do IntelliJ. O agente executa; a turma lê permissões, plano, testes e diff.</span></li>
-        <li><span class="mode sozinho">🧍 agora é você</span> <span style="color:var(--text-dim);font-size:.9rem">mesmo critério, tarefa nova. O professor circula na sala e atende o Zoom. Tem um entregável.</span></li>
-        <li><span class="mode teoria">📖 pausa teórica</span> <span style="color:var(--text-dim);font-size:.9rem">a teoria do tema, com o porquê e um caso real, no ponto em que o próximo passo precisa dela.</span></li>
-        <li><span class="mode desenhe">📐 desenhe</span> <span style="color:var(--text-dim);font-size:.9rem">o pedido de desenho na prancheta. Fica salvo no seu navegador e aparece na <a href="../../prancheta/" style="color:var(--accent6)">Prancheta</a> do curso.</span></li>
-      </ul>
-      <h4 style="margin:18px 0 6px">Traga no dia 05/09</h4>
-      <p style="margin-bottom:6px"><span data-progress="cap01/antes/"></span></p>
-      <ul class="chk-list">
-        <li><label class="chk"><input type="checkbox" data-persist="cap01/antes/cap0"><span><span class="chk-t">Capítulo 0 lido, com a prancheta do loop desenhada</span></span></label></li>
-        <li><label class="chk"><input type="checkbox" data-persist="cap01/antes/setup"><span><span class="chk-t">Setup do <a href="../../setup/" style="color:var(--accent4)">Sábado 0</a> completo: Java 21, IntelliJ, Git, Docker aberto e um agente CLI autenticado</span></span></label></li>
-        <li><label class="chk"><input type="checkbox" data-persist="cap01/antes/claudemd"><span><span class="chk-t">Rascunho das instruções do projeto: <code>AGENTS.md</code> e a ponte <code>CLAUDE.md</code></span></span></label></li>
-        <li><label class="chk"><input type="checkbox" data-persist="cap01/antes/initializr"><span><span class="chk-t">Projeto Spring Boot gerado, aberto no IntelliJ e diagnosticado pelo agente</span><span class="chk-d">Initializr: Maven, Java 21, artefato <code>pedidos</code>, grupo <code>br.com.pedidos</code>, Web, Data JPA, PostgreSQL e Validation. O Prompt 0 manda o agente usar o Maven Wrapper; você não roda Maven manualmente.</span></span></label></li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- ╔════════════════════════════════════╗
-       ║  🏫 O LAB                            ║
-       ╚════════════════════════════════════╝ -->
-  <div class="zone-head zone-sala" id="z-sala">
-    <div class="zh-em">🏫</div>
-    <div>
-      <div class="zh-k">Zona 2 · sábado 05/09 · presencial ou Zoom</div>
-      <h2>O lab: do papel ao Postgres</h2>
-      <div class="zh-s">Uma única janela: IntelliJ + terminal + agente. O professor conduz com os prompts abaixo; a turma aprova planos e permissões, observa a execução e revisa evidências.</div>
-    </div>
-    <div class="zh-side"><div class="zh-time">13h30 → 17h30</div><div class="text-dim" style="font-size:0.72rem"><span data-progress="cap01/lab/"></span></div></div>
-  </div>
-
-  <section class="step-section" id="s-roteiro-prof">
-    <div class="step-header">
-      <div class="step-number sn-purple">⌨</div>
-      <div><div class="step-title">Mesa do professor: prompts prontos para a aula</div><div class="step-sub">Copie, cole no agente e faça as pausas de revisão indicadas; funcionam em Claude Code, Codex CLI e Antigravity CLI</div></div>
-    </div>
-    <div class="card">
-      <div class="terminal-rule"><span>🧑🏽‍🏫</span><p><b>O professor não demonstra comandos Maven.</b> Ele demonstra direção: formular o prompt, revisar o plano, compreender a permissão solicitada, observar o agente executar e conferir a evidência. Se o build falhar, o agente investiga e explica.</p></div>
-      <div class="teacher-cue"><strong>Ritmo recomendado:</strong> revele um prompt por vez. Antes de colar, pergunte “o que esperamos que mude?”. Depois da execução, pergunte “qual evidência prova que cumpriu?”. O objetivo é o aluno aprender o ciclo, não decorar estas frases.</div>
-
-      <div class="prompt-deck">
-        <details open><summary><strong>Prompt 1 — criar o contrato portátil do projeto</strong></summary>
-          <div class="prompt-card" data-phase="plan"><div class="prompt-head"><div><small>Ato 1 · contexto persistente</small><strong>AGENTS.md + CLAUDE.md + .specs/README.md, sem Java</strong></div><button type="button" class="copy-prompt" data-copy-prompt>📋 Copiar prompt</button></div>
-<pre class="prompt-text" data-prompt-text>Vamos preparar as regras do projeto antes do primeiro código.
-
-Inspecione o projeto e proponha um plano curto. Depois aguarde meu OK antes de editar.
-
-Após aprovação, crie:
-1. AGENTS.md como fonte principal, com: objetivo do serviço; Java 21 e Spring Boot; comandos pelo Maven Wrapper; arquitetura hexagonal; domínio e aplicação sem Spring/JPA; dinheiro com BigDecimal; sem Lombok; nenhuma dependência nova sem pedir; ler a spec indicada, planejar, aguardar OK, testar e mostrar diff.
-2. CLAUDE.md contendo uma breve apresentação e a importação @AGENTS.md, para o Claude Code receber as mesmas regras.
-3. .specs/README.md explicando que cada mudança terá contexto, tarefa, regras e definição de pronto, e que a pasta só entra no contexto quando o agente é instruído a lê-la.
-
-Não altere pom.xml nem arquivos Java. Não crie infraestrutura ainda. Não faça commit. Ao terminar, mostre git diff e relacione cada arquivo ao pedido.</pre>
-            <div class="prompt-foot"><span><b>Pausa antes do OK:</b> o plano tem somente três arquivos?</span><span><b>Evidência:</b> diff sem Java ou dependência.</span></div></div>
-        </details>
-
-        <details><summary><strong>Prompt 2 — escrever a spec do domínio, ainda sem implementar</strong></summary>
-          <div class="prompt-card" data-phase="plan"><div class="prompt-head"><div><small>Ato 2 · especificação</small><strong>Transformar decisões em critérios verificáveis</strong></div><button type="button" class="copy-prompt" data-copy-prompt>📋 Copiar prompt</button></div>
-<pre class="prompt-text" data-prompt-text>Leia AGENTS.md e .specs/README.md. Não implemente código.
-
-Crie somente .specs/01-dominio-pedido.md com contexto, tarefa, regras e definição de pronto.
-
-O domínio inicial terá Pedido, ItemPedido e StatusPedido. Use linguagem de comportamento antes de nomes de implementação. Inclua: quantidade e preço positivos; total derivado; dinheiro com BigDecimal; pedido novo começa ABERTO; adicionar item devolve novo pedido; pedido pago ou cancelado não aceita item; listas não podem ser modificadas por fora; nenhuma dependência de Spring/JPA.
-
-Na definição de pronto, transforme cada regra em caso de teste, incluindo erros. Não altere Java, pom.xml ou outros arquivos. Mostre a spec e destaque qualquer ambiguidade que eu precise decidir.</pre>
-            <div class="prompt-foot"><span><b>Professor pergunta:</b> cada regra produz um teste?</span><span><b>Evidência:</b> só a spec foi criada.</span></div></div>
-        </details>
-
-        <details><summary><strong>Prompt 3 — planejar, executar e revisar o domínio</strong></summary>
-          <div class="prompt-card" data-phase="verify"><div class="prompt-head"><div><small>Ato 2 · primeira entrega</small><strong>O agente faz o trabalho mecânico; a turma segura o escopo</strong></div><button type="button" class="copy-prompt" data-copy-prompt>📋 Copiar prompt</button></div>
-<pre class="prompt-text" data-prompt-text>Leia AGENTS.md e .specs/01-dominio-pedido.md. Inspecione a estrutura atual.
-
-Primeiro, proponha um plano com a lista exata de arquivos de produção e teste. Para cada arquivo, diga qual regra da spec ele atende. Não implemente até eu responder OK.
-
-Após meu OK: implemente somente o domínio e seus testes; execute os testes pelo Maven Wrapper; corrija falhas sem ampliar o escopo; mostre o resultado dos testes, git diff --stat e uma revisão regra por regra da spec.
-
-Não use Spring, JPA, Lombok, setters ou double no domínio. Não faça commit.</pre>
-            <div class="prompt-foot"><span><b>Pausa antes do OK:</b> corte Service, Controller e Repository.</span><span><b>Evidência:</b> teste rápido sem contexto Spring.</span></div></div>
-        </details>
-
-        <details><summary><strong>Prompt 4 — fazer o agente ensinar hexagonal sobre o código real</strong></summary>
-          <div class="prompt-card" data-phase="review"><div class="prompt-head"><div><small>Ato 3 · aula dialogada</small><strong>Explicação antes da próxima implementação</strong></div><button type="button" class="copy-prompt" data-copy-prompt>📋 Copiar prompt</button></div>
-<pre class="prompt-text" data-prompt-text>Atue como tutor de arquitetura para uma turma iniciante em hexagonal. Não altere arquivos.
-
-Leia AGENTS.md, a spec 01 e o domínio implementado. Explique usando exatamente este projeto:
-1. o que é o núcleo e por que Pedido fica nele;
-2. a diferença entre port de entrada, caso de uso, port de saída e adapter;
-3. quem chama quem ao criar um pedido;
-4. para que lado apontam as dependências de código;
-5. como testar CriarPedido sem Spring nem Postgres;
-6. um exemplo de interface desnecessária que seria exagero.
-
-Use frases curtas, mostre uma árvore de pacotes proposta e termine com cinco perguntas para a turma. Não proponha implementação ainda.</pre>
-            <div class="prompt-foot"><span><b>Professor usa:</b> compare a resposta com o laboratório visual abaixo.</span><span><b>Evidência:</b> nenhuma mudança no git.</span></div></div>
-        </details>
-
-        <details><summary><strong>Prompt 5 — criar aplicação e ports sem deixar Spring entrar</strong></summary>
-          <div class="prompt-card" data-phase="verify"><div class="prompt-head"><div><small>Ato 3 · núcleo completo</small><strong>CriarPedido atravessa duas portas</strong></div><button type="button" class="copy-prompt" data-copy-prompt>📋 Copiar prompt</button></div>
-<pre class="prompt-text" data-prompt-text>Leia AGENTS.md e .specs/01-dominio-pedido.md. Antes de editar, crie .specs/02-caso-de-uso-criar-pedido.md com o contrato abaixo e mostre seu plano. Aguarde meu OK.
-
-O caso de uso recebe cliente e itens, recusa lista vazia, cria o domínio, salva por uma interface chamada Pedidos e devolve o pedido salvo. Crie um port de entrada CriarPedido, sua implementação CriarPedidoService e o port de saída Pedidos. A aplicação não pode importar Spring, JPA, HTTP ou adapters.
-
-Após meu OK, implemente e teste com uma implementação em memória de Pedidos dentro do teste. Execute os testes pelo Maven Wrapper. Mostre os imports de aplicacao/, o resultado dos testes e o diff. Não crie Controller, JPA, DTOs, configuração ou commit.</pre>
-            <div class="prompt-foot"><span><b>Pausa antes do OK:</b> três tipos de produção + testes.</span><span><b>Evidência:</b> zero imports de framework no núcleo.</span></div></div>
-        </details>
-
-        <details><summary><strong>Prompt 6 — adicionar Docker, REST e JPA pelas bordas</strong></summary>
-          <div class="prompt-card" data-phase="verify"><div class="prompt-head"><div><small>Ato 4 · adapters</small><strong>O agente sobe e testa tudo</strong></div><button type="button" class="copy-prompt" data-copy-prompt>📋 Copiar prompt</button></div>
-<pre class="prompt-text" data-prompt-text>Leia AGENTS.md e as specs 01 e 02. Não edite ainda.
-
-Prepare .specs/03-adapters-rest-e-jpa.md e um plano para conectar o núcleo ao mundo externo:
-- infra/docker-compose.yml com Postgres 16;
-- adapter de entrada REST para POST /pedidos;
-- adapter de saída JPA que implementa Pedidos;
-- entidades JPA separadas dos records do domínio e mapper manual;
-- configuração Spring que liga ports e adapters;
-- application.yml para o banco local.
-
-Limites: não anotar domínio ou aplicação; não adicionar Lombok/MapStruct; não criar endpoints extras; não fazer commit. Aguarde meu OK.
-
-Após meu OK, implemente. Faça o agente: subir apenas o Postgres no Docker; executar todos os testes; iniciar a aplicação; criar um pedido por HTTP; conferir a persistência; testar quantidade zero; encerrar a aplicação; mostrar logs relevantes e git diff. Se algo falhar, diagnostique antes de alterar o desenho.</pre>
-            <div class="prompt-foot"><span><b>Humano aprova:</b> Docker e comandos locais com alcance claro.</span><span><b>Evidência:</b> 201, linha no banco, erro de domínio e testes.</span></div></div>
-        </details>
-
-        <details><summary><strong>Prompt 7 — prática individual: AdicionarItem</strong></summary>
-          <div class="prompt-card" data-phase="verify"><div class="prompt-head"><div><small>Ato 5 · transferência</small><strong>O aluno repete o ciclo sem copiar a solução</strong></div><button type="button" class="copy-prompt" data-copy-prompt>📋 Copiar prompt</button></div>
-<pre class="prompt-text" data-prompt-text>Agora faremos AdicionarItem de ponta a ponta. Leia AGENTS.md e as specs existentes.
-
-Primeiro, escreva somente .specs/04-caso-de-uso-adicionar-item.md. Inclua: buscar pelo port Pedidos; pedido inexistente gera PedidoNaoEncontradoException; pedido fechado gera conflito; adicionar item atualiza o total; salvar pelo port; endpoint POST /pedidos/{id}/itens. Liste casos de teste e limites de arquivos. Pare para minha revisão.
-
-Depois do meu OK na spec, proponha o plano e pare novamente. Só implemente após um segundo OK. Ao terminar, execute testes de unidade e o cenário HTTP pelo Maven Wrapper e ferramentas locais, mostre o diff e aponte qualquer import de JPA/Spring dentro de aplicacao/ ou dominio/. Não faça commit.</pre>
-            <div class="prompt-foot"><span><b>Dois OKs:</b> um para a spec, outro para o plano.</span><span><b>Evidência:</b> novo caso sem quebrar CriarPedido.</span></div></div>
-        </details>
-
-        <details><summary><strong>Prompt 8 — auditoria final antes dos commits</strong></summary>
-          <div class="prompt-card" data-phase="review"><div class="prompt-head"><div><small>Fechamento · revisão</small><strong>Transformar “funciona” em evidência revisável</strong></div><button type="button" class="copy-prompt" data-copy-prompt>📋 Copiar prompt</button></div>
-<pre class="prompt-text" data-prompt-text>Faça uma auditoria final sem alterar arquivos.
-
-1. Leia AGENTS.md e todas as specs.
-2. Execute a suíte completa pelo Maven Wrapper.
-3. Liste arquivos modificados e novos por ato.
-4. Procure imports de Spring/JPA em dominio/ e aplicacao/.
-5. Confira se as entidades JPA estão somente no adapter de saída.
-6. Compare cada definição de pronto com uma evidência observável.
-7. Mostre git diff --stat e riscos ou dívidas conscientes.
-
-Não corrija nem faça commit. Entregue primeiro o relatório para revisão humana. Se aprovamos, eu enviarei comandos separados para os commits.</pre>
-            <div class="prompt-foot"><span><b>Professor projeta:</b> relatório lado a lado com as specs.</span><span><b>Decisão final:</b> aprovar, corrigir ou rejeitar.</span></div></div>
-        </details>
-      </div>
-    </div>
-  </section>
-
-  <div class="section-connector"><div class="line"></div></div>
-
-  <!-- ═══ ABERTURA ═══ -->
-  <section class="step-section ato" id="ato-0">
-    <div class="ato-head">
-      <div class="ah-n">0<small>ABERTURA</small></div>
-      <div><h3>Por que julgamento, e por onde um pedido anda</h3><div class="ah-s">A história do 4711 contada ao vivo, as dúvidas que vocês trouxeram, e o primeiro desenho.</div><div class="ah-modes"><span class="mode teoria">📖 teoria</span><span class="mode desenhe">📐 desenhe</span></div></div>
-      <div class="ah-t">13:30<small>15 min</small><label style="display:block;margin-top:6px"><input type="checkbox" data-persist="cap01/lab/0"> feito</label></div>
-    </div>
-    <div class="card">
-      <p>O professor abre com as dúvidas reais que vocês trouxeram do Cap 0 ("a IA me entregou X errado") e conta o 4711. A pergunta
-      que fica no ar até o fim da tarde: <strong>em que ponto do sistema cada uma daquelas decisões deveria ter sido tomada?</strong></p>
-      <div class="desenhe"><span class="d-em">📐</span><span><b>Prancheta 1:</b> desenhe, do seu jeito, por onde um pedido anda hoje num sistema típico: do clique do cliente até o e-mail. Caixas e setas. Não consulte o desenho-alvo; o ponto é comparar no fechamento.</span></div>
-      <div data-arch="cap01/p1-como-imagino" data-palette="app,free" data-title="Prancheta 1 — por onde um pedido anda (como eu imagino)" data-height="380"></div>
-    </div>
-  </section>
-
-  <!-- ═══ ATO 1 ═══ -->
-  <section class="step-section ato" id="ato-1">
-    <div class="ato-head">
-      <div class="ah-n">1<small>ATO</small></div>
-      <div><h3>O contrato do projeto: AGENTS.md, CLAUDE.md e .specs/</h3><div class="ah-s">Antes de qualquer linha de Java, o agente precisa saber as regras da casa. Vocês escrevem juntos.</div><div class="ah-modes"><span class="mode teoria">📖 teoria</span><span class="mode junto">👥 junto</span></div></div>
-      <div class="ah-t">13:45<small>35 min</small><label style="display:block;margin-top:6px"><input type="checkbox" data-persist="cap01/lab/1"> feito</label></div>
-    </div>
-
-    <div class="teoria-box">
-      <div class="tb-k">📖 pausa teórica · 10 min</div>
-      <h4>AGENTS.md como contrato comum, e por que ele vem antes do código</h4>
-      <p>No Cap 0 você viu que regra dita na conversa cai da mesa. Aqui a consequência prática: <strong>o primeiro commit do projeto não é
-      código, é o contrato</strong>. Para a aula funcionar com ferramentas diferentes, o conteúdo principal fica em <code>AGENTS.md</code>.
-      Codex e Antigravity o reconhecem no workspace; <code>CLAUDE.md</code> importa <code>@AGENTS.md</code> para o Claude Code. Quatro seções
-      respondem às perguntas que qualquer agente precisa resolver:</p>
-      <ol>
-        <li><strong>Stack e comandos</strong> ("com o que eu trabalho e como rodo?"): Java 21, Spring Boot 3, Maven wrapper, Postgres via compose. Os comandos exatos: <code>./mvnw test</code>, <code>docker compose -f infra/docker-compose.yml up -d</code>.</li>
-        <li><strong>Arquitetura</strong> ("onde cada coisa mora?"): os pacotes do hexagonal e a regra da dependência. É a seção que mais evita retrabalho, porque o default do agente é o tutorial de três camadas com <code>@Entity</code> no domínio.</li>
-        <li><strong>Convenções</strong> ("como se escreve aqui?"): imutabilidade, BigDecimal, exceções nomeadas, sem Lombok, sem dependência nova sem pedir.</li>
-        <li><strong>Como trabalhar</strong> ("qual é o ritual?"): ler a spec em <code>.specs/</code>, propor plano, esperar OK, rodar testes antes de dizer pronto, não criar arquivo fora do pedido.</li>
-      </ol>
-      <p>A pasta <code>.specs/</code> começa com um <code>README.md</code> de cinco linhas dizendo o que o serviço é e uma spec por tarefa. No fim do
-      curso ela tem a história inteira das decisões, datada. É a memória que sobrevive ao contexto, ao colega novo e a você mesmo daqui a
-      três meses.</p>
-      <p><strong>Permissões.</strong> O agente pode pedir autorização antes de rodar comandos. O aluno lê o comando, o motivo e o alcance.
-      Testes pelo wrapper, Docker Compose do projeto e <code>git status/diff</code> são esperados neste lab; instalar dependência, apagar arquivo,
-      acessar fora do projeto ou publicar algo merece interrupção e explicação. O objetivo não é clicar “sim” depressa: é entender o que será executado.</p>
-    </div>
-
-    <ol class="passos">
-      <li class="passo"><div class="p-n">1</div><div class="p-b"><span class="mode junto">👥 junto</span> No terminal do IntelliJ, inicie <code>claude</code>, <code>codex</code> ou <code>agy</code>. O projeto já foi diagnosticado pelo Prompt 0. Peça ao agente para inicializar Git se necessário e mostrar o estado, sem commit automático.</div></li>
-      <li class="passo"><div class="p-n">2</div><div class="p-b"><span class="mode junto">👥 junto</span> Cole o <strong>Prompt 1</strong>. Antes do OK, a turma confere se o plano contém somente <code>AGENTS.md</code>, <code>CLAUDE.md</code> e <code>.specs/README.md</code>.</div></li>
-      <li class="passo"><div class="p-n">3</div><div class="p-b"><span class="mode junto">👥 junto</span> Aprove. O agente cria o contrato e mostra o diff. Compare as regras com os rascunhos da turma: cada frase permite dizer “cumpre” ou “não cumpre” olhando código e testes?</div></li>
-      <li class="passo"><div class="p-n">4</div><div class="p-b"><span class="mode junto">👥 junto</span> Teste o contrato: peça <em>“adicione Lombok ao pom para reduzir boilerplate”</em>. Ele deve apontar o conflito e pedir uma decisão, sem editar. Se obedeceu diretamente, fortaleça a regra.</div></li>
-      <li class="passo"><div class="p-n">5</div><div class="p-b"><span class="mode junto">👥 junto</span> Dogfooding: o professor abre a <code>.specs/</code>, o <code>AGENTS.md</code> e o <code>CLAUDE.md</code> deste site. Repare que são o mesmo formato, num projeto de tamanho real.</div></li>
-    </ol>
-
-    <div class="code-block" style="margin-top:14px">
-      <div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">AGENTS.md — contrato comum aos agentes</span><span class="lang-badge md">md</span></div>
-<pre><span class="cm"># Serviço de Pedidos — regras da casa</span>
-
-<span class="cm">## Stack e comandos</span>
-- Java 21, Spring Boot 3, Maven. Sempre `./mvnw`, nunca `mvn`.
-- Postgres 16 em Docker: `docker compose -f infra/docker-compose.yml up -d`. Porta 5432, db/user/senha `pedidos`.
-- Testes: JUnit 5. `./mvnw -q test` antes de dizer que terminou.
-
-<span class="cm">## Arquitetura: hexagonal (ports &amp; adapters)</span>
-- `br.com.pedidos.dominio`   records, regras, exceções de domínio. Não importa nada de Spring/JPA/web.
-- `br.com.pedidos.aplicacao` casos de uso (ports de entrada) e ports de saída (interfaces). Também não importa framework.
-- `br.com.pedidos.adapters`  `entrada.rest` (controllers, DTOs) e `saida.jpa` (entidade JPA, repositório Spring Data, mapper).
-- `br.com.pedidos.config`    classes @Configuration que ligam ports a adapters com @Bean.
-- Dependências apontam para dentro: adapters conhecem aplicacao e dominio; o inverso nunca.
-
-<span class="cm">## Convenções</span>
-- Domínio imutável: records + List.copyOf. Sem setter. Transição de estado é método que devolve novo objeto.
-- Dinheiro é BigDecimal. Identidade é String (UUID).
-- Violação de regra = exceção de domínio nomeada (PedidoFechadoException). Nunca null, nunca boolean de erro.
-- Sem Lombok. Sem MapStruct. Não adicione dependência ao pom sem me perguntar.
-
-<span class="cm">## Como trabalhar</span>
-- Antes de codar: leia a spec em .specs/ e proponha um plano curto (arquivos + testes). Só execute após meu "ok".
-- Não crie arquivo que a spec não pede. Sem README, Dockerfile, DTO extra ou "melhorias".
-- Ao terminar, liste os arquivos tocados e explique cada decisão de design em uma frase.</pre>
-    </div>
-    <div class="code-block" style="margin-top:10px"><div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">CLAUDE.md — ponte para o mesmo contrato</span><span class="lang-badge md">md</span></div><pre><span class="cm"># Contexto do Claude Code</span>
-@AGENTS.md</pre></div>
-    <div class="note" data-note="cap01/ato1" data-title="Ato 1 — o que melhorou no contrato do projeto" data-placeholder="Regra que era vaga: … / Regra que faltava: …"></div>
-  </section>
-
-  <!-- ═══ ATO 2 ═══ -->
-  <section class="step-section ato" id="ato-2">
-    <div class="ato-head">
-      <div class="ah-n">2<small>ATO</small></div>
-      <div><h3>A spec do domínio: Pedido nasce no papel</h3><div class="ah-s">A primeira spec, o primeiro plano, a primeira revisão. O Java moderno entra como critério de aceite.</div><div class="ah-modes"><span class="mode teoria">📖 teoria</span><span class="mode junto">👥 junto</span><span class="mode sozinho">🧍 sozinho</span><span class="mode desenhe">📐 desenhe</span></div></div>
-      <div class="ah-t">14:20<small>35 min</small><label style="display:block;margin-top:6px"><input type="checkbox" data-persist="cap01/lab/2"> feito</label></div>
-    </div>
-
-    <div class="teoria-box">
-      <div class="tb-k">📖 pausa teórica · 8 min</div>
-      <h4>Spec verificável, e o Java que vira critério</h4>
-      <p>Uma spec tem quatro partes (Cap 0): contexto, tarefa, regras, definição de pronto. O que faz dela uma spec de sênior é que
-      <strong>cada linha da seção de regras é um item de checklist de revisão</strong>. Para o domínio de Pedidos, as regras vêm do Java moderno
-      que um sênior espera ver, e cada uma tem um porquê que o pedido 4711 explica:</p>
-      <ul>
-        <li><strong>Imutável, com <code>record</code> e cópia defensiva.</strong> Criou, não muda. Um pedido que passa por uma fila (Bloco 2) ou por duas threads não pode ser alterado por quem tem a referência. <code>List.copyOf</code> no compact constructor fecha a brecha da lista.</li>
-        <li><strong>Total derivado, nunca armazenado.</strong> Duas fontes da verdade desatualizam. O 4711 tinha total guardado.</li>
-        <li><strong>Dinheiro é <code>BigDecimal</code>.</strong> <code>double</code> em dinheiro é erro de arredondamento esperando a auditoria.</li>
-        <li><strong>Status é tipo fechado</strong> (<code>enum</code> hoje, <code>sealed</code> quando houver dados por variante). <code>String</code> aceita "PAGOO". O <code>switch</code> exaustivo garante que um status novo quebra a compilação, não a produção.</li>
-        <li><strong>Regra violada é exceção de domínio nomeada.</strong> <code>PedidoFechadoException</code> diz o que aconteceu; <code>IllegalStateException</code> diz que algo aconteceu. Nunca <code>null</code>, nunca <code>boolean</code> de sucesso.</li>
-        <li><strong>Transição de estado é método que devolve novo objeto.</strong> <code>pedido.pagar()</code> retorna outro <code>Pedido</code>. Setter não existe.</li>
-      </ul>
-      <p>Tudo isso cabe em dez linhas de spec. E tudo isso o agente <em>não</em> faz por padrão, porque a internet não faz.</p>
-    </div>
-
-    <ol class="passos">
-      <li class="passo"><div class="p-n">1</div><div class="p-b"><span class="mode junto">👥 junto</span> Cole o <strong>Prompt 2</strong>. Revise no editor abaixo: toda regra tem exemplo de sucesso ou erro? Só então aceite a spec.</div></li>
-      <li class="passo"><div class="p-n">2</div><div class="p-b"><span class="mode junto">👥 junto</span> Cole o <strong>Prompt 3</strong>. O agente propõe arquivos e liga cada um a uma regra. Corte qualquer Controller, Service Spring, DTO ou Repository JPA.</div></li>
-      <li class="passo"><div class="p-n">3</div><div class="p-b"><span class="mode sozinho">🧍 agora é você</span> Dê o OK. O agente implementa e executa Maven. Você revisa o checklist e manda corrigir. Somente depois peça o commit <code>feat: dominio Pedido</code>.</div></li>
-    </ol>
-
-    <div class="speclint" data-note="cap01/spec-dominio" data-title=".specs/01-dominio-pedido.md">
-<script type="text/plain"># Domínio: Pedido
-
-## Contexto
-- Serviço de Pedidos, Spring Boot 3 / Java 21. Leia AGENTS.md e CLAUDE.md. Só o pacote br.com.pedidos.dominio nesta tarefa.
-
-## Tarefa
-- Criar Pedido, ItemPedido, StatusPedido e as exceções de domínio.
-
-## Regras
-- Pedido(id, clienteId, itens, status) e ItemPedido(sku, quantidade, precoUnitario) são records. Listas com List.copyOf. Sem setter.
-- quantidade > 0 e precoUnitario > 0 (BigDecimal); violar lança ItemInvalidoException no compact constructor.
-- total() é derivado dos itens, nunca armazenado.
-- StatusPedido: ABERTO, PAGO, CANCELADO. Transições: ABERTO -> PAGO (pagar), ABERTO -> CANCELADO (cancelar). Outra transição lança PedidoFechadoException.
-- adicionarItem(item) devolve um NOVO Pedido; se status != ABERTO lança PedidoFechadoException.
-- Pedido.novo(clienteId) cria um pedido ABERTO sem itens, com id UUID.
-- Nenhuma importação de Spring, JPA ou web no pacote.
-
-## Definição de pronto
-- Testes JUnit 5 (sem Spring): item inválido, adicionar em pedido pago, total com 2 itens, pagar/cancelar válidos e inválidos.
-- O agente executa ./mvnw -q test e mostra o resultado verde. Só os arquivos do pacote dominio e seus testes.
-</script>
-    </div>
-
-    <h4 style="margin:16px 0 6px">🔬 Checklist de revisão do Ato 2</h4>
-    <ul class="check-rev">
-      <li><b>Records?</b> <code>Pedido</code> e <code>ItemPedido</code> são <code>record</code>, com <code>List.copyOf</code> no compact constructor.</li>
-      <li><b>Exceções nomeadas?</b> <code>ItemInvalidoException</code> e <code>PedidoFechadoException</code>, não <code>IllegalArgumentException</code>.</li>
-      <li><b>Total calculado?</b> <code>total()</code> é método, não campo.</li>
-      <li><b>Transições devolvem novo Pedido?</b> Nenhum setter, nenhum campo mutável.</li>
-      <li><b>Pacote limpo?</b> Nenhum <code>import org.springframework</code> ou <code>jakarta.persistence</code> em <code>dominio/</code>.</li>
-      <li><b>Só o pedido?</b> Nenhum Service, Repository, README ou DTO apareceu.</li>
-      <li><b>Testes cobrem os casos de erro?</b> Não só o caminho feliz.</li>
-    </ul>
-
-    <div class="desenhe"><span class="d-em">📐</span><span><b>Prancheta 2:</b> o domínio. Uma caixa por tipo (Pedido, ItemPedido, StatusPedido, as duas exceções), setas "contém" e "lança", e uma <em>nota</em> colada em cada caixa com a regra que mora nela. Se uma regra não tem dono, o desenho já denunciou o anemic model.</span></div>
-    <div data-arch="cap01/p2-dominio" data-palette="app,free" data-title="Prancheta 2 — o domínio Pedido" data-height="360">
-      <script type="application/json">{"nodes":[
-        {"id":"p","t":"dominio","x":340,"y":140,"l":"Pedido"},
-        {"id":"i","t":"dominio","x":90,"y":140,"l":"ItemPedido"},
-        {"id":"s","t":"dominio","x":600,"y":140,"l":"StatusPedido"},
-        {"id":"n1","t":"note","x":320,"y":230,"w":200,"h":80,"l":"total() derivado; adicionarItem devolve novo Pedido"},
-        {"id":"n2","t":"note","x":70,"y":230,"w":200,"h":70,"l":"quantidade > 0, preco > 0 (ItemInvalidoException)"}
-      ],"edges":[
-        {"id":"1","a":"p","b":"i","l":"contém (copyOf)"},
-        {"id":"2","a":"p","b":"s","l":"tem"}
-      ]}</script>
-    </div>
-    <div class="note" data-note="cap01/ato2" data-title="Ato 2 — o que o agente errou e como eu mandei corrigir" data-placeholder="1. …&#10;2. …&#10;3. …"></div>
-  </section>
-
-  <!-- ═══ INTERVALO ═══ -->
-  <section class="step-section ato">
-    <div class="ato-head" style="opacity:.75;border-style:dashed">
-      <div class="ah-n">☕<small>PAUSA</small></div>
-      <div><h3>Intervalo</h3><div class="ah-s">Café. Quem travou no Ato 2 resolve agora com o professor, não depois.</div></div>
-      <div class="ah-t">14:55<small>15 min</small><label style="display:block;margin-top:6px"><input type="checkbox" data-persist="cap01/lab/pausa"> feito</label></div>
-    </div>
-  </section>
-
-  <!-- ═══ ATO 3 ═══ -->
-  <section class="step-section ato" id="ato-3">
-    <div class="ato-head">
-      <div class="ah-n">3<small>ATO</small></div>
-      <div><h3>Hexagonal: o caso de uso atrás de uma porta</h3><div class="ah-s">A teoria mais longa do dia, porque é a decisão de arquitetura que sustenta os sete sábados seguintes.</div><div class="ah-modes"><span class="mode teoria">📖 teoria forte</span><span class="mode junto">👥 junto</span><span class="mode desenhe">📐 desenhe</span></div></div>
-      <div class="ah-t">15:10<small>55 min</small><label style="display:block;margin-top:6px"><input type="checkbox" data-persist="cap01/lab/3"> feito</label></div>
-    </div>
-
-    <div class="teoria-box">
-      <div class="tb-k">📖 pausa teórica · 15 min</div>
-      <h4>De três camadas a ports &amp; adapters</h4>
-      <p><strong>Comece sem o desenho.</strong> O nosso sistema tem uma parte que decide e partes que traduzem tecnologias. A regra “pedido
-      vazio não pode ser criado” continuaria verdadeira se o Postgres virasse DynamoDB, se REST virasse uma fila ou se o Spring desaparecesse.
-      Portanto, essa regra deve morar numa parte que não depende de nenhuma dessas escolhas.</p>
-      <div class="hex-first-principles">
-        <article class="hex-principle"><b>💎 Dentro: decisões do negócio</b><p>Pedido, itens, status e casos de uso. Falam a linguagem da empresa e podem ser testados como Java puro.</p></article>
-        <article class="hex-principle"><b>🔌 Na fronteira: ports</b><p>Contratos que dizem como iniciar um caso de uso ou o que a aplicação precisa pedir ao mundo externo.</p></article>
-        <article class="hex-principle"><b>🌍 Fora: adapters e tecnologias</b><p>Controller REST, JPA, Postgres e, depois, RabbitMQ ou DynamoDB. Traduzem o mundo técnico para os ports.</p></article>
-      </div>
-      <div class="analogy"><span class="analogy-icon">🏠</span><div><strong>Imagine uma casa com tomadas.</strong> A casa decide qual energia precisa; a tomada define o encaixe; cada aparelho tem um plugue compatível. A tomada é o <em>port</em>, o plugue é parte do <em>adapter</em>. Trocar o aparelho não exige quebrar a casa. O limite da analogia: em software, os ports representam conversas úteis ao caso de uso, não apenas formato elétrico.</div></div>
-      <p>O Spring que muita gente aprendeu organiza o serviço em três camadas: <code>Controller</code> chama <code>Service</code> que chama
-      <code>Repository</code>. Essa organização pode funcionar. O problema aparece quando as regras passam a depender de <code>@Entity</code>,
-      <code>JpaRepository</code>, HTTP ou do contexto do Spring. O teste então precisa subir tecnologias que não fazem parte da decisão de negócio.</p>
-      <div class="layers">
-        <div class="lay old"><h5>✗ Três camadas, como o tutorial ensina</h5><div class="stack">
-          <span>PedidoController</span><span>PedidoService (regra + orquestração)</span><span class="warn">PedidoRepository extends JpaRepository</span><span class="warn">@Entity Pedido (domínio = tabela)</span></div>
-          <p>Tudo aponta para baixo, e o de baixo é o framework. A regra "só ABERTO paga" mora num <code>if</code> no service, ao lado do <code>save()</code> e do <code>enviarEmail()</code>. É o pedido 4711.</p></div>
-        <div class="lay hex"><h5>✓ Hexagonal (ports &amp; adapters)</h5><div class="stack">
-          <span>adapters/entrada/rest → PedidoController</span><span class="core">aplicacao → port CriarPedido · CriarPedidoService</span><span class="core">dominio → Pedido, regras, exceções</span><span class="core">aplicacao → port Pedidos (interface)</span><span>adapters/saida/jpa → PedidosJpaAdapter, PedidoJpaEntity</span></div>
-          <p>O centro (domínio + aplicação) não importa nada de fora. Quem entra (REST) e quem sai (JPA) são <em>adapters</em> que implementam ou chamam <em>ports</em>: interfaces definidas pelo centro.</p></div>
-      </div>
-      <div class="hex-teacher" data-hex-teacher>
-        <div class="hex-teacher-head"><small>ROTEIRO VISUAL DO PROFESSOR · 6 PASSOS</small><strong>Explique de dentro para fora</strong></div>
-        <div class="hex-teacher-tabs" role="group" aria-label="Passos da explicação de arquitetura hexagonal"><button type="button" data-hex-frame>1 · Domínio</button><button type="button" data-hex-frame>2 · Aplicação</button><button type="button" data-hex-frame>3 · Entrada</button><button type="button" data-hex-frame>4 · Ports</button><button type="button" data-hex-frame>5 · Saída</button><button type="button" data-hex-frame>6 · Setas</button></div>
-        <div class="hex-teacher-stage">
-          <div class="hex-teacher-visual" aria-label="Camadas da arquitetura hexagonal"><div class="hex-rings"><div class="hex-ring out" data-ring="out"><em>ADAPTERS</em></div><div class="hex-ring app" data-ring="app"><em>APLICAÇÃO + PORTS</em></div><div class="hex-ring core" data-ring="core">PEDIDO<br>regras</div></div></div>
-          <div class="hex-teacher-copy"><h4 data-hex-title></h4><p data-hex-text></p><div class="hex-say" data-hex-say></div></div>
-        </div>
-      </div>
-      <div class="hexwrap">
-        <div class="hex-side">
-          <div class="hex-port in"><div class="hp-k">port de entrada (driving)</div><code>interface CriarPedido { Pedido executar(Comando c); }</code><br><span style="font-size:.78rem;color:var(--text-dim)">quem chama: o controller REST hoje, um consumidor de fila no Sáb 4, uma Lambda no Sáb 6</span></div>
-          <div class="hex-port in"><div class="hp-k">port de entrada</div><code>interface AdicionarItem { … }</code><br><span style="font-size:.78rem;color:var(--text-dim)">o do Ato 5, seu</span></div>
-        </div>
-        <div class="hexagon"><div class="hx-t">⬡ o núcleo</div><div class="hx-s">dominio/ + aplicacao/<br>sem Spring, sem JPA, sem web</div><div class="hx-core">Pedido · CriarPedidoService</div></div>
-        <div class="hex-side">
-          <div class="hex-port out"><div class="hp-k">port de saída (driven)</div><code>interface Pedidos { Pedido salvar(Pedido p); Optional&lt;Pedido&gt; buscar(String id); }</code><br><span style="font-size:.78rem;color:var(--text-dim)">quem implementa: JPA + Postgres hoje, DynamoDB no Sáb 7, um HashMap no teste</span></div>
-          <div class="hex-port out"><div class="hp-k">port de saída (futuro)</div><code>interface PublicadorDeEventos { … }</code><br><span style="font-size:.78rem;color:var(--text-dim)">Sáb 4: é por aqui que o e-mail do 4711 deixa de derrubar o pedido</span></div>
-        </div>
-      </div>
-      <p><strong>A regra da dependência.</strong> Setas de import apontam para dentro. <code>adapters</code> conhece <code>aplicacao</code> e <code>dominio</code>;
-      <code>aplicacao</code> conhece <code>dominio</code>; <code>dominio</code> não conhece ninguém. Quem liga a interface <code>Pedidos</code> à classe
-      <code>PedidosJpaAdapter</code> é uma classe de configuração na borda (<code>config/</code>), com <code>@Bean</code>. O núcleo nunca vê a anotação.</p>
-      <p><strong>O que isso paga, e quando.</strong></p>
-      <ul>
-        <li><strong>Hoje:</strong> o teste de <code>CriarPedidoService</code> roda com um <code>Pedidos</code> em memória, em milissegundos, sem Spring. Testes rápidos são testes que rodam.</li>
-        <li><strong>Sáb 3:</strong> Testcontainers testa <em>só o adapter</em> JPA contra um Postgres real; o núcleo continua sem banco.</li>
-        <li><strong>Sáb 4:</strong> "avisar o estoque" vira um port de saída; o adapter publica numa fila. O caso de uso não muda uma linha.</li>
-        <li><strong>Sáb 7:</strong> o port <code>Pedidos</code> ganha um adapter DynamoDB. O domínio e o serviço não sabem que mudaram de banco.</li>
-      </ul>
-      <p><strong>O que <em>não</em> fazer.</strong> Hexagonal não é criar interface para tudo. Um port existe quando há uma fronteira real
-      (entrada externa, infraestrutura, algo que você quer trocar ou testar isolado). <code>Pedido</code> não precisa de <code>IPedido</code>. O agente
-      adora criar interface demais; a spec diz quais existem.</p>
-      <div class="tree"><b>src/main/java/br/com/pedidos/</b>
-├── dominio/                 <i>Pedido, ItemPedido, StatusPedido, *Exception   (Ato 2)</i>
-├── aplicacao/
-│   ├── CriarPedido.java     <i>port de entrada (interface) + record Comando</i>
-│   ├── CriarPedidoService.java
-│   └── Pedidos.java         <i>port de saída (interface)</i>
-├── adapters/
-│   ├── entrada/rest/        <i>PedidoController, PedidoRequest, PedidoResponse  (Ato 4)</i>
-│   └── saida/jpa/           <i>PedidoJpaEntity, ItemJpaEntity, PedidoSpringDataRepository, PedidosJpaAdapter, PedidoMapper</i>
-└── config/
-    └── CasosDeUsoConfig.java <i>@Bean CriarPedido criarPedido(Pedidos pedidos)</i></div>
-    </div>
-
-    <div class="hex-journey" data-hex-journey>
-      <div class="at-head"><div><div class="p-label">LABORATÓRIO VISUAL · ARQUITETURA HEXAGONAL</div><strong>A bancada de tradução do Pedido 4711</strong></div><span class="score-pill">entrada → núcleo → saída</span></div>
-      <p class="hex-lab-instruction">Acompanhe o mesmo pedido mudando de representação. Antes de avançar, peça à turma para prever <strong>o que entra, o que sai e qual tecnologia pode aparecer</strong>. A bancada é silenciosa para acompanhar a voz do professor.</p>
-      <div class="hex-lab-scroll" tabindex="0" aria-label="Bancada com sete etapas; em telas estreitas, deslize horizontalmente">
-        <div class="hex-map" aria-label="Caminho do pedido pelo sistema">
-          <div class="hex-stop" data-hex-stop><b>📱</b>Cliente</div>
-          <div class="hex-stop" data-hex-stop><b>🎮</b>Controller</div>
-          <div class="hex-stop" data-hex-stop><b>🚪</b>Port entrada</div>
-          <div class="hex-stop" data-hex-stop><b>⚙️</b>Caso de uso</div>
-          <div class="hex-stop" data-hex-stop><b>💎</b>Domínio</div>
-          <div class="hex-stop" data-hex-stop><b>🚪</b>Port saída</div>
-          <div class="hex-stop" data-hex-stop><b>🐘</b>JPA + Postgres</div>
-        </div>
-        <div class="hex-lane" aria-label="O artefato atual se desloca entre as etapas">
-          <div class="hex-lane-rail" aria-hidden="true"></div>
-          <div class="hex-payload" data-hex-payload><span data-hex-icon>📦</span><div><small data-hex-kind></small><code data-hex-code></code></div></div>
-        </div>
-      </div>
-      <div class="hex-tech-tray" aria-label="Tecnologias presentes na etapa"><span data-hex-tech="http">🌐 HTTP + JSON</span><span data-hex-tech="core">💎 Java do núcleo</span><span data-hex-tech="jpa">🐘 JPA + SQL</span><b data-hex-boundary></b></div>
-      <div class="hex-workbench" aria-label="Transformação observável desta etapa">
-        <div class="hex-state-card"><small>ANTES</small><strong data-hex-before></strong></div>
-        <div class="hex-transform"><span>🤖</span><small>TRADUÇÃO / DECISÃO</small><strong data-hex-action></strong></div>
-        <div class="hex-state-card after"><small>DEPOIS</small><strong data-hex-after></strong></div>
-        <div class="hex-state-card proof"><small>COMO PROVAR</small><strong data-hex-proof></strong></div>
-      </div>
-      <div class="hex-message" aria-live="polite"><b data-hex-title></b><p data-hex-explanation></p><strong class="hex-predict" data-hex-question></strong></div>
-      <div class="hex-db-row" data-hex-db aria-hidden="true"><span>pedidos</span><code>id: 4711</code><code>status: ABERTO</code><code>total: 37.80</code><b>✓ linha persistida</b></div>
-      <div class="hex-controls"><button type="button" data-hex-play>▶ Encene as traduções</button><button type="button" data-hex-prev>← Voltar</button><button type="button" data-hex-next>Avançar →</button><button type="button" data-hex-reset>↺ Recomeçar</button><span data-hex-count>1 / 7</span></div>
-    </div>
-
-    <div class="card" data-hex-check style="margin-top:14px">
-      <div class="p-label">QUIZ DE FIXAÇÃO · SEM PEGADINHA</div>
-      <h3 style="margin:5px 0 4px">Coloque cada componente no seu lugar</h3>
-      <p class="text-dim" style="font-size:.84rem">A pergunta central é sempre: esta peça contém regra, define uma conversa ou traduz uma tecnologia?</p>
-      <div class="hex-check-question" data-hc-question></div>
-      <div class="hex-check-options"><button type="button" data-hc-choice="core">💎 Núcleo</button><button type="button" data-hc-choice="port">🚪 Port</button><button type="button" data-hc-choice="adapter">🔌 Adapter</button><button type="button" data-hc-choice="edge">🧩 Configuração da borda</button></div>
-      <div class="hex-check-feedback" data-hc-feedback aria-live="polite"></div>
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px"><span class="score-pill" data-hc-counter></span><button type="button" class="lk-btn sm" data-hc-next hidden>Próximo componente →</button></div>
-    </div>
-
-    <div class="card" style="margin-top:14px">
-      <h3>O menor exemplo que mostra a inversão</h3>
-      <p>Leia pelas dependências: o caso de uso conhece a interface <code>Pedidos</code>; o adapter JPA também conhece essa interface e a implementa. A interface pertence à necessidade da aplicação, não ao banco.</p>
-      <div class="code-block"><div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">núcleo primeiro, tecnologia depois</span><span class="lang-badge java">java</span></div>
-<pre><span class="cm">// port de saída: a aplicação diz do que precisa</span>
-<span class="kw">public interface</span> Pedidos {
-  Pedido salvar(Pedido pedido);
-}
-
-<span class="cm">// caso de uso: depende do port, sem saber quem salva</span>
-<span class="kw">public final class</span> CriarPedidoService <span class="kw">implements</span> CriarPedido {
-  <span class="kw">private final</span> Pedidos pedidos;
-
-  <span class="kw">public</span> Pedido executar(Comando comando) {
-    Pedido novo = Pedido.novo(comando.clienteId());
-    <span class="kw">return</span> pedidos.salvar(novo);
-  }
-}
-
-<span class="cm">// adapter de saída: aqui JPA pode aparecer</span>
-<span class="an">@Component</span>
-<span class="kw">public final class</span> PedidosJpaAdapter <span class="kw">implements</span> Pedidos {
-  <span class="cm">// traduz Pedido &lt;-&gt; entidade JPA e usa Spring Data</span>
-}</pre></div>
-      <div class="tip"><span class="tip-icon">🧪</span><div class="tip-content"><strong>Por que o teste fica fácil?</strong> No teste, outra classe pequena implementa <code>Pedidos</code> com um <code>HashMap</code>. O mesmo caso de uso roda sem Spring ou Postgres. Isso prova que o adapter é substituível.</div></div>
-      <p class="source-strip">Base conceitual: <a href="https://alistair.cockburn.us/hexagonal-architecture" target="_blank" rel="noopener">artigo original de Alistair Cockburn sobre Ports &amp; Adapters</a>. O hexágono não representa seis camadas; a forma deixa espaço para várias portas ao redor de um dentro protegido.</p>
-    </div>
-
-    <ol class="passos">
-      <li class="passo"><div class="p-n">1</div><div class="p-b"><span class="mode junto">👥 junto</span> Cole o <strong>Prompt 4</strong>. O agente explica a arquitetura sobre os arquivos reais, sem editar. Compare com os seis passos e faça o quiz acima.</div></li>
-      <li class="passo"><div class="p-n">2</div><div class="p-b"><span class="mode junto">👥 junto</span> Cole o <strong>Prompt 5</strong>. No plano, corte <code>PedidoDTO</code>, <code>PedidoMapper</code>, <code>@Service</code> e qualquer adapter: agora construímos somente o núcleo.</div></li>
-      <li class="passo"><div class="p-n">3</div><div class="p-b"><span class="mode junto">👥 junto</span> Dê o OK. O agente implementa e testa. A turma responde: <strong>há algum import de Spring dentro de <code>aplicacao/</code>?</strong> Se há, a fronteira vazou. Depois da correção, peça o commit <code>feat: caso de uso CriarPedido</code>.</div></li>
-    </ol>
-
-    <div class="speclint" data-note="cap01/spec-criar-pedido" data-title=".specs/02-caso-de-uso-criar-pedido.md">
-<script type="text/plain"># Caso de uso: CriarPedido
-
-## Contexto
-- Núcleo hexagonal em br.com.pedidos.aplicacao. Domínio pronto em .specs/01. Leia AGENTS.md e CLAUDE.md.
-
-## Tarefa
-- Port de entrada CriarPedido (interface) com record Comando(clienteId, List<ItemComando(sku, quantidade, precoUnitario)>).
-- CriarPedidoService implementa CriarPedido: cria Pedido.novo(clienteId), adiciona os itens, salva via port de saída e devolve o Pedido.
-- Port de saída Pedidos (interface): salvar(Pedido) e buscar(String id) -> Optional<Pedido>.
-
-## Regras
-- aplicacao/ não importa Spring, JPA nem web. Sem @Service, sem @Component: a ligação é feita em config/ no Ato 4.
-- Comando sem itens lança PedidoSemItensException (domínio).
-- Não criar adapter, controller, DTO de web nem classe de configuração nesta tarefa.
-- Não tocar em dominio/ exceto para adicionar PedidoSemItensException.
-
-## Definição de pronto
-- Teste de CriarPedidoService com uma implementação de Pedidos em memória (HashMap) dentro do próprio teste. Sem Spring.
-- Casos: cria com 2 itens e total certo; comando sem itens lança exceção; o pedido salvo é o devolvido.
-- O agente executa ./mvnw -q test e mostra o resultado verde. Só os arquivos listados.
-</script>
-    </div>
-
-    <div class="desenhe"><span class="d-em">📐</span><span><b>Prancheta 3:</b> o hexágono. Três áreas (use a forma <em>Área/camada</em>): <code>dominio</code> no centro, <code>aplicacao</code> em volta, <code>adapters</code> fora. Coloque os ports na borda entre aplicação e adapters. Todas as setas de import apontam para dentro; se alguma apontar para fora, ela está errada e você acabou de encontrar um bug de arquitetura no desenho antes de encontrar no código.</span></div>
-    <div data-arch="cap01/p3-hexagono" data-palette="app,free" data-title="Prancheta 3 — o hexágono do serviço de Pedidos" data-height="440">
-      <script type="application/json">{"nodes":[
-        {"id":"ga","t":"group","x":20,"y":20,"w":860,"h":400,"l":"adapters/ (fora)"},
-        {"id":"gp","t":"group","x":220,"y":70,"w":460,"h":300,"l":"aplicacao/"},
-        {"id":"gd","t":"group","x":370,"y":150,"w":160,"h":140,"l":"dominio/"},
-        {"id":"d","t":"dominio","x":375,"y":200,"l":"Pedido"},
-        {"id":"in","t":"box","x":235,"y":200,"l":"port CriarPedido"},
-        {"id":"out","t":"box","x":540,"y":200,"l":"port Pedidos"},
-        {"id":"rest","t":"controller","x":40,"y":200,"l":"REST"},
-        {"id":"jpa","t":"repository","x":710,"y":200,"l":"JPA"}
-      ],"edges":[
-        {"id":"1","a":"rest","b":"in","l":"chama"},
-        {"id":"2","a":"in","b":"d","l":"usa"},
-        {"id":"3","a":"jpa","b":"out","l":"implementa"},
-        {"id":"4","a":"in","b":"out","l":"salvar"}
-      ]}</script>
-    </div>
-    <div class="note" data-note="cap01/ato3" data-title="Ato 3 — onde eu acho que o hexagonal vai se pagar no MEU trabalho" data-placeholder="No projeto atual da empresa, o que eu trocaria por um port?"></div>
-  </section>
-
-  <!-- ═══ ATO 4 ═══ -->
-  <section class="step-section ato" id="ato-4">
-    <div class="ato-head">
-      <div class="ah-n">4<small>ATO</small></div>
-      <div><h3>Postgres no Docker e os adapters: a requisição chega ao banco</h3><div class="ah-s">REST na entrada, JPA na saída, e a primeira linha na tabela.</div><div class="ah-modes"><span class="mode teoria">📖 teoria</span><span class="mode junto">👥 junto</span><span class="mode sozinho">🧍 sozinho</span><span class="mode desenhe">📐 desenhe</span></div></div>
-      <div class="ah-t">16:05<small>45 min</small><label style="display:block;margin-top:6px"><input type="checkbox" data-persist="cap01/lab/4"> feito</label></div>
-    </div>
-
-    <div class="teoria-box">
-      <div class="tb-k">📖 pausa teórica · 10 min</div>
-      <h4>O banco num container, e a entidade JPA como adapter</h4>
-      <p><strong>Por que Docker.</strong> Um Postgres instalado na máquina é um Postgres com versão, porta e senha diferentes em cada
-      notebook da sala. O container é o mesmo binário, a mesma versão, a mesma configuração, descrito num arquivo versionado junto com
-      o código. <code>docker compose up -d</code> sobe; <code>down</code> derruba; o volume guarda os dados entre reinícios. No Sáb 3 o
-      Testcontainers vai subir um desses <em>dentro do teste</em>, e no Sáb 4 o RabbitMQ entra no mesmo arquivo.</p>
-      <p><strong>A entidade JPA não é o domínio.</strong> É a tentação número um, e é o que o agente faz por padrão: colocar <code>@Entity</code>
-      no <code>Pedido</code>. Só que JPA exige construtor vazio, campos mutáveis e proxies; o domínio exige o oposto. A solução hexagonal é ter
-      <strong>dois objetos</strong>: <code>PedidoJpaEntity</code> (mutável, anotada, mora em <code>adapters/saida/jpa</code>) e o record
-      <code>Pedido</code>. Um <code>PedidoMapper</code> converte nos dois sentidos. Parece duplicação; é isolamento. Quando a tabela mudar,
-      o domínio não muda.</p>
-      <p><strong>O adapter de saída</strong> implementa o port <code>Pedidos</code> usando um <code>JpaRepository</code> do Spring Data por dentro. O
-      <strong>adapter de entrada</strong> é o controller: recebe JSON num <code>PedidoRequest</code>, monta o <code>Comando</code>, chama o port
-      <code>CriarPedido</code>, devolve um <code>PedidoResponse</code>. Ele não sabe que existe banco.</p>
-      <p><strong>Schema.</strong> Hoje deixamos o Hibernate criar as tabelas (<code>ddl-auto: update</code>) para a aula andar. Em produção isso é
-      proibido; migração é com Flyway, e entra no Sáb 3 junto com o Testcontainers. Anote como dívida consciente.</p>
-    </div>
-
-    <div class="code-block">
-      <div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">src/main/resources/application.yml</span><span class="lang-badge yaml">yaml</span></div>
-<pre><span class="kw">spring</span>:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/pedidos
-    username: pedidos
-    password: pedidos
-  jpa:
-    hibernate:
-      ddl-auto: update        <span class="cm"># só hoje. Sáb 3: Flyway.</span>
-    open-in-view: false       <span class="cm"># o adapter abre e fecha a sessão; o controller não</span></pre>
-    </div>
-
-    <ol class="passos">
-      <li class="passo"><div class="p-n">1</div><div class="p-b"><span class="mode junto">👥 junto</span> Cole o <strong>Prompt 6</strong>. Antes do OK, a turma revisa a spec e o plano: REST entra por um adapter, JPA sai por outro e o núcleo continua intacto.</div></li>
-      <li class="passo"><div class="p-n">2</div><div class="p-b"><span class="mode junto">👥 junto</span> Aprove as ações locais necessárias. O agente cria o compose, sobe o Postgres, implementa os adapters, executa Maven e inicia a aplicação. Você não abre outro terminal para digitar comandos.</div></li>
-      <li class="passo"><div class="p-n">3</div><div class="p-b"><span class="mode junto">👥 junto</span> Peça ao agente que mostre estas evidências no próprio relatório:
-        <div class="code-block" style="margin-top:8px"><div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">evidência esperada — comandos executados pelo agente</span><span class="lang-badge terminal">terminal</span></div>
-<pre>curl -s -X POST localhost:8080/pedidos -H 'Content-Type: application/json' \
-  -d '{"clienteId":"c-1","itens":[{"sku":"CAFE-500","quantidade":2,"precoUnitario":"18.90"}]}'
-<span class="cm">{"id":"7f2c…","clienteId":"c-1","status":"ABERTO","total":"37.80","itens":[…]}</span>
-
-docker compose -f infra/docker-compose.yml exec postgres psql -U pedidos -c 'select id, status from pedido;'
-<span class="cm">                  id                  | status</span>
-<span class="cm">--------------------------------------+--------</span>
-<span class="cm"> 7f2c…                                | ABERTO</span></pre></div></div></li>
-      <li class="passo"><div class="p-n">4</div><div class="p-b"><span class="mode sozinho">🧍 agora é você</span> No mesmo chat do agente, peça para testar <code>quantidade: 0</code>. Se voltar 500, acrescente à spec que <code>ItemInvalidoException</code> vira HTTP 422 com mensagem, peça um plano de correção e aprove somente esse limite. Depois da revisão, peça o commit <code>feat: adapters REST e JPA</code>.</div></li>
-    </ol>
-
-    <div class="speclint" data-note="cap01/spec-adapters" data-title=".specs/03-adapters-rest-e-jpa.md">
-<script type="text/plain"># Adapters: REST (entrada) e JPA/Postgres (saída)
-
-## Contexto
-- Núcleo pronto (.specs/01 e 02). Postgres em infra/docker-compose.yml. Leia AGENTS.md e CLAUDE.md.
-
-## Tarefa
-- adapters/saida/jpa: PedidoJpaEntity e ItemJpaEntity (anotadas), PedidoSpringDataRepository (JpaRepository), PedidoMapper (entity <-> record), PedidosJpaAdapter implements Pedidos.
-- adapters/entrada/rest: PedidoController com POST /pedidos (PedidoRequest -> Comando -> CriarPedido -> PedidoResponse, HTTP 201).
-- config/CasosDeUsoConfig: @Bean CriarPedido criarPedido(Pedidos pedidos) { return new CriarPedidoService(pedidos); }
-- application.yml com o datasource acima e ddl-auto: update.
-
-## Regras
-- O record Pedido e o pacote aplicacao/ continuam sem nenhuma anotação ou import de framework.
-- Entidades JPA só em adapters/saida/jpa. O mapper é uma classe simples, sem biblioteca.
-- Sem Lombok, sem MapStruct, sem dependência nova no pom.
-- Não criar GET, PUT, DELETE, exception handler global nem README nesta tarefa.
-
-## Definição de pronto
-- O agente executa ./mvnw spring-boot:run com o Postgres do compose e mostra o log de inicialização.
-- curl POST /pedidos devolve 201 com id, status ABERTO e total; a linha aparece em select * from pedido.
-- Os testes do núcleo continuam sem Spring e verdes.
-</script>
-    </div>
-
-    <div class="desenhe"><span class="d-em">📐</span><span><b>Prancheta 4:</b> a infra. Duplique a Prancheta 3 (ou comece do zero) e acrescente o container do Postgres, o <code>PedidoJpaEntity</code> dentro do adapter, o mapper entre ele e o record, e o <code>curl</code> batendo no controller. Setas sólidas: é tudo síncrono hoje.</span></div>
-    <div data-arch="cap01/p4-infra" data-palette="app,free" data-title="Prancheta 4 — a requisição chega ao banco" data-height="420"></div>
-    <div class="note" data-note="cap01/ato4" data-title="Ato 4 — dívidas conscientes que ficaram (ddl-auto, 500 vs 422, …)" data-placeholder="O que está feio hoje e em que sábado a gente paga?"></div>
-  </section>
-
-  <!-- ═══ ATO 5 ═══ -->
-  <section class="step-section ato" id="ato-5">
-    <div class="ato-head">
-      <div class="ah-n">5<small>ATO</small></div>
-      <div><h3>Sozinho: AdicionarItem, ponta a ponta</h3><div class="ah-s">O mesmo ciclo, sem o professor no volante. Spec, plano, seu OK, execução, revisão.</div><div class="ah-modes"><span class="mode sozinho">🧍 sozinho</span></div></div>
-      <div class="ah-t">16:50<small>30 min</small><label style="display:block;margin-top:6px"><input type="checkbox" data-persist="cap01/lab/5"> feito</label></div>
-    </div>
-    <div class="exercise solo">
-      <div class="exercise-header">
-        <span class="exercise-icon">🧍</span>
-        <div><div class="exercise-title">Um caso de uso inteiro, seu</div><div class="exercise-sub">port de entrada → service → port de saída → REST</div></div>
-      </div>
-      <p><code>POST /pedidos/{id}/itens</code> adiciona um item a um pedido aberto. Cole o <strong>Prompt 7</strong>: ele força duas pausas,
-      uma para revisar a spec e outra para revisar o plano. Depois, revise com o checklist do Ato 2 mais duas perguntas:
-      <strong>o service buscou pelo port ou pelo JpaRepository?</strong> e <strong>pedido inexistente virou exceção de domínio nomeada?</strong></p>
-      <div class="speclint" data-note="cap01/spec-adicionar-item" data-title=".specs/04-caso-de-uso-adicionar-item.md">
-<script type="text/plain"># Caso de uso: AdicionarItem
-
-## Contexto
-- Mesmo núcleo e adapters de .specs/01 a 03. Leia AGENTS.md e CLAUDE.md.
-
-## Tarefa
-- Port de entrada AdicionarItem(pedidoId, ItemComando) -> Pedido; AdicionarItemService: busca pelo port Pedidos, chama pedido.adicionarItem(...), salva e devolve.
-- Endpoint POST /pedidos/{id}/itens no PedidoController existente, HTTP 200 com PedidoResponse.
-- @Bean em CasosDeUsoConfig.
-
-## Regras
-- Pedido inexistente lança PedidoNaoEncontradoException (domínio) -> HTTP 404. Pedido fechado -> HTTP 409.
-- O service usa só o port Pedidos. Nenhum import de JPA em aplicacao/.
-- Não tocar em CriarPedido nem criar arquivos além dos listados.
-
-## Definição de pronto
-- Teste do service em memória: adiciona em pedido aberto (total atualiza); pedido inexistente; pedido pago.
-- O agente executa o cenário HTTP: criar pedido, adicionar item e conferir o total; depois executa ./mvnw -q test e mostra o resultado.
-</script>
-      </div>
-      <div class="try-first"><span class="try-first-icon">🚨</span><div class="try-first-content"><strong>Entregável:</strong> commit <code>feat: caso de uso AdicionarItem</code> e, no Caderno, os pontos que você mandou corrigir. Quem terminar antes: o <code>GET /pedidos/{id}</code>, com spec.</div></div>
-      <div class="note" data-note="cap01/ato5" data-title="Ato 5 — o que o agente errou sozinho comigo" data-placeholder="…"></div>
-    </div>
-  </section>
-
-  <!-- ═══ FECHAMENTO ═══ -->
-  <section class="step-section ato" id="ato-6">
-    <div class="ato-head">
-      <div class="ah-n">✓<small>FECHO</small></div>
-      <div><h3>Fechamento: os desenhos, a troca, a tarefa</h3><div class="ah-s">Prancheta 1 ao lado da 4. O que mudou na sua cabeça em quatro horas.</div><div class="ah-modes"><span class="mode desenhe">📐 compare</span><span class="mode sozinho">🧍 revisão cruzada</span></div></div>
-      <div class="ah-t">17:20<small>10 min</small><label style="display:block;margin-top:6px"><input type="checkbox" data-persist="cap01/lab/6"> feito</label></div>
-    </div>
-    <div class="card">
-      <ol class="passos">
-        <li class="passo"><div class="p-n">1</div><div class="p-b">Abra a <a href="../../prancheta/" style="color:var(--accent6)">Prancheta</a> do curso: as quatro do dia estão lá. Compare a 1 (como você imaginava) com a 4 (o que existe). Onde o e-mail do 4711 entraria hoje? Marque com uma nota vermelha. É a ponte para o Bloco 2.</div></li>
-        <li class="passo"><div class="p-n">2</div><div class="p-b"><span class="mode sozinho">🧍 duplas</span> Troque de repositório com o colega (presencial ou Zoom, via GitHub). Cada um encontra <strong>dois</strong> pontos no <code>AdicionarItem</code> do outro e nomeia: "import de JPA na aplicação", "exceção genérica", "setter", "arquivo que a spec não pediu".</div></li>
-        <li class="passo"><div class="p-n">3</div><div class="p-b">Cole o <strong>Prompt 8</strong> e projete a auditoria final. O que fixou como critério: spec verificável, regra em arquivo, núcleo sem framework, entidade JPA como adapter e evidência antes de commit. A tarefa de casa vem abaixo.</div></li>
-      </ol>
-      <div class="keyword-grid" style="margin-top:14px">
-        <div class="keyword-chip"><span class="emoji">📝</span><span class="kw-name">SDD</span><span class="kw-desc">Spec com regras verificáveis, plano aprovado, revisão contra a spec. Nada é digitado antes de ser decidido.</span></div>
-        <div class="keyword-chip"><span class="emoji">📄</span><span class="kw-name">AGENTS.md + CLAUDE.md</span><span class="kw-desc">Stack, arquitetura, convenções e comandos. Um contrato portátil e uma ponte curta para o Claude.</span></div>
-        <div class="keyword-chip"><span class="emoji">⬡</span><span class="kw-name">Hexagonal</span><span class="kw-desc">Núcleo sem framework, ports nas fronteiras, adapters fora, config liga. Paga no Sáb 3, 4 e 7.</span></div>
-        <div class="keyword-chip"><span class="emoji">🐘</span><span class="kw-name">Postgres no Docker</span><span class="kw-desc">Infra versionada com o código. Entidade JPA é adapter; o record é o domínio.</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ╔════════════════════════════════════╗
-       ║  🏠 ATÉ 19/09                        ║
-       ╚════════════════════════════════════╝ -->
-  <div class="zone-head zone-casa" id="z-casa">
-    <div class="zh-em">🏠</div>
-    <div>
-      <div class="zh-k">Zona 3 · em casa · duas semanas (12/09 não tem aula)</div>
-      <h2>Até o próximo sábado, 19/09</h2>
-      <div class="zh-s">O serviço cresce em casa, dirigido por você. O Sáb 2 (OO de verdade + SOLID) começa abrindo o seu repositório.</div>
-    </div>
-    <div class="zh-side"><div class="zh-time">~3h</div><div class="text-dim" style="font-size:0.72rem">com seu agente CLI</div></div>
-  </div>
-
-  <section class="step-section" id="s-casa">
-    <div class="card">
-      <p style="margin-bottom:4px"><span data-progress="cap01/casa/"></span></p>
-      <ul class="chk-list">
-        <li><label class="chk"><input type="checkbox" data-persist="cap01/casa/repo"><span><span class="chk-t">Repositório <code>pedidos</code> no GitHub com tudo o que foi feito na sala</span><span class="chk-d"><code>AGENTS.md</code>, <code>CLAUDE.md</code>, <code>.specs/</code> com as quatro specs, <code>infra/docker-compose.yml</code>, os quatro commits.</span></span></label></li>
-        <li><label class="chk"><input type="checkbox" data-persist="cap01/casa/pagar"><span><span class="chk-t"><code>PagarPedido</code> ponta a ponta, com <code>ResultadoPagamento</code> sealed</span><span class="chk-d">Spec nova em <code>.specs/05</code>: <code>Aprovado</code> → PAGO, <code>Recusado(motivo)</code> → continua ABERTO, <code>Estornado</code> só de PAGO. Switch exaustivo, sem <code>default</code>. Endpoint <code>POST /pedidos/{id}/pagamento</code>. Testes em memória.</span></span></label></li>
-        <li><label class="chk"><input type="checkbox" data-persist="cap01/casa/get"><span><span class="chk-t"><code>GET /pedidos/{id}</code>, se não fez na sala</span></span></label></li>
-        <li><label class="chk"><input type="checkbox" data-persist="cap01/casa/claudemd"><span><span class="chk-t">Peça ao agente que <em>proponha</em> melhorias no <code>AGENTS.md</code>, e rejeite pelo menos uma</span><span class="chk-d">Ele pode sugerir regras genéricas. Quais servem ao projeto? Anote no Caderno o que rejeitou e por quê.</span></span></label></li>
-        <li><label class="chk"><input type="checkbox" data-persist="cap01/casa/readme"><span><span class="chk-t">README com as pranchetas 3 e 4 exportadas em PNG e um parágrafo: "por que hexagonal"</span></span></label></li>
-        <li><label class="chk"><input type="checkbox" data-persist="cap01/casa/leitura"><span><span class="chk-t">Ler a zona 📖 do Sábado 2 quando for publicada</span><span class="chk-d">OO de verdade e SOLID como checklist de revisão. Avisamos no grupo.</span></span></label></li>
-      </ul>
-      <div class="tip" style="margin-top:12px"><span class="tip-icon">📦</span><div class="tip-content"><strong>O que trazer dia 19/09:</strong> o repositório com os commits, os pontos de revisão no Caderno, e uma pergunta real sobre onde uma regra de negócio deveria morar. O Sáb 2 começa com o seu <code>PagarPedido</code> no projetor.</div></div>
-      <div class="note" data-note="cap01/casa-rejeitei" data-title="Tarefa — o que o agente sugeriu no contrato e eu rejeitei (e por quê)" data-placeholder="Sugestão: … / Rejeitei porque: …"></div>
-      <div class="center" style="margin-top:18px">
-        <a href="../02-oo-de-verdade-e-solid/" style="display:inline-block;padding:12px 28px;background:linear-gradient(135deg,var(--java),var(--claude));color:var(--bg);text-decoration:none;font-weight:900;border-radius:50px;letter-spacing:1px">Próximo: Sábado 02 — OO de verdade + SOLID → <span style="opacity:0.7;font-size:0.8em">(em breve)</span></a>
-      </div>
-    </div>
-  </section>
-
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>Cap 1 · Uma API de pedidos, passo a passo com IA</title><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&amp;family=Nunito:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet"/><link href="../../shared/styles.css" rel="stylesheet"/><link href="../../shared/lab-kit.css?v=3" rel="stylesheet"/><link href="cap1-ai.css?v=3" rel="stylesheet"/><link href="cap1-oficina.css?v=2" rel="stylesheet"/><link href="cap1-guia.css?v=1" rel="stylesheet"/></head><body data-caderno-livre="./caderno.html" data-page="Cap 01 — API de pedidos com IA"><a class="skip-link" href="#etapa-1">Pular para a primeira etapa</a><div class="progress-track"><div class="progress-bar"></div></div><button aria-label="Abrir menu" class="menu-toggle" onclick="openSidebar()">☰</button><div class="sidebar-overlay"></div><nav aria-label="Sequência da aula" class="sidebar-nav"><button aria-label="Fechar menu" class="sidebar-close" onclick="closeSidebar()">✕</button><div class="sidebar-header"><h3>Cap 1 · uma sequência</h3>
+<a href="../../">← Todos os capítulos</a></div><div class="sidebar-group"><a class="sidebar-link" href="#etapa-1">1. Preparar</a><a class="sidebar-link" href="#etapa-2">2. Ver responder</a><a class="sidebar-link" href="#etapa-3">3. Orientar o agente</a><a class="sidebar-link" href="#etapa-4">4. Escrever a spec</a><a class="sidebar-link" href="#etapa-5">5. Construir em memória</a><a class="sidebar-link" href="#etapa-6">6. Salvar no PostgreSQL</a><a class="sidebar-link" href="#fechamento">Conferir o que aprendi</a><a class="sidebar-link" href="./caderno.html" rel="noopener" target="_blank">📓 Caderno livre ↗</a></div></nav>
+<main class="lesson"><header class="guide-hero"><span class="eyebrow">CAPÍTULO 01 · GUIA DE AULA PARA PROFESSOR E ALUNOS</span><h1>Uma API de pedidos.<br/>Um passo de cada vez.</h1>
+<p class="hero-lead">Vamos construir com um agente de IA e entender cada decisão no caminho. Você prepara o projeto; o agente implementa e executa os testes; a turma confere uma entrega de cada vez.</p>
+<div class="hero-goal"><span>☕</span><p><b>Nosso destino:</b> cadastrar 2 cafés de R$ 18,90, receber o total de R$ 37,80 e encontrar o pedido salvo no PostgreSQL.</p>
+</div><div class="guide-toolbar"><button aria-pressed="true" data-teacher-toggle="">🎙️ Guia do professor visível</button><button aria-pressed="true" data-cap-audio="">🔇 Modo mudo ativado</button><a href="./caderno.html" rel="noopener" target="_blank">📓 Caderno livre</a></div><p id="cap1-audio-note"></p>
+<div class="teacher-cue" data-teacher=""><strong>Professor, comece por aqui</strong><p>Siga as seis etapas em ordem. Leia a fala sugerida, mostre o exemplo, cole o prompt e confira o resultado com a turma. Os prompts que geram código param no plano: você confere e envia o OK indicado logo abaixo. As simulações são apoio à explicação; a entrega acontece no IntelliJ.</p>
+<p>Ritmo sugerido: <b>4 horas</b>, com 215 min nas seis etapas, 15 min de intervalo após a etapa 4 e 10 min de fechamento. Instalações e downloads devem estar resolvidos antes da aula. O tempo de geração e testes varia; confira o resultado antes de avançar.</p>
+</div><nav aria-label="Mapa das seis etapas" class="route-map"><a href="#etapa-1"><b>1</b><span>Preparar</span></a><a href="#etapa-2"><b>2</b><span>Responder</span></a><a href="#etapa-3"><b>3</b><span>Orientar</span></a><a href="#etapa-4"><b>4</b><span>Especificar</span></a><a href="#etapa-5"><b>5</b><span>Construir</span></a><a href="#etapa-6"><b>6</b><span>Persistir</span></a></nav>
+<p aria-live="polite" class="saved-progress" data-guide-progress="">0 de 6 etapas conferidas neste navegador.</p>
+<noscript><p>Ative JavaScript para copiar prompts e usar os simuladores. As explicações e os prompts continuam disponíveis para leitura e cópia manual.</p>
+</noscript></header>
+<section class="lesson-step" id="etapa-1"><header class="step-heading"><span class="step-number">1</span><div><small>ETAPA 1 DE 6 · cerca de 20 min</small><h2>Preparar a bancada</h2>
+</div></header>
+<p class="step-goal"><b>Agora queremos:</b> abrir um projeto mínimo e conversar com o agente dentro dele.</p>
+
+<p>Hoje construiremos uma <b>API</b>: um programa que recebe pedidos de outros programas e devolve respostas. O exemplo é uma cafeteria. Primeiro vamos fazê-lo responder; depois ele aprenderá a cadastrar pedidos.</p>
+
+<h3>1.1 · O que precisa estar instalado</h3>
+
+<div class="simple-grid"><article><b>☕ JDK 21</b><p>Ferramentas para compilar e executar Java. O IntelliJ e o terminal precisam usar essa mesma versão.</p>
+<a href="https://adoptium.net/temurin/releases/?version=21">Download do Java 21</a></article>
+<article><b>💡 IntelliJ IDEA</b><p>É a nossa bancada: arquivos à esquerda, código ao centro e terminal embaixo. Abra a aba Terminal dentro dele.</p>
+<a href="https://www.jetbrains.com/idea/download/">Download do IntelliJ</a></article>
+<article><b>🤖 Um agente com acesso ativo</b><p>Escolha Claude Code ou Codex CLI, já instalado e autenticado. Use o mesmo durante a prática.</p>
+<a href="https://code.claude.com/docs/en/setup">Claude Code</a> · <a href="https://developers.openai.com/codex/cli">Codex CLI</a></article>
+<article><b>🐳 Docker Desktop + Git</b><p>Deixe o Docker instalado para a etapa 6. Git registra mudanças. <b>Maven</b> organiza bibliotecas e tarefas de compilação e teste. O <b>Wrapper</b> é o lançador incluído no projeto para usar a versão prevista de Maven.</p>
+<a href="https://www.docker.com/products/docker-desktop/">Docker Desktop</a> · <a href="https://git-scm.com/downloads">Git</a></article>
 </div>
+<p class="note">Se você usa outro agente, mantenha os mesmos prompts e peça a leitura explícita dos arquivos. A demonstração desta aula usa um CLI no terminal do IntelliJ; um editor com agente integrado pode ter outro fluxo de abertura.</p>
 
-<footer class="footer">
-  <strong style="color:var(--java)">Backend Moderno, Agentes de IA e Cloud</strong> · Sábado 01 ·
-  <a href="../../">← voltar ao hub</a> ·
-  <a href="https://github.com/kelsonvictr" target="_blank" rel="noopener">github.com/kelsonvictr</a>
-</footer>
+<p><b>Teste automatizado</b> é uma verificação executada pelo computador. O projeto inicial traz um teste para conferir se a aplicação consegue iniciar. Vamos pedir que o agente execute essa verificação antes de mudar o código.</p>
+<h3>1.2 · Crie o esqueleto no Spring Initializr</h3>
 
-<script src="../../shared/scripts.js" defer></script>
-<script src="../../shared/lab-kit.js?v=4" defer></script>
-<script src="./cap1-audio.js?v=1" defer></script>
-<script src="./cap1-ai-cenas.js?v=1" defer></script>
-<script src="../../assets/audio/cap01-ai/audio/manifest.js?v=1" defer></script>
-<script src="./cap1-ai.js?v=2" defer></script>
-<script src="./cap1-oficina.js?v=2" defer></script>
-<script type="module" src="../../shared/motion-fx.js?v=3"></script>
-</body>
-</html>
+<p>O <b>Spring Boot</b> prepara configurações comuns de uma aplicação Java. O <b>Spring Initializr</b> é o site que gera os arquivos iniciais. Abra <a href="https://start.spring.io/" rel="noopener" target="_blank">start.spring.io ↗</a> e preencha:</p>
+
+<div class="table-wrap"><table><tr><th>Campo</th><th>Escolha da aula</th></tr><tr><td>Project / Language</td><td>Maven / Java</td></tr><tr><td>Spring Boot</td><td>Versão estável, sem SNAPSHOT, M ou RC; use a mesma do professor.</td></tr><tr><td>Group / Artifact</td><td><code>br.com</code> / <code>pedidos</code></td></tr><tr><td>Package name / Packaging / Java</td><td><code>br.com.pedidos</code> / Jar / 21</td></tr><tr><td>Dependencies</td><td><b>Somente Spring Web</b>, para receber chamadas pela web.</td></tr></table>
+</div>
+<p class="note">JPA e o driver do PostgreSQL entram juntos na etapa 6, quando houver um banco configurado. Assim, a primeira execução depende apenas de Java e Spring Web.</p>
+
+<ol class="actions"><li>Clique em <b>Generate</b>, extraia o ZIP e guarde a pasta <code>pedidos</code>.</li><li>No IntelliJ, use <b>Open</b> e selecione a pasta que contém <code>pom.xml</code>. Espere a importação Maven.</li><li>Em <b>Project Structure → Project SDK</b>, escolha JDK 21. O <code>pom.xml</code> descreve o projeto e suas bibliotecas.</li><li>Abra a aba <b>Terminal</b>. Inicie seu agente digitando <code>claude</code> ou <code>codex</code>. A partir daí, cole os prompts na conversa do agente.</li></ol>
+
+<aside class="teacher-cue" data-teacher=""><strong>🎙️ Professor · diga assim</strong><p>“Vamos deixar a bancada pronta. Ainda não estamos construindo o cadastro; estamos conferindo se as ferramentas conversam.”</p>
+<p><b>Mostre:</b> A pasta pedidos, o pom.xml e o terminal na mesma janela.</p>
+<details><summary>Pergunte: O agente está trabalhando em qual pasta?</summary><p><b>Resposta comentada:</b> Na raiz de pedidos, onde está pom.xml. Em outra pasta ele pode inspecionar ou alterar o projeto errado.</p>
+</details>
+</aside>
+<div class="prompt-card" id="prompt-1"><div class="prompt-head"><div><small>No terminal do IntelliJ · converse com o agente</small><strong>Diagnosticar antes de começar</strong></div><button class="copy-prompt" data-copy-prompt="" type="button">Copiar prompt</button></div><pre class="prompt-text" data-prompt-text="">Estamos na aula de uma API de pedidos. Inspecione a pasta atual e confirme que é a raiz do projeto gerado no Spring Initializr.
+Confira Java 21 no terminal, a versão no pom.xml, Maven Wrapper e Git. Confirme que só adicionamos Spring Web como dependência funcional; testes do gerador são esperados. Não precisamos de banco ainda.
+Execute o teste inicial usando o Maven Wrapper adequado ao sistema. Não altere código-fonte nem adicione dependências. Se houver erro, explique a causa e proponha a menor correção antes de editar.
+Mostre: pasta, versões, comando executado e resultado real do teste. Não diga que passou sem executar. Pare aqui.</pre>
+</div><details class="help"><summary>🛟 Se travar aqui</summary><p>Se o terminal não encontrar o agente, conclua a instalação e o login pelo link acima e abra um novo terminal. Se Java divergir, peça ao agente para diagnosticar JDK/JAVA_HOME e configure também o SDK do IntelliJ. Se aparecer erro de DataSource, confira se JPA foi adicionado antes da hora: retorne ao projeto mínimo com Spring Web. Não avance com teste inicial falhando.</p>
+</details>
+<label class="checkpoint"><input data-checkpoint="1" type="checkbox"/><span><b>Posso avançar quando…</b> o agente confirmou a pasta correta, Java 21 e o teste inicial passou.</span></label></section>
+<section class="lesson-step" id="etapa-2"><header class="step-heading"><span class="step-number">2</span><div><small>ETAPA 2 DE 6 · cerca de 25 min</small><h2>Ver a API responder</h2>
+</div></header>
+<p class="step-goal"><b>Agora queremos:</b> abrir /ola no navegador e enxergar a primeira entrega feita pelo agente.</p>
+
+<p><b>HTTP</b> é o protocolo usado nesta conversa entre navegador e servidor. A resposta traz um código de status: <b>200</b> significa que a chamada foi atendida com sucesso.</p>
+<p>Uma <b>requisição</b> é um pedido enviado à aplicação. <b>GET</b> é o método HTTP usado aqui para buscar uma resposta. A <b>rota</b> <code>/ola</code> indica qual resposta queremos. Vamos criar uma única entrada: <code>GET /ola</code>.</p>
+
+<div class="reading-flow"><span>🧑 Navegador<br/><code>GET /ola</code></span><b>→</b><span>🎮 Controller<br/>recebe o pedido</span><b>→</b><span>💬 Resposta<br/>API funcionando</span></div>
+<p><b>Controller</b> é uma classe que atende chamadas HTTP. As marcações com <code>@</code> são <b>anotações</b>: informações que o Spring usa para reconhecer a classe e a rota.</p>
+
+<pre class="example-code"><code><span class="syn-annotation">@RestController</span>
+<span class="syn-keyword">public class</span> OlaController {
+    <span class="syn-annotation">@GetMapping</span>(<span class="syn-string">"/ola"</span>)
+    <span class="syn-keyword">public</span> String ola() {
+        <span class="syn-keyword">return</span> <span class="syn-string">"API funcionando"</span>;
+    }
+}</code></pre>
+<p class="caption">Trecho de leitura: o agente colocará package e imports no arquivo. <code>@RestController</code> marca a entrada web; <code>@GetMapping</code> liga GET à rota; <code>return</code> devolve o texto.</p>
+<aside class="teacher-cue" data-teacher=""><strong>🎙️ Professor · diga assim</strong><p>“Eu descrevo uma entrega pequena. O agente escreve e testa. Nós conferimos a resposta real antes de pedir mais.”</p>
+<p><b>Mostre:</b> A proposta do agente, o arquivo criado e, por último, a resposta no navegador.</p>
+<details><summary>Pergunte: Se o agente disser “pronto”, já podemos aceitar?</summary><p><b>Resposta comentada:</b> Precisamos conferir o teste e a chamada real. Uma frase de conclusão não prova que a API responde.</p>
+</details>
+</aside>
+<p><b>Diff</b> é a comparação entre versões de um arquivo. O agente mostrará o que mudou, e também o conteúdo dos arquivos novos. <b>Git</b> é a ferramenta que acompanha esse histórico; nesta primeira entrega, o agente prepara o repositório se necessário.</p>
+<div class="prompt-card" id="prompt-2"><div class="prompt-head"><div><small>No terminal do IntelliJ · converse com o agente</small><strong>Criar nossa primeira resposta</strong></div><button class="copy-prompt" data-copy-prompt="" type="button">Copiar prompt</button></div><pre class="prompt-text" data-prompt-text="">Queremos comprovar que a aplicação funciona antes de construir pedidos.
+Proponha um plano curto para criar GET /ola, retornando exatamente "API funcionando", com HTTP 200. Use um OlaController simples dentro do pacote br.com.pedidos e um teste apropriado à versão do Spring Boot do pom.xml.
+Não adicione banco nem dependências. Explique as anotações usadas em linguagem iniciante. Aguarde meu OK antes de implementar.
+Depois do OK: se esta pasta ainda não tiver repositório Git próprio, inicialize um aqui para acompanhar as mudanças. Não altere outros repositórios. Implemente, execute os testes pelo Maven Wrapper, inicie a aplicação, faça a chamada HTTP real e mostre a resposta. Deixe a aplicação disponível para eu abrir no navegador e informe a URL. Mostre arquivos novos e diff dos modificados.</pre>
+</div><p class="approval"><b>Quando o plano estiver correto, responda:</b> “Pode executar somente esse plano. Rode os testes e mostre os arquivos alterados e a evidência. Pare ao concluir.” Se aparecer algo que você não entendeu, peça a explicação antes do OK.</p>
+<div class="expected"><b>Veja com seus olhos</b><p>Abra <a href="http://localhost:8080/ola" rel="noopener" target="_blank">http://localhost:8080/ola ↗</a> na sua máquina. Deve aparecer <b>API funcionando</b>. Se a porta precisou mudar, use a URL informada pelo agente.</p>
+</div><details class="help"><summary>🛟 Se travar aqui</summary><p>“Conexão recusada” costuma indicar aplicação parada ou porta incorreta. “404” indica que a aplicação respondeu, mas aquela rota não foi encontrada. Cole o erro no agente e peça diagnóstico. Se a porta estiver ocupada, identifique o processo; encerre apenas a instância desta aula ou escolha outra porta.</p>
+</details>
+<label class="checkpoint"><input data-checkpoint="2" type="checkbox"/><span><b>Posso avançar quando…</b> vi “API funcionando” no navegador e o agente mostrou os testes passando.</span></label></section>
+<section class="lesson-step" id="etapa-3"><header class="step-heading"><span class="step-number">3</span><div><small>ETAPA 3 DE 6 · cerca de 25 min</small><h2>Dar direção ao agente</h2>
+</div></header>
+<p class="step-goal"><b>Agora queremos:</b> registrar regras que serão usadas em todas as próximas tarefas.</p>
+
+<p>Até aqui demos uma tarefa pequena. Quando o projeto cresce, repetir todas as orientações no chat fica cansativo. Podemos guardá-las em um arquivo de texto do projeto.</p>
+
+<p><b>AGENTS.md</b> registra instruções para o agente: como trabalhar, quais limites respeitar e como verificar a entrega. <b>CLAUDE.md</b> é o arquivo de instruções do Claude Code. Nesta aula, ele aponta para <code>AGENTS.md</code>, mantendo um único texto principal. <b>Markdown</b>, a extensão <code>.md</code>, é texto com marcações simples: <code>#</code> faz um título, <code>-</code> faz um item.</p>
+
+<div class="simple-grid two"><article><b>💬 Prompt = pedido de agora</b><p>“Crie a rota /ola e pare.” Pode mudar a cada conversa.</p>
+</article>
+<article><b>📋 Instruções = modo de trabalhar</b><p>“Use Java 21. Faça um plano. Teste antes de concluir.” São reutilizadas entre tarefas.</p>
+</article>
+</div>
+<p>Esses arquivos ajudam a orientar; não garantem obediência. Peça ao agente para dizer o que leu e confira o resultado. Uma biblioteca adicional é uma <b>dependência</b>: ela adiciona recursos e também manutenção ao projeto.</p>
+
+<aside class="teacher-cue" data-teacher=""><strong>🎙️ Professor · diga assim</strong><p>“Vamos dar ao agente um combinado de trabalho. Ele precisa saber como queremos construir, não apenas o que queremos receber.”</p>
+<p><b>Mostre:</b> AGENTS.md na raiz e a leitura das regras feita pelo agente.</p>
+<details><summary>Pergunte: Onde colocar “use Java 21 em todas as tarefas”?</summary><p><b>Resposta comentada:</b> Em AGENTS.md. É uma orientação permanente. O prompt atual pode lembrar o agente de ler esse arquivo.</p>
+</details>
+</aside>
+<div class="prompt-card" id="prompt-3"><div class="prompt-head"><div><small>No terminal do IntelliJ · converse com o agente</small><strong>Registrar os combinados do projeto</strong></div><button class="copy-prompt" data-copy-prompt="" type="button">Copiar prompt</button></div><pre class="prompt-text" data-prompt-text="">Proponha os dois documentos abaixo e aguarde meu OK antes de gravar. Depois do OK, crie AGENTS.md na raiz com estas regras, em português simples:
+- Usar Java 21 e respeitar a versão do Spring Boot no pom.xml.
+- Usar o Maven Wrapper do projeto para executar testes e aplicação.
+- Trabalhar em passos pequenos: explicar o plano, aguardar meu OK, implementar, testar e apresentar evidência real.
+- Não adicionar bibliotecas, funcionalidades ou infraestrutura fora da tarefa aprovada.
+- Manter as regras do pedido em Java puro, sem Spring nem JPA nessas classes. JPA é a tecnologia de mapeamento para banco que só entra no final. Vamos introduzir essa separação gradualmente.
+- Antes de cada tarefa, ler a especificação indicada no prompt. Não presumir que uma pasta .specs é lida automaticamente.
+- Mostrar arquivos novos, diff dos arquivos modificados e o que não conseguiu verificar. Não apagar mudanças existentes.
+Crie CLAUDE.md contendo @AGENTS.md, para importar essas instruções no Claude Code.
+Se esses arquivos já existirem, preserve as instruções válidas e mostre conflitos antes de substituir qualquer conteúdo.
+Nesta tarefa, altere somente esses documentos. Ao terminar, leia ambos e resuma o combinado que seguirá. Não implemente funcionalidades.</pre>
+</div><p class="approval"><b>Confira o texto proposto antes de gravar.</b> Se estiver de acordo, responda: “Pode criar somente esses documentos. Mostre o conteúdo final e pare.”</p>
+<div class="expected"><b>Resultado esperado</b><p>Dois arquivos na raiz. O conteúdo principal está em <code>AGENTS.md</code>. O agente consegue explicar as regras e ainda não criou o cadastro de pedidos.</p>
+</div><details class="help"><summary>🛟 Se travar aqui</summary><p>Se o agente não carregar o arquivo automaticamente, diga: “Leia explicitamente AGENTS.md e CLAUDE.md desta pasta antes de continuar”. Depois de criar instruções durante uma sessão, essa releitura evita depender do comportamento de carregamento de cada ferramenta.</p>
+</details>
+<label class="checkpoint"><input data-checkpoint="3" type="checkbox"/><span><b>Posso avançar quando…</b> li as regras e o agente confirmou os limites do trabalho.</span></label></section>
+<section class="lesson-step" id="etapa-4"><header class="step-heading"><span class="step-number">4</span><div><small>ETAPA 4 DE 6 · cerca de 25 min</small><h2>Combinar o que será entregue</h2>
+</div></header>
+<p class="step-goal"><b>Agora queremos:</b> escrever uma especificação curta do cadastro antes de gerar seu código.</p>
+
+<p><b>Especificação</b>, ou <b>spec</b>, é a descrição do comportamento que esperamos. É como anotar o pedido do cliente antes de ir para a cozinha. Ela responde: quais dados entram, quais regras valem e como reconhecer uma entrega correta?</p>
+
+<p><b>SDD</b> significa <i>Specification-Driven Development</i>, desenvolvimento guiado por especificação. Nosso ciclo será: escrever exemplos → conferir o plano → autorizar → executar → comparar o resultado com os exemplos.</p>
+
+<p>Os exemplos usam códigos HTTP: <b>201</b> = criado; <b>422</b> = os dados foram entendidos, mas violam uma regra; <b>400</b> = a entrada não pôde ser interpretada. Os detalhes da chamada POST e do formato JSON serão montados na etapa 5.3.</p>
+<p>A pasta <code>.specs/</code> guardará esses documentos. É uma convenção nossa, não um recurso do Java ou do Spring. O ponto no início faz a pasta ficar oculta em alguns exploradores de arquivos; dentro da IDE ela continua sendo uma pasta comum.</p>
+
+<div class="order-card"><span>☕</span><div><small>NOSSO ÚNICO CASO DA AULA</small><h3>2 cafés de R$ 18,90</h3>
+<p>Produto: <code>CAFE-500</code> · quantidade: <b>2</b><br/>Total esperado: <b>R$ 37,80</b> · pedido começa <b>ABERTO</b></p>
+</div></div>
+<p><b>SKU</b> é o código que identifica um produto. Um pedido tem uma lista de <b>itens</b>; cada item informa SKU, quantidade e preço unitário. Total é a soma de quantidade × preço de cada item.</p>
+
+<div class="mini-ide" data-spec-lab=""><div class="lab-top"><b>🗂️ Veja a .specs/ nascer</b><span>Simulação · não altera seu projeto</span></div><div class="ide-panels"><pre data-spec-tree=""></pre>
+<div><b data-spec-title=""></b><pre data-spec-content=""></pre>
+</div></div><p aria-live="polite" class="lab-evidence" data-spec-evidence=""></p>
+<div class="lab-controls"><button data-spec-back="">← Voltar</button><button data-spec-next="">Próximo passo →</button><button data-spec-reset="">Recomeçar</button><span data-spec-position=""></span></div></div>
+<aside class="teacher-cue" data-teacher=""><strong>🎙️ Professor · diga assim</strong><p>“Spec não é um documento enorme. É o combinado que nos permite dizer: esta entrega está certa ou está errada.”</p>
+<p><b>Mostre:</b> Na simulação, a pasta aparece, depois o arquivo e depois os exemplos verificáveis. Em seguida, faça isso no projeto real.</p>
+<details><summary>Pergunte: “O cadastro deve ser bom” é um critério suficiente?</summary><p><b>Resposta comentada:</b> Não. “Duas unidades de 18,90 resultam em 37,80” pode ser testado. Um critério de aceite é uma condição objetiva para aceitar a entrega.</p>
+</details>
+</aside>
+<div class="prompt-card" id="prompt-4"><div class="prompt-head"><div><small>No terminal do IntelliJ · converse com o agente</small><strong>Criar a spec do cadastro</strong></div><button class="copy-prompt" data-copy-prompt="" type="button">Copiar prompt</button></div><pre class="prompt-text" data-prompt-text="">Leia AGENTS.md. Vamos especificar o cadastro de pedidos, sem implementar Java ainda. Proponha os documentos abaixo e aguarde meu OK para gravá-los.
+Crie .specs/README.md explicando que a pasta guarda decisões e que a spec relevante deve ser lida explicitamente em cada tarefa.
+Crie .specs/02-criar-pedido.md com objetivo, entrada, regras, exemplos, limites e critérios de aceite:
+- Entrada: uma lista de itens. Cada item tem sku, quantidade inteira e precoUnitario decimal.
+- Rejeitar lista nula/vazia, item nulo, SKU nulo/em branco, quantidade menor ou igual a zero e preço nulo, zero ou negativo.
+- Nesta aula, preço tem no máximo duas casas decimais. Rejeitar mais casas, sem arredondar silenciosamente.
+- Gerar um identificador UUID para o pedido, iniciar com status ABERTO e calcular total a partir dos itens. O cliente não informa o total.
+- Exemplo válido: CAFE-500, quantidade 2, precoUnitario 18.90; total 37.80.
+- Exemplos inválidos: lista vazia e quantidade 0; não salvar pedido inválido.
+- Primeiro faremos regras e testes em Java puro; depois cadastro em memória e entrada HTTP. Banco somente na etapa seguinte aprovada.
+- No HTTP: POST /pedidos válido retorna 201 com id, status e total; regra inválida retorna 422 com mensagem clara; JSON malformado retorna 400.
+- Fora do escopo: autenticação, pagamentos, frete, estoque, filas e atualização de pedidos.
+Use linguagem curta, com exemplos. Ao terminar, mostre os documentos para revisão. Não crie código.</pre>
+</div><p class="approval"><b>Confira o texto proposto antes de gravar.</b> Se estiver de acordo, responda: “Pode criar somente esses documentos. Mostre o conteúdo final e pare.”</p>
+<p class="note"><b>Limite do exemplo:</b> o preço vem na requisição para concentrar a aula no fluxo. Em uma loja real, o servidor consulta o preço autorizado; não confia no valor enviado pelo comprador.</p>
+<div class="expected"><b>Antes de continuar</b><p>Abra <code>.specs/02-criar-pedido.md</code>. Leia os exemplos junto com a turma. <b>UUID</b> é um identificador gerado, como uma etiqueta única; o valor concreto será diferente em cada execução.</p>
+</div><details class="help"><summary>🛟 Se travar aqui</summary><p>Se o agente começar a gerar classes, interrompa: “Nesta etapa estamos revisando só os documentos. Mostre o que mudou e aguarde”. Se a spec estiver longa, peça para separar o que é regra necessária do que é melhoria futura.</p>
+</details>
+<label class="checkpoint"><input data-checkpoint="4" type="checkbox"/><span><b>Posso avançar quando…</b> a spec contém o caso de R$ 37,80, casos inválidos e limites que consigo explicar.</span></label></section>
+<section class="lesson-step" id="etapa-5"><header class="step-heading"><span class="step-number">5</span><div><small>ETAPA 5 DE 6 · cerca de 65 min</small><h2>Construir e entender cada peça</h2>
+</div></header>
+<p class="step-goal"><b>Agora queremos:</b> cadastrar o pedido em memória, entendendo por que cada classe existe.</p>
+
+<p>Agora seguimos três pequenas rodadas na mesma funcionalidade. Em cada uma, o agente propõe, nós conferimos e só então autorizamos. A spec da etapa 4 continua sendo nosso combinado.</p>
+
+<h3>5.1 · Primeiro, a regra: o pedido faz a conta</h3>
+
+<p>O <b>domínio</b> é a parte do programa que conhece o assunto do negócio. Na cafeteria, <code>ItemPedido</code> conhece quantidade e preço; <code>Pedido</code> conhece seus itens e calcula o total. Eles podem ser testados sem navegador, Spring ou banco.</p>
+
+<p>Em Java, uma <b>classe</b> reúne dados e comportamentos; um <b>objeto</b> é um exemplar dessa classe. Um <b>teste automatizado</b> executa uma situação e confere o resultado esperado. Para dinheiro usaremos <code>BigDecimal</code>, um tipo decimal, em vez de <code>double</code>, que pode produzir aproximações binárias.</p>
+
+<aside class="teacher-cue" data-teacher=""><strong>🎙️ Professor · diga assim</strong><p>“Se eu anotar duas unidades de 18,90 num papel, o total é 37,80. Essa regra existe antes de escolher banco ou site. É ela que vamos proteger.”</p>
+<p><b>Mostre:</b> Um teste construindo um pedido e conferindo o total, sem iniciar a aplicação.</p>
+<details><summary>Pergunte: Para descobrir o total, precisamos ligar o PostgreSQL?</summary><p><b>Resposta comentada:</b> Não. A conta depende dos itens. Se o teste exigir banco para multiplicar quantidade por preço, misturamos responsabilidades.</p>
+</details>
+</aside>
+<div class="prompt-card" id="prompt-5a"><div class="prompt-head"><div><small>No terminal do IntelliJ · converse com o agente</small><strong>Rodada 1 · regras e testes</strong></div><button class="copy-prompt" data-copy-prompt="" type="button">Copiar prompt</button></div><pre class="prompt-text" data-prompt-text="">Leia AGENTS.md e .specs/02-criar-pedido.md. Faça um plano apenas para as regras do pedido e seus testes em Java puro; aguarde meu OK.
+Crie ItemPedido e Pedido em br.com.pedidos.domain. Classes simples, campos privados e métodos com nomes claros. Valide todas as entradas previstas na spec, incluindo nulos. Não permita que alterações na lista recebida contornem as regras. Calcule o total com BigDecimal a partir dos itens; não receba total pronto. Gere UUID e status ABERTO.
+Use uma exceção específica de regra do pedido, explicando que exceção sinaliza uma operação que não pode continuar. Não importe Spring, JPA ou classes de HTTP no domínio. Não crie Controller, banco nem portas ainda.
+Depois do OK, implemente e execute testes do domínio: exemplo 37.80, lista vazia, quantidade zero, demais entradas inválidas e soma de mais de um item. Explique um teste linha por linha. Mostre evidência real e pare.</pre>
+</div><p class="approval"><b>Quando o plano estiver correto, responda:</b> “Pode executar somente esse plano. Rode os testes e mostre os arquivos alterados e a evidência. Pare ao concluir.” Se aparecer algo que você não entendeu, peça a explicação antes do OK.</p>
+<div class="expected"><b>Conferência da rodada 1</b><p>Peça: “Mostre o teste de 37.80 e a linha que rejeita quantidade 0”. O agente deve apontar o código, explicar a regra e mostrar o teste executado. A aplicação ainda só expõe <code>/ola</code>.</p>
+</div>
+<h3>5.2 · Depois, o processo: criar e guardar</h3>
+
+<p>Um <b>caso de uso</b> organiza uma ação que alguém quer fazer. <code>CriarPedidoService</code> receberá os dados, criará um pedido válido e pedirá para guardá-lo. Ele não precisa saber como o armazenamento funciona.</p>
+
+<p>Pense numa tomada: ela define o encaixe; aparelhos diferentes respeitam esse encaixe. Em Java, uma <b>interface</b> declara operações que uma classe deve oferecer. Chamaremos essas interfaces de <b>portas</b> (<i>ports</i>). Uma classe que realiza a operação de uma porta é uma implementação.</p>
+
+<div class="simple-grid two"><article><b>🚪 Porta de entrada: CriarPedido</b><p>Define o que a aplicação oferece: criar um pedido. O caso de uso implementa essa interface.</p>
+</article>
+<article><b>🚪 Porta de saída: Pedidos</b><p>Define o que a aplicação precisa: salvar um pedido. A aplicação usa essa interface, sem escolher um banco.</p>
+</article>
+</div>
+<p>O <b>adaptador</b> (<i>adapter</i>) faz a conexão com uma tecnologia concreta. <code>PedidosEmMemoria</code> implementará a porta <code>Pedidos</code>, guardando os objetos na memória do processo. Ao encerrar a aplicação, esses dados desaparecem.</p>
+
+<pre class="example-code"><code><span class="syn-keyword">public interface</span> Pedidos {
+    <span class="syn-keyword">void</span> salvar(Pedido pedido);
+}</code></pre>
+<p class="caption">Leia: “Quem implementar Pedidos precisa saber salvar um Pedido”. <code>void</code> significa que este método não devolve um valor. O caso de uso pode devolver o próprio pedido após salvar.</p>
+<aside class="teacher-cue" data-teacher=""><strong>🎙️ Professor · diga assim</strong><p>“O caso de uso pede “salve este pedido”. A interface é o contrato desse pedido. A classe de memória executa o trabalho. Depois conectaremos outra classe com o mesmo contrato.”</p>
+<p><b>Mostre:</b> A interface Pedidos e a classe PedidosEmMemoria. Mostre quem pede e quem executa.</p>
+<details><summary>Pergunte: Quem deve conhecer os detalhes do banco: caso de uso ou adaptador?</summary><p><b>Resposta comentada:</b> O adaptador. O caso de uso depende da operação salvar, declarada na porta, e continua igual quando mudamos a tecnologia.</p>
+</details>
+</aside>
+<div class="prompt-card" id="prompt-5b"><div class="prompt-head"><div><small>No terminal do IntelliJ · converse com o agente</small><strong>Rodada 2 · caso de uso e memória</strong></div><button class="copy-prompt" data-copy-prompt="" type="button">Copiar prompt</button></div><pre class="prompt-text" data-prompt-text="">Leia AGENTS.md e .specs/02-criar-pedido.md; inspecione o domínio existente. Proponha um plano para coordenar criar e salvar em memória; aguarde meu OK.
+Em application.port.in, defina a interface CriarPedido e um comando Java simples com os dados necessários, sem tipos HTTP.
+Em application.port.out, defina Pedidos com a operação salvar(Pedido pedido).
+Em application, implemente CriarPedidoService: receber dados, construir o domínio, salvar pela porta Pedidos e devolver o pedido. Receba Pedidos pelo construtor, sem anotação Spring. Não duplique as validações do domínio.
+Em adapter.out.memory, implemente PedidosEmMemoria, guardando pedidos por UUID em uma coleção segura para chamadas concorrentes. Não apenas finja que salvou.
+Nesta rodada, nada de HTTP novo, JPA ou banco. Teste o caso de uso com uma implementação de teste da porta: pedido válido é salvo; pedido inválido não chama salvar. Teste também o armazenamento em memória.
+Depois do OK, execute os testes pelo Wrapper, mostre quem chama cada interface, os arquivos criados e pare.</pre>
+</div><p class="approval"><b>Quando o plano estiver correto, responda:</b> “Pode executar somente esse plano. Rode os testes e mostre os arquivos alterados e a evidência. Pare ao concluir.” Se aparecer algo que você não entendeu, peça a explicação antes do OK.</p>
+<div class="expected"><b>Conferência da rodada 2</b><p>No teste, encontre <code>new CriarPedidoService(...)</code>. O argumento é quem sabe salvar. <b>Injeção de dependência</b> é isso: entregar ao objeto um colaborador pronto. Podemos fazer manualmente no teste; o Spring fará a montagem na próxima rodada.</p>
+</div>
+<h3>5.3 · Por último, a entrada web</h3>
+
+<p><b>POST</b> é o método HTTP usado aqui para criar. <b>JSON</b> é um formato de texto com campos e valores. O Controller receberá esse texto e chamará a porta <code>CriarPedido</code>.</p>
+
+<pre class="example-code"><code>POST /pedidos
+{
+  "itens": [
+    { "sku": "CAFE-500", "quantidade": 2, "precoUnitario": 18.90 }
+  ]
+}</code></pre>
+<p>Um <b>DTO</b> é um objeto que transporta dados na entrada ou saída. O DTO da web representa o JSON. O Controller o converte para o comando da aplicação. Isso evita que nossas regras precisem conhecer o formato da web.</p>
+
+<p>O Spring montará os objetos numa classe de configuração: cria o armazenamento em memória, entrega-o ao caso de uso e entrega o caso de uso ao Controller. <b>Bean</b> é um objeto administrado pelo Spring; <code>@Bean</code> marca o método que o fornece.</p>
+<div class="prompt-card" id="prompt-5c"><div class="prompt-head"><div><small>No terminal do IntelliJ · converse com o agente</small><strong>Rodada 3 · POST /pedidos funcionando</strong></div><button class="copy-prompt" data-copy-prompt="" type="button">Copiar prompt</button></div><pre class="prompt-text" data-prompt-text="">Leia AGENTS.md e .specs/02-criar-pedido.md e reutilize as peças existentes. Proponha somente a entrada HTTP e a montagem dos objetos; aguarde meu OK.
+Crie PedidoController em adapter.in.web. POST /pedidos recebe DTO com itens (sku, quantidade, precoUnitario), converte para o comando Java e chama CriarPedido. Retorne DTO com id, status e total, HTTP 201.
+Mapeie a exceção de regra do domínio para HTTP 422 e mensagem clara na borda web. JSON malformado retorna 400. Não exponha rastros internos de erro. Valores nulos devem seguir os critérios da spec, sem NullPointerException virar 500.
+Em config, conecte PedidosEmMemoria e CriarPedidoService com @Bean. Mantenha domínio e aplicação sem imports de Spring/JPA. Uma única instância do armazenamento atende às requisições. Preserve GET /ola.
+Depois do OK: implemente, execute testes automatizados, inicie ou reinicie apenas a aplicação desta aula e faça chamadas HTTP reais: válido (201, ABERTO, total 37.80); quantidade zero (422); lista vazia (422); JSON malformado (400).
+Mostre requisição, status e corpo de cada resposta. Inspecione também o armazenamento no teste: inválidos não foram salvos. Explique o caminho de uma chamada apontando os arquivos, um por vez. Não adicione banco nem dependências novas.</pre>
+</div><p class="approval"><b>Quando o plano estiver correto, responda:</b> “Pode executar somente esse plano. Rode os testes e mostre os arquivos alterados e a evidência. Pare ao concluir.” Se aparecer algo que você não entendeu, peça a explicação antes do OK.</p>
+<h3>Agora podemos dar nome à organização: arquitetura hexagonal</h3>
+
+<p>Construímos um <b>núcleo</b> com regras e casos de uso. Ele conversa com o exterior por portas. Adaptadores conectam essas portas à web e ao armazenamento. <b>Arquitetura hexagonal</b> é essa organização por dentro e fora; o desenho com seis lados não obriga seis camadas nem seis classes.</p>
+
+<div class="hex-lab" data-request-lab=""><div class="lab-top"><b>☕ Acompanhe um pedido por dentro</b><span>Simulação didática · nenhum servidor é chamado</span></div><div class="lab-controls"><label>Quantidade <select data-quantity=""><option value="2">2 · caso válido</option><option value="0">0 · caso inválido</option></select></label><button data-request-back="">← Voltar</button><button data-request-next="">Próximo passo →</button><button data-request-reset="">Recomeçar</button></div><div class="request-rail" data-request-rail=""></div><div aria-live="polite" class="request-stage"><small data-request-count=""></small><h4 data-request-title=""></h4><p data-request-action=""></p>
+<pre data-request-artifact=""></pre>
+<p class="lab-evidence" data-request-proof=""></p>
+</div></div>
+<div class="simple-grid two"><article><b>Caminho da execução</b><p>Controller → caso de uso → domínio → chamada à porta de saída → adaptador. É a ordem do trabalho desta requisição.</p>
+</article>
+<article><b>Direção das dependências</b><p>A implementação de memória conhece a interface do núcleo. O núcleo conhece a interface, sem importar a implementação. É diferente da ordem em que os métodos são executados.</p>
+</article>
+</div>
+<details><summary>Mapa de pastas · abra depois de construir</summary><pre class="example-code"><code>br.com.pedidos/
+  domain/                 Pedido, ItemPedido e suas regras
+  application/            CriarPedidoService
+    port/in/              CriarPedido e comando
+    port/out/             Pedidos
+  adapter/in/web/          Controller e DTOs
+  adapter/out/memory/      PedidosEmMemoria
+  config/                 montagem com Spring</code></pre>
+<p>Esses nomes são uma convenção da aula. O critério é a responsabilidade e a direção das dependências, não a pasta sozinha.</p>
+</details>
+<aside class="teacher-cue" data-teacher=""><strong>🎙️ Professor · diga assim</strong><p>“A vantagem aparece na próxima etapa: vamos mudar onde guardamos o pedido e preservar a regra que calcula 37,80. Cada peça tem uma razão para existir.”</p>
+<p><b>Mostre:</b> Na simulação, compare quantidade 2 e 0. O caminho inválido termina antes de salvar.</p>
+<details><summary>Pergunte: Colocar classes em pastas chamadas domain e adapter já garante hexagonal?</summary><p><b>Resposta comentada:</b> Não. Precisamos conferir os imports e as responsabilidades. Se Pedido importar JPA, o núcleo ainda depende da tecnologia, mesmo dentro de uma pasta chamada domain.</p>
+</details>
+</aside>
+<details class="help"><summary>🛟 Se travar aqui</summary><p>Se houver muitas classes, peça: “Mostre só o caminho de uma requisição e explique cada arquivo quando chegar nele”. Se receber 500 para quantidade zero, peça para conferir a exceção do domínio e sua tradução no Controller/handler. Se o agente gerar Repository JPA, lembre que o armazenamento desta etapa é em memória.</p>
+</details>
+<label class="checkpoint"><input data-checkpoint="5" type="checkbox"/><span><b>Posso avançar quando…</b> vi 201 com total 37.80, os erros esperados e consigo apontar onde a regra vive.</span></label></section>
+<section class="lesson-step" id="etapa-6"><header class="step-heading"><span class="step-number">6</span><div><small>ETAPA 6 DE 6 · cerca de 55 min</small><h2>Trocar a memória pelo PostgreSQL</h2>
+</div></header>
+<p class="step-goal"><b>Agora queremos:</b> salvar o mesmo pedido no banco e provar que ele sobrevive ao reinício da aplicação.</p>
+
+<p>A API já funciona. Agora temos uma necessidade nova: os pedidos precisam continuar existindo quando a aplicação for encerrada. <b>Persistir</b> significa guardar os dados de forma durável.</p>
+
+<div class="simple-grid two"><article><b>🧠 Memória da aplicação</b><p>Rápida e simples para começar. Os dados somem quando o processo termina.</p>
+</article>
+<article><b>🐘 PostgreSQL</b><p>Um banco de dados que organiza registros em tabelas e os mantém em disco. A aplicação se conecta a ele.</p>
+</article>
+</div>
+<p><b>Docker</b> executa o PostgreSQL num ambiente isolado, o <b>container</b>. <b>Docker Compose</b> descreve como iniciar esse ambiente. Um <b>volume</b> guarda os arquivos do banco fora da parte descartável do container.</p>
+
+<p><b>Porta de rede</b>, como <code>5432</code>, é um número que identifica onde um serviço atende. Ela é diferente da <b>porta da arquitetura</b>, que é uma interface Java. <b>Healthcheck</b> é uma verificação para saber se o banco está pronto para receber conexões.</p>
+<p><b>JPA</b> é um padrão para mapear objetos Java para registros de banco. O Hibernate implementa esse padrão; Spring Data JPA reduz o trabalho de acesso. Eles ficarão no novo <code>PedidosJpaAdapter</code>, que implementa a mesma porta <code>Pedidos</code>.</p>
+
+<div class="swap-lab" data-swap-lab=""><div class="lab-top"><b>🔌 Troque a forma de guardar</b><span>Simulação isolada · não altera Docker</span></div><div class="lab-controls"><label>Armazenamento <select data-store=""><option value="memory">Memória da aplicação</option><option value="postgres">PostgreSQL com volume</option></select></label><button data-store-save="">Cadastrar 2 cafés</button><button data-store-restart="">Reiniciar aplicação</button><button data-store-reset="">Limpar simulação</button></div><div class="storage-core">💎 Mesma regra: 2 × R$ 18,90 = <b>R$ 37,80</b><small>Pedido → porta Pedidos → <strong data-store-adapter=""></strong></small></div><div class="storage-slots" data-store-slots=""></div><p aria-live="polite" class="lab-evidence" data-store-feedback="">Cadastre um pedido e preveja: o que acontece ao reiniciar a aplicação?</p>
+</div>
+<aside class="teacher-cue" data-teacher=""><strong>🎙️ Professor · diga assim</strong><p>“Vamos trocar uma peça na borda. O pedido não precisa aprender SQL para continuar calculando o total. Mas precisamos testar se a nova conexão funciona de verdade.”</p>
+<p><b>Mostre:</b> Cadastre e reinicie na simulação usando memória. Repita usando PostgreSQL. Depois faça a troca no projeto real.</p>
+<details><summary>Pergunte: O que precisa mudar na regra de total para usar PostgreSQL?</summary><p><b>Resposta comentada:</b> Nada. Mudam o adaptador e a configuração de montagem. O domínio e o caso de uso devem continuar iguais. O novo adaptador precisa dos próprios testes de integração.</p>
+</details>
+</aside>
+<div class="prompt-card" id="prompt-6a"><div class="prompt-head"><div><small>No terminal do IntelliJ · converse com o agente</small><strong>Planejar a troca e preparar o banco</strong></div><button class="copy-prompt" data-copy-prompt="" type="button">Copiar prompt</button></div><pre class="prompt-text" data-prompt-text="">Leia AGENTS.md e a spec do cadastro. Vamos trocar a implementação de armazenamento, preservando comportamento e núcleo.
+Primeiro confira se Docker Desktop está ativo, Docker Compose está disponível e se a porta local pretendida está livre. Não encerre serviços de outros projetos.
+Proponha .specs/03-persistencia.md com plano e critérios: persistir pedido e itens em PostgreSQL; preservar as regras e respostas HTTP; reiniciar a aplicação e consultar no banco o mesmo UUID. Não apague pedidos existentes.
+Nesta rodada, após meu OK, crie somente a spec, compose.yaml e configuração local de credenciais e uma regra em .gitignore para que esse arquivo não entre no Git. Use PostgreSQL 17, projeto Compose identificado como pedidos-aula, porta ligada a 127.0.0.1, volume nomeado e healthcheck. Se a porta 5432 estiver ocupada, proponha outra porta no host.
+Inicie somente esse serviço e aguarde ficar saudável. Mostre o status e execute uma consulta SQL simples para comprovar conexão. Explique container, volume e porta em linguagem iniciante.
+Não adicione JPA nem mude código Java nesta rodada. Não use limpeza global de Docker nem remova volumes. Aguarde meu OK antes de criar arquivos e iniciar o banco.</pre>
+</div><p class="approval"><b>Quando o plano estiver correto, responda:</b> “Pode executar somente esse plano. Rode os testes e mostre os arquivos alterados e a evidência. Pare ao concluir.” Se aparecer algo que você não entendeu, peça a explicação antes do OK.</p>
+<div class="expected"><b>Conferência do banco</b><p>O Docker Desktop mostra o PostgreSQL saudável. O agente executou uma consulta. <b>SQL</b> é a linguagem usada para consultar e modificar dados. <b>Entidade JPA</b> representa o formato de armazenamento; <b>repository JPA</b> é a interface usada pelo adaptador para operar o banco. Eles ficam na borda, separados do Pedido do domínio. Um teste de <b>integração</b> confere essa ligação com o banco real.</p>
+</div><div class="prompt-card" id="prompt-6b"><div class="prompt-head"><div><small>No terminal do IntelliJ · converse com o agente</small><strong>Conectar o adaptador e provar persistência</strong></div><button class="copy-prompt" data-copy-prompt="" type="button">Copiar prompt</button></div><pre class="prompt-text" data-prompt-text="">Leia AGENTS.md, .specs/02-criar-pedido.md e .specs/03-persistencia.md. O PostgreSQL da aula já está saudável. Proponha o plano e aguarde meu OK.
+Adicione Spring Data JPA e o driver PostgreSQL compatíveis com a versão atual do pom.xml. Não troque versões do projeto. Configure conexão usando a configuração local ignorada pelo Git; explique como carregá-la na execução e nos testes.
+Crie entidades de persistência e repository JPA dentro de adapter.out.jpa. Persista UUID, status e os itens (sku, quantidade, precoUnitario) de forma atômica; use tipo decimal para preço. Total continua calculado pelos itens, sem coluna de total.
+Crie PedidosJpaAdapter implementando a porta Pedidos. Faça conversão explícita entre domínio e persistência, sem anotações JPA no domínio. Troque a montagem da aplicação para injetar apenas esse adaptador, evitando dois beans concorrentes para Pedidos. Preserve o adaptador em memória para testes.
+Não altere domínio nem caso de uso para acoplar banco. Mantenha suas regras e testes. Para este banco local de aula, ddl-auto=update pode criar as tabelas; registre que produção exige migrações versionadas.
+Depois do OK: execute os testes existentes e testes de integração da persistência. Use dados de teste identificáveis e limpe apenas esses dados, sem truncar tabelas ou apagar registros manuais.
+Faça POST real com CAFE-500, quantidade 2, preço 18.90: confira 201 e 37.80. Registre o UUID retornado e consulte pedido e itens no PostgreSQL.
+Reinicie somente a aplicação, mantendo banco e volume. Consulte novamente o mesmo UUID e confira os itens e o total calculado 37.80. Demonstre que quantidade zero é recusada sem novo registro.
+Mostre os comandos executados, respostas, consultas, testes e diff. Se algo não rodou, informe claramente. Pare sem publicar ou apagar recursos.</pre>
+</div><p class="approval"><b>Quando o plano estiver correto, responda:</b> “Pode executar somente esse plano. Rode os testes e mostre os arquivos alterados e a evidência. Pare ao concluir.” Se aparecer algo que você não entendeu, peça a explicação antes do OK.</p>
+<div class="expected"><b>A prova final tem três partes</b><ol><li>Resposta HTTP real: <code>201</code>, <code>ABERTO</code>, total <code>37.80</code>.</li><li>Consulta real: UUID e itens encontrados no PostgreSQL.</li><li>Aplicação reiniciada: o <b>mesmo UUID</b> continua no banco. A regra de total e seus testes permaneceram iguais.</li></ol>
+</div>
+<p class="note">A simulação simplifica disco, rede e falhas do banco. Ela não executa Java nem comprova persistência real. Quem comprova nossa entrega são os testes e consultas da aplicação. Persistência também não substitui backup.</p>
+
+<details><summary>O que a hexagonal nos deu — e quanto custou?</summary><p>Podemos testar regras sem infraestrutura e substituir armazenamento preservando o núcleo. Em troca, escrevemos interfaces, conversões e configuração. Em aplicações pequenas, camadas mais simples podem bastar. Aqui usamos a separação para aprender uma troca real, não como obrigação para todo projeto.</p>
+</details>
+<details class="help"><summary>🛟 Se travar aqui</summary><p>Conexão recusada: confira se o container está saudável e a porta do host bate com a URL da aplicação. Falha de senha: confira o arquivo local carregado pelo processo; trocar variáveis não altera automaticamente credenciais de um banco já inicializado. Dois beans de Pedidos: confira a configuração que escolhe o adaptador. Dados desapareceram: verifique qual adaptador está ativo e se alguém removeu o volume. Peça diagnóstico antes de qualquer limpeza.</p>
+</details>
+<label class="checkpoint"><input data-checkpoint="6" type="checkbox"/><span><b>Posso avançar quando…</b> o mesmo pedido continuou salvo após reiniciar a aplicação e os testes passaram.</span></label></section>
+<section class="lesson-close" id="fechamento"><small>ÚLTIMOS 10 MINUTOS</small><h2>Você consegue conduzir a próxima tentativa?</h2>
+<p>Peça a um aluno para prever o resultado de <b>3 cafés de R$ 18,90</b>. Depois ele conduz o agente para fazer a chamada, sem alterar código.</p>
+<div class="prompt-card" id="prompt-final"><div class="prompt-head"><div><small>No terminal do IntelliJ · converse com o agente</small><strong>Conferência independente do aluno</strong></div><button class="copy-prompt" data-copy-prompt="" type="button">Copiar prompt</button></div><pre class="prompt-text" data-prompt-text="">Sem alterar o código, use a API que construímos para criar um pedido com CAFE-500, quantidade 3, precoUnitario 18.90.
+Antes de chamar, explique o total esperado. Execute a chamada real e mostre status, corpo e o pedido no banco.
+Em seguida tente quantidade -1. Mostre a rejeição e a evidência de que esse pedido inválido não foi salvo. Não apague dados existentes.</pre>
+</div><details><summary>Resposta esperada · abra após a previsão</summary><p>3 × 18,90 = <b>56,70</b>. O cadastro válido responde 201. Quantidade -1 responde 422 e não deve gerar um novo pedido. O agente deve mostrar evidência; dizer “não salvou” é insuficiente.</p>
+</details>
+<div class="quiz-card" data-guide-quiz=""><h3>Quatro decisões para fixar</h3>
+<p data-quiz-question=""></p>
+<div class="quiz-options" data-quiz-options=""></div><p aria-live="polite" data-quiz-feedback=""></p>
+<button data-quiz-next="" hidden="">Próxima →</button></div><aside class="teacher-cue" data-teacher=""><strong>🎙️ Feche a aula com esta fala</strong><p>“Hoje nós descrevemos a entrega, orientamos o agente e conferimos o resultado. O pedido ganhou uma entrada web e um banco, enquanto suas regras continuaram independentes. O ganho de produtividade veio de delegar execução com um critério claro de revisão.”</p>
+<details><summary>Se o tempo da aula terminar antes do banco</summary><p>Encerre com o cadastro em memória verificado na etapa 5 e retome a etapa 6 depois. Diga explicitamente que persistência ainda não foi entregue. Evite correr pelas explicações para apresentar uma integração que ninguém conferiu.</p>
+</details>
+</aside>
+<details class="recap-theater"><summary>🎭 Revisão opcional · o agente com e sem direção</summary><p>Use a cena para revisar direção, plano e evidência. <b>Endpoint</b> significa uma entrada da API; <b>Lombok</b> é uma biblioteca que gera métodos, dispensável nesta aula; <b>mutável</b> descreve um objeto cujo estado pode mudar. Os arquivos, quantidades de testes e resultados do teatro são ilustrativos; não representam a execução do seu projeto. A cena “mudança” antecipa uma possível aula futura. As vozes locais foram preservadas.</p>
+<div class="agent-theater" data-ai-theater="" data-speaker="LIA" data-stage="prompt" id="cap1-agent-theater">
+<div class="at-head">
+<div><div class="p-label">TEATRO INTERATIVO · PEDIDO 4711</div><strong>Veja onde a produtividade nasce</strong></div>
+<div aria-label="Escolher história" class="at-scenes" role="group">
+<button aria-pressed="true" data-ai-scene="sem_contexto" type="button">1 · Sem contexto</button>
+<button aria-pressed="false" data-ai-scene="com_contexto" type="button">2 · Projeto dirigido</button>
+<button aria-pressed="false" data-ai-scene="mudanca" type="button">3 · Próxima mudança</button>
+</div>
+</div>
+<div class="at-stage">
+<aside aria-label="Personagens" class="at-cast">
+<div class="at-person" data-person="LIA"><div class="at-avatar">👩🏽‍💻</div><div><b>Lia</b><span>faz o pedido</span></div></div>
+<div class="at-person" data-person="BETO"><div class="at-avatar">👨🏾‍💻</div><div><b>Beto</b><span>revisa a entrega</span></div></div>
+<div class="at-person" data-person="LLM"><div class="at-avatar">🤖</div><div><b>Tico</b><span>agente programador</span></div></div>
+</aside>
+
+<div class="at-workbench">
+<div aria-live="polite" class="at-caption"><b data-at-speaker="">Lia</b><h4 data-at-title="">Uma ordem curta</h4><p data-at-line=""></p>
+<small data-at-detail=""></small></div>
+<div class="at-machine">
+<div class="at-context">
+<div class="at-panel-title">CONTEXTO DISPONÍVEL AGORA</div>
+<div class="at-source-node" data-at-source="prompt">💬 prompt atual</div>
+<div class="at-source-node" data-at-source="rules">🏠 CLAUDE.md / AGENTS.md</div>
+<div class="at-source-node" data-at-source="spec">📋 .specs/02-criar-pedido.md</div>
+<div class="at-source-node" data-at-source="plan">🧭 plano aprovado</div>
+<div class="at-source-node" data-at-source="code">📂 código existente</div>
+<div class="at-source-node" data-at-source="test">🧪 resultado dos testes</div>
+<div class="at-source-node" data-at-source="review">🔎 diff para revisão</div>
+</div>
+<div class="at-output">
+<div class="at-panel-title">TERMINAL DO AGENTE · SIMULAÇÃO</div>
+<pre class="at-log" data-at-log=""></pre>
+
+<div aria-label="arquivos criados" class="at-file-tree"><span>📄 CriarPedido.java</span><span>📄 CriarPedidoService.java</span><span>📄 Pedidos.java</span><span>🧪 criaComDoisItens()</span><span>🧪 recusaPedidoVazio()</span><span>🔎 diff revisável</span></div>
+</div>
+</div>
+<div class="at-controls">
+<button class="primary" data-at-play="" type="button">▶ Assistir sem som</button>
+<button data-at-prev="" type="button">← Voltar</button>
+<button data-at-next="" type="button">Avançar →</button>
+<button data-at-reset="" type="button">↺ Recomeçar</button>
+<span class="at-status" data-at-status="">estado: prompt</span><span data-at-progress="">1 / 5</span>
+</div>
+</div>
+</div>
+</div></details>
+<p><a class="guide-link" href="./caderno.html" rel="noopener" target="_blank">📓 Registrar minhas descobertas no caderno livre</a></p>
+<details><summary>Consulta do professor · fontes e próximas práticas</summary><p><a href="https://docs.spring.io/spring-boot/reference/data/sql.html">Spring Boot: banco e JPA</a> · <a href="https://code.claude.com/docs/en/memory">Claude Code: instruções e importação</a> · <a href="https://developers.openai.com/codex/guides/agents-md">Codex: AGENTS.md</a> · <a href="https://alistair.cockburn.us/hexagonal-architecture">Origem da arquitetura hexagonal</a>.</p>
+<p>Como continuação, especifique a busca de um pedido por UUID antes de pedir a implementação. Reutilize o ciclo: exemplo, spec, plano, execução e evidência. Novos recursos ficam para depois de consolidar o cadastro.</p>
+</details>
+</section>
+<footer class="guide-footer"><a href="../../">← Voltar aos capítulos</a><span>Java 21 · IntelliJ · agente no terminal</span></footer>
+</main>
+<script defer="" src="../../shared/scripts.js"></script><script defer="" src="../../shared/lab-kit.js?v=4"></script><script defer="" src="cap1-audio.js?v=1"></script><script defer="" src="cap1-ai-cenas.js?v=1"></script><script defer="" src="../../assets/audio/cap01-ai/audio/manifest.js?v=1"></script><script defer="" src="cap1-ai.js?v=3"></script><script defer="" src="cap1-guia.js?v=1"></script></body></html>
