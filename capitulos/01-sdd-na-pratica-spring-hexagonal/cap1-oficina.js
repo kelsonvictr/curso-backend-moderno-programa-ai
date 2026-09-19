@@ -30,7 +30,7 @@
   });
 
   const ideSteps = [
-    {title:'1. Gere somente o esqueleto', text:'No Spring Initializr, escolha Maven, Java 21 e as quatro dependências indicadas. O ZIP já traz o Maven Wrapper: ninguém instala Maven.', say:'Professor: “Até aqui usamos o navegador. Depois de abrir no IntelliJ, não sairemos mais da IDE.”', terminal:'start.spring.io  →  pedidos.zip'},
+    {title:'1. Gere somente o esqueleto', text:'No Spring Initializr, escolha Maven, Java 21 e Spring Web e Validation; JPA e driver entram no checkpoint 4B. O ZIP já traz o Maven Wrapper: ninguém instala Maven.', say:'Professor: “Até aqui usamos o navegador. Depois de abrir no IntelliJ, não sairemos mais da IDE.”', terminal:'start.spring.io  →  pedidos.zip'},
     {title:'2. Abra a pasta no IntelliJ', text:'Descompacte e abra a pasta pedidos. Espere a IDE importar o pom.xml e confirme Project SDK 21.', say:'Professor: mostre o pom.xml na árvore e o seletor de SDK antes de abrir qualquer arquivo Java.', terminal:'IntelliJ · File → Open → pedidos/'},
     {title:'3. Abra o Terminal da IDE', text:'Use View → Tool Windows → Terminal. Ele deve iniciar na raiz do projeto, onde ficam pom.xml, mvnw e mvnw.cmd.', say:'Professor: rode apenas pwd (ou cd no Windows) para provar que o agente começará no diretório correto.', terminal:'pedidos $  # raiz do projeto'},
     {title:'4. Inicie um agente CLI', text:'Escolha um: claude, codex ou agy. A partir daqui, as frases grandes deste capítulo são coladas no prompt do agente.', say:'Professor: use a mesma ferramenta durante toda a aula; alunos podem usar outra e seguir os mesmos prompts.', terminal:'pedidos $ claude   # ou: codex   # ou: agy'},

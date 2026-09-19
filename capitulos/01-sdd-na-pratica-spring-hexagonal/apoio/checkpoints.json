@@ -1,0 +1,38 @@
+[
+  {
+    "checkpoint": "base",
+    "arquivo": "pedidos-base.zip",
+    "arquivos": 8,
+    "sha256": "1189d2c8b3225617ea49a84f6f062117196cb0e7438857fdaa0d4d7e27030951"
+  },
+  {
+    "checkpoint": "dominio",
+    "arquivo": "pedidos-dominio.zip",
+    "arquivos": 18,
+    "sha256": "ae86d6bc20fd9478ca06ee929942a5326351befc6165b495bef79094c77c2e2d"
+  },
+  {
+    "checkpoint": "nucleo",
+    "arquivo": "pedidos-nucleo.zip",
+    "arquivos": 24,
+    "sha256": "424a75893e12971f4b71308c0ee4071673256e1731fd36e8cad184598f0b910b"
+  },
+  {
+    "checkpoint": "banco",
+    "arquivo": "pedidos-banco.zip",
+    "arquivos": 25,
+    "sha256": "a64968a7eb2a376b033142377b6b281d4441310e63dde992e86adf7ef88d7b70"
+  },
+  {
+    "checkpoint": "persistencia",
+    "arquivo": "pedidos-persistencia.zip",
+    "arquivos": 33,
+    "sha256": "37645eb38571fc6c6331d8426ad89c557a746dd9606604a8160202517a9ade85"
+  },
+  {
+    "checkpoint": "http",
+    "arquivo": "pedidos-http.zip",
+    "arquivos": 39,
+    "sha256": "4c030b32398256d17057bb69d05e3b74bbfc0ada03b990db0725754a4efc97a3"
+  }
+]

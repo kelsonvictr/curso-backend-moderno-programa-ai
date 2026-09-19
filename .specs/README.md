@@ -27,6 +27,7 @@ padrão de qualidade.
 | [07-decisoes.md](07-decisoes.md) | Log de decisões de arquitetura/didática (com datas) |
 | [08-imagens-e-memes.md](08-imagens-e-memes.md) | Política de imagens, memes e diagramas (aprovação prévia do professor) |
 | [09-divulgacao-cards.md](09-divulgacao-cards.md) | **Guia de estilo dos cards de divulgação** (Instagram/WhatsApp): tokens, formatos, receita da capa aprovada |
+| [10-cap1-fluidez-preservando-atos.md](10-cap1-fluidez-preservando-atos.md) | Ajustes incrementais do Cap 1, checkpoints e cronograma de 4h |
 
 ## Regra de ouro
 

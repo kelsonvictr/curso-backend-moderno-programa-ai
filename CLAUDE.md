@@ -176,3 +176,11 @@ passo a passo. Cada estado deve responder: **antes, ação, depois, como provar 
 - Use poucas mudanças coordenadas e reserve a ênfase visual para a transformação estudada.
 - Toda metáfora precisa declarar seu limite e toda etapa precisa oferecer uma evidência observável.
 - Laboratórios devem funcionar silenciosamente, por teclado, com movimento reduzido e em tela estreita.
+
+## Cap 1 — fluidez preservando os atos (2026-09-19)
+- Aplicar melhorias incrementais sobre a versão restaurada, mantendo história, teoria, três zonas, atos, jogos, teatro e pranchetas. Não voltar ao guia de seis etapas reprovado.
+- Prompts no ponto de uso; decisões de negócio antes das escolhas Java; integração 4A banco → 4B persistência → 4C HTTP, com prova e recuperação.
+- AdicionarItem começa pelos resultados esperados; dicas, prompt e spec ficam recolhidos. Revisão pode justificar código correto, sem exigir erros artificiais.
+- Base: Java 21, Boot 3.5.16, Web/Validation; JPA/driver só no 4B. Testes unitários e integração têm comandos distintos e evidência explícita.
+- Checkpoints reproduzíveis em tooling/cap01-reference, empacotados por tooling/build-cap01-checkpoints.py; validar com tooling/validate-cap01.py --integration.
+- Contrato e cronograma: .specs/10-cap1-fluidez-preservando-atos.md.
