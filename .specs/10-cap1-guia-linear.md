@@ -30,3 +30,6 @@ CAFE-500, quantidade 2, precoUnitario 18.90 → 37.80, UUID gerado, ABERTO. Tota
 - Navegador: simulações, retrocesso/reset, erro e acerto do quiz, cópia exata do prompt, guia ocultar/mostrar, progresso após recarga, modo mudo e revisão opcional.
 - Responsividade: leitura e laboratório a 390 px, sem rolagem horizontal da página.
 - Escopo: validamos o material HTML e coerência dos prompts; esta revisão não executou a construção completa de uma API Java/PostgreSQL. Resultados mostrados nas simulações são explicitamente ilustrativos.
+
+## Página independente do professor
+`professor.html`, com CSS e JS locais próprios, atende à consulta em segundo monitor. Navegação pelas mesmas seis etapas, fala breve, ação, critério de avanço, recuperação e cola de responsabilidades da hexagonal. Dez prompts idênticos aos do capítulo, recolhidos, com cópia direta. Nenhuma fonte remota, animação ou áudio. O capítulo principal oferece o link “Roteiro do professor”.

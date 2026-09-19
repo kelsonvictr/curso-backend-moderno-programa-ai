@@ -191,3 +191,9 @@ O material deve permitir que o professor aprenda e conduza a explicação durant
 - Preserve caderno livre e suas chaves antigas; progresso novo em cap01:guia:etapa:1..6. Som geral cap01:muted, inicialmente mudo para novos navegadores.
 - Não restaurar menus paralelos de teoria, atos e prompts. Aprofundamentos ficam expansíveis na etapa pertinente.
 - Detalhes e evidência da reorganização: .specs/10-cap1-guia-linear.md.
+
+## Cap 1 — página de consulta do professor
+- `capitulos/01-sdd-na-pratica-spring-hexagonal/professor.html` é a cola independente para o segundo monitor. Link no início do capítulo.
+- Manter texto curto: diga, faça, confira e destrave. Sem animações, áudio, jogos ou componentes decorativos nessa página.
+- Prompts completos recolhidos e copiáveis; devem permanecer idênticos aos correspondentes `#prompt-*` do capítulo. Ao mudar um prompt, atualizar também `data-source-prompt` na página do professor.
+- A página é um roteiro de condução, não um segundo capítulo teórico.
