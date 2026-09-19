@@ -1,0 +1,1315 @@
+CAP 01 — RESOLUÇÕES E CONSULTA
+Os mesmos [NN] de professor.txt e da página. Caminhos a partir de pedidos/.
+Pontos 01–21 reproduzem a referência; 22/26/27 são soluções das tarefas.
+Código completo entre INÍCIO/FIM; cole somente o conteúdo entre as linhas.
+Não substituir o projeto do aluno sem comparar nomes, pacotes e contratos.
+
+[01] BANCADA
+Local: raiz do projeto pedidos aberto no IntelliJ. Use o Prompt 0 da página.
+Esperado: Java 21, Boot 3.5.16, Web/Validation, Wrapper e teste de contexto verde.
+JPA/driver ainda não entram. Arquivos em target/ são produtos normais do build.
+No Windows: mvnw.cmd test; macOS/Linux: ./mvnw test.
+Se o projeto da turma divergir, compare pom/pacotes antes de copiar as correções.
+Não há evidência de progresso anterior da turma nesta conversa.
+Referência inicial: apoio/pedidos-base.zip. Extraia em outra pasta.
+
+[02] HISTÓRIA DO 4711
+Resposta: salvar, estoque, e-mail e cobrança foram acoplados numa sequência
+que não tratou a falha parcial. Hexagonal permite isolar dependências, mas
+não garante idempotência, entrega de evento ou consistência distribuída.
+Essas garantias exigem decisões posteriores; não prometer que portas bastam.
+
+[03] TRÊS FONTES DE CONTEXTO
+Prompt = tarefa e limite agora; instruções = convenções recorrentes;
+spec = comportamento/aceite de uma mudança. .specs/ é convenção do curso.
+Resposta ao exemplo: Java 21 no contrato; recusar pedido vazio na spec;
+"leia a spec e proponha plano" no prompt.
+
+[04] TEATRO DO AGENTE
+Sem contexto: decisões não combinadas e retrabalho na revisão.
+Projeto dirigido: instruções, spec, plano, OK, núcleo, testes e diff.
+Próxima mudança: AdicionarItem preserva CriarPedido e sua regressão.
+Gabarito: produtividade inclui prova e revisão, não só quantidade de arquivos.
+Não usar a contagem de arquivos/testes da narração como exigência do projeto.
+A cena tem dois itens; a prática tem um item de café, quantidade 2.
+
+[05] A SPEC GANHA VIDA
+Oito estados: projeto; pedido no chat; pasta .specs/; README;
+spec de criar pedido; plano; execução; revisão.
+A pasta é criada por uma necessidade, não para carregar contexto sozinha.
+O editor da página salva no navegador: copiar para o agente não salva no repo.
+O aluno precisa pedir a gravação no caminho da spec e conferir o arquivo.
+
+[06] ONDE A REGRA MORA
+Ordem exata das cinco perguntas em cap1-ai.js:
+1. Java 21 + Wrapper -> regras do projeto: vale em todas as tarefas.
+2. Recusar lista vazia -> spec: comportamento do caso de uso.
+3. Ler spec 02, planejar, não implementar -> prompt: pedido desta conversa.
+4. Não adicionar dependência sem pedir -> regras do projeto.
+5. AdicionarItem não alterar CriarPedido -> spec: limite desta mudança.
+
+[07] ORDEM DO TRABALHO
+Gabarito do jogo: ler instruções -> ler spec -> inspecionar código ->
+propor plano -> receber OK -> editar -> testar -> revisar diff.
+Essa é a sequência didática do jogo; a inspeção real pode exigir voltar à spec.
+Não confundir decorar oito botões com justificar o limite de uma edição.
+
+[08] ALVO DO DIA
+Resultado do caso: c-1 / CAFE-500 / quantidade 2 / preço 18.90 = total 37.80.
+ID String com UUID, gerado em Pedido.novo. 4711 é referência narrativa.
+CriarPedido roda com port em memória no teste. REST e JPA só entram nas bordas.
+AdicionarItem é a prática individual; não existe nos ZIPs de retomada.
+
+[09] MAPA DA TARDE
+13h30 abertura 15; 13h45 contrato 25; 14h10 domínio 40;
+14h50 intervalo 15; 15h05 hexagonal 45; 15h50 integração 45;
+16h35 individual 25; 17h00 retomada 15; 17h15 fechamento 15.
+Total 240 minutos. Essas são referências do plano publicado, não registro da aula.
+Antes: Cap 0 e ambiente preparado. Depois: repo, pagamento, consulta e revisão.
+
+[10] DESENHO INICIAL — juntos
+Prancheta 1 é diagnóstico, não exercício com desenho único.
+Aceite caixas e setas com cliente, aplicação, banco e integrações.
+Peça para o aluno indicar o ponto que acredita decidir a regra de negócio.
+No fechamento, compare as responsabilidades com o desenho final.
+
+[11] CONTRATO DO PROJETO — juntos
+Local: raiz do projeto, antes de criar Java de domínio. Prompt 1.
+Aprove somente AGENTS.md, CLAUDE.md e .specs/README.md.
+A ponte CLAUDE.md contém @AGENTS.md. Confira arquivos novos no editor/status.
+Peça avaliação da proposta de Lombok sem edição; uma ordem explícita para
+mudar a regra não testa apenas se o arquivo foi lido.
+Abaixo, contrato-base extraído da própria aula.
+
+Arquivo: AGENTS.md
+INÍCIO DO ARQUIVO
+# Serviço de Pedidos — regras da casa
+
+## Stack e comandos
+- Java 21, Spring Boot 3.5.16, Maven Wrapper: `./mvnw` (macOS/Linux) ou `mvnw.cmd` (Windows).
+- Postgres 16 em Docker: `docker compose -f infra/docker-compose.yml up -d`. Porta 5432, db/user/senha `pedidos`.
+- Testes: JUnit 5. `./mvnw -q test` antes de dizer que terminou.
+
+## Arquitetura: hexagonal (ports & adapters)
+- `br.com.pedidos.dominio`   records, regras, exceções de domínio. Não importa nada de Spring/JPA/web.
+- `br.com.pedidos.aplicacao` casos de uso (ports de entrada) e ports de saída (interfaces). Também não importa framework.
+- `br.com.pedidos.adapters`  `entrada.rest` (controllers, DTOs) e `saida.jpa` (entidade JPA, repositório Spring Data, mapper).
+- `br.com.pedidos.config`    classes @Configuration que ligam ports a adapters com @Bean.
+- Dependências apontam para dentro: adapters conhecem aplicacao e dominio; o inverso nunca.
+
+## Convenções
+- Domínio imutável: records + List.copyOf. Sem setter. Transição de estado é método que devolve novo objeto.
+- Dinheiro é BigDecimal. Identidade é String (UUID).
+- Violação de regra = exceção de domínio nomeada (PedidoFechadoException). Nunca null, nunca boolean de erro.
+- Sem Lombok. Sem MapStruct. Não adicione dependência ao pom sem me perguntar.
+
+## Como trabalhar
+- Antes de codar: leia a spec em .specs/ e proponha um plano curto (arquivos + testes). Só execute após meu "ok".
+- Não crie arquivo que a spec não pede. Sem README, Dockerfile, DTO extra ou "melhorias".
+- Ao terminar, liste os arquivos tocados e explique cada decisão de design em uma frase.
+FIM DO ARQUIVO
+
+Arquivo: CLAUDE.md
+INÍCIO DO ARQUIVO
+# Contexto do Claude Code
+@AGENTS.md
+FIM DO ARQUIVO
+
+Arquivo: .specs/README.md
+INÍCIO DO ARQUIVO
+# Serviço de Pedidos
+Cada mudança registra contexto, tarefa, regras e definição de pronto.
+Leia a spec antes de planejar.
+FIM DO ARQUIVO
+
+[12] DOMÍNIO — juntos
+Local: src/main/java/br/com/pedidos/dominio e testes correspondentes.
+Prompts 2/3: primeiro spec, depois plano, OK e implementação.
+Respostas: zero/negativo recusados; total derivado; List.copyOf protege lista;
+pedido fechado não aceita item; transições devolvem novo Pedido.
+Pedido.novo vazio é rascunho transitório; CriarPedido só salva após os itens.
+Arquivos completos abaixo correspondem à referência do capítulo.
+
+Arquivo: src/main/java/br/com/pedidos/dominio/StatusPedido.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.dominio;
+public enum StatusPedido { ABERTO, PAGO, CANCELADO }
+FIM DO ARQUIVO
+
+Arquivo: src/main/java/br/com/pedidos/dominio/ItemInvalidoException.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.dominio;
+public final class ItemInvalidoException extends RuntimeException {
+    public ItemInvalidoException() { super("Item deve ter SKU, quantidade positiva e preço positivo."); }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/main/java/br/com/pedidos/dominio/PedidoFechadoException.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.dominio;
+public final class PedidoFechadoException extends RuntimeException {
+    public PedidoFechadoException() { super("Pedido fechado não permite esta operação."); }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/main/java/br/com/pedidos/dominio/ItemPedido.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.dominio;
+import java.math.BigDecimal;
+public record ItemPedido(String sku, int quantidade, BigDecimal precoUnitario) {
+    public ItemPedido {
+        if (sku == null || sku.isBlank() || quantidade <= 0 || precoUnitario == null || precoUnitario.signum() <= 0) {
+            throw new ItemInvalidoException();
+        }
+    }
+    public BigDecimal subtotal() { return precoUnitario.multiply(BigDecimal.valueOf(quantidade)); }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/main/java/br/com/pedidos/dominio/Pedido.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.dominio;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+public record Pedido(String id, String clienteId, List<ItemPedido> itens, StatusPedido status) {
+    public Pedido {
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(clienteId);
+        Objects.requireNonNull(status);
+        itens = List.copyOf(itens);
+    }
+    public static Pedido novo(String clienteId) {
+        return new Pedido(UUID.randomUUID().toString(), clienteId, List.of(), StatusPedido.ABERTO);
+    }
+    public BigDecimal total() {
+        BigDecimal soma = BigDecimal.ZERO;
+        for (ItemPedido item : itens) soma = soma.add(item.subtotal());
+        return soma;
+    }
+    public Pedido adicionarItem(ItemPedido item) {
+        exigirAberto();
+        var novosItens = new ArrayList<>(itens);
+        novosItens.add(item);
+        return new Pedido(id, clienteId, novosItens, status);
+    }
+    public Pedido pagar() { exigirAberto(); return new Pedido(id, clienteId, itens, StatusPedido.PAGO); }
+    public Pedido cancelar() { exigirAberto(); return new Pedido(id, clienteId, itens, StatusPedido.CANCELADO); }
+    private void exigirAberto() {
+        if (status != StatusPedido.ABERTO) throw new PedidoFechadoException();
+    }
+}
+FIM DO ARQUIVO
+
+[13] REVISÃO DO DOMÍNIO
+Critérios: records; cópia defensiva; BigDecimal; total como método;
+exceções nomeadas; original preservado; nenhum import Spring/JPA.
+Prancheta 2: Pedido contém ItemPedido/StatusPedido; ItemPedido recusa dado
+inválido; Pedido recusa transição em estado fechado. Identifique o dono da regra.
+Rode os testes abaixo pelo Wrapper; o checkpoint inclui o contexto sem banco.
+
+Arquivo: src/test/java/br/com/pedidos/dominio/PedidoTest.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.dominio;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+class PedidoTest {
+    private ItemPedido cafe(int quantidade) { return new ItemPedido("CAFE-500", quantidade, new BigDecimal("18.90")); }
+    @Test void recusaQuantidadeEPrecoInvalidos() {
+        assertThrows(ItemInvalidoException.class, () -> cafe(0));
+        assertThrows(ItemInvalidoException.class, () -> cafe(-1));
+        assertThrows(ItemInvalidoException.class, () -> new ItemPedido("CAFE-500", 1, BigDecimal.ZERO));
+        assertThrows(ItemInvalidoException.class, () -> new ItemPedido("CAFE-500", 1, new BigDecimal("-1")));
+    }
+    @Test void derivaTotalEPreservaOriginal() {
+        Pedido original = Pedido.novo("c-1");
+        Pedido comCafe = original.adicionarItem(cafe(2));
+        assertEquals(0, comCafe.total().compareTo(new BigDecimal("37.80")));
+        assertTrue(original.itens().isEmpty());
+        assertEquals(original.id(), comCafe.id());
+        assertDoesNotThrow(() -> UUID.fromString(comCafe.id()));
+        assertEquals(0, comCafe.adicionarItem(cafe(1)).total().compareTo(new BigDecimal("56.70")));
+    }
+    @Test void protegeListaDeMudancasExternas() {
+        var lista = new ArrayList<>(List.of(cafe(2)));
+        Pedido pedido = new Pedido("id-teste", "c-1", lista, StatusPedido.ABERTO);
+        lista.clear();
+        assertEquals(1, pedido.itens().size());
+        assertThrows(UnsupportedOperationException.class, () -> pedido.itens().clear());
+    }
+    @Test void transicoesValidasEInvalidas() {
+        Pedido aberto = Pedido.novo("c-1").adicionarItem(cafe(2));
+        Pedido pago = aberto.pagar();
+        Pedido cancelado = aberto.cancelar();
+        assertEquals(StatusPedido.ABERTO, aberto.status());
+        assertEquals(StatusPedido.PAGO, pago.status());
+        assertEquals(StatusPedido.CANCELADO, cancelado.status());
+        for (Pedido fechado : List.of(pago, cancelado)) {
+            assertThrows(PedidoFechadoException.class, () -> fechado.adicionarItem(cafe(1)));
+            assertThrows(PedidoFechadoException.class, fechado::pagar);
+            assertThrows(PedidoFechadoException.class, fechado::cancelar);
+        }
+    }
+}
+FIM DO ARQUIVO
+
+[14] DENTRO E FORA — juntos
+Resposta ao roteiro visual: domínio = regras; aplicação = coordenação;
+entrada = tradução de HTTP; port = contrato; saída = tradução de persistência;
+configuração = montagem das implementações. Import aponta para dentro.
+Não exigir IPedido ou interface para toda classe. Três camadas não são, por si,
+um erro; aqui queremos isolar regras de JPA/HTTP e testar o núcleo sem Spring.
+
+[15] CRIAR PEDIDO SEM BANCO — juntos
+Local: pacote aplicacao e PedidoSemItensException no domínio. Prompt 5.
+Rascunho -> itens validados -> port salvar -> pedido devolvido.
+Rejeição antes de salvar deve deixar o armazenamento inalterado.
+A implementação em memória está dentro do teste, não num servidor novo.
+
+Arquivo: src/main/java/br/com/pedidos/dominio/PedidoSemItensException.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.dominio;
+public final class PedidoSemItensException extends RuntimeException {
+    public PedidoSemItensException() { super("Pedido precisa de ao menos um item."); }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/main/java/br/com/pedidos/aplicacao/CriarPedido.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.aplicacao;
+import br.com.pedidos.dominio.Pedido;
+import java.math.BigDecimal;
+import java.util.List;
+public interface CriarPedido {
+    Pedido executar(Comando comando);
+    record ItemComando(String sku, int quantidade, BigDecimal precoUnitario) { }
+    record Comando(String clienteId, List<ItemComando> itens) { }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/main/java/br/com/pedidos/aplicacao/CriarPedidoService.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.aplicacao;
+import br.com.pedidos.dominio.ItemPedido;
+import br.com.pedidos.dominio.Pedido;
+import br.com.pedidos.dominio.PedidoSemItensException;
+public final class CriarPedidoService implements CriarPedido {
+    private final Pedidos pedidos;
+    public CriarPedidoService(Pedidos pedidos) { this.pedidos = pedidos; }
+    public Pedido executar(Comando comando) {
+        if (comando.itens() == null || comando.itens().isEmpty()) throw new PedidoSemItensException();
+        Pedido novo = Pedido.novo(comando.clienteId());
+        for (ItemComando item : comando.itens()) {
+            novo = novo.adicionarItem(new ItemPedido(item.sku(), item.quantidade(), item.precoUnitario()));
+        }
+        return pedidos.salvar(novo);
+    }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/main/java/br/com/pedidos/aplicacao/Pedidos.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.aplicacao;
+import br.com.pedidos.dominio.Pedido;
+import java.util.Optional;
+public interface Pedidos {
+    Pedido salvar(Pedido pedido);
+    Optional<Pedido> buscar(String id);
+}
+FIM DO ARQUIVO
+
+Arquivo: src/test/java/br/com/pedidos/aplicacao/CriarPedidoTest.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.aplicacao;
+import br.com.pedidos.dominio.*;
+import java.math.BigDecimal;
+import java.util.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+class CriarPedidoTest {
+    static class Memoria implements Pedidos {
+        final Map<String, Pedido> dados = new HashMap<>();
+        public Pedido salvar(Pedido p) { dados.put(p.id(), p); return p; }
+        public Optional<Pedido> buscar(String id) { return Optional.ofNullable(dados.get(id)); }
+    }
+    @Test void criaSalvaEDevolveMesmoPedido() {
+        var memoria = new Memoria();
+        var service = new CriarPedidoService(memoria);
+        var cafe = new CriarPedido.ItemComando("CAFE-500", 2, new BigDecimal("18.90"));
+        Pedido p = service.executar(new CriarPedido.Comando("c-1", List.of(cafe)));
+        assertEquals(0, p.total().compareTo(new BigDecimal("37.80")));
+        assertEquals(StatusPedido.ABERTO, p.status());
+        assertSame(p, memoria.buscar(p.id()).orElseThrow());
+    }
+    @Test void recusaVazioSemSalvar() {
+        var memoria = new Memoria();
+        var service = new CriarPedidoService(memoria);
+        assertThrows(PedidoSemItensException.class, () -> service.executar(new CriarPedido.Comando("c-1", List.of())));
+        assertTrue(memoria.dados.isEmpty());
+    }
+    @Test void itemInvalidoNaoSalvaNemPedidoParcial() {
+        var memoria = new Memoria();
+        var service = new CriarPedidoService(memoria);
+        var valido = new CriarPedido.ItemComando("CAFE-500", 2, new BigDecimal("18.90"));
+        var invalido = new CriarPedido.ItemComando("CAFE-500", 0, new BigDecimal("18.90"));
+        assertThrows(ItemInvalidoException.class, () -> service.executar(new CriarPedido.Comando("c-1", List.of(valido, invalido))));
+        assertTrue(memoria.dados.isEmpty());
+    }
+}
+FIM DO ARQUIVO
+
+[16] BANCADA DE TRADUÇÃO
+Sete etapas: cliente envia JSON; controller traduz; port de entrada oferece
+a operação; caso de uso coordena; domínio valida; port de saída pede salvar;
+adapter converte e persiste. A resposta volta pela borda.
+O UUID não muda. Os itens persistidos geram total 37.80, sem coluna total.
+Previsões: domínio não conhece HTTP/JPA; config escolhe implementação;
+trocar banco se concentra no adapter, respeitando o contrato.
+Essa cena é simulação, não evidencia que o Java da turma executou.
+
+[17] QUIZ E PRANCHETA 3
+Respostas exatas de cap1-oficina.js:
+Pedido -> núcleo (regra).
+CriarPedido -> port de entrada (operação oferecida).
+Pedidos -> port de saída (necessidade de persistência).
+PedidoController -> adapter de entrada.
+PedidosJpaAdapter -> adapter de saída.
+CasosDeUsoConfig -> configuração da borda.
+Prancheta 3: núcleo protegido; adapters importam os ports. A chamada salvar
+vai até o adapter em execução, mas o caso de uso importa apenas a interface.
+
+[18] INTEGRAÇÃO POR FRONTEIRAS — juntos
+Retome o contrato antes de ligar infraestrutura. Não há novos conceitos de
+negócio aqui: traduzimos os mesmos dados para tecnologias.
+Pedido é domínio; PedidoJpaEntity é entidade usada pelo adapter (a entidade
+isolada não implementa o port). PedidoMapper converte; config monta os beans.
+O modelo didático usa ddl-auto:update; migrações entram em capítulo posterior.
+
+[19] 4A: BANCO DISPONÍVEL
+Local: infra/docker-compose.yml. Prompt 6a. Só suba o Postgres deste projeto.
+Peça pg_isready e SELECT 1 com usuário/banco pedidos.
+Se 5432 estiver ocupada, use PEDIDOS_DB_PORT no compose e ajuste a URL JDBC
+para a mesma porta. Preserve volumes existentes.
+Comandos executados pelo agente:
+  docker compose -f infra/docker-compose.yml up -d
+  docker compose -f infra/docker-compose.yml exec postgres pg_isready -U pedidos
+  docker compose -f infra/docker-compose.yml exec postgres psql -U pedidos -d pedidos -c 'SELECT 1'
+Esperado: accepting connections e 1. Compose completo abaixo.
+
+Arquivo: infra/docker-compose.yml
+INÍCIO DO ARQUIVO
+services:
+  postgres:
+    image: postgres:16
+    ports:
+      - "127.0.0.1:${PEDIDOS_DB_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: pedidos
+      POSTGRES_USER: pedidos
+      POSTGRES_PASSWORD: pedidos
+    volumes:
+      - pedidos-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pedidos -d pedidos"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+volumes:
+  pedidos-data:
+FIM DO ARQUIVO
+
+[20] 4B: PERSISTÊNCIA
+Local: adapter JPA e resources/application.yml. Prompt 6b.
+Adicione ao pom somente starter-data-jpa e postgresql (runtime).
+Renomeie o teste de contexto para PedidosApplicationIT, sem apagar sua verificação.
+Unitários: ./mvnw test. Com banco pronto: ./mvnw -Dtest='*IT' test.
+Windows: mvnw.cmd "-Dtest=*IT" test.
+Confira transação no adapter: converter a lista lazy antes de fechar a sessão.
+Mapper preserva UUID, itens e estado; total não é coluna.
+O teste abaixo relê em outra transação e também verifica atualização de itens.
+
+Arquivo: src/main/resources/application.yml
+INÍCIO DO ARQUIVO
+spring:
+  datasource:
+    url: ${PEDIDOS_DB_URL:jdbc:postgresql://localhost:5432/pedidos}
+    username: ${PEDIDOS_DB_USER:pedidos}
+    password: ${PEDIDOS_DB_PASSWORD:pedidos}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+FIM DO ARQUIVO
+
+Arquivo: src/main/java/br/com/pedidos/adapters/saida/jpa/ItemJpaEntity.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.adapters.saida.jpa;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+@Entity
+@Table(name = "item_pedido")
+public class ItemJpaEntity {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
+    @Column(nullable = false) String sku;
+    @Column(nullable = false) int quantidade;
+    @Column(nullable = false, columnDefinition = "numeric") BigDecimal precoUnitario;
+    protected ItemJpaEntity() { }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/main/java/br/com/pedidos/adapters/saida/jpa/PedidoJpaEntity.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.adapters.saida.jpa;
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+@Entity
+@Table(name = "pedido")
+public class PedidoJpaEntity {
+    @Id String id;
+    @Column(nullable = false) String clienteId;
+    @Column(nullable = false) String status;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "pedido_id", nullable = false)
+    @OrderColumn(name = "posicao")
+    List<ItemJpaEntity> itens = new ArrayList<>();
+    protected PedidoJpaEntity() { }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/main/java/br/com/pedidos/adapters/saida/jpa/PedidoMapper.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.adapters.saida.jpa;
+import br.com.pedidos.dominio.*;
+import java.util.ArrayList;
+final class PedidoMapper {
+    private PedidoMapper() { }
+    static PedidoJpaEntity paraEntity(Pedido pedido) {
+        var entity = new PedidoJpaEntity();
+        entity.id = pedido.id(); entity.clienteId = pedido.clienteId(); entity.status = pedido.status().name();
+        for (ItemPedido item : pedido.itens()) {
+            var e = new ItemJpaEntity();
+            e.sku = item.sku(); e.quantidade = item.quantidade(); e.precoUnitario = item.precoUnitario();
+            entity.itens.add(e);
+        }
+        return entity;
+    }
+    static Pedido paraDominio(PedidoJpaEntity entity) {
+        var itens = new ArrayList<ItemPedido>();
+        for (ItemJpaEntity e : entity.itens) itens.add(new ItemPedido(e.sku, e.quantidade, e.precoUnitario));
+        return new Pedido(entity.id, entity.clienteId, itens, StatusPedido.valueOf(entity.status));
+    }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/main/java/br/com/pedidos/adapters/saida/jpa/PedidoSpringDataRepository.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.adapters.saida.jpa;
+import org.springframework.data.jpa.repository.JpaRepository;
+public interface PedidoSpringDataRepository extends JpaRepository<PedidoJpaEntity, String> { }
+FIM DO ARQUIVO
+
+Arquivo: src/main/java/br/com/pedidos/adapters/saida/jpa/PedidosJpaAdapter.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.adapters.saida.jpa;
+import br.com.pedidos.aplicacao.Pedidos;
+import br.com.pedidos.dominio.Pedido;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.Optional;
+@Component
+@Transactional
+public class PedidosJpaAdapter implements Pedidos {
+    private final PedidoSpringDataRepository repository;
+    public PedidosJpaAdapter(PedidoSpringDataRepository repository) { this.repository = repository; }
+    public Pedido salvar(Pedido pedido) {
+        return PedidoMapper.paraDominio(repository.saveAndFlush(PedidoMapper.paraEntity(pedido)));
+    }
+    @Transactional(readOnly = true)
+    public Optional<Pedido> buscar(String id) {
+        return repository.findById(id).map(PedidoMapper::paraDominio);
+    }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/test/java/br/com/pedidos/adapters/saida/jpa/PedidosJpaAdapterIT.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.adapters.saida.jpa;
+import br.com.pedidos.dominio.*;
+import java.math.BigDecimal;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import static org.junit.jupiter.api.Assertions.*;
+@SpringBootTest
+class PedidosJpaAdapterIT {
+    @Autowired PedidosJpaAdapter adapter;
+    @Autowired PedidoSpringDataRepository repository;
+    @Test void preservaIdItensETotalEmOutraTransacao() {
+        var pedido = Pedido.novo("c-1").adicionarItem(new ItemPedido("CAFE-500", 2, new BigDecimal("18.90")));
+        try {
+            adapter.salvar(pedido); // A transação do adapter termina aqui.
+            var relido = adapter.buscar(pedido.id()).orElseThrow(); // Outra transação; mapeamento dentro dela.
+            assertEquals(pedido.id(), relido.id());
+            assertEquals("c-1", relido.clienteId());
+            assertEquals(StatusPedido.ABERTO, relido.status());
+            assertEquals("CAFE-500", relido.itens().getFirst().sku());
+            assertEquals(2, relido.itens().getFirst().quantidade());
+            assertEquals(0, relido.total().compareTo(new BigDecimal("37.80")));
+            adapter.salvar(relido.adicionarItem(new ItemPedido("CAFE-500", 1, new BigDecimal("18.90"))));
+            var atualizado = adapter.buscar(pedido.id()).orElseThrow();
+            assertEquals(2, atualizado.itens().size());
+            assertEquals(0, atualizado.total().compareTo(new BigDecimal("56.70")));
+        } finally { repository.deleteById(pedido.id()); }
+    }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/test/java/br/com/pedidos/PedidosApplicationIT.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+@SpringBootTest
+class PedidosApplicationIT {
+    @Test void contextoCarrega() { }
+}
+FIM DO ARQUIVO
+
+[21] 4C: HTTP
+Local: adapter REST/config. Prompt 6c. Arquivos completos da referência abaixo.
+POST /pedidos: 201, UUID, ABERTO e 37.80.
+Quantidade zero ou itens vazios: 422; JSON malformado/campo ausente: 400.
+Nas recusas, compare count(*) antes/depois. Mensagem vem do handler na borda.
+Registre o UUID do 201; reinicie só a aplicação; releia pedido e itens via SQL.
+Prancheta 4 acrescenta mapper, entidades, container e caminho HTTP.
+JSON válido: {"clienteId":"c-1","itens":[{"sku":"CAFE-500","quantidade":2,"precoUnitario":18.90}]}
+37.8 e 37.80 são numericamente iguais.
+
+Arquivo: src/main/java/br/com/pedidos/adapters/entrada/rest/PedidoController.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.adapters.entrada.rest;
+import br.com.pedidos.aplicacao.CriarPedido;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+@RestController
+@RequestMapping("/pedidos")
+public class PedidoController {
+    private final CriarPedido criarPedido;
+    public PedidoController(CriarPedido criarPedido) { this.criarPedido = criarPedido; }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED)
+    public PedidoResponse criar(@Valid @RequestBody PedidoRequest request) {
+        return PedidoResponse.de(criarPedido.executar(request.paraComando()));
+    }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/main/java/br/com/pedidos/adapters/entrada/rest/PedidoExceptionHandler.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.adapters.entrada.rest;
+import br.com.pedidos.dominio.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
+@RestControllerAdvice
+public class PedidoExceptionHandler {
+    record Erro(String mensagem) { }
+    @ExceptionHandler({ItemInvalidoException.class, PedidoSemItensException.class})
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    Erro regra(RuntimeException e) { return new Erro(e.getMessage()); }
+    @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    Erro formato(Exception e) { return new Erro("Confira o JSON e os campos obrigatórios."); }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/main/java/br/com/pedidos/adapters/entrada/rest/PedidoRequest.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.adapters.entrada.rest;
+import br.com.pedidos.aplicacao.CriarPedido;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+public record PedidoRequest(@NotBlank String clienteId, @NotNull List<@NotNull @Valid ItemRequest> itens) {
+    public record ItemRequest(@NotBlank String sku, @NotNull Integer quantidade, @NotNull BigDecimal precoUnitario) { }
+    CriarPedido.Comando paraComando() {
+        var comandos = new ArrayList<CriarPedido.ItemComando>();
+        for (var item : itens) comandos.add(new CriarPedido.ItemComando(item.sku(), item.quantidade(), item.precoUnitario()));
+        return new CriarPedido.Comando(clienteId, comandos);
+    }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/main/java/br/com/pedidos/adapters/entrada/rest/PedidoResponse.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.adapters.entrada.rest;
+import br.com.pedidos.dominio.Pedido;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+public record PedidoResponse(String id, String clienteId, String status, BigDecimal total, List<ItemResponse> itens) {
+    public record ItemResponse(String sku, int quantidade, BigDecimal precoUnitario) { }
+    static PedidoResponse de(Pedido pedido) {
+        var itens = new ArrayList<ItemResponse>();
+        for (var i : pedido.itens()) itens.add(new ItemResponse(i.sku(), i.quantidade(), i.precoUnitario()));
+        return new PedidoResponse(pedido.id(), pedido.clienteId(), pedido.status().name(), pedido.total(), itens);
+    }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/main/java/br/com/pedidos/config/CasosDeUsoConfig.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.config;
+import br.com.pedidos.aplicacao.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+@Configuration
+public class CasosDeUsoConfig {
+    @Bean CriarPedido criarPedido(Pedidos pedidos) { return new CriarPedidoService(pedidos); }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/test/java/br/com/pedidos/adapters/entrada/rest/PedidoHttpIT.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.adapters.entrada.rest;
+import br.com.pedidos.adapters.saida.jpa.PedidoSpringDataRepository;
+import br.com.pedidos.aplicacao.Pedidos;
+import java.util.UUID;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.servlet.MockMvc;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+@SpringBootTest @AutoConfigureMockMvc
+class PedidoHttpIT {
+    @Autowired MockMvc mvc;
+    @Autowired ObjectMapper json;
+    @Autowired PedidoSpringDataRepository repository;
+    @Autowired Pedidos pedidos;
+    String body(int qtd) { return "{\"clienteId\":\"c-1\",\"itens\":[{\"sku\":\"CAFE-500\",\"quantidade\":" + qtd + ",\"precoUnitario\":18.90}]}"; }
+    @Test void criaPedidoPelaWebEPersiste() throws Exception {
+        String resposta = mvc.perform(post("/pedidos").contentType("application/json").content(body(2)))
+            .andExpect(status().isCreated()).andExpect(jsonPath("$.total").value(37.8))
+            .andExpect(jsonPath("$.status").value("ABERTO")).andReturn().getResponse().getContentAsString();
+        String id = json.readTree(resposta).get("id").asText();
+        try { UUID.fromString(id); assertEquals(1, pedidos.buscar(id).orElseThrow().itens().size()); }
+        finally { repository.deleteById(id); }
+    }
+    @Test void errosNaoGravamPedido() throws Exception {
+        long antes = repository.count();
+        mvc.perform(post("/pedidos").contentType("application/json").content(body(0)))
+            .andExpect(status().isUnprocessableEntity()).andExpect(jsonPath("$.mensagem").isNotEmpty());
+        mvc.perform(post("/pedidos").contentType("application/json").content("{\"clienteId\":\"c-1\",\"itens\":[]}"))
+            .andExpect(status().isUnprocessableEntity());
+        for (String invalido : new String[]{"{", "{}", "{\"clienteId\":\"c-1\",\"itens\":[null]}"}) {
+            mvc.perform(post("/pedidos").contentType("application/json").content(invalido)).andExpect(status().isBadRequest());
+        }
+        assertEquals(antes, repository.count());
+    }
+}
+FIM DO ARQUIVO
+
+[22] ADICIONAR ITEM — sozinhos
+Pré-requisito: checkpoint HTTP funcionando. Prática individual: não antecipar
+estas classes ao aluno antes da tentativa/spec/plano. A solução abaixo é uma
+referência para corrigir, não código que a turma já implementou.
+Crie os arquivos novos; substitua controller/config/handler pelas versões abaixo.
+PedidoRequest.ItemRequest e PedidoResponse existentes são reutilizados.
+Contrato: POST /pedidos/{id}/itens recebe {"sku":"CAFE-500","quantidade":1,"precoUnitario":18.90}.
+Esperado: 200, mesmo UUID, total 56.70. Ausente 404; fechado 409; inválido 422.
+Critério para erro combinado nesta referência: existência e estado precedem
+a validação do novo item. Registre essa decisão na spec antes de implementar.
+Verifique pago/cancelado por fixture no teste, pois pagamento ainda não existe.
+Não modificar CriarPedido nem mover regras para o controller.
+
+Criar ou substituir: src/main/java/br/com/pedidos/dominio/PedidoNaoEncontradoException.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.dominio;
+public final class PedidoNaoEncontradoException extends RuntimeException {
+    public PedidoNaoEncontradoException(String id) {
+        super("Pedido não encontrado: " + id);
+    }
+}
+FIM DO ARQUIVO
+
+Criar ou substituir: src/main/java/br/com/pedidos/aplicacao/AdicionarItem.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.aplicacao;
+import br.com.pedidos.dominio.Pedido;
+import java.math.BigDecimal;
+public interface AdicionarItem {
+    Pedido executar(Comando comando);
+    record ItemComando(String sku, int quantidade, BigDecimal precoUnitario) { }
+    record Comando(String pedidoId, ItemComando item) { }
+}
+FIM DO ARQUIVO
+
+Criar ou substituir: src/main/java/br/com/pedidos/aplicacao/AdicionarItemService.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.aplicacao;
+import br.com.pedidos.dominio.*;
+public final class AdicionarItemService implements AdicionarItem {
+    private final Pedidos pedidos;
+    public AdicionarItemService(Pedidos pedidos) { this.pedidos = pedidos; }
+    public Pedido executar(Comando comando) {
+        Pedido atual = pedidos.buscar(comando.pedidoId())
+            .orElseThrow(() -> new PedidoNaoEncontradoException(comando.pedidoId()));
+        if (atual.status() != StatusPedido.ABERTO) throw new PedidoFechadoException();
+        var entrada = comando.item();
+        var item = new ItemPedido(entrada.sku(), entrada.quantidade(), entrada.precoUnitario());
+        return pedidos.salvar(atual.adicionarItem(item));
+    }
+}
+FIM DO ARQUIVO
+
+Criar ou substituir: src/main/java/br/com/pedidos/adapters/entrada/rest/PedidoController.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.adapters.entrada.rest;
+import br.com.pedidos.aplicacao.*;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+@RestController
+@RequestMapping("/pedidos")
+public class PedidoController {
+    private final CriarPedido criarPedido;
+    private final AdicionarItem adicionarItem;
+    public PedidoController(CriarPedido criarPedido, AdicionarItem adicionarItem) {
+        this.criarPedido = criarPedido;
+        this.adicionarItem = adicionarItem;
+    }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED)
+    public PedidoResponse criar(@Valid @RequestBody PedidoRequest request) {
+        return PedidoResponse.de(criarPedido.executar(request.paraComando()));
+    }
+    @PostMapping("/{id}/itens")
+    public PedidoResponse adicionar(@PathVariable String id,
+            @Valid @RequestBody PedidoRequest.ItemRequest request) {
+        var item = new AdicionarItem.ItemComando(
+            request.sku(), request.quantidade(), request.precoUnitario());
+        return PedidoResponse.de(adicionarItem.executar(new AdicionarItem.Comando(id, item)));
+    }
+}
+FIM DO ARQUIVO
+
+Criar ou substituir: src/main/java/br/com/pedidos/config/CasosDeUsoConfig.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.config;
+import br.com.pedidos.aplicacao.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+@Configuration
+public class CasosDeUsoConfig {
+    @Bean CriarPedido criarPedido(Pedidos pedidos) { return new CriarPedidoService(pedidos); }
+    @Bean AdicionarItem adicionarItem(Pedidos pedidos) { return new AdicionarItemService(pedidos); }
+}
+FIM DO ARQUIVO
+
+Criar ou substituir: src/main/java/br/com/pedidos/adapters/entrada/rest/PedidoExceptionHandler.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.adapters.entrada.rest;
+import br.com.pedidos.dominio.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
+@RestControllerAdvice
+public class PedidoExceptionHandler {
+    record Erro(String mensagem) { }
+    @ExceptionHandler({ItemInvalidoException.class, PedidoSemItensException.class})
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    Erro regra(RuntimeException e) { return new Erro(e.getMessage()); }
+    @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    Erro formato(Exception e) { return new Erro("Confira o JSON e os campos obrigatórios."); }
+    @ExceptionHandler(PedidoNaoEncontradoException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    Erro ausente(PedidoNaoEncontradoException e) { return new Erro(e.getMessage()); }
+    @ExceptionHandler(PedidoFechadoException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    Erro fechado(PedidoFechadoException e) { return new Erro(e.getMessage()); }
+}
+FIM DO ARQUIVO
+
+Testes da referência (crie os arquivos nos caminhos indicados):
+
+Arquivo: src/test/java/br/com/pedidos/aplicacao/PedidosMemoria.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.aplicacao;
+import br.com.pedidos.dominio.Pedido;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+final class PedidosMemoria implements Pedidos {
+    final Map<String, Pedido> dados = new HashMap<>();
+    int gravacoes;
+    public Pedido salvar(Pedido pedido) {
+        gravacoes++;
+        dados.put(pedido.id(), pedido);
+        return pedido;
+    }
+    public Optional<Pedido> buscar(String id) {
+        return Optional.ofNullable(dados.get(id));
+    }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/test/java/br/com/pedidos/aplicacao/AdicionarItemTest.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.aplicacao;
+import br.com.pedidos.dominio.*;
+import java.math.BigDecimal;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+class AdicionarItemTest {
+    Pedido cafe() {
+        return Pedido.novo("c-1")
+            .adicionarItem(new ItemPedido("CAFE-500", 2, new BigDecimal("18.90")));
+    }
+    AdicionarItem.Comando comando(String id, int quantidade) {
+        return new AdicionarItem.Comando(id,
+            new AdicionarItem.ItemComando("CAFE-500", quantidade,
+                new BigDecimal("18.90")));
+    }
+    @Test void adicionaPreservandoIdentidadeEOriginal() {
+        var memoria = new PedidosMemoria();
+        var original = cafe();
+        memoria.dados.put(original.id(), original);
+        var resultado = new AdicionarItemService(memoria)
+            .executar(comando(original.id(), 1));
+        assertEquals(original.id(), resultado.id());
+        assertEquals(0, resultado.total().compareTo(new BigDecimal("56.70")));
+        assertEquals(0, original.total().compareTo(new BigDecimal("37.80")));
+        assertSame(resultado, memoria.dados.get(original.id()));
+        assertEquals(1, memoria.gravacoes);
+    }
+    @Test void errosNaoSalvam() {
+        var memoria = new PedidosMemoria();
+        var service = new AdicionarItemService(memoria);
+        assertThrows(PedidoNaoEncontradoException.class,
+            () -> service.executar(comando("inexistente", 1)));
+        var aberto = cafe();
+        memoria.dados.put(aberto.id(), aberto);
+        assertThrows(ItemInvalidoException.class,
+            () -> service.executar(comando(aberto.id(), 0)));
+        for (var fechado : List.of(cafe().pagar(), cafe().cancelar())) {
+            memoria.dados.put(fechado.id(), fechado);
+            assertThrows(PedidoFechadoException.class,
+                () -> service.executar(comando(fechado.id(), 1)));
+            assertSame(fechado, memoria.dados.get(fechado.id()));
+        }
+        assertSame(aberto, memoria.dados.get(aberto.id()));
+        assertEquals(0, memoria.gravacoes);
+    }
+}
+FIM DO ARQUIVO
+
+[23] RETOMADA E REVISÃO
+Sem evidência de onde a turma parou: pergunte a última prova verde.
+Escolha base/domínio/núcleo/banco/persistência/HTTP; não escolha por horário.
+Descompacte em outra pasta e leia RETOMADA.md. Registre o uso de referência.
+Peça diagnóstico mínimo, plano e OK. Não aceite apagar teste para ficar verde.
+Em duplas, aceite uma decisão correta justificada e uma dúvida/correção.
+
+[24] FECHAMENTO
+Pranchetas 1 e 4 não precisam ter o mesmo desenho; compare responsabilidades.
+E-mail futuro fica atrás de port de saída e adapter, com garantias de entrega
+explicitadas depois. Mover a chamada sozinho não resolve a falha distribuída.
+Auditoria: specs, testes unitários, *IT, imports, arquivos novos/status e diff.
+Nos atos commitados, revisar também os commits; working tree limpo não prova
+que as decisões anteriores estavam certas.
+
+[25] CONTINUIDADE — tarefa
+Entregas: repositório com contrato, specs e commits revisados; desenhos 3/4
+no README; justificativa de hexagonal; uma pergunta sobre responsabilidade.
+Aceitar/rejeitar sugestões ao contrato por necessidade real, sem cota de rejeição.
+A data 19/09 é a data impressa no capítulo, não confirmação do próximo encontro.
+Pagamento/GET abaixo são soluções de referência para a tarefa proposta.
+
+[26] PAGAMENTO — tarefa
+Pré-requisito: ponto 22 concluído. Esta tarefa exige spec nova antes do código.
+Decisões de referência a validar com a turma: aprovado/recusado só para pedido
+ABERTO; fechado -> 409; ausente -> 404; aprovação salva PAGO; recusa devolve
+ABERTO sem salvar; motivo obrigatório na recusa. Não há estorno neste escopo.
+O capítulo fixa a rota/estados, mas não o JSON. Contrato proposto aqui:
+POST /pedidos/{id}/pagamento com {"aprovado":true}, ou
+{"aprovado":false,"motivo":"Limite insuficiente"}. Ambas respostas 200,
+com status PAGO/ABERTO respectivamente. Formato inválido -> 400.
+Este endpoint simula o resultado para o laboratório; não comprova pagamento
+real nem autoriza uma cobrança. Não conectar gateway com este contrato.
+Crie ResultadoPagamento, port/service e PagamentoRequest; substitua controller
+e config pelas versões cumulativas. Preserve handler do ponto 22.
+O switch Java 21 cobre as duas variantes sem default. Nova variante exige revisão.
+
+Criar ou substituir: src/main/java/br/com/pedidos/dominio/ResultadoPagamento.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.dominio;
+public sealed interface ResultadoPagamento
+        permits ResultadoPagamento.Aprovado, ResultadoPagamento.Recusado {
+    record Aprovado() implements ResultadoPagamento { }
+    record Recusado(String motivo) implements ResultadoPagamento { }
+}
+FIM DO ARQUIVO
+
+Criar ou substituir: src/main/java/br/com/pedidos/aplicacao/PagarPedido.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.aplicacao;
+import br.com.pedidos.dominio.Pedido;
+import br.com.pedidos.dominio.ResultadoPagamento;
+public interface PagarPedido {
+    Pedido executar(String pedidoId, ResultadoPagamento resultado);
+}
+FIM DO ARQUIVO
+
+Criar ou substituir: src/main/java/br/com/pedidos/aplicacao/PagarPedidoService.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.aplicacao;
+import br.com.pedidos.dominio.*;
+public final class PagarPedidoService implements PagarPedido {
+    private final Pedidos pedidos;
+    public PagarPedidoService(Pedidos pedidos) { this.pedidos = pedidos; }
+    public Pedido executar(String pedidoId, ResultadoPagamento resultado) {
+        Pedido atual = pedidos.buscar(pedidoId)
+            .orElseThrow(() -> new PedidoNaoEncontradoException(pedidoId));
+        if (atual.status() != StatusPedido.ABERTO) throw new PedidoFechadoException();
+        return switch (resultado) {
+            case ResultadoPagamento.Aprovado aprovado -> pedidos.salvar(atual.pagar());
+            case ResultadoPagamento.Recusado recusado -> atual;
+        };
+    }
+}
+FIM DO ARQUIVO
+
+Criar ou substituir: src/main/java/br/com/pedidos/adapters/entrada/rest/PagamentoRequest.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.adapters.entrada.rest;
+import br.com.pedidos.dominio.ResultadoPagamento;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotNull;
+public record PagamentoRequest(@NotNull Boolean aprovado, String motivo) {
+    @AssertTrue(message = "Informe o motivo da recusa.")
+    public boolean isMotivoValido() {
+        return aprovado == null || aprovado || (motivo != null && !motivo.isBlank());
+    }
+    ResultadoPagamento paraResultado() {
+        return aprovado ? new ResultadoPagamento.Aprovado()
+                        : new ResultadoPagamento.Recusado(motivo);
+    }
+}
+FIM DO ARQUIVO
+
+Criar ou substituir: src/main/java/br/com/pedidos/adapters/entrada/rest/PedidoController.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.adapters.entrada.rest;
+import br.com.pedidos.aplicacao.*;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+@RestController
+@RequestMapping("/pedidos")
+public class PedidoController {
+    private final CriarPedido criarPedido;
+    private final AdicionarItem adicionarItem;
+    private final PagarPedido pagarPedido;
+    public PedidoController(CriarPedido criarPedido, AdicionarItem adicionarItem, PagarPedido pagarPedido) {
+        this.criarPedido = criarPedido;
+        this.adicionarItem = adicionarItem;
+        this.pagarPedido = pagarPedido;
+    }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED)
+    public PedidoResponse criar(@Valid @RequestBody PedidoRequest request) {
+        return PedidoResponse.de(criarPedido.executar(request.paraComando()));
+    }
+    @PostMapping("/{id}/itens")
+    public PedidoResponse adicionar(@PathVariable String id,
+            @Valid @RequestBody PedidoRequest.ItemRequest request) {
+        var item = new AdicionarItem.ItemComando(
+            request.sku(), request.quantidade(), request.precoUnitario());
+        return PedidoResponse.de(adicionarItem.executar(new AdicionarItem.Comando(id, item)));
+    }
+    @PostMapping("/{id}/pagamento")
+    public PedidoResponse pagar(@PathVariable String id,
+            @Valid @RequestBody PagamentoRequest request) {
+        return PedidoResponse.de(pagarPedido.executar(id, request.paraResultado()));
+    }
+}
+FIM DO ARQUIVO
+
+Criar ou substituir: src/main/java/br/com/pedidos/config/CasosDeUsoConfig.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.config;
+import br.com.pedidos.aplicacao.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+@Configuration
+public class CasosDeUsoConfig {
+    @Bean CriarPedido criarPedido(Pedidos pedidos) { return new CriarPedidoService(pedidos); }
+    @Bean AdicionarItem adicionarItem(Pedidos pedidos) { return new AdicionarItemService(pedidos); }
+    @Bean PagarPedido pagarPedido(Pedidos pedidos) { return new PagarPedidoService(pedidos); }
+}
+FIM DO ARQUIVO
+
+Testes da referência (crie os arquivos nos caminhos indicados):
+
+Arquivo: src/test/java/br/com/pedidos/aplicacao/PagarPedidoTest.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.aplicacao;
+import br.com.pedidos.dominio.*;
+import java.math.BigDecimal;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+class PagarPedidoTest {
+    Pedido cafe() {
+        return Pedido.novo("c-1")
+            .adicionarItem(new ItemPedido("CAFE-500", 2, new BigDecimal("18.90")));
+    }
+    @Test void recusaNaoSalvaEAprovacaoPaga() {
+        var memoria = new PedidosMemoria();
+        var original = cafe();
+        memoria.dados.put(original.id(), original);
+        var service = new PagarPedidoService(memoria);
+        var recusado = service.executar(original.id(),
+            new ResultadoPagamento.Recusado("Limite insuficiente"));
+        assertSame(original, recusado);
+        assertEquals(StatusPedido.ABERTO, recusado.status());
+        assertEquals(0, memoria.gravacoes);
+        var pago = service.executar(original.id(), new ResultadoPagamento.Aprovado());
+        assertEquals(StatusPedido.PAGO, pago.status());
+        assertEquals(original.id(), pago.id());
+        assertEquals(1, memoria.gravacoes);
+        assertEquals(StatusPedido.ABERTO, original.status());
+    }
+    @Test void ausenteEFechadoNaoSalvam() {
+        var memoria = new PedidosMemoria();
+        var service = new PagarPedidoService(memoria);
+        assertThrows(PedidoNaoEncontradoException.class,
+            () -> service.executar("inexistente", new ResultadoPagamento.Aprovado()));
+        for (var fechado : List.of(cafe().pagar(), cafe().cancelar())) {
+            memoria.dados.put(fechado.id(), fechado);
+            assertThrows(PedidoFechadoException.class,
+                () -> service.executar(fechado.id(), new ResultadoPagamento.Aprovado()));
+        }
+        assertEquals(0, memoria.gravacoes);
+    }
+}
+FIM DO ARQUIVO
+
+[27] CONSULTA — tarefa
+Pré-requisito da versão cumulativa abaixo: pontos 22 e 26.
+GET /pedidos/{id}: 200 com PedidoResponse; desconhecido -> 404, sem gravação.
+Crie port/service de consulta; substitua controller/config e preserve o handler.
+Se fizer GET antes de pagamento (desafio em sala), adicione só ConsultarPedido,
+seu bean, campo/construtor e método consultar ao controller do ponto 22.
+Não copie os membros de PagarPedido antes de criar a tarefa 26.
+Ao final, rode os testes das três extensões abaixo. O IT verifica HTTP com
+Postgres real e os unitários confirmam que erros/consulta/recusa não salvam.
+
+Criar ou substituir: src/main/java/br/com/pedidos/aplicacao/ConsultarPedido.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.aplicacao;
+import br.com.pedidos.dominio.Pedido;
+public interface ConsultarPedido { Pedido executar(String id); }
+FIM DO ARQUIVO
+
+Criar ou substituir: src/main/java/br/com/pedidos/aplicacao/ConsultarPedidoService.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.aplicacao;
+import br.com.pedidos.dominio.*;
+public final class ConsultarPedidoService implements ConsultarPedido {
+    private final Pedidos pedidos;
+    public ConsultarPedidoService(Pedidos pedidos) { this.pedidos = pedidos; }
+    public Pedido executar(String id) {
+        return pedidos.buscar(id).orElseThrow(() -> new PedidoNaoEncontradoException(id));
+    }
+}
+FIM DO ARQUIVO
+
+Criar ou substituir: src/main/java/br/com/pedidos/adapters/entrada/rest/PedidoController.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.adapters.entrada.rest;
+import br.com.pedidos.aplicacao.*;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+@RestController
+@RequestMapping("/pedidos")
+public class PedidoController {
+    private final CriarPedido criarPedido;
+    private final AdicionarItem adicionarItem;
+    private final PagarPedido pagarPedido;
+    private final ConsultarPedido consultarPedido;
+    public PedidoController(CriarPedido criarPedido, AdicionarItem adicionarItem, PagarPedido pagarPedido, ConsultarPedido consultarPedido) {
+        this.criarPedido = criarPedido;
+        this.adicionarItem = adicionarItem;
+        this.pagarPedido = pagarPedido;
+        this.consultarPedido = consultarPedido;
+    }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED)
+    public PedidoResponse criar(@Valid @RequestBody PedidoRequest request) {
+        return PedidoResponse.de(criarPedido.executar(request.paraComando()));
+    }
+    @PostMapping("/{id}/itens")
+    public PedidoResponse adicionar(@PathVariable String id,
+            @Valid @RequestBody PedidoRequest.ItemRequest request) {
+        var item = new AdicionarItem.ItemComando(
+            request.sku(), request.quantidade(), request.precoUnitario());
+        return PedidoResponse.de(adicionarItem.executar(new AdicionarItem.Comando(id, item)));
+    }
+    @PostMapping("/{id}/pagamento")
+    public PedidoResponse pagar(@PathVariable String id,
+            @Valid @RequestBody PagamentoRequest request) {
+        return PedidoResponse.de(pagarPedido.executar(id, request.paraResultado()));
+    }
+    @GetMapping("/{id}")
+    public PedidoResponse consultar(@PathVariable String id) {
+        return PedidoResponse.de(consultarPedido.executar(id));
+    }
+}
+FIM DO ARQUIVO
+
+Criar ou substituir: src/main/java/br/com/pedidos/config/CasosDeUsoConfig.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.config;
+import br.com.pedidos.aplicacao.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+@Configuration
+public class CasosDeUsoConfig {
+    @Bean CriarPedido criarPedido(Pedidos pedidos) { return new CriarPedidoService(pedidos); }
+    @Bean AdicionarItem adicionarItem(Pedidos pedidos) { return new AdicionarItemService(pedidos); }
+    @Bean PagarPedido pagarPedido(Pedidos pedidos) { return new PagarPedidoService(pedidos); }
+    @Bean ConsultarPedido consultarPedido(Pedidos pedidos) { return new ConsultarPedidoService(pedidos); }
+}
+FIM DO ARQUIVO
+
+Testes da referência (crie os arquivos nos caminhos indicados):
+
+Arquivo: src/test/java/br/com/pedidos/aplicacao/ConsultarPedidoTest.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.aplicacao;
+import br.com.pedidos.dominio.*;
+import java.math.BigDecimal;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+class ConsultarPedidoTest {
+    @Test void buscaSemGravarENomeiaAusente() {
+        var memoria = new PedidosMemoria();
+        var pedido = Pedido.novo("c-1")
+            .adicionarItem(new ItemPedido("CAFE-500", 2, new BigDecimal("18.90")));
+        memoria.dados.put(pedido.id(), pedido);
+        var service = new ConsultarPedidoService(memoria);
+        assertSame(pedido, service.executar(pedido.id()));
+        assertThrows(PedidoNaoEncontradoException.class,
+            () -> service.executar("inexistente"));
+        assertEquals(0, memoria.gravacoes);
+    }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/test/java/br/com/pedidos/adapters/entrada/rest/ExtensoesProfessorIT.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.adapters.entrada.rest;
+import br.com.pedidos.adapters.saida.jpa.PedidoSpringDataRepository;
+import br.com.pedidos.aplicacao.Pedidos;
+import br.com.pedidos.dominio.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.servlet.MockMvc;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+@SpringBootTest @AutoConfigureMockMvc
+class ExtensoesProfessorIT {
+    @Autowired MockMvc mvc;
+    @Autowired ObjectMapper json;
+    @Autowired Pedidos pedidos;
+    @Autowired PedidoSpringDataRepository repository;
+    @Test void percorreAdicionarPagamentoEConsulta() throws Exception {
+        var ids = new ArrayList<String>();
+        try {
+            String criado = mvc.perform(post("/pedidos")
+                .contentType("application/json").content("""
+                {"clienteId":"c-1","itens":[
+                  {"sku":"CAFE-500","quantidade":2,"precoUnitario":18.90}]}
+                """)).andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+            String id = json.readTree(criado).get("id").asText();
+            ids.add(id);
+            String item = """
+                {"sku":"CAFE-500","quantidade":1,"precoUnitario":18.90}
+                """;
+            mvc.perform(post("/pedidos/" + id + "/itens")
+                .contentType("application/json").content(item))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.total").value(56.7));
+            mvc.perform(post("/pedidos/" + id + "/itens")
+                .contentType("application/json").content(item.replace(":1,", ":0,")))
+                .andExpect(status().isUnprocessableEntity());
+            mvc.perform(post("/pedidos/" + id + "/pagamento")
+                .contentType("application/json").content("""
+                {"aprovado":false,"motivo":"Limite insuficiente"}
+                """))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.status").value("ABERTO"));
+            mvc.perform(post("/pedidos/" + id + "/pagamento")
+                .contentType("application/json").content("{\"aprovado\":false}"))
+                .andExpect(status().isBadRequest());
+            mvc.perform(post("/pedidos/" + id + "/pagamento")
+                .contentType("application/json").content("{\"aprovado\":true}"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.status").value("PAGO"));
+            mvc.perform(post("/pedidos/" + id + "/itens")
+                .contentType("application/json").content(item))
+                .andExpect(status().isConflict());
+            var cancelado = Pedido.novo("c-1").adicionarItem(
+                new ItemPedido("CAFE-500", 2, new BigDecimal("18.90"))).cancelar();
+            ids.add(cancelado.id());
+            pedidos.salvar(cancelado);
+            mvc.perform(post("/pedidos/" + cancelado.id() + "/itens")
+                .contentType("application/json").content(item))
+                .andExpect(status().isConflict());
+            String inexistente = UUID.randomUUID().toString();
+            mvc.perform(post("/pedidos/" + inexistente + "/itens")
+                .contentType("application/json").content(item))
+                .andExpect(status().isNotFound());
+            mvc.perform(get("/pedidos/" + id)).andExpect(status().isOk())
+                .andExpect(jsonPath("$.total").value(56.7))
+                .andExpect(jsonPath("$.status").value("PAGO"));
+            mvc.perform(get("/pedidos/" + inexistente)).andExpect(status().isNotFound());
+            assertEquals(2, pedidos.buscar(id).orElseThrow().itens().size());
+            assertEquals(StatusPedido.CANCELADO,
+                pedidos.buscar(cancelado.id()).orElseThrow().status());
+        } finally {
+            for (String id : ids) repository.deleteById(id);
+        }
+    }
+}
+FIM DO ARQUIVO
+
+Verificação final das resoluções:
+  ./mvnw test
+Com o Postgres da aula pronto:
+  ./mvnw -Dtest='*IT' test
+Os arquivos de teste acima são código; estas duas linhas são comandos shell.
+No Windows, use mvnw.cmd e "-Dtest=*IT".

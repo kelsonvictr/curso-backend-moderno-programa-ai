@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="./cap1-ai.css?v=2">
 <link rel="stylesheet" href="./cap1-oficina.css?v=1">
 <style>
+  .ponto-ref{display:inline-block;margin-left:.35em;color:var(--text-dim);font:600 .72rem/1.4 "Nunito",sans-serif;letter-spacing:0;white-space:nowrap;vertical-align:middle}
   pre, code {font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;}
   .cap1-sound-mini{right:18px;bottom:80px}
   @media(max-width:700px){.cap1-sound-mini{right:18px;bottom:80px}}
@@ -144,7 +145,7 @@
   <section class="step-section" id="s-preparo">
     <div class="step-header">
       <div class="step-number sn-docker">1</div>
-      <div><div class="step-title">Prepare a bancada antes da aula</div><div class="step-sub">O aluno instala as ferramentas uma vez; durante o lab, quem executa Maven, testes e Docker é o agente</div></div>
+      <div><div class="step-title">Prepare a bancada antes da aula <span class="ponto-ref" data-ponto="01">[01]</span></div><div class="step-sub">O aluno instala as ferramentas uma vez; durante o lab, quem executa Maven, testes e Docker é o agente</div></div>
     </div>
     <div class="card">
       <div class="setup-callout"><div class="sc-icon">🧰</div><div><h3>Chegue com cinco itens prontos</h3><p>Java 21, IntelliJ, Git, Docker Desktop e <strong>um</strong> agente CLI autenticado. O roteiro detalhado por sistema operacional continua no <a href="../../setup/" style="color:var(--accent4)">Sábado 0</a>.</p></div></div>
@@ -218,7 +219,7 @@ Entregue uma tabela: verificação, evidência observada e ação necessária. S
   <section class="step-section" id="s-historia">
     <div class="step-header">
       <div class="step-number sn-java">2</div>
-      <div><div class="step-title">A história do pedido 4711</div><div class="step-sub">Por que passamos uma tarde inteira construindo o que "qualquer tutorial faz em vinte minutos"</div></div>
+      <div><div class="step-title">A história do pedido 4711 <span class="ponto-ref" data-ponto="02">[02]</span></div><div class="step-sub">Por que passamos uma tarde inteira construindo o que "qualquer tutorial faz em vinte minutos"</div></div>
     </div>
     <div class="card">
       <div class="story">
@@ -254,7 +255,7 @@ Entregue uma tabela: verificação, evidência observada e ação necessária. S
   <section class="step-section" id="s-agente-produto">
     <div class="step-header">
       <div class="step-number sn-purple">3</div>
-      <div><div class="step-title">O agente em dois universos</div><div class="step-sub">A mesma IA, a mesma velocidade — resultados muito diferentes</div></div>
+      <div><div class="step-title">O agente em dois universos <span class="ponto-ref" data-ponto="03">[03]</span></div><div class="step-sub">A mesma IA, a mesma velocidade — resultados muito diferentes</div></div>
     </div>
     <div class="card">
       <div class="analogy"><span class="analogy-icon">🧭</span><div><strong>Um agente é como um motorista muito rápido.</strong> O prompt diz o destino desta viagem. As instruções do projeto explicam as regras do veículo e da estrada. A spec descreve a entrega desta vez. Sem esses três, velocidade não garante direção.</div></div>
@@ -273,7 +274,7 @@ Entregue uma tabela: verificação, evidência observada e ação necessária. S
     <p class="practice-note">O teatro mostra um exemplo de revisão com dois itens. Na bancada e na prática Java abaixo, acompanhamos um único item de café com quantidade 2. As vozes ilustram o ritual de trabalho; os critérios executáveis estão nas specs de cada ato.</p>
     <div class="agent-theater" id="cap1-agent-theater" data-ai-theater data-speaker="LIA" data-stage="prompt">
       <div class="at-head">
-        <div><div class="p-label">TEATRO INTERATIVO · PEDIDO 4711</div><strong>Veja onde a produtividade nasce</strong></div>
+        <div><div class="p-label">TEATRO INTERATIVO · PEDIDO 4711</div><strong>Veja onde a produtividade nasce <span class="ponto-ref" data-ponto="04">[04]</span></strong></div>
         <div class="at-scenes" role="group" aria-label="Escolher história">
           <button type="button" data-ai-scene="sem_contexto" aria-pressed="true">1 · Sem contexto</button>
           <button type="button" data-ai-scene="com_contexto" aria-pressed="false">2 · Projeto dirigido</button>
@@ -323,7 +324,7 @@ Entregue uma tabela: verificação, evidência observada e ação necessária. S
   <section class="step-section" id="s-specs-fluxo">
     <div class="step-header">
       <div class="step-number sn-green">4</div>
-      <div><div class="step-title">A pasta <code>.specs/</code> ganha vida</div><div class="step-sub">Da pasta vazia até uma entrega que pode ser conferida</div></div>
+      <div><div class="step-title">A pasta <code>.specs/</code> ganha vida <span class="ponto-ref" data-ponto="05">[05]</span></div><div class="step-sub">Da pasta vazia até uma entrega que pode ser conferida</div></div>
     </div>
     <div class="card">
       <p>Agora acompanhe a construção como se estivesse numa IDE. Repare que cada arquivo nasce para responder uma pergunta: <em>o que é este projeto?</em>, <em>qual mudança queremos?</em>, <em>como saberemos que terminou?</em></p>
@@ -348,14 +349,14 @@ Entregue uma tabela: verificação, evidência observada e ação necessária. S
     <div class="did-games">
       <div class="did-game context-game" data-context-game>
         <span class="score-pill" data-cg-score>0 acertos · 1/5</span>
-        <h4>🏠 Onde esta regra mora?</h4><p>Escolha o lugar que fará a informação aparecer no momento certo sem repetir tudo em cada conversa.</p>
+        <h4>🏠 Onde esta regra mora? <span class="ponto-ref" data-ponto="06">[06]</span></h4><p>Escolha o lugar que fará a informação aparecer no momento certo sem repetir tudo em cada conversa.</p>
         <div class="game-card"><b data-cg-question></b><small data-cg-hint></small></div>
         <div class="game-options"><button type="button" data-cg-choice="prompt">💬 Prompt atual</button><button type="button" data-cg-choice="rules">🏠 CLAUDE.md / AGENTS.md</button><button type="button" data-cg-choice="spec">📋 Spec da tarefa</button></div>
         <div class="game-feedback" data-cg-feedback aria-live="polite"></div><button type="button" data-cg-next hidden>Próxima regra →</button>
       </div>
       <div class="did-game flow-game" data-flow-game>
         <span class="score-pill" data-fg-score>0 / 8 etapas</span>
-        <h4>🧭 Monte o fluxo produtivo</h4><p>Clique na ordem correta. O objetivo não é decorar comandos: é saber o que precisa existir antes de autorizar uma edição.</p>
+        <h4>🧭 Monte o fluxo produtivo <span class="ponto-ref" data-ponto="07">[07]</span></h4><p>Clique na ordem correta. O objetivo não é decorar comandos: é saber o que precisa existir antes de autorizar uma edição.</p>
         <div class="flow-slots" data-fg-slots aria-live="polite"></div>
         <div class="flow-pool"><button type="button" data-fg-step="edit">Editar</button><button type="button" data-fg-step="instructions">Ler instruções</button><button type="button" data-fg-step="test">Testar</button><button type="button" data-fg-step="plan">Propor plano</button><button type="button" data-fg-step="spec">Ler a spec</button><button type="button" data-fg-step="diff">Revisar o diff</button><button type="button" data-fg-step="inspect">Inspecionar o código</button><button type="button" data-fg-step="approve">Receber o OK</button></div>
         <div class="game-feedback" data-fg-feedback></div><button type="button" data-fg-reset>↺ Recomeçar</button>
@@ -369,7 +370,7 @@ Entregue uma tabela: verificação, evidência observada e ação necessária. S
   <section class="step-section" id="s-alvo">
     <div class="step-header">
       <div class="step-number sn-blue">6</div>
-      <div><div class="step-title">O que vamos construir</div><div class="step-sub">O serviço de Pedidos no fim do Sábado 1, animado</div></div>
+      <div><div class="step-title">O que vamos construir <span class="ponto-ref" data-ponto="08">[08]</span></div><div class="step-sub">O serviço de Pedidos no fim do Sábado 1, animado</div></div>
     </div>
     <div class="card">
       <p>Um serviço com um primeiro caso de uso completo, <strong>criar pedido</strong>, e um segundo que você faz sozinho, <strong>adicionar item</strong>.
@@ -409,7 +410,7 @@ Entregue uma tabela: verificação, evidência observada e ação necessária. S
   <section class="step-section" id="s-mapa">
     <div class="step-header">
       <div class="step-number sn-blue">7</div>
-      <div><div class="step-title">O mapa da tarde</div><div class="step-sub">Como ler os marcadores, e o que trazer</div></div>
+      <div><div class="step-title">O mapa da tarde <span class="ponto-ref" data-ponto="09">[09]</span></div><div class="step-sub">Como ler os marcadores, e o que trazer</div></div>
     </div>
     <div class="card">
       <p>O lab ocupa as quatro horas: abertura, cinco atos de construção e fechamento. Cada passo diz quem está dirigindo:</p>
@@ -453,7 +454,7 @@ Entregue uma tabela: verificação, evidência observada e ação necessária. S
   <section class="step-section ato" id="ato-0">
     <div class="ato-head">
       <div class="ah-n">0<small>ABERTURA</small></div>
-      <div><h3>Por que julgamento, e por onde um pedido anda</h3><div class="ah-s">A história do 4711 contada ao vivo, as dúvidas que vocês trouxeram, e o primeiro desenho.</div><div class="ah-modes"><span class="mode teoria">📖 teoria</span><span class="mode desenhe">📐 desenhe</span></div></div>
+      <div><h3>Por que julgamento, e por onde um pedido anda <span class="ponto-ref" data-ponto="10">[10]</span></h3><div class="ah-s">A história do 4711 contada ao vivo, as dúvidas que vocês trouxeram, e o primeiro desenho.</div><div class="ah-modes"><span class="mode teoria">📖 teoria</span><span class="mode desenhe">📐 desenhe</span></div></div>
       <div class="ah-t">13:30<small>15 min</small><label style="display:block;margin-top:6px"><input type="checkbox" data-persist="cap01/lab/0"> feito</label></div>
     </div>
     <div class="card">
@@ -468,7 +469,7 @@ Entregue uma tabela: verificação, evidência observada e ação necessária. S
   <section class="step-section ato" id="ato-1">
     <div class="ato-head">
       <div class="ah-n">1<small>ATO</small></div>
-      <div><h3>O contrato do projeto: AGENTS.md, CLAUDE.md e .specs/</h3><div class="ah-s">Antes de qualquer linha de Java, o agente precisa saber as regras da casa. Vocês escrevem juntos.</div><div class="ah-modes"><span class="mode teoria">📖 teoria</span><span class="mode junto">👥 junto</span></div></div>
+      <div><h3>O contrato do projeto: AGENTS.md, CLAUDE.md e .specs/ <span class="ponto-ref" data-ponto="11">[11]</span></h3><div class="ah-s">Antes de qualquer linha de Java, o agente precisa saber as regras da casa. Vocês escrevem juntos.</div><div class="ah-modes"><span class="mode teoria">📖 teoria</span><span class="mode junto">👥 junto</span></div></div>
       <div class="ah-t">13:45<small>25 min</small><label style="display:block;margin-top:6px"><input type="checkbox" data-persist="cap01/lab/1"> feito</label></div>
     </div>
 
@@ -551,7 +552,7 @@ Não altere pom.xml nem arquivos Java. Não crie infraestrutura ainda. Não faç
   <section class="step-section ato" id="ato-2">
     <div class="ato-head">
       <div class="ah-n">2<small>ATO</small></div>
-      <div><h3>A spec do domínio: Pedido nasce no papel</h3><div class="ah-s">A primeira spec, o primeiro plano, a primeira revisão. O Java moderno entra como critério de aceite.</div><div class="ah-modes"><span class="mode teoria">📖 teoria</span><span class="mode junto">👥 junto</span><span class="mode sozinho">🧍 sozinho</span><span class="mode desenhe">📐 desenhe</span></div></div>
+      <div><h3>A spec do domínio: Pedido nasce no papel <span class="ponto-ref" data-ponto="12">[12]</span></h3><div class="ah-s">A primeira spec, o primeiro plano, a primeira revisão. O Java moderno entra como critério de aceite.</div><div class="ah-modes"><span class="mode teoria">📖 teoria</span><span class="mode junto">👥 junto</span><span class="mode sozinho">🧍 sozinho</span><span class="mode desenhe">📐 desenhe</span></div></div>
       <div class="ah-t">14:10<small>40 min</small><label style="display:block;margin-top:6px"><input type="checkbox" data-persist="cap01/lab/2"> feito</label></div>
     </div>
 
@@ -635,7 +636,7 @@ Não use Spring, JPA, Lombok, setters ou double no domínio. Não faça commit.<
     </div>
 
 <div class="practice-check"><strong>✓ Checkpoint 2 · domínio funcionando</strong><p><b>Prova:</b> CAFE-500 × 2 × 18,90 = 37,80; quantidade zero recusada; pedido pago não recebe item; a lista original não altera o pedido. Testes sem Spring.</p><p><b>Se travar:</b> Peça o nome do teste que falhou e compare uma regra por vez. Não aceite remover o teste ou afrouxar a regra para obter verde.</p><a href="./apoio/pedidos-dominio.zip" download>Baixar referência deste ponto ↗</a></div>
-    <h4 style="margin:16px 0 6px">🔬 Checklist de revisão do Ato 2</h4>
+    <h4 style="margin:16px 0 6px">🔬 Checklist de revisão do Ato 2 <span class="ponto-ref" data-ponto="13">[13]</span></h4>
     <ul class="check-rev">
       <li><b>Records?</b> <code>Pedido</code> e <code>ItemPedido</code> são <code>record</code>, com <code>List.copyOf</code> no compact constructor.</li>
       <li><b>Exceções nomeadas?</b> <code>ItemInvalidoException</code> e <code>PedidoFechadoException</code>, não <code>IllegalArgumentException</code>.</li>
@@ -675,7 +676,7 @@ Não use Spring, JPA, Lombok, setters ou double no domínio. Não faça commit.<
   <section class="step-section ato" id="ato-3">
     <div class="ato-head">
       <div class="ah-n">3<small>ATO</small></div>
-      <div><h3>Hexagonal: o caso de uso atrás de uma porta</h3><div class="ah-s">Três ciclos: localizar a regra, testar o caso de uso e preparar a conexão com as tecnologias.</div><div class="ah-modes"><span class="mode teoria">📖 teoria forte</span><span class="mode junto">👥 junto</span><span class="mode desenhe">📐 desenhe</span></div></div>
+      <div><h3>Hexagonal: o caso de uso atrás de uma porta <span class="ponto-ref" data-ponto="14">[14]</span></h3><div class="ah-s">Três ciclos: localizar a regra, testar o caso de uso e preparar a conexão com as tecnologias.</div><div class="ah-modes"><span class="mode teoria">📖 teoria forte</span><span class="mode junto">👥 junto</span><span class="mode desenhe">📐 desenhe</span></div></div>
       <div class="ah-t">15:05<small>45 min</small><label style="display:block;margin-top:6px"><input type="checkbox" data-persist="cap01/lab/3"> feito</label></div>
     </div>
 
@@ -749,7 +750,7 @@ Não use Spring, JPA, Lombok, setters ou double no domínio. Não faça commit.<
     </div>
 
     <div class="card" style="margin-top:14px">
-      <h3>Ciclo 2 · o caso de uso funciona sem banco</h3>
+      <h3>Ciclo 2 · o caso de uso funciona sem banco <span class="ponto-ref" data-ponto="15">[15]</span></h3>
       <p>Leia pelas dependências: o caso de uso conhece a interface <code>Pedidos</code>; o adapter JPA também conhece essa interface e a implementa. A interface pertence à necessidade da aplicação, não ao banco.</p>
       <div class="code-block"><div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">núcleo primeiro, tecnologia depois</span><span class="lang-badge java">java</span></div>
 <pre><span class="cm">// Recorte do método executar; classe completa no checkpoint 3.</span>
@@ -827,7 +828,7 @@ Após meu OK, implemente e teste com uma implementação em memória de Pedidos 
 <div class="practice-check"><strong>✓ Checkpoint 3 · núcleo completo</strong><p><b>Prova:</b> CriarPedido recebe itens, devolve 37,80 e salva pelo port. Entrada vazia lança PedidoSemItensException e não chama salvar.</p><p><b>Se travar:</b> Compare os imports e o teste em memória. A implementação do teste é um substituto do banco, não um servidor de banco novo.</p><a href="./apoio/pedidos-nucleo.zip" download>Baixar referência deste ponto ↗</a></div>
 <h3 class="cycle-title">Ciclo 3 · o que muda quando a requisição vem da web?</h3><p>Use a bancada para prever a tradução em cada fronteira. Depois, escolha a responsabilidade de cada componente no quiz. Essas são as peças que construiremos no Ato 4.</p>
     <div class="hex-journey" data-hex-journey>
-      <div class="at-head"><div><div class="p-label">LABORATÓRIO VISUAL · ARQUITETURA HEXAGONAL</div><strong>A bancada de tradução do Pedido 4711 · simulação</strong></div><span class="score-pill">entrada → núcleo → saída</span></div>
+      <div class="at-head"><div><div class="p-label">LABORATÓRIO VISUAL · ARQUITETURA HEXAGONAL</div><strong>A bancada de tradução do Pedido 4711 · simulação <span class="ponto-ref" data-ponto="16">[16]</span></strong></div><span class="score-pill">entrada → núcleo → saída</span></div>
       <p class="hex-lab-instruction">Acompanhe c-1 comprando 2 unidades de CAFE-500 a 18,90. O UUID ilustrativo é o mesmo em todas as etapas; a API gera o seu. Antes de avançar, preveja <strong>o que entra, o que sai e qual tecnologia pode aparecer</strong>. A bancada é silenciosa para acompanhar a voz do professor.</p>
       <div class="hex-lab-scroll" tabindex="0" aria-label="Bancada com sete etapas; em telas estreitas, deslize horizontalmente">
         <div class="hex-map" aria-label="Caminho do pedido pelo sistema">
@@ -858,7 +859,7 @@ Após meu OK, implemente e teste com uma implementação em memória de Pedidos 
 
     <div class="card" data-hex-check style="margin-top:14px">
       <div class="p-label">QUIZ DE FIXAÇÃO · SEM PEGADINHA</div>
-      <h3 style="margin:5px 0 4px">Coloque cada componente no seu lugar</h3>
+      <h3 style="margin:5px 0 4px">Coloque cada componente no seu lugar <span class="ponto-ref" data-ponto="17">[17]</span></h3>
       <p class="text-dim" style="font-size:.84rem">A pergunta central é sempre: esta peça contém regra, define uma conversa ou traduz uma tecnologia?</p>
       <div class="hex-check-question" data-hc-question></div>
       <div class="hex-check-options"><button type="button" data-hc-choice="core">💎 Núcleo</button><button type="button" data-hc-choice="port">🚪 Port</button><button type="button" data-hc-choice="adapter">🔌 Adapter</button><button type="button" data-hc-choice="edge">🧩 Configuração da borda</button></div>
@@ -892,7 +893,7 @@ Após meu OK, implemente e teste com uma implementação em memória de Pedidos 
   <section class="step-section ato" id="ato-4">
     <div class="ato-head">
       <div class="ah-n">4<small>ATO</small></div>
-      <div><h3>Postgres no Docker e os adapters: a requisição chega ao banco</h3><div class="ah-s">REST na entrada, JPA na saída, e a primeira linha na tabela.</div><div class="ah-modes"><span class="mode teoria">📖 teoria</span><span class="mode junto">👥 junto</span><span class="mode sozinho">🧍 sozinho</span><span class="mode desenhe">📐 desenhe</span></div></div>
+      <div><h3>Postgres no Docker e os adapters: a requisição chega ao banco <span class="ponto-ref" data-ponto="18">[18]</span></h3><div class="ah-s">REST na entrada, JPA na saída, e a primeira linha na tabela.</div><div class="ah-modes"><span class="mode teoria">📖 teoria</span><span class="mode junto">👥 junto</span><span class="mode sozinho">🧍 sozinho</span><span class="mode desenhe">📐 desenhe</span></div></div>
       <div class="ah-t">15:50<small>45 min</small><label style="display:block;margin-top:6px"><input type="checkbox" data-persist="cap01/lab/4"> feito</label></div>
     </div>
 
@@ -927,11 +928,11 @@ Após meu OK, implemente e teste com uma implementação em memória de Pedidos 
     open-in-view: false       <span class="cm"># o adapter abre e fecha a sessão; o controller não</span></pre>
     </div>
 
-<p class="practice-note">Uma fronteira por vez: 4A comprova o banco; 4B comprova o adapter; 4C comprova HTTP. Não avance enquanto a evidência anterior estiver vermelha. Os tempos de 10 + 15 + 20 minutos incluem a explicação no ponto de uso.</p><details class="practice-help" id="prompt-6a"><summary>Prompt 6a · 4A · banco disponível · 10 min</summary><div class="prompt-card" data-phase="verify"><div class="prompt-head"><strong>4A · banco disponível · 10 min</strong><button type="button" class="copy-prompt" data-copy-prompt>📋 Copiar prompt</button></div><pre class="prompt-text" data-prompt-text>Leia AGENTS.md e as specs 01 e 02. Inspecione o ambiente sem editar. Proponha um plano apenas para infra/docker-compose.yml com Postgres 16, serviço postgres, db/user/senha pedidos, porta local configurável e volume nomeado. Verifique conflito na porta 5432. Aguarde meu OK.
-Após aprovação, crie o compose e suba somente esse serviço. Comprove pg_isready e SELECT 1. Não altere Java, pom.xml ou application.yml. Não remova containers/volumes alheios. Pare se o banco não estiver pronto e explique o erro. Mostre arquivos novos e modificados.</pre><div class="prompt-foot"><span><b>Confira:</b> Postgres responde antes de JPA entrar no projeto.</span></div></div></details><div class="practice-check"><strong>✓ Checkpoint 4A · banco disponível</strong><p><b>Prova:</b> pg_isready aceita conexões e SELECT 1 retorna 1.</p><p><b>Se travar:</b> Confira Docker aberto, porta ocupada e logs do serviço. Se mudar a porta local, use o mesmo valor no datasource. Nunca apague volumes para “tentar de novo”.</p><a href="./apoio/pedidos-banco.zip" download>Baixar referência deste ponto ↗</a></div><details class="practice-help" id="prompt-6b"><summary>Prompt 6b · 4B · salvar e recuperar pelo adapter · 15 min</summary><div class="prompt-card" data-phase="verify"><div class="prompt-head"><strong>4B · salvar e recuperar pelo adapter · 15 min</strong><button type="button" class="copy-prompt" data-copy-prompt>📋 Copiar prompt</button></div><pre class="prompt-text" data-prompt-text>Leia AGENTS.md e specs 01/02. Proponha .specs/03-adapters-rest-e-jpa.md com as três provas: banco disponível; persistência pelo adapter; HTTP. Escreva a spec antes do Java. Apresente plano só do checkpoint 4B e aguarde meu OK.
+<p class="practice-note">Uma fronteira por vez: 4A comprova o banco; 4B comprova o adapter; 4C comprova HTTP. Não avance enquanto a evidência anterior estiver vermelha. Os tempos de 10 + 15 + 20 minutos incluem a explicação no ponto de uso.</p><details class="practice-help" id="prompt-6a"><summary>Prompt 6a · 4A · banco disponível · 10 min <span class="ponto-ref" data-ponto="19">[19]</span></summary><div class="prompt-card" data-phase="verify"><div class="prompt-head"><strong>4A · banco disponível · 10 min</strong><button type="button" class="copy-prompt" data-copy-prompt>📋 Copiar prompt</button></div><pre class="prompt-text" data-prompt-text>Leia AGENTS.md e as specs 01 e 02. Inspecione o ambiente sem editar. Proponha um plano apenas para infra/docker-compose.yml com Postgres 16, serviço postgres, db/user/senha pedidos, porta local configurável e volume nomeado. Verifique conflito na porta 5432. Aguarde meu OK.
+Após aprovação, crie o compose e suba somente esse serviço. Comprove pg_isready e SELECT 1. Não altere Java, pom.xml ou application.yml. Não remova containers/volumes alheios. Pare se o banco não estiver pronto e explique o erro. Mostre arquivos novos e modificados.</pre><div class="prompt-foot"><span><b>Confira:</b> Postgres responde antes de JPA entrar no projeto.</span></div></div></details><div class="practice-check"><strong>✓ Checkpoint 4A · banco disponível</strong><p><b>Prova:</b> pg_isready aceita conexões e SELECT 1 retorna 1.</p><p><b>Se travar:</b> Confira Docker aberto, porta ocupada e logs do serviço. Se mudar a porta local, use o mesmo valor no datasource. Nunca apague volumes para “tentar de novo”.</p><a href="./apoio/pedidos-banco.zip" download>Baixar referência deste ponto ↗</a></div><details class="practice-help" id="prompt-6b"><summary>Prompt 6b · 4B · salvar e recuperar pelo adapter · 15 min <span class="ponto-ref" data-ponto="20">[20]</span></summary><div class="prompt-card" data-phase="verify"><div class="prompt-head"><strong>4B · salvar e recuperar pelo adapter · 15 min</strong><button type="button" class="copy-prompt" data-copy-prompt>📋 Copiar prompt</button></div><pre class="prompt-text" data-prompt-text>Leia AGENTS.md e specs 01/02. Proponha .specs/03-adapters-rest-e-jpa.md com as três provas: banco disponível; persistência pelo adapter; HTTP. Escreva a spec antes do Java. Apresente plano só do checkpoint 4B e aguarde meu OK.
 Após aprovação, adicione SOMENTE Data JPA e PostgreSQL Driver ao pom. Crie entidades PedidoJpaEntity/ItemJpaEntity, repository Spring Data, mapper manual e PedidosJpaAdapter; application.yml para o Postgres local. Mantenha domínio e aplicação intactos, sem imports de framework. Não crie endpoint ainda.
 Mapeie a tabela pedido; ID String/UUID do domínio, sem gerar outro ID; total derivado dos itens, sem coluna total. Cada item guarda sku, quantidade e precoUnitario. Use transação no adapter para mapear itens antes de fechar a sessão; open-in-view=false.
-Preserve os testes unitários. Crie PedidosJpaAdapterIT (integração, execução explícita) e adapte o teste de contexto gerado para essa mesma convenção *IT; não o apague nem desative. Rode os testes unitários pelo Wrapper sem banco; depois execute explicitamente os *IT contra o Postgres: salvar pedido de c-1 com CAFE-500, 2 x 18.90, e recuperar por UUID, em uma nova transação. Verifique itens, status ABERTO e total 37.80. Mostre a consulta à tabela e o diff. Não crie H2, endpoint, Lombok ou MapStruct.</pre><div class="prompt-foot"><span><b>Confira:</b> A ida e a volta pelo banco preservam UUID e itens; testes do núcleo continuam independentes.</span></div></div></details><div class="practice-check"><strong>✓ Checkpoint 4B · pedido persistido e recuperado</strong><p><b>Prova:</b> Teste de integração salva e relê o mesmo UUID em nova transação; itens e total 37,80 conferem.</p><p><b>Se travar:</b> Se a conexão falha, retorne ao 4A. Se os itens somem, confira relacionamento, mapper e limite da transação. Não coloque anotações no domínio.</p><a href="./apoio/pedidos-persistencia.zip" download>Baixar referência deste ponto ↗</a></div><details class="practice-help" id="prompt-6c"><summary>Prompt 6c · 4C · ligar HTTP ao núcleo · 20 min</summary><div class="prompt-card" data-phase="verify"><div class="prompt-head"><strong>4C · ligar HTTP ao núcleo · 20 min</strong><button type="button" class="copy-prompt" data-copy-prompt>📋 Copiar prompt</button></div><pre class="prompt-text" data-prompt-text>Leia AGENTS.md e specs 01/02/03. Antes de editar, complete na spec o contrato HTTP e proponha o plano. Aguarde meu OK.
+Preserve os testes unitários. Crie PedidosJpaAdapterIT (integração, execução explícita) e adapte o teste de contexto gerado para essa mesma convenção *IT; não o apague nem desative. Rode os testes unitários pelo Wrapper sem banco; depois execute explicitamente os *IT contra o Postgres: salvar pedido de c-1 com CAFE-500, 2 x 18.90, e recuperar por UUID, em uma nova transação. Verifique itens, status ABERTO e total 37.80. Mostre a consulta à tabela e o diff. Não crie H2, endpoint, Lombok ou MapStruct.</pre><div class="prompt-foot"><span><b>Confira:</b> A ida e a volta pelo banco preservam UUID e itens; testes do núcleo continuam independentes.</span></div></div></details><div class="practice-check"><strong>✓ Checkpoint 4B · pedido persistido e recuperado</strong><p><b>Prova:</b> Teste de integração salva e relê o mesmo UUID em nova transação; itens e total 37,80 conferem.</p><p><b>Se travar:</b> Se a conexão falha, retorne ao 4A. Se os itens somem, confira relacionamento, mapper e limite da transação. Não coloque anotações no domínio.</p><a href="./apoio/pedidos-persistencia.zip" download>Baixar referência deste ponto ↗</a></div><details class="practice-help" id="prompt-6c"><summary>Prompt 6c · 4C · ligar HTTP ao núcleo · 20 min <span class="ponto-ref" data-ponto="21">[21]</span></summary><div class="prompt-card" data-phase="verify"><div class="prompt-head"><strong>4C · ligar HTTP ao núcleo · 20 min</strong><button type="button" class="copy-prompt" data-copy-prompt>📋 Copiar prompt</button></div><pre class="prompt-text" data-prompt-text>Leia AGENTS.md e specs 01/02/03. Antes de editar, complete na spec o contrato HTTP e proponha o plano. Aguarde meu OK.
 Implemente POST /pedidos com PedidoRequest, PedidoResponse, PedidoController e config/CasosDeUsoConfig. O controller chama CriarPedido; não conhece JPA. Resposta 201 com UUID, clienteId, itens, status ABERTO e total. Preços e total em JSON são números decimais.
 Autorize nesta etapa um PedidoExceptionHandler em adapters/entrada/rest: ItemInvalidoException e PedidoSemItensException viram 422 com mensagem; JSON malformado ou campos obrigatórios ausentes viram 400. Use @Valid para formato e presença; a regra quantidade/preço positivos continua no domínio. Não crie outros endpoints.
 Após implementar, rode unitários sem banco e os *IT com Postgres. Inicie a aplicação e registre status HTTP e corpo para: CAFE-500, quantidade 2, precoUnitario 18.90 -&gt; 201 e total 37.80; quantidade zero -&gt; 422; itens vazios -&gt; 422; JSON malformado -&gt; 400. Nas recusas, comprove que nenhuma linha foi adicionada.
@@ -979,7 +980,7 @@ curl -i -X POST localhost:8080/pedidos -H 'Content-Type: application/json' \
   <section class="step-section ato" id="ato-5">
     <div class="ato-head">
       <div class="ah-n">5<small>ATO</small></div>
-      <div><h3>Sozinho: AdicionarItem, ponta a ponta</h3><div class="ah-s">O mesmo ciclo, sem o professor no volante. Spec, plano, seu OK, execução, revisão.</div><div class="ah-modes"><span class="mode sozinho">🧍 sozinho</span></div></div>
+      <div><h3>Sozinho: AdicionarItem, ponta a ponta <span class="ponto-ref" data-ponto="22">[22]</span></h3><div class="ah-s">O mesmo ciclo, sem o professor no volante. Spec, plano, seu OK, execução, revisão.</div><div class="ah-modes"><span class="mode sozinho">🧍 sozinho</span></div></div>
       <div class="ah-t">16:35<small>25 min</small><label style="display:block;margin-top:6px"><input type="checkbox" data-persist="cap01/lab/5"> feito</label></div>
     </div>
     <div class="exercise solo">
@@ -1030,13 +1031,13 @@ Depois do meu OK na spec, proponha o plano e pare novamente. Só implemente apó
     </div>
   </section>
 
-  <section class="step-section ato" id="s-retomada"><div class="ato-head"><div class="ah-n">↺<small>RETOMADA</small></div><div><h3>Recupere o ponto de partida e troque uma revisão</h3><div class="ah-s">Uma margem para a turma chegar junta ao fechamento.</div></div><div class="ah-t">17:00<small>15 min</small></div></div><div class="card"><p>Quem travou: anote a última evidência verde e use a referência desse ponto. Quem concluiu: compartilhe o repositório e comece a revisão em dupla. Se sobrar tempo, aprofunde um caso de erro.</p><details class="practice-help"><summary>Como retomar com um checkpoint sem perder meu trabalho?</summary><ol><li>Guarde seu projeto e suas anotações. Descompacte o ZIP em outra pasta; não sobrescreva a sua.</li><li>Abra a referência no IntelliJ. Peça ao agente para ler RETOMADA.md e executar as verificações indicadas.</li><li>Compare com seu código e explique uma diferença. Anote que usou a referência.</li><li>Continue a partir do próximo ato. Se precisar comparar novamente, seu projeto original continua disponível.</li></ol><p>Os ZIPs incluem Wrapper e código até aquele ponto. O primeiro build baixa dependências. São referências para estudo local; não incluem solução de AdicionarItem.</p></details><details class="practice-help" id="prompt-retomada"><summary>Prompt retomada · diagnosticar o ponto em que parei</summary><div class="prompt-card" data-phase="verify"><div class="prompt-head"><strong>diagnosticar o ponto em que parei</strong><button type="button" class="copy-prompt" data-copy-prompt>📋 Copiar prompt</button></div><pre class="prompt-text" data-prompt-text>Não altere arquivos. Leia AGENTS.md, a spec da etapa e RETOMADA.md se existir. Identifique o último checkpoint comprovado e a primeira divergência. Mostre o teste/log/arquivo que demonstra o problema. Proponha uma correção mínima, sem remover testes, apagar dados ou adiantar funcionalidades. Aguarde meu OK.</pre><div class="prompt-foot"><span><b>Confira:</b> Uma causa por vez; retomar é entender o estado atual.</span></div></div></details></div></section>
+  <section class="step-section ato" id="s-retomada"><div class="ato-head"><div class="ah-n">↺<small>RETOMADA</small></div><div><h3>Recupere o ponto de partida e troque uma revisão <span class="ponto-ref" data-ponto="23">[23]</span></h3><div class="ah-s">Uma margem para a turma chegar junta ao fechamento.</div></div><div class="ah-t">17:00<small>15 min</small></div></div><div class="card"><p>Quem travou: anote a última evidência verde e use a referência desse ponto. Quem concluiu: compartilhe o repositório e comece a revisão em dupla. Se sobrar tempo, aprofunde um caso de erro.</p><details class="practice-help"><summary>Como retomar com um checkpoint sem perder meu trabalho?</summary><ol><li>Guarde seu projeto e suas anotações. Descompacte o ZIP em outra pasta; não sobrescreva a sua.</li><li>Abra a referência no IntelliJ. Peça ao agente para ler RETOMADA.md e executar as verificações indicadas.</li><li>Compare com seu código e explique uma diferença. Anote que usou a referência.</li><li>Continue a partir do próximo ato. Se precisar comparar novamente, seu projeto original continua disponível.</li></ol><p>Os ZIPs incluem Wrapper e código até aquele ponto. O primeiro build baixa dependências. São referências para estudo local; não incluem solução de AdicionarItem.</p></details><details class="practice-help" id="prompt-retomada"><summary>Prompt retomada · diagnosticar o ponto em que parei</summary><div class="prompt-card" data-phase="verify"><div class="prompt-head"><strong>diagnosticar o ponto em que parei</strong><button type="button" class="copy-prompt" data-copy-prompt>📋 Copiar prompt</button></div><pre class="prompt-text" data-prompt-text>Não altere arquivos. Leia AGENTS.md, a spec da etapa e RETOMADA.md se existir. Identifique o último checkpoint comprovado e a primeira divergência. Mostre o teste/log/arquivo que demonstra o problema. Proponha uma correção mínima, sem remover testes, apagar dados ou adiantar funcionalidades. Aguarde meu OK.</pre><div class="prompt-foot"><span><b>Confira:</b> Uma causa por vez; retomar é entender o estado atual.</span></div></div></details></div></section>
 
   <!-- ═══ FECHAMENTO ═══ -->
   <section class="step-section ato" id="ato-6">
     <div class="ato-head">
       <div class="ah-n">✓<small>FECHO</small></div>
-      <div><h3>Fechamento: os desenhos, a troca, a tarefa</h3><div class="ah-s">Prancheta 1 ao lado da 4. O que mudou na sua cabeça em quatro horas.</div><div class="ah-modes"><span class="mode desenhe">📐 compare</span><span class="mode sozinho">🧍 revisão cruzada</span></div></div>
+      <div><h3>Fechamento: os desenhos, a troca, a tarefa <span class="ponto-ref" data-ponto="24">[24]</span></h3><div class="ah-s">Prancheta 1 ao lado da 4. O que mudou na sua cabeça em quatro horas.</div><div class="ah-modes"><span class="mode desenhe">📐 compare</span><span class="mode sozinho">🧍 revisão cruzada</span></div></div>
       <div class="ah-t">17:15<small>15 min</small><label style="display:block;margin-top:6px"><input type="checkbox" data-persist="cap01/lab/6"> feito</label></div>
     </div>
     <div class="card">
@@ -1075,7 +1076,7 @@ Não corrija nem faça commit. Entregue primeiro o relatório para revisão huma
     <div class="zh-em">🏠</div>
     <div>
       <div class="zh-k">Zona 3 · em casa · duas semanas (12/09 não tem aula)</div>
-      <h2>Até o próximo sábado, 19/09</h2>
+      <h2>Até o próximo sábado, 19/09 <span class="ponto-ref" data-ponto="25">[25]</span></h2>
       <div class="zh-s">O serviço cresce em casa, dirigido por você. O Sáb 2 (OO de verdade + SOLID) começa abrindo o seu repositório.</div>
     </div>
     <div class="zh-side"><div class="zh-time">~3h</div><div class="text-dim" style="font-size:0.72rem">com seu agente CLI</div></div>
@@ -1087,8 +1088,8 @@ Não corrija nem faça commit. Entregue primeiro o relatório para revisão huma
 
       <ul class="chk-list">
         <li><label class="chk"><input type="checkbox" data-persist="cap01/casa/repo"><span><span class="chk-t">Repositório <code>pedidos</code> no GitHub com tudo o que foi feito na sala</span><span class="chk-d"><code>AGENTS.md</code>, <code>CLAUDE.md</code>, <code>.specs/</code> com as quatro specs, <code>infra/docker-compose.yml</code> e commits revisados do contrato, domínio, caso de uso, adapters e prática individual.</span></span></label></li>
-        <li><label class="chk"><input type="checkbox" data-persist="cap01/casa/pagar"><span><span class="chk-t"><code>PagarPedido</code> ponta a ponta, com <code>ResultadoPagamento</code> sealed</span><span class="chk-d">Spec nova em <code>.specs/05</code>: <code>Aprovado</code> → PAGO, <code>Recusado(motivo)</code> → continua ABERTO. Antes de implementar, peça uma explicação de <code>sealed</code>: limita os tipos possíveis de resultado. Preveja os dois caminhos; depois use switch exaustivo, sem <code>default</code>. Estorno fica para uma evolução futura com estados e regras próprios. Endpoint <code>POST /pedidos/{id}/pagamento</code>. Testes em memória.</span></span></label></li>
-        <li><label class="chk"><input type="checkbox" data-persist="cap01/casa/get"><span><span class="chk-t"><code>GET /pedidos/{id}</code>, se não fez na sala</span></span></label></li>
+        <li><label class="chk"><input type="checkbox" data-persist="cap01/casa/pagar"><span><span class="chk-t"><code>PagarPedido</code> ponta a ponta, com <code>ResultadoPagamento</code> sealed <span class="ponto-ref" data-ponto="26">[26]</span></span><span class="chk-d">Spec nova em <code>.specs/05</code>: <code>Aprovado</code> → PAGO, <code>Recusado(motivo)</code> → continua ABERTO. Antes de implementar, peça uma explicação de <code>sealed</code>: limita os tipos possíveis de resultado. Preveja os dois caminhos; depois use switch exaustivo, sem <code>default</code>. Estorno fica para uma evolução futura com estados e regras próprios. Endpoint <code>POST /pedidos/{id}/pagamento</code>. Testes em memória.</span></span></label></li>
+        <li><label class="chk"><input type="checkbox" data-persist="cap01/casa/get"><span><span class="chk-t"><code>GET /pedidos/{id}</code>, se não fez na sala <span class="ponto-ref" data-ponto="27">[27]</span></span></span></label></li>
         <li><label class="chk"><input type="checkbox" data-persist="cap01/casa/claudemd"><span><span class="chk-t">Peça ao agente que <em>proponha</em> melhorias no <code>AGENTS.md</code>, e avalie cada uma com evidência</span><span class="chk-d">Ele pode sugerir regras genéricas. Quais servem ao projeto? Anote no Caderno o que aceitou ou rejeitou e por quê; não rejeite uma proposta correta só para cumprir uma contagem.</span></span></label></li>
         <li><label class="chk"><input type="checkbox" data-persist="cap01/casa/readme"><span><span class="chk-t">README com as pranchetas 3 e 4 exportadas em PNG e um parágrafo: "por que hexagonal"</span></span></label></li>
         <li><label class="chk"><input type="checkbox" data-persist="cap01/casa/leitura"><span><span class="chk-t">Ler a zona 📖 do Sábado 2 quando for publicada</span><span class="chk-d">OO de verdade e SOLID como checklist de revisão. Avisamos no grupo.</span></span></label></li>

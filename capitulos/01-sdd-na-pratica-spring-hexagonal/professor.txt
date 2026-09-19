@@ -1,0 +1,130 @@
+CAP 01 — SDD, SPRING HEXAGONAL E POSTGRES
+Consulte pelos números da página; não há registro de onde a turma parou.
+Correções completas: professor-resolucoes.txt, nesta mesma pasta.
+Tempos são do plano; números [NN] são pontos, não atos ou prompts.
+Peça ao agente para executar; o aluno prevê, autoriza e confere.
+
+[01] BANCADA
+  Confira Java 21, IDE, Git, Docker e um agente autenticado. Use o Prompt 0.
+  Peça testes pelo Wrapper: base Web/Validation deve passar sem banco.
+  Se JPA já entrou, compare com pedidos-base.zip antes de prosseguir.
+
+[02] HISTÓRIA DO 4711
+  Pergunte por que a falha do e-mail afetou o pedido: responsabilidades juntas.
+  Destaque: hoje isolamos regras; duplicidade e entrega ficam para eventos.
+
+[03] TRÊS FONTES DE CONTEXTO
+  Separe prompt = agora; AGENTS.md = regras do projeto; spec = mudança.
+  Pergunte se .specs/ é lida por existir: não, o ritual manda ler.
+
+[04] TEATRO DO AGENTE
+  Compare sem contexto e projeto dirigido; pause antes do plano e do diff.
+  Peça uma decisão que evita retrabalho: limitar arquivos e exigir testes.
+  Use mudo em sala; teatro usa dois itens, prática usa café com quantidade 2.
+
+[05] A SPEC GANHA VIDA
+  Avance pasta, README, spec, plano, execução e revisão.
+  Pergunte onde a regra vira prova: critérios de aceite ligados aos testes.
+
+[06] ONDE A REGRA MORA
+  Peça as cinco escolhas: regras, spec, prompt, regras, spec.
+  Confira o motivo: duração da regra e escopo da mudança.
+
+[07] ORDEM DO TRABALHO
+  Peça: instruções, spec, inspeção, plano, OK, edição, testes, diff.
+  Pergunte o que falta antes de editar: contexto, plano e autorização.
+
+[08] ALVO DO DIA
+  Mostre c-1, CAFE-500, 2 x 18.90 = 37.80; UUID nasce no domínio.
+  Peça para localizar o teste sem banco. AdicionarItem será a transferência.
+
+[09] MAPA DA TARDE
+  Confira preparo; siga os horários como referência do plano.
+  Reserve 15 min de intervalo, 15 de retomada e 15 de fechamento.
+
+[10] DESENHO INICIAL — juntos
+  Conte o incidente e peça a Prancheta 1, sem consultar o desenho-alvo.
+  Guarde o desenho para comparar no final; não corrija tudo agora.
+
+[11] CONTRATO DO PROJETO — juntos
+  Use Prompt 1; aprove só AGENTS.md, CLAUDE.md e .specs/README.md.
+  Peça uma avaliação de conflito com Lombok, sem autorizar edição.
+  Confira arquivos novos no status/editor; diff sozinho pode omiti-los.
+
+[12] DOMÍNIO — juntos
+  Pergunte quantidade zero, total divergente, lista externa e pedido pago.
+  Use Prompts 2/3: spec, plano, OK, implementação e testes sem Spring.
+  Confira: 37.80, original preservado, cópia defensiva, exceções nomeadas.
+
+[13] REVISÃO DO DOMÍNIO
+  Peça evidência de cada regra; acrescente seus donos na Prancheta 2.
+  Confira record + List.copyOf, total derivado e nenhum import de framework.
+  Autorize o commit do domínio; faça o intervalo antes de hexagonal.
+
+[14] DENTRO E FORA — juntos
+  Localize a regra no código; pergunte se ela precisa conhecer Postgres.
+  Mostre dentro, ports e adapters. Imports apontam para dentro.
+  Use a explicação do agente (Prompt 4) apenas se houver dúvida concreta.
+
+[15] CRIAR PEDIDO SEM BANCO — juntos
+  Use Prompt 5: criar, adicionar itens e salvar pelo port Pedidos.
+  Confira café = 37.80; entrada vazia/ inválida não pode chamar salvar.
+  Peça o teste em memória e o commit revisado do caso de uso.
+
+[16] BANCADA DE TRADUÇÃO
+  Pause e peça previsão: HTTP/DTO -> comando -> regra -> port -> JPA.
+  Confira UUID preservado, itens gravados e total calculado, sem coluna total.
+  Lembre: animação demonstra; o teste real ainda vem no Ato 4.
+
+[17] QUIZ E PRANCHETA 3
+  Confira: núcleo, port, port, adapter, adapter, configuração da borda.
+  Peça a justificativa antes de avançar; complete as setas da Prancheta 3.
+  Diferencie chamada em execução de dependência de código (import).
+
+[18] INTEGRAÇÃO POR FRONTEIRAS — juntos
+  Apresente as três provas: banco, ida/volta pelo adapter, HTTP.
+  Separe Pedido de PedidoJpaEntity; mapper traduz, config liga.
+  Só avance com a evidência anterior verde; use 4A/4B/4C.
+
+[19] 4A: BANCO DISPONÍVEL
+  Use Prompt 6a; aprove só compose/Postgres 16.
+  Confira pg_isready e SELECT 1. Porta ocupada pede ajuste, não apagar volume.
+
+[20] 4B: PERSISTÊNCIA
+  Use Prompt 6b; autorize JPA/driver e adapter, sem endpoint.
+  Confira releitura em outra transação: mesmo UUID, itens e total 37.80.
+  Rode unitários e depois *IT com banco; preserve o teste de contexto como IT.
+
+[21] 4C: HTTP
+  Use Prompt 6c; confira 201/37.80, quantidade zero e vazio = 422.
+  Confira JSON inválido = 400; recusas não gravam.
+  Reinicie a aplicação, releia o mesmo UUID e complete a Prancheta 4.
+
+[22] ADICIONAR ITEM — sozinhos
+  Peça spec própria antes das ajudas. Revise spec e plano em duas pausas.
+  Confira: 37.80 + 18.90 = 56.70; mesmo UUID; 404/409/422 sem gravar.
+  Peça uma decisão aceita e outra questionada; CriarPedido continua verde.
+
+[23] RETOMADA E REVISÃO
+  Peça a última prova verde. Abra o ZIP em outra pasta, preservando o aluno.
+  Leia RETOMADA.md; compare uma diferença antes de continuar.
+  Quem terminou começa a revisão em dupla; não exigir defeitos inventados.
+
+[24] FECHAMENTO
+  Compare Pranchetas 1/4; pergunte onde o e-mail entraria: adapter/port futuro.
+  Use Prompt 8: unitários, integração, status, diff e critérios das specs.
+  Recolha uma decisão justificada e uma dúvida real para a próxima aula.
+
+[25] CONTINUIDADE — tarefa
+  Peça repo, specs, commits revisados e desenhos exportados.
+  Avalie sugestões ao AGENTS.md por evidência; rejeitar não é obrigatório.
+  Confirme a data real do próximo encontro antes de repetir a data do HTML.
+
+[26] PAGAMENTO — tarefa
+  Peça spec: Aprovado -> PAGO; Recusado(motivo) -> permanece ABERTO.
+  Explique sealed/switch; estorno fica para uma evolução própria.
+  Use simulação local de resultado; não conectar cartão ou cobrança real.
+
+[27] CONSULTA — tarefa
+  Peça consulta pelo port Pedidos: existente = 200; ausente = 404.
+  Confira que consultar não salva e não altera total ou status.

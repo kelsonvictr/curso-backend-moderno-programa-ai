@@ -112,3 +112,13 @@ passo a passo. Cada estado deve responder: **antes, ação, depois, como provar 
 - Base: Java 21, Boot 3.5.16, Web/Validation; JPA/driver só no 4B. Testes unitários e integração têm comandos distintos e evidência explícita.
 - Checkpoints reproduzíveis em tooling/cap01-reference, empacotados por tooling/build-cap01-checkpoints.py; validar com tooling/validate-cap01.py --integration.
 - Contrato e cronograma: .specs/10-cap1-fluidez-preservando-atos.md.
+
+## Cap 1 — consulta do professor (2026-09-19)
+- Aplicada a skill `professor-txt`: cola curta em `professor.txt` e correções completas
+  em `professor-resolucoes.txt`, dentro da pasta do capítulo.
+- Os 27 pontos seguem a ordem visual; mantenha números e títulos dos dois TXTs
+  sincronizados com os marcadores discretos `[NN]` do HTML, incluindo atividades.
+- Não incluir links ou anúncios dos TXTs no capítulo. Ausência de links não é
+  controle de acesso. Os arquivos não registram progresso presumido da turma.
+- Soluções de AdicionarItem, pagamento e consulta são referências para correção;
+  os ZIPs de retomada continuam terminando em CriarPedido/HTTP.

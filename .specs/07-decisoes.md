@@ -412,3 +412,18 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
 - HTTP real validado: 201/422/400, recusas sem inserir pedido, UUID e itens preservados após reinício da aplicação e ausência de coluna total. Comparação decimal corrigida no validador para aceitar representação numérica equivalente (37.8/37.80).
 - Documentação operacional e decisões: 10-cap1-fluidez-preservando-atos.md e tooling/CAP01.md. Alteração local, sem commit/publicação automática.
 - Verificação no navegador: 12 prompts com cópia exata, jogos com acerto/erro/reinício, etapas de spec e hexagonal revisitadas, ajuda por teclado, notas preservadas após reload e três cenas narradas navegáveis. Pausa de voz e mudo global conferidos por estado de reprodução; sem alegação de avaliação auditiva. Download funcional, dependências externas bloqueadas sem impedir a aula, desktop e 390 px sem overflow ou erros JS. Botões de som/caderno separados; ligaduras desativadas. IDs/âncoras/recursos/JSON, manifesto dos ZIPs e preservação das chaves antigas conferidos.
+
+## 2026-09-19 — Cola do professor no Cap 1
+- Kelson pediu aplicar `professor-txt` ao capítulo atual e fazer push.
+- Criados `professor.txt` (27 pontos, consulta rápida) e `professor-resolucoes.txt`
+  (gabaritos, caminhos e classes/testes completos). Sem progresso presumido da turma.
+- Marcadores `[01]`–`[27]` seguem a ordem visual, incluindo jogos, simulação e tarefas.
+  HTML recebeu somente marcadores e seu estilo; não há links para os TXTs na página.
+- Correções de AdicionarItem, pagamento e consulta foram montadas sobre a referência
+  HTTP. Decisões adicionais de contrato são identificadas como propostas; não se
+  apresentam como implementação existente da turma. ZIPs de retomada preservados.
+- Validação: soluções cumulativas dos pontos 22, 26 e 27 compilaram separadamente e
+  passaram nos unitários; versão completa passou em 17 testes, incluindo integração
+  com Postgres 16 isolado. Código dos TXTs comparado com os arquivos executados.
+- Conferidos sequência/títulos dos dois TXTs e 27 marcadores no HTML. Inspeção visual
+  em 1440 e 390 px, sem overflow horizontal ou erros JS, com ligaduras desativadas.
