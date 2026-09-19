@@ -427,3 +427,33 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
   com Postgres 16 isolado. Código dos TXTs comparado com os arquivos executados.
 - Conferidos sequência/títulos dos dois TXTs e 27 marcadores no HTML. Inspeção visual
   em 1440 e 390 px, sem overflow horizontal ou erros JS, com ligaduras desativadas.
+
+## 2026-09-19 — Cap 2: OO e SOLID com prática e revisão
+- Pedido: iniciar Sábado 02 no padrão didático/técnico do Cap 01 e criar apoio
+  docente com professor-txt. Mantidos três momentos e plano de 240 minutos.
+- Construção gradual: estado/comportamento/invariante, encapsulamento, cópia
+  defensiva, coesão/acoplamento, composição/herança, contratos e cinco princípios.
+  Cada princípio parte de uma mudança concreta e termina com decisão e feedback.
+- Duas simulações principais e quatro bancadas de mudança, todas silenciosas,
+  manuais e com resultados revisitáveis. 18 combinações de guarda/estado/entrada
+  e quatro combinações de contrato/implementação. Movimento não é necessário.
+- Domínio aprovado do Cap 01 preservado. Defeitos vivem em projeto independente;
+  testes de caracterização explicitamente reproduzem falhas conhecidas. Revisão
+  A–E tem rubrica, tentativa antes do modelo e aceita sobreposição fundamentada.
+- Continuidade: base consolida adicionar/pagar/consultar. Transferência expõe
+  cancelar já existente no domínio: 200/404/409, identidade/itens/total preservados,
+  recusa sem salvar. Sem nova infraestrutura, estorno ou garantia de concorrência.
+- Incluídos quatro ZIPs reproduzíveis, fonte Java, validador, skill revisar-solid
+  para o laboratório, caderno livre próprio e duas pranchetas. Cola com 21 pontos
+  e resoluções completas; sem links dos TXTs no capítulo. Hub e próximo do Cap 01
+  apontam ao novo capítulo disponível localmente.
+- Validação de ZIPs em pastas novas: base 12 unitários + 5 integração; cancelamento
+  14 unitários + 6 integração; revisão 4 caracterizações; solução 7 testes.
+  PostgreSQL 16 temporário em porta aleatória removido ao fim. Código dos TXTs
+  comparado às fontes, IDs/âncoras/recursos/pontos e JavaScript conferidos.
+- Browser: escolhas corretas/incorretas, reinício, variação das bancadas, cópia de
+  prompts, persistência de notas, pranchetas/caderno, teclado e movimento reduzido.
+  Recursos externos bloqueados; desktop 1440 e móvel 390 sem overflow de página
+  nem erros JS. Diagrama amplo tem rolagem interna indicada e foco por teclado.
+- Referências primárias ligadas à teoria: Oracle Java 21, textos de Robert Martin
+  para SRP/OCP/LSP/ISP/DIP e documentação Claude Code para skills, consultadas hoje.

@@ -1,0 +1,104 @@
+SÁBADO 02 — OO E SOLID NA REVISÃO
+Use os números discretos da página; não há registro de onde a turma parou.
+Correções completas em professor-resolucoes.txt, nesta pasta.
+Tempos são referências do plano; juntos, sozinhos e tarefa orientam a condução.
+
+[01] O MESMO PEDIDO. UMA PERGUNTA NOVA.
+  Peça repo e última prova verde; não presuma pagamento/consulta concluídos.
+  Abra a base em outra pasta se necessário. Compare, não sobrescreva.
+  Pergunte quem barra item em pedido pago: Pedido, no Cap 01.
+
+[02] O MAPA DAS QUATRO HORAS
+  Mostre os 240 min; reserve intervalo e fechamento.
+  Peça o diagnóstico sem edição. Transferência pode terminar em casa.
+
+[03] DUAS ENTRADAS, DUAS VERDADES?
+  Peça previsão antes de abrir o gabarito: importação altera pedido pago.
+  Desenhe duas entradas e marque onde a condição existe.
+
+[04] OBJETO NÃO É SÓ UMA SACOLA DE CAMPOS
+  Defina estado, comportamento e invariante antes de falar em domínio rico.
+  Peça a regra: fechado não aceita item. Quem garante? Pedido.
+  Separe dono da regra de coordenador; DTO de transporte pode só ter dados.
+
+[05] LABORATÓRIO: ONDE MORA A REGRA?
+  Compare API/importação com guarda no controller e depois no domínio.
+  Pago: recusa mantém 37.80; brecha chega a 56.70. Aberto: ambos aceitam.
+  Explique o limite: esta importação contorna o service.
+
+[06] RECORD NÃO CONGELA TUDO SOZINHO
+  Desenhe variável -> lista -> itens. Diferencie referência final de objeto imutável.
+  Peça teste da origem alterada, da lista exposta e do original preservado.
+
+[07] REFATORE UMA FALHA QUE VOCÊ CONSEGUE PROVAR
+  Rode caracterização e explique por que verde pode documentar um bug.
+  Peça spec antes do plano; só EntradaAlternativa e seus testes.
+  Confira as duas entradas, cópia defensiva e original preservado.
+  Compare com o Pedido real e faça o intervalo.
+
+[08] O QUE DEVE MUDAR JUNTO?
+  Peça três mudanças: regra do pedido, texto do e-mail, conexão.
+  Separe por motivo real, não por quantidade de métodos.
+
+[09] REUTILIZAR NÃO EXIGE VIRAR UM SUBTIPO
+  Explique herança como promessa de substituição; composição como colaboração.
+  Use cartão/Pix: autorizar é comum, parcelar não.
+  Defina interface e polimorfismo antes do laboratório seguinte.
+
+[10] LABORATÓRIO: A PROMESSA SOBREVIVE À TROCA?
+  Teste parcelar(2) em cartão e Pix: Pix rompe a promessa.
+  Troque o contrato para autorizar: ambos cumprem o contrato didático.
+
+[11] S · UMA RAZÃO DE MUDANÇA POR RESPONSABILIDADE
+  Peça quem muda: comercial altera preço; comunicação altera mensagem.
+  Troque a organização na bancada: texto passa a tocar só MensagemPedido.
+  Confira: vários métodos coesos não exigem várias classes.
+
+[12] O · UMA VARIAÇÃO COM UM LUGAR PARA ENTRAR
+  Troque 10% por R$ 5: com 100, resultados 90/95; com 3, fixo dá zero.
+  Confira 37.80 com 10% = 34.02 e arredondamento final 0.05 -> 0.05.
+  Peça variação real antes de criar plugins; um if não prova violação.
+
+[13] L · TROCAR A IMPLEMENTAÇÃO SEM QUEBRAR A PROMESSA
+  Retome parcelar(2): cartão cumpre; Pix quebra a promessa herdada.
+  Confira: recusa prevista no contrato não viola substituição.
+  Peça o contrato comum, não parentesco do mundo real.
+
+[14] I · O CLIENTE DEPENDE SÓ DO QUE PRECISA
+  Troque contrato amplo/estreito: o fake de consulta só precisa buscar.
+  Pergunte se dividir Pedidos é obrigatório: não, buscar/salvar são coesos.
+  Avalie necessidade dos clientes, não um método por interface.
+
+[15] D · QUEM ESCOLHE O DETALHE EXTERNO?
+  Troque GatewayHttp por Autorizador e localize a opção de fake.
+  Confira aprovação/recusa sem rede; montagem escolhe implementação.
+  Separe técnica de injeção e direção da dependência.
+
+[16] AGORA VOCÊ É O REVISOR
+  Reserve 10 min de diagnóstico individual, 10 em dupla, 15 para um caso e 5 de defesa.
+  Peça A–E com local, consequência, princípio, correção e prova.
+  Use rubrica 2 por caso; aceite sobreposição fundamentada.
+
+[17] UMA CORREÇÃO PEQUENA TAMBÉM PRECISA DE PROVA
+  Abra o modelo só depois dos pareceres.
+  Diferencie refatoração, correção de bug e nova funcionalidade.
+  Peça uma decisão preservada, além da mudança defendida.
+
+[18] TRANSFIRA: CANCELAR SEM ESPALHAR A REGRA
+  Peça spec: aberto 200, fechado 409, ausente 404; total fica 37.80.
+  Use cancelar existente. Caso de uso busca, delega e salva retorno.
+  Confira unitários antes de HTTP/JPA; conclua em casa se necessário.
+
+[19] SEU CHECKLIST VIRA UMA SKILL
+  Salve o SKILL.md e explique: instrução reutilizável, não garantia de qualidade.
+  Peça revisão de um diff identificado; não autorize edição junto.
+  Confira um achado com a spec e aceite relatório sem problemas inventados.
+
+[20] DEFENDA UMA DECISÃO, NÃO UMA QUANTIDADE DE CLASSES
+  Peça mudança, risco, princípio, correção e prova em uma fala curta.
+  Compare pranchetas e registre decisão preservada + dúvida.
+
+[21] O QUE TRAZER PARA O SÁBADO 03
+  Peça parecer, spec, provas de cancelamento e revisão pela skill.
+  Aceite pendências identificadas; não confunda arquivo gerado com prova.
+  Oriente backup do caderno e uma dúvida para o próximo encontro.

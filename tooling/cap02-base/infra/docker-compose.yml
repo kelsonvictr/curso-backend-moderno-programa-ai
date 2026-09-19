@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres:16
+    ports:
+      - "127.0.0.1:${PEDIDOS_DB_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: pedidos
+      POSTGRES_USER: pedidos
+      POSTGRES_PASSWORD: pedidos
+    volumes:
+      - pedidos-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pedidos -d pedidos"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+volumes:
+  pedidos-data:

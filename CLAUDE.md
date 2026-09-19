@@ -194,3 +194,17 @@ passo a passo. Cada estado deve responder: **antes, ação, depois, como provar 
   controle de acesso. Os arquivos não registram progresso presumido da turma.
 - Soluções de AdicionarItem, pagamento e consulta são referências para correção;
   os ZIPs de retomada continuam terminando em CriarPedido/HTTP.
+
+## Cap 2 — OO/SOLID por evidências (2026-09-19)
+- Capítulo em `capitulos/02-oo-de-verdade-e-solid/`; contrato didático em
+  `.specs/11-cap2-oo-solid.md`. O domínio aprovado do Cap 1 não é tornado anêmico.
+- Laboratório defeituoso e solução são projetos independentes (`br.com.revisao`).
+  Caracterização verde reproduz bugs conhecidos; correção troca a expectativa com
+  justificativa. SOLID não impõe interface por classe nem achado por letra.
+- Base consolida tarefas do Cap 1. CancelarPedido reutiliza Pedido.cancelar e Pedidos:
+  aberto 200, pago/cancelado 409, ausente 404, sem gravar em recusas. Não promete
+  estorno, concorrência, idempotência de repetição nem integração de cobrança.
+- Manter os 21 pontos do HTML, professor.txt e professor-resolucoes.txt sincronizados.
+  Não colocar links dos TXTs no capítulo. Caderno usa armazenamento próprio cap02.
+- Fontes de apoio em tooling/cap02-*. Empacotar com build-cap02-checkpoints.py;
+  validar ZIPs extraídos com validate-cap02.py --integration (Postgres isolado).

@@ -1,0 +1,564 @@
+SÁBADO 02 — RESOLUÇÕES E CONSULTA
+Mesmos números e títulos de professor.txt e da página.
+Caminhos de Java relativos ao projeto indicado em cada ponto.
+Cole apenas o conteúdo entre INÍCIO/FIM, comparando antes com seu projeto.
+
+[01] O MESMO PEDIDO. UMA PERGUNTA NOVA.
+A base consolida os pontos 22, 26 e 27 das resoluções do Cap 01. Pagamento continua
+simulado. O laboratório br.com.revisao é independente e não deve substituir
+br.com.pedidos. Java 21, Wrapper e nenhuma instalação nova para a revisão.
+
+[02] O MAPA DAS QUATRO HORAS
+Cronograma soma 240 minutos. Sem banco: ./mvnw test. Integração só com Postgres
+pronto: ./mvnw "-Dtest=*IT" test. Tempos são plano, não registro de progresso da
+turma.
+
+[03] DUAS ENTRADAS, DUAS VERDADES?
+O campo private não impede alterar a lista exposta. Controller recusa; importação
+passa. Evidência executável: CaracterizacaoTest.segundaEntradaViolaRegraAtual no ZIP
+revisao-solid. O teste verde reproduz um defeito conhecido.
+
+[04] OBJETO NÃO É SÓ UMA SACOLA DE CAMPOS
+A regra precisa ser verdadeira em toda operação pública que altera itens. No Cap 01,
+adicionarItem chama exigirAberto e cria outra instância. O record tem construtor
+público para representar/reconstituir estado; isso não prova sozinho todo ciclo de
+vida. Não apresentar Java record como mecanismo de autorização ou controle de
+concorrência.
+
+[05] LABORATÓRIO: ONDE MORA A REGRA?
+Matriz: ABERTO aceita nas seis combinações. PAGO/CANCELADO: API recusa nas três;
+importação só recusa com guarda no domínio. Cada execução reinicia em 2 unidades.
+Quiz: operação de Pedido deve proteger a regra. Um service pode centralizar
+política, mas não torna um objeto mutável incapaz de estados ilegais.
+
+[06] RECORD NÃO CONGELA TUDO SOZINHO
+Gabarito: não muda pela lista de origem, mas elementos precisam de análise.
+List.copyOf não faz cópia profunda e rejeita elementos nulos. A prova executável
+está em ContratosTest.copiaDefensivaEPedidoAberto. Não estender a garantia para
+concorrência no banco.
+
+[07] REFATORE UMA FALHA QUE VOCÊ CONSEGUE PROVAR
+Correção completa de EntradaAlternativa.java e ContratosTest no final deste ponto.
+Os testes deste ponto ficam em EntradaAlternativaTest. A mudança de
+boolean/mutabilidade para record é uma opção didática, não requisito de
+encapsulamento.
+
+Arquivo: src/main/java/br/com/revisao/EntradaAlternativa.java
+INÍCIO DO ARQUIVO
+package br.com.revisao;
+import java.util.ArrayList;
+import java.util.List;
+public final class EntradaAlternativa {
+    public record Pedido(boolean pago, List<String> itens) {
+        public Pedido { itens = List.copyOf(itens); }
+        public Pedido adicionar(String sku) {
+            if (pago) throw new IllegalStateException("Pedido fechado");
+            var novos = new ArrayList<>(itens);
+            novos.add(sku);
+            return new Pedido(pago, novos);
+        }
+    }
+    public Pedido peloController(Pedido pedido, String sku) {
+        return pedido.adicionar(sku);
+    }
+    public Pedido pelaImportacao(Pedido pedido, String sku) {
+        return pedido.adicionar(sku);
+    }
+}
+FIM DO ARQUIVO
+No projeto de revisão, crie o teste abaixo e retire de CaracterizacaoTest somente
+o método segundaEntradaViolaRegraAtual, substituído pelos dois cenários abaixo.
+Preserve os três testes dos casos ainda não corrigidos. Execute ./mvnw test.
+
+Arquivo: src/test/java/br/com/revisao/EntradaAlternativaTest.java
+INÍCIO DO ARQUIVO
+package br.com.revisao;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+class EntradaAlternativaTest {
+    @Test void asDuasEntradasProtegemPedidoPago() {
+        var entradas = new EntradaAlternativa();
+        var pago = new EntradaAlternativa.Pedido(true, List.of("CAFE-500"));
+        assertThrows(IllegalStateException.class, () -> entradas.peloController(pago, "CHA"));
+        assertThrows(IllegalStateException.class, () -> entradas.pelaImportacao(pago, "CHA"));
+        assertEquals(List.of("CAFE-500"), pago.itens());
+    }
+    @Test void copiaDefensivaEPedidoAberto() {
+        var lista = new ArrayList<String>(); lista.add("CAFE-500");
+        var original = new EntradaAlternativa.Pedido(false, lista);
+        lista.clear();
+        assertEquals(1, original.itens().size());
+        assertThrows(UnsupportedOperationException.class, () -> original.itens().clear());
+        var novo = new EntradaAlternativa().pelaImportacao(original, "CHA");
+        assertEquals(2, novo.itens().size());
+        assertEquals(1, original.itens().size());
+    }
+}
+FIM DO ARQUIVO
+
+[08] O QUE DEVE MUDAR JUNTO?
+Coesão é relação interna; acoplamento é dependência entre partes. Aplicação depender
+de um port continua sendo acoplamento, mas a contrato escolhido. Não prometer
+acoplamento zero. Pedido com adicionar/pagar/cancelar pode ser coeso.
+
+[09] REUTILIZAR NÃO EXIGE VIRAR UM SUBTIPO
+Não dizer que herança é sempre proibida. O problema de PagamentoPix extends
+PagamentoCartao é herdar uma operação que a implementação não cumpre para entradas
+válidas. Uma interface comum deve expressar capacidade realmente comum; métodos
+específicos podem permanecer nas classes concretas.
+
+[10] LABORATÓRIO: A PROMESSA SOBREVIVE À TROCA?
+Matriz: parcelar/cartão retorna 2x; parcelar/Pix recusa operação prometida e viola
+substituição. Autorizar/cartão e autorizar/Pix retornam Autorizado. Recusar um
+pagamento por regra de negócio pode ser resultado válido de um contrato; não
+confundir com operação não suportada.
+
+[11] S · UMA RAZÃO DE MUDANÇA POR RESPONSABILIDADE
+Single Responsibility Principle · responsabilidade única. Um recibo reúne dois
+trabalhos: calcular o preço promocional e escrever o e-mail. A equipe comercial muda
+a promoção; comunicação muda a saudação. Os motivos são independentes, embora ambos
+mencionem Pedido. Extraia PrecoPromocional e MensagemPedido. Um coordenador pode
+chamar ambos; ele não precisa escrever o texto nem recalcular a regra. Mudar “Olá”
+agora alcança a mensagem, sem editar o cálculo. Gabarito da decisão: segunda
+alternativa. Código completo dos casos corrigidos aparece no ponto da revisão. Não
+exigir um único rótulo se o aluno demonstrar sobreposição com outro princípio.
+
+[12] O · UMA VARIAÇÃO COM UM LUGAR PARA ENTRAR
+Open–Closed Principle · aberto para extensão, fechado para modificação. Uma campanha
+oferece 10%; outra desconta R$ 5. O time precisa variar o abatimento sem repetir a
+conta final, seu arredondamento e suas validações. Com subtotal 100, dez por cento
+produz 90.00; cinco reais produz 95.00. Com subtotal 3, o desconto fixo limita o
+abatimento a 3 e resulta em 0.00. OCP não exige abstrair cada if: um conjunto
+pequeno e estável pode continuar explícito. Gabarito da decisão: segunda
+alternativa. Código completo dos casos corrigidos aparece no ponto da revisão. Não
+exigir um único rótulo se o aluno demonstrar sobreposição com outro princípio.
+
+[13] L · TROCAR A IMPLEMENTAÇÃO SEM QUEBRAR A PROMESSA
+Liskov Substitution Principle · substituição de Liskov. O cliente recebe
+PagamentoCartao e chama parcelar(2), permitido de 1 a 12 vezes. PagamentoPix herda
+cartão, mas lança UnsupportedOperationException para essa chamada. Compartilhe
+apenas autorizar por MeioPagamento; mantenha parcelar no cartão. Uma recusa de
+negócio prevista no contrato é diferente de não implementar uma operação prometida.
+Tipos relacionados no mundo real não são automaticamente bons subtipos no código.
+Gabarito da decisão: segunda alternativa. Código completo dos casos corrigidos
+aparece no ponto da revisão. Não exigir um único rótulo se o aluno demonstrar
+sobreposição com outro princípio.
+
+[14] I · O CLIENTE DEPENDE SÓ DO QUE PRECISA
+Interface Segregation Principle · segregação de interfaces. Consulta precisa de
+buscar. Recebe um Repositorio que também obriga salvar e exportarTodos. Até o fake
+de consulta precisa conhecer capacidades que não usa. Agora o teste da consulta
+fornece só buscar; exportação pode evoluir sem ampliar esse contrato. O port Pedidos
+do Cap 01 tem buscar e salvar usados juntos pelos casos de uso: isso não exige
+dividi-lo automaticamente. Gabarito da decisão: segunda alternativa. Código completo
+dos casos corrigidos aparece no ponto da revisão. Não exigir um único rótulo se o
+aluno demonstrar sobreposição com outro princípio.
+
+[15] D · QUEM ESCOLHE O DETALHE EXTERNO?
+Dependency Inversion Principle · inversão de dependência. O caso de uso cria new
+GatewayHttp(). Ao testar uma aprovação, já ficamos presos ao serviço externo. O
+detalhe técnico passou a decidir como a regra pode ser executada. No teste, um fake
+devolve aprovado ou recusado sem rede. Na aplicação real, config monta o adapter.
+Injeção pelo construtor é uma técnica; DIP é a direção das dependências. Receber
+GatewayHttp pelo construtor ainda prende o cliente ao tipo concreto. Gabarito da
+decisão: segunda alternativa. Código completo dos casos corrigidos aparece no ponto
+da revisão. Não exigir um único rótulo se o aluno demonstrar sobreposição com outro
+princípio.
+
+[16] AGORA VOCÊ É O REVISOR
+A: SRP, comercial e comunicação mudam por motivos distintos; separar preservando
+resultados. B: OCP no contexto da campanha nova; política de abatimento e cálculo
+comum, com arredondamento final. C: LSP; Pix não cumpre parcelar(2), compartilhar
+autorizar. D: ISP; Consulta recebe só ConsultaPedidos. E: DIP; aplicação recebe
+Autorizador, fake testa ambos resultados. Evidência de SRP/ISP inclui dependências e
+diff: teste verde sozinho não prova estrutura boa.
+
+[17] UMA CORREÇÃO PEQUENA TAMBÉM PRECISA DE PROVA
+Os arquivos completos da solução e seus testes seguem abaixo. São exemplos isolados:
+não colocar desconto automaticamente no total do Pedido do Cap 01. O total continua
+sendo a soma dos itens. As interfaces aninhadas são organização didática do
+laboratório, não exigência para o projeto real.
+
+Arquivo: src/main/java/br/com/revisao/Propostas.java
+INÍCIO DO ARQUIVO
+package br.com.revisao;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
+public final class Propostas {
+    private Propostas() { }
+    // A: colaboradores independentes; separar motivos de mudança, não cada método.
+    public static final class PrecoPromocional {
+        public BigDecimal total(BigDecimal subtotal) {
+            return subtotal.multiply(new BigDecimal("0.90"))
+                .setScale(2, RoundingMode.HALF_UP);
+        }
+    }
+    public static final class MensagemPedido {
+        public String email(String cliente) {
+            return "Olá, " + cliente + ". Seu pedido está pronto.";
+        }
+    }
+    // B: contrato aceita subtotal não negativo; política retorna abatimento de 0 ao subtotal.
+    public interface Desconto { BigDecimal abatimento(BigDecimal subtotal); }
+    public static final class DezPorCento implements Desconto {
+        public BigDecimal abatimento(BigDecimal subtotal) {
+            return subtotal.multiply(new BigDecimal("0.10"));
+        }
+    }
+    public static final class CincoReais implements Desconto {
+        public BigDecimal abatimento(BigDecimal subtotal) {
+            return subtotal.min(new BigDecimal("5.00"));
+        }
+    }
+    public static final class Calculadora {
+        private final Desconto desconto;
+        public Calculadora(Desconto desconto) { this.desconto = desconto; }
+        public BigDecimal total(BigDecimal subtotal) {
+            if (subtotal == null || subtotal.signum() < 0) throw new IllegalArgumentException();
+            BigDecimal abatimento = desconto.abatimento(subtotal);
+            if (abatimento == null || abatimento.signum() < 0 || abatimento.compareTo(subtotal) > 0) {
+                throw new IllegalArgumentException("Desconto fora do contrato");
+            }
+            return subtotal.subtract(abatimento).setScale(2, RoundingMode.HALF_UP);
+        }
+    }
+    // C: somente a promessa comum de autorizar é compartilhada; parcelar é do cartão.
+    public interface MeioPagamento { String autorizar(); }
+    public static final class PagamentoCartao implements MeioPagamento {
+        public String autorizar() { return "Autorizado"; }
+        public String parcelar(int vezes) {
+            if (vezes < 1 || vezes > 12) throw new IllegalArgumentException();
+            return "Cartão em " + vezes + "x";
+        }
+    }
+    public static final class PagamentoPix implements MeioPagamento {
+        public String autorizar() { return "Autorizado"; }
+    }
+    // D: contratos vistos pelo cliente; uma implementação pode implementar vários.
+    public interface ConsultaPedidos { String buscar(String id); }
+    public interface GravacaoPedidos { void salvar(String id); }
+    public interface ExportacaoPedidos { List<String> exportarTodos(); }
+    public static final class Consulta {
+        private final ConsultaPedidos pedidos;
+        public Consulta(ConsultaPedidos pedidos) { this.pedidos = pedidos; }
+        public String executar(String id) { return pedidos.buscar(id); }
+    }
+    // E: port definido pela necessidade da aplicação; montagem concreta fica fora.
+    public interface Autorizador { boolean autorizar(String id); }
+    public static final class AutorizarPedido {
+        private final Autorizador autorizador;
+        public AutorizarPedido(Autorizador autorizador) { this.autorizador = autorizador; }
+        public boolean executar(String id) { return autorizador.autorizar(id); }
+    }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/test/java/br/com/revisao/ContratosTest.java
+INÍCIO DO ARQUIVO
+package br.com.revisao;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+class ContratosTest {
+    @Test void separarPrecoEMensagemPreservaResultado() {
+        assertEquals(new BigDecimal("90.00"), new Propostas.PrecoPromocional().total(new BigDecimal("100")));
+        assertEquals("Olá, Ana. Seu pedido está pronto.", new Propostas.MensagemPedido().email("Ana"));
+    }
+    @Test void politicasVariamSemEditarCalculoComum() {
+        assertEquals(new BigDecimal("90.00"), new Propostas.Calculadora(new Propostas.DezPorCento()).total(new BigDecimal("100")));
+        assertEquals(new BigDecimal("95.00"), new Propostas.Calculadora(new Propostas.CincoReais()).total(new BigDecimal("100")));
+        assertEquals(new BigDecimal("0.00"), new Propostas.Calculadora(new Propostas.CincoReais()).total(new BigDecimal("3")));
+        assertEquals(new BigDecimal("34.02"), new Propostas.Calculadora(new Propostas.DezPorCento()).total(new BigDecimal("37.80")));
+        assertEquals(new BigDecimal("0.05"), new Propostas.Calculadora(new Propostas.DezPorCento()).total(new BigDecimal("0.05")));
+        assertThrows(IllegalArgumentException.class, () -> new Propostas.Calculadora(s -> s.add(BigDecimal.ONE)).total(BigDecimal.TEN));
+    }
+    @Test void substituicaoRespeitaPromessaComum() {
+        for (Propostas.MeioPagamento meio : List.of(new Propostas.PagamentoCartao(), new Propostas.PagamentoPix())) {
+            assertEquals("Autorizado", meio.autorizar());
+        }
+    }
+    @Test void clienteDependeSoDaConsulta() {
+        var consulta = new Propostas.Consulta(id -> "Pedido " + id);
+        assertEquals("Pedido p-1", consulta.executar("p-1"));
+    }
+    @Test void aprovadoERecusadoSemRede() {
+        assertTrue(new Propostas.AutorizarPedido(id -> true).executar("p-1"));
+        assertFalse(new Propostas.AutorizarPedido(id -> false).executar("p-1"));
+    }
+}
+FIM DO ARQUIVO
+Remova CaracterizacaoTest após substituir seus cenários pelas novas expectativas de
+ContratosTest. Não mantenha as asserções que exigem o defeito. Execute ./mvnw test
+(Windows: mvnw.cmd test).
+
+[18] TRANSFIRA: CANCELAR SEM ESPALHAR A REGRA
+Pré-requisito: base do Cap 02 ou serviço equivalente com handler 404/409 e consulta.
+A solução abaixo usa os pacotes br.com.pedidos e o port Pedidos já existente.
+Substitua controller/config de modo cumulativo, sem remover
+criar/adicionar/pagar/consultar. Pedido e adapter JPA permanecem iguais. A aplicação
+faz leitura e gravação separadas: não alegar proteção contra corrida entre pagar e
+cancelar.
+
+Arquivo: src/main/java/br/com/pedidos/aplicacao/CancelarPedido.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.aplicacao;
+import br.com.pedidos.dominio.Pedido;
+public interface CancelarPedido {
+    Pedido executar(String pedidoId);
+}
+FIM DO ARQUIVO
+
+Arquivo: src/main/java/br/com/pedidos/aplicacao/CancelarPedidoService.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.aplicacao;
+import br.com.pedidos.dominio.Pedido;
+import br.com.pedidos.dominio.PedidoNaoEncontradoException;
+public final class CancelarPedidoService implements CancelarPedido {
+    private final Pedidos pedidos;
+    public CancelarPedidoService(Pedidos pedidos) {
+        this.pedidos = pedidos;
+    }
+    public Pedido executar(String pedidoId) {
+        Pedido atual = pedidos.buscar(pedidoId)
+            .orElseThrow(() -> new PedidoNaoEncontradoException(pedidoId));
+        Pedido cancelado = atual.cancelar();
+        return pedidos.salvar(cancelado);
+    }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/main/java/br/com/pedidos/config/CasosDeUsoConfig.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.config;
+import br.com.pedidos.aplicacao.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+@Configuration
+public class CasosDeUsoConfig {
+    @Bean CriarPedido criarPedido(Pedidos pedidos) { return new CriarPedidoService(pedidos); }
+    @Bean AdicionarItem adicionarItem(Pedidos pedidos) { return new AdicionarItemService(pedidos); }
+    @Bean PagarPedido pagarPedido(Pedidos pedidos) { return new PagarPedidoService(pedidos); }
+    @Bean ConsultarPedido consultarPedido(Pedidos pedidos) { return new ConsultarPedidoService(pedidos); }
+    @Bean CancelarPedido cancelarPedido(Pedidos pedidos) {
+        return new CancelarPedidoService(pedidos);
+    }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/main/java/br/com/pedidos/adapters/entrada/rest/PedidoController.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.adapters.entrada.rest;
+import br.com.pedidos.aplicacao.*;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+@RestController
+@RequestMapping("/pedidos")
+public class PedidoController {
+    private final CriarPedido criarPedido;
+    private final AdicionarItem adicionarItem;
+    private final PagarPedido pagarPedido;
+    private final ConsultarPedido consultarPedido;
+    private final CancelarPedido cancelarPedido;
+    public PedidoController(CriarPedido criarPedido, AdicionarItem adicionarItem, PagarPedido pagarPedido, ConsultarPedido consultarPedido, CancelarPedido cancelarPedido) {
+        this.criarPedido = criarPedido;
+        this.adicionarItem = adicionarItem;
+        this.pagarPedido = pagarPedido;
+        this.consultarPedido = consultarPedido;
+        this.cancelarPedido = cancelarPedido;
+    }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED)
+    public PedidoResponse criar(@Valid @RequestBody PedidoRequest request) {
+        return PedidoResponse.de(criarPedido.executar(request.paraComando()));
+    }
+    @PostMapping("/{id}/itens")
+    public PedidoResponse adicionar(@PathVariable String id,
+            @Valid @RequestBody PedidoRequest.ItemRequest request) {
+        var item = new AdicionarItem.ItemComando(
+            request.sku(), request.quantidade(), request.precoUnitario());
+        return PedidoResponse.de(adicionarItem.executar(new AdicionarItem.Comando(id, item)));
+    }
+    @PostMapping("/{id}/pagamento")
+    public PedidoResponse pagar(@PathVariable String id,
+            @Valid @RequestBody PagamentoRequest request) {
+        return PedidoResponse.de(pagarPedido.executar(id, request.paraResultado()));
+    }
+    @GetMapping("/{id}")
+    public PedidoResponse consultar(@PathVariable String id) {
+        return PedidoResponse.de(consultarPedido.executar(id));
+    }
+    @PostMapping("/{id}/cancelamento")
+    public PedidoResponse cancelar(@PathVariable String id) {
+        return PedidoResponse.de(cancelarPedido.executar(id));
+    }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/test/java/br/com/pedidos/aplicacao/CancelarPedidoTest.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.aplicacao;
+import br.com.pedidos.dominio.*;
+import java.math.BigDecimal;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+class CancelarPedidoTest {
+    private Pedido cafe() {
+        return Pedido.novo("c-1").adicionarItem(
+            new ItemPedido("CAFE-500", 2, new BigDecimal("18.90")));
+    }
+    @Test void abertoCancelaPreservandoIdentidadeItensETotal() {
+        var memoria = new PedidosMemoria();
+        var original = cafe();
+        memoria.dados.put(original.id(), original);
+        var resultado = new CancelarPedidoService(memoria).executar(original.id());
+        assertEquals(StatusPedido.CANCELADO, resultado.status());
+        assertEquals(original.id(), resultado.id());
+        assertEquals(original.itens(), resultado.itens());
+        assertEquals(0, resultado.total().compareTo(new BigDecimal("37.80")));
+        assertEquals(StatusPedido.ABERTO, original.status());
+        assertSame(resultado, memoria.dados.get(original.id()));
+        assertEquals(1, memoria.gravacoes);
+    }
+    @Test void ausentePagoECanceladoNaoGravam() {
+        var memoria = new PedidosMemoria();
+        var caso = new CancelarPedidoService(memoria);
+        assertThrows(PedidoNaoEncontradoException.class, () -> caso.executar("ausente"));
+        for (var fechado : List.of(cafe().pagar(), cafe().cancelar())) {
+            memoria.dados.put(fechado.id(), fechado);
+            assertThrows(PedidoFechadoException.class, () -> caso.executar(fechado.id()));
+            assertSame(fechado, memoria.dados.get(fechado.id()));
+        }
+        assertEquals(0, memoria.gravacoes);
+    }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/test/java/br/com/pedidos/adapters/entrada/rest/CancelarPedidoIT.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.adapters.entrada.rest;
+import br.com.pedidos.aplicacao.Pedidos;
+import br.com.pedidos.dominio.*;
+import br.com.pedidos.adapters.saida.jpa.PedidoSpringDataRepository;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.UUID;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.servlet.MockMvc;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+@SpringBootTest @AutoConfigureMockMvc
+class CancelarPedidoIT {
+    @Autowired MockMvc mvc;
+    @Autowired Pedidos pedidos;
+    @Autowired PedidoSpringDataRepository repository;
+    @Test void contratoHttpEReleituraReal() throws Exception {
+        var ids = new ArrayList<String>();
+        try {
+            var aberto = Pedido.novo("c-1").adicionarItem(
+                new ItemPedido("CAFE-500", 2, new BigDecimal("18.90")));
+            var pago = Pedido.novo("c-1").adicionarItem(
+                new ItemPedido("CAFE-500", 2, new BigDecimal("18.90"))).pagar();
+            ids.add(aberto.id()); ids.add(pago.id());
+            pedidos.salvar(aberto); pedidos.salvar(pago);
+            mvc.perform(post("/pedidos/" + aberto.id() + "/cancelamento"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(aberto.id()))
+                .andExpect(jsonPath("$.status").value("CANCELADO"))
+                .andExpect(jsonPath("$.total").value(37.8));
+            mvc.perform(get("/pedidos/" + aberto.id()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("CANCELADO"));
+            mvc.perform(post("/pedidos/" + aberto.id() + "/cancelamento"))
+                .andExpect(status().isConflict());
+            mvc.perform(post("/pedidos/" + pago.id() + "/cancelamento"))
+                .andExpect(status().isConflict());
+            mvc.perform(post("/pedidos/" + UUID.randomUUID() + "/cancelamento"))
+                .andExpect(status().isNotFound());
+            assertEquals(StatusPedido.PAGO, pedidos.buscar(pago.id()).orElseThrow().status());
+            var salvo = pedidos.buscar(aberto.id()).orElseThrow();
+            assertEquals(StatusPedido.CANCELADO, salvo.status());
+            assertEquals(aberto.itens(), salvo.itens());
+        } finally {
+            for (String id : ids) repository.deleteById(id);
+        }
+    }
+}
+FIM DO ARQUIVO
+
+Arquivo: src/test/java/br/com/pedidos/aplicacao/PedidosMemoria.java
+INÍCIO DO ARQUIVO
+package br.com.pedidos.aplicacao;
+import br.com.pedidos.dominio.Pedido;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+final class PedidosMemoria implements Pedidos {
+    final Map<String, Pedido> dados = new HashMap<>();
+    int gravacoes;
+    public Pedido salvar(Pedido pedido) {
+        gravacoes++;
+        dados.put(pedido.id(), pedido);
+        return pedido;
+    }
+    public Optional<Pedido> buscar(String id) {
+        return Optional.ofNullable(dados.get(id));
+    }
+}
+FIM DO ARQUIVO
+
+Execute ./mvnw test. Com Postgres pronto, ./mvnw "-Dtest=*IT" test.
+HTTP esperado: aberto 200/CANCELADO/37.80; segunda tentativa 409; pago 409; ausente
+404. GET comprova releitura. Os testes removem apenas os registros que criaram.
+
+[19] SEU CHECKLIST VIRA UMA SKILL
+O conteúdo completo do SKILL.md segue abaixo. Local no Claude Code:
+.claude/skills/revisar-solid/SKILL.md. Nas outras ferramentas, leitura explícita
+mantém a atividade executável sem pressupor descoberta automática. A skill não
+concede permissões nem substitui revisão humana. Não exigir um achado por princípio.
+
+Arquivo: .claude/skills/revisar-solid/SKILL.md
+INÍCIO DO ARQUIVO
+---
+name: revisar-solid
+description: Revisar mudanças Java por contratos, encapsulamento e SOLID, com evidência e correção mínima. Use ao pedir revisão de um diff do serviço de Pedidos.
+---
+Leia as instruções do projeto e a spec da mudança. Identifique o diff a revisar;
+se ele não foi indicado, peça o intervalo ou os arquivos antes de concluir.
+Não edite arquivos, não faça commit, push nem abra PR durante a revisão.
+
+1. Resuma o comportamento prometido e os limites da mudança.
+2. Confira quem protege cada invariante e se outra entrada a contorna.
+3. Examine SOLID pelo contexto: motivos de mudança, variação real,
+   substituição, necessidade dos clientes e direção das dependências.
+4. Para cada achado, informe arquivo/linha, consequência, princípio,
+   evidência observada (ou hipótese explícita), correção mínima e teste.
+5. Não invente um achado por letra. Não exija interface por classe.
+6. Execute apenas testes locais pertinentes dentro das permissões do projeto;
+   diga quais rodaram e quais não rodaram. Não use serviços pagos ou produção.
+7. Separe defeitos, riscos e preferências. Se não houver achados, diga isso e
+   registre os limites da revisão. Termine com uma decisão que merece ser mantida.
+
+Saída: resumo do contrato, achados priorizados, testes/evidências e limites.
+Aguarde uma solicitação de implementação antes de corrigir qualquer coisa.
+FIM DO ARQUIVO
+
+[20] DEFENDA UMA DECISÃO, NÃO UMA QUANTIDADE DE CLASSES
+Quiz: mostrar contrato, variação/dependência e evidência. Não exigir uma arquitetura
+única. A defesa precisa ligar consequência a decisão. Pranchetas devem distinguir
+setas de chamada em execução e dependências de código.
+
+[21] O QUE TRAZER PARA O SÁBADO 03
+Critérios: recusas sem salvar, identidade/itens/total preservados, regressão das
+operações existentes e parecer rastreável. O contrato não contém estorno nem
+eventos. Não reestruturar o serviço inteiro para encaixar todos os cinco princípios.
