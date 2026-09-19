@@ -57,7 +57,7 @@
     }
     function go(index,speak=false){stop();finished=false;step=index;render();if(speak){document.dispatchEvent(new CustomEvent('teatro:play',{detail:root.id}));playFresh();}}
     root.querySelectorAll('[data-ai-scene]').forEach(b=>b.addEventListener('click',()=>{scene=b.dataset.aiScene;root.querySelectorAll('[data-ai-scene]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));go(0);}));
-    q('[data-at-play]').addEventListener('click',play);q('[data-at-prev]').addEventListener('click',()=>go(Math.max(0,step-1)));q('[data-at-next]').addEventListener('click',()=>go(Math.min(frames().length-1,step+1)));q('[data-at-reset]').addEventListener('click',()=>go(0));
+    q('[data-at-play]').addEventListener('click',play);q('[data-at-prev]').addEventListener('click',()=>go(Math.max(0,step-1)));q('[data-at-next]').addEventListener('click',()=>go(Math.min(frames().length-1,step+1),true));q('[data-at-reset]').addEventListener('click',()=>go(0));
     document.addEventListener('teatro:play',e=>{if(e.detail!==root.id)pause();});document.addEventListener('cap-audio:change',()=>{const resume=playing;stop();if(resume)playFresh();else sync();});document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});
     new IntersectionObserver(es=>{if(!es[0].isIntersecting)pause();},{threshold:.08}).observe(root);render();
   });

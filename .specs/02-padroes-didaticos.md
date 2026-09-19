@@ -1,8 +1,4 @@
-# 02 — Padrões didáticos
-
-> **Atualização 2026-09-18:** nos Caps 0 e 1, o pedido atual do professor é partir do nível iniciante, inclusive em Java/Spring. No Cap 1, vale a sequência linear de [10-cap1-guia-linear.md](10-cap1-guia-linear.md). As antigas prescrições de tom denso, não explicar classes e três zonas não se aplicam a esses capítulos. O aluno continua dirigindo e revisando o agente.
-
-## Registro histórico para os demais capítulos
+# 02 — Padrões didáticos (registro SÊNIOR)
 
 > O motor visual e o rigor de qualidade vêm dos materiais irmãos. **O registro muda:** o aluno é
 > experiente e a competência avaliada é **julgamento de engenharia**. Ele não digita no piloto
