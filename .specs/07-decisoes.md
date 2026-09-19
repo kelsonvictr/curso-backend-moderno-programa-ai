@@ -401,3 +401,17 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
 - Primeiro projeto somente Spring Web, GET /ola antes do cadastro, domínio e memória antes de infraestrutura. JPA chega após PostgreSQL saudável.
 - Prompts e verificações ficam junto do conceito. Laboratórios manuais mostram pasta .specs, fluxo válido/inválido e durabilidade. Caderno, áudio local e compatibilidade de âncoras preservados.
 - Hub atualizado para anunciar a mesma sequência. Ver [10-cap1-guia-linear.md](10-cap1-guia-linear.md) para contrato e escopo da validação.
+
+
+## 2026-09-18 — Cap 1 voltado ao aluno; condução docente em página separada
+- Pedido atual: remover orientações para o professor falar ou conduzir a turma de dentro do capítulo. Esta decisão substitui o guia docente inicialmente visível da revisão anterior.
+- Abertura explica como estudar; as seis etapas preservam explicação, prática e conferência. Perguntas antes dirigidas ao professor passam a ser reflexões para o aluno, com resposta expansível.
+- Dez prompts mantêm o conteúdo e a cópia integral, agora recolhidos para facilitar a leitura. Instruções ao agente dentro dos prompts continuam intencionais.
+- Removidos modo professor e sua lógica de exibição; `professor.html` continua independente, para consulta direta do professor (link no rodapé removido pela decisão abaixo). Progresso, caderno, simulações, quiz e teatro de revisão preservados.
+
+
+## 2026-09-18 — Não divulgar o roteiro docente aos alunos
+- Pedido explícito de Kelson: remover o link do roteiro do professor da página pública e registrar a regra para não repetir.
+- Removido o link do rodapé do Cap 1. Materiais exclusivos do professor não devem ser vinculados ou anunciados no capítulo, menu, rodapé ou hub dos alunos.
+- A página do roteiro permanece disponível para consulta direta do professor; a alteração remove a divulgação, sem implementar controle de acesso.
+- Regra registrada em AGENTS.md, CLAUDE.md e na spec do capítulo, substituindo a orientação anterior de oferecer um link discreto.

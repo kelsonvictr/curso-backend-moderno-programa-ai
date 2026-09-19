@@ -6,7 +6,7 @@
   function sync(){
     document.documentElement.dataset.capMuted=String(muted);
     document.querySelectorAll('[data-cap-audio]').forEach(b=>{b.textContent=muted?'🔇 Modo mudo ativado':'🔊 Som ativado neste dispositivo';b.setAttribute('aria-pressed',String(muted));});
-    const note=document.getElementById('cap1-audio-note');if(note)note.textContent=muted?'Na sala, acompanhe a voz do professor. Animações, jogos e legendas continuam funcionando.':'As vozes tocam quando você inicia o teatro. Ative o modo mudo se estiver acompanhando o professor.';
+    const note=document.getElementById('cap1-audio-note');if(note)note.textContent=muted?'O teatro está sem som. Você pode acompanhar as cenas pelas legendas.':'As vozes tocam quando você inicia o teatro de revisão. Use o botão para silenciar.';
   }
   window.CAP_AUDIO={isMuted:()=>muted,setMuted(value){muted=!!value;try{localStorage.setItem('cap01:muted',String(muted));}catch{}sync();document.dispatchEvent(new CustomEvent('cap-audio:change',{detail:{muted}}));}};
   document.querySelectorAll('[data-cap-audio]').forEach(b=>b.addEventListener('click',()=>window.CAP_AUDIO.setMuted(!muted)));

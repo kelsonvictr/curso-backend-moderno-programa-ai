@@ -3,10 +3,6 @@
   'use strict';
   const get = (key, fallback) => { try { return localStorage.getItem(key) ?? fallback; } catch { return fallback; } };
   const save = (key, value) => { try { localStorage.setItem(key, value); } catch { /* Leitura e controles continuam sem armazenamento. */ } };
-  const teacher = document.querySelector('[data-teacher-toggle]');
-  function setTeacher(show) { document.body.dataset.teacherView=String(show); teacher.setAttribute('aria-pressed',String(show)); teacher.textContent=show?'🎙️ Guia do professor visível':'🎙️ Mostrar guia do professor'; save('cap01:guia:professor',String(show)); }
-  setTeacher(get('cap01:guia:professor','true')==='true');
-  teacher.addEventListener('click',()=>setTeacher(document.body.dataset.teacherView!=='true'));
   const checks=[...document.querySelectorAll('[data-checkpoint]')];
   function progress(){document.querySelector('[data-guide-progress]').textContent=`${checks.filter(x=>x.checked).length} de 6 etapas conferidas neste navegador. Marque o resultado ao final de cada etapa.`;checks.forEach(x=>document.querySelector(`.route-map a[href="#etapa-${x.dataset.checkpoint}"]`).classList.toggle('done',x.checked));}
   checks.forEach(x=>{x.checked=get('cap01:guia:etapa:'+x.dataset.checkpoint,'false')==='true';x.addEventListener('change',()=>{save('cap01:guia:etapa:'+x.dataset.checkpoint,String(x.checked));progress();});});progress();
@@ -25,7 +21,7 @@
       ['Crie o lugar das decisões','pedidos/\n  .specs/   ← pasta criada\n  src/\n  pom.xml\n  AGENTS.md\n  CLAUDE.md','.specs/\n\nÉ uma pasta comum do projeto.\nEla não altera o funcionamento do Spring.','Depois: há um lugar para guardar as decisões junto do código.'],
       ['Explique o ritual','pedidos/\n  .specs/\n    README.md   ← novo\n  src/\n  pom.xml','.specs/README.md\n\nLeia a spec indicada na tarefa.\nProponha um plano.\nEspere aprovação antes de implementar.','Como conferir: abra README.md. O agente lê a spec porque foi instruído a fazê-lo.'],
       ['Escreva exemplos verificáveis','pedidos/\n  .specs/\n    README.md\n    02-criar-pedido.md ← novo\n  src/\n  pom.xml','# Criar pedido\n\nCAFE-500: 2 × 18.90 = 37.80\nQuantidade 0: rejeitar, sem salvar.\nLista vazia: rejeitar, sem salvar.\nTotal calculado, nunca recebido pronto.','Como conferir: cada exemplo pode virar uma chamada ou um teste com resultado esperado.'],
-      ['Revise antes de construir','pedidos/\n  .specs/\n    README.md\n    02-criar-pedido.md\n  src/   ← ainda igual\n  pom.xml','Professor + turma:\n“O exemplo descreve o que queremos?”\n\nSó depois de revisar o documento:\npedir plano de implementação → conferir → OK.','Previsão: o que devemos fazer se o agente inventar pagamento? Rejeitar esse acréscimo: está fora da spec.']
+      ['Revise antes de construir','pedidos/\n  .specs/\n    README.md\n    02-criar-pedido.md\n  src/   ← ainda igual\n  pom.xml','Sua revisão:\n“O exemplo descreve o que queremos?”\n\nSó depois de revisar o documento:\npedir plano de implementação → conferir → OK.','Previsão: o que devemos fazer se o agente inventar pagamento? Rejeitar esse acréscimo: está fora da spec.']
     ];let index=0;
     const q=s=>spec.querySelector(s);
     function render(){const [title,tree,content,evidence]=stages[index];q('[data-spec-title]').textContent=title;q('[data-spec-tree]').textContent=tree;q('[data-spec-content]').textContent=content;q('[data-spec-evidence]').textContent=evidence;q('[data-spec-position]').textContent=`${index+1} / ${stages.length}`;q('[data-spec-back]').disabled=index===0;q('[data-spec-next]').disabled=index===stages.length-1;}

@@ -107,21 +107,25 @@ passo a passo. Cada estado deve responder: **antes, ação, depois, como provar 
 
 ## Cap 1 — sequência linear para iniciantes (2026-09-18)
 Esta orientação substitui as antigas zonas/atos e o registro denso no Cap 1, por pedido do professor.
-O material deve permitir que o professor aprenda e conduza a explicação durante a própria aula.
+O capítulo principal deve falar diretamente com o aluno e permitir acompanhar a prática ou retomar o estudo de forma independente. Orientações de condução ficam em `professor.html`.
 
 - Uma única sequência: preparar → GET /ola → AGENTS.md/CLAUDE.md → spec → cadastro em memória → PostgreSQL.
 - Initializr começa apenas com Spring Web e Java 21; JPA e driver entram juntos após o banco saudável.
 - Um único exemplo: CAFE-500, 2 unidades de 18.90, total 37.80; UUID real gerado. Pedido 4711 é apenas a referência histórica dos teatros antigos.
 - Na etapa de construção: domínio/testes → portas/caso de uso/memória → Controller/DTO/configuração. Explique cada termo antes do uso prático.
 - Prompts junto da explicação, com plano, OK, resultado esperado e instrução de recuperação. O agente executa o Maven Wrapper dentro do projeto aberto no IntelliJ.
-- Falas sugeridas e respostas comentadas no guia do professor, inicialmente visível. Simulações manuais de spec, pedido válido/inválido e troca de armazenamento; teatro narrado como revisão opcional após a prática.
+- Falas sugeridas e instruções como “diga”, “mostre” e “pergunte à turma” ficam exclusivamente em `professor.html`. No capítulo, use explicações diretas, atividades e perguntas de reflexão com resposta expansível; não recrie modo professor nem notas docentes ocultas.
+- Prompts completos expansíveis e copiáveis no ponto de uso. Simulações manuais de spec, pedido válido/inválido e troca de armazenamento; teatro narrado como revisão opcional após a prática.
 - Persistência exige prova com mesmo UUID após reiniciar a aplicação. Não confundir execução da simulação com execução Java real.
 - Preserve caderno livre e suas chaves antigas; progresso novo em cap01:guia:etapa:1..6. Som geral cap01:muted, inicialmente mudo para novos navegadores.
 - Não restaurar menus paralelos de teoria, atos e prompts. Aprofundamentos ficam expansíveis na etapa pertinente.
 - Detalhes e evidência da reorganização: .specs/10-cap1-guia-linear.md.
 
 ## Cap 1 — página de consulta do professor
-- `capitulos/01-sdd-na-pratica-spring-hexagonal/professor.html` é a cola independente para o segundo monitor. Link no início do capítulo.
+- `capitulos/01-sdd-na-pratica-spring-hexagonal/professor.html` é a cola independente para consulta direta do professor no segundo monitor. Não incluir links nem menções a esse roteiro nas páginas públicas dos alunos (abertura, menu, rodapé ou hub).
 - Manter texto curto: diga, faça, confira e destrave. Sem animações, áudio, jogos ou componentes decorativos nessa página.
 - Prompts completos recolhidos e copiáveis; devem permanecer idênticos aos correspondentes `#prompt-*` do capítulo. Ao mudar um prompt, atualizar também `data-source-prompt` na página do professor.
 - A página é um roteiro de condução, não um segundo capítulo teórico.
+
+## Materiais exclusivos do professor — navegação pública
+Por orientação explícita de Kelson, os alunos não devem receber links nem anúncios de materiais exclusivos do professor. Mantenha esses materiais separados e acessíveis por consulta direta; não reintroduza atalhos em páginas públicas, mesmo discretos ou recolhidos. Esta regra substitui qualquer orientação anterior de exibir o roteiro docente no capítulo.
