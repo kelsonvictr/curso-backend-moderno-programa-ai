@@ -75,3 +75,11 @@ as 4 horas sem sobras.
   amq.topic + cafe.#, "not routed"). Leitura guiada do código Spring AMQP antes de gerar.
 - Cronograma com contingência (atrasou: conclusão no 20; prompts 8/9 para casa) e extra
   (segunda instância de Pagamentos na 8082). Prompts 1–10 preservados literalmente.
+
+## Repositório e commits por etapa (26/09/2026)
+- Ponto 03 ganha a "regra da tarde" (desenho revisar → commit → push) e o Prompt 1B, só para
+  quem ainda não tem o projeto no GitHub: repo vazio, .gitignore, commit inicial, push da main.
+- Prompts 2–9 terminam com [COMMIT]: após OK humano, commit só da etapa e push origin main;
+  sem segredos, sem force push; autenticação feita pelo aluno. Prompt 10 não edita, não commita.
+- Prompt 6: Pagamentos em pagamentos/ dentro do mesmo repositório, Maven independente.
+- Entrega de casa inclui o link do repositório (main, um commit por etapa).

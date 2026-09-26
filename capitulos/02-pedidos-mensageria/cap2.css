@@ -71,3 +71,6 @@ aside.concept,aside.story,aside.tip,aside.warning{display:block}
 .duas-colunas{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:22px 0}.duas-colunas>div{padding:18px;border-radius:12px;background:#181824;border:1px solid #3a3a52}.duas-colunas h4{margin:0 0 8px;color:#ffd09e}.duas-colunas p{margin:6px 0}
 @media(max-width:700px){.calc-grid,.rt-filas,.duas-colunas{grid-template-columns:1fr}.glossario dl{grid-template-columns:1fr}.glossario dt{border-bottom:0;padding-bottom:4px}.part-head{padding:18px}.teoria{padding:18px}}
 @media print{.flow-lab,.calc,.roteador,.classificador{break-inside:avoid}.desenho{background:#fff!important}.desenho text{fill:#111!important}.teoria,.limite,.part-head{background:#f6f6f6!important}}
+.repo-box{margin:26px 0;padding:24px 26px;border-radius:14px;background:#15231b;border:2px dashed #5d9c73}
+.repo-box>h3{margin-top:0;color:#a7e8bc}.repo-box .prompt{background:#10161a}
+@media(max-width:700px){.repo-box{padding:18px}}

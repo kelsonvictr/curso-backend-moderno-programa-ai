@@ -18,6 +18,8 @@ Seis fluxos HyperFrames: avance manualmente e peça previsão ANTES de cada cliq
   Dispare o Prompt 1 e siga para a teoria; revise a resposta depois.
   Confira 201, ID real, consulta e total 37,80. Não aprove reconstrução inteira.
   Faltou operação? base de retomada em outra pasta.
+  Regra da tarde: prompts 2–9 terminam em [COMMIT] (OK humano → commit → push main).
+  Sem GitHub ainda? Prompt 1B (repo VAZIO, sem README). Já tem? só git remote -v.
 
 [04] ESPERAR NA LIGAÇÃO OU DEIXAR UMA COMANDA?
   Conte as duas lanchonetes. Nomeie: acoplamento temporal.
@@ -100,7 +102,7 @@ Seis fluxos HyperFrames: avance manualmente e peça previsão ANTES de cada cliq
   Nada de Purge/Delete/Get nas filas da aula.
 
 [20] PAGAMENTOS RECEBE UMA TAREFA
-  Segunda aplicação/terminal, sem fechar Pedidos.
+  Segunda aplicação/terminal, sem fechar Pedidos. Pasta pagamentos/ no mesmo repo.
   Restrição única = memória durável da idempotência.
   Extra se sobrar: PAGAMENTOS_PORT=8082, Consumers 2.
 
@@ -140,7 +142,7 @@ Seis fluxos HyperFrames: avance manualmente e peça previsão ANTES de cada cliq
   Ponte para OO/SOLID no Cap 03.
 
 [28] TRAGA UMA PROVA E UMA DÚVIDA
-  Spec, testes e narrativa da falha investigada.
+  Link do repo (main, um commit por etapa), spec, testes e narrativa da falha.
   Rever os seis fluxos narrando antes de clicar.
   Nenhum pagamento real foi integrado.
 

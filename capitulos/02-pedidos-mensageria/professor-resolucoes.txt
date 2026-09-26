@@ -24,6 +24,14 @@ Base: pedidos-base.zip. Há um README externo e RETOMADA.md dentro de pedidos.
 Unitários: ./mvnw test (Windows: mvnw.cmd test).
 A base não tem RabbitMQ; preservar a infraestrutura existente ao evoluir o próprio projeto.
 
+GitHub: o Prompt 1B é só para quem não tem o projeto em repositório remoto (o Cap 01 já
+pedia o repo pedidos como tarefa de casa). Repositório precisa nascer vazio: com README, o
+primeiro push é rejeitado (históricos diferentes); não resolver com force push — o mais simples
+é apagar e recriar o repo vazio, ou fazer pull --allow-unrelated-histories com revisão.
+Autenticação é do aluno (gh auth login ou SSH); o agente não recebe token.
+A partir do Prompt 2, [COMMIT] = commit só dos arquivos da etapa + push origin main após OK.
+Senha aula-local no Compose é credencial didática local; aceitável no repo da aula.
+
 [04] ESPERAR NA LIGAÇÃO OU DEIXAR UMA COMANDA?
 
 O ganho aqui é desacoplar o momento de solicitar do momento de processar.
@@ -162,6 +170,8 @@ SolicitacaoListener recebe bytes JSON, persiste decisão e publica resultado con
 A tipagem Java é local em cada serviço; não depende do nome da classe Java do outro serviço.
 Consumer AUTO do Spring confirma após retorno bem-sucedido do listener, não no início.
 
+Pagamentos fica em pagamentos/ dentro do mesmo repositório (projeto Maven independente, não
+módulo). A conclusão de referência usa pedidos/ e pagamentos/ lado a lado; ambos funcionam.
 Extra: segunda instância com PAGAMENTOS_PORT=8082 (application.yml lê a variável). Painel
 mostra Consumers 2; logs indicam qual instância processou. Mesmo banco pagamentos: a restrição
 única continua protegendo a chave entre as duas instâncias.
