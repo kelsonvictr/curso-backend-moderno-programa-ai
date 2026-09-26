@@ -58,7 +58,8 @@ Seis fluxos HyperFrames: avance manualmente e peça previsão ANTES de cada cliq
 
 [11] UMA FILA PRECISA DE UM LUGAR PARA EXISTIR
   Leia os amarelos: preservar volume e separar as portas 5672/15672.
-  Confira painel e saúde do broker. Filas da aula ainda não existem.
+  Painel: http://localhost:15672, aula / aula-local; espere ~20 s (healthy).
+  Filas da aula ainda não existem.
   Porta ocupada pede ajuste, nunca apagar banco.
 
 [12] SUA PRIMEIRA FILA, À MÃO
