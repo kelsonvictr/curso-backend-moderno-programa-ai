@@ -1,0 +1,65 @@
+<div id="root" data-composition-id="tres-confirmacoes" data-start="0" data-width="1280" data-height="720" data-duration="26"><svg id="cena" viewBox="0 0 1280 720" role="img" aria-labelledby="t d"><title id="t">Três confirmações: 202, publisher confirm e consumer ack</title><desc id="d">Diagrama de sequência com Insomnia, Pedidos, RabbitMQ e Pagamentos. Pedidos grava a solicitação, publica, recebe o publisher confirm e responde 202. Pagamentos recebe, grava a decisão, publica o resultado e envia o consumer ack. Duas janelas de falha mostram onde uma queda deixa trabalho pendente ou repetido.</desc></svg></div>
+<script>
+window.__timelines=window.__timelines||{};const svg=document.getElementById('cena');const tl=gsap.timeline({paused:true});const K=new HFKit(svg,tl);
+K.text(72,58,'Três confirmações diferentes','title');K.text(72,92,'Cada ✓ confirma uma coisa, para um destinatário','sub');
+
+// Participantes e linhas de vida.
+const X={ins:150,ped:440,rab:780,pag:1110};
+[['Insomnia',X.ins],['Pedidos',X.ped],['RabbitMQ',X.rab],['Pagamentos',X.pag]].forEach(function(p,i){
+ K.el('line',{x1:p[1],y1:170,x2:p[1],y2:530,stroke:'#4a4760','stroke-width':2,'stroke-dasharray':'6 8'});
+ K.el('rect',{x:p[1]-100,y:118,width:200,height:52,rx:12,class:i===2?'broker':'node'});
+ K.text(p[1],152,p[0],'label',null,{'text-anchor':'middle'});
+});
+
+function seta(x1,x2,y,rotulo,cor,t,selo){
+ const dir=x2>x1?1:-1,a=x1+dir*8,b=x2-dir*14;
+ const linha=K.el('line',{x1:a,y1:y,x2:b,y2:y,stroke:cor,'stroke-width':3});K.draw(linha,t,.6);
+ const g=K.g({opacity:0});
+ K.el('polygon',{points:(b)+','+(y-8)+' '+(b+dir*14)+','+y+' '+(b)+','+(y+8),fill:cor},g);
+ K.text((x1+x2)/2,y-10,rotulo,'small',g,{'text-anchor':'middle',style:'fill:#ebe7f7;font-size:17px'});
+ if(selo){K.el('circle',{cx:Math.min(x1,x2)+26,cy:y-16,r:15,fill:cor},g);K.text(Math.min(x1,x2)+26,y-10,selo,'small',g,{'text-anchor':'middle',style:'fill:#11111d;font-size:17px;font-weight:900'});}
+ K.fadeIn(g,t+.55,.25);
+}
+function nota(cx,y,w,texto,t,cls){
+ const g=K.g({opacity:0});
+ K.el('rect',{x:cx-w/2,y:y,width:w,height:30,rx:8,class:cls||'db'},g);
+ K.text(cx,y+21,texto,'small',g,{'text-anchor':'middle',style:'fill:#e6eef5;font-size:16px'});
+ K.fadeIn(g,t,.3);return g;
+}
+const LARANJA='#ffb466',VERDE='#8fe0a8',LILAS='#b9b3ff';
+// 01 · pedido de pagamento e transação local.
+seta(X.ins,X.ped,200,'POST /pedidos/{id}/pagamentos',LARANJA,.4);
+nota(X.ped,214,330,'COMMIT: S1 PENDENTE + EM_PAGAMENTO',1.4);
+// 02 · publicação e publisher confirm.
+seta(X.ped,X.rab,282,'publica S1 (persistente)',LARANJA,4.4);
+nota(X.rab,294,230,'grava na fila durável',5.3,'broker');
+seta(X.rab,X.ped,350,'publisher confirm ✓',VERDE,6.2,'2');
+// 03 · resposta HTTP.
+seta(X.ped,X.ins,386,'202 Accepted',LILAS,8.4,'1');
+// 04 · consumo, decisão e ack.
+seta(X.rab,X.pag,418,'entrega S1',LARANJA,12.4);
+nota(X.pag,430,250,'COMMIT: decisão de S1',13.2);
+seta(X.pag,X.rab,482,'publica resultado ✓',LARANJA,14);
+seta(X.pag,X.rab,520,'consumer ack ✓',VERDE,14.9,'3');
+
+// Janelas de falha.
+function janela(cx,y1,y2,rotulo,t,w){
+ const g=K.g({opacity:0});
+ K.el('rect',{x:cx-w/2,y:y1,width:w,height:y2-y1,rx:8,fill:'#3a1717',stroke:'#ff8a8a','stroke-width':2},g);
+ K.text(cx,y1+(y2-y1)/2+7,rotulo,'bad',g,{'text-anchor':'middle'});
+ K.fadeIn(g,t,.35);tl.to(g,{opacity:.55,duration:.3},t+3.9);
+}
+janela(X.ped-80,246,274,'✗ janela A',16.3,170);
+janela(X.pag+30,488,510,'✗ janela B',20.3,170);
+
+K.captions([
+ [0,'Quem confirma o quê, para quem?','Quatro participantes. Cada seta é uma mensagem; cada ✓ é uma confirmação diferente.'],
+ [4,'01 · Pedidos grava antes de publicar','Numa transação local: registro S1 PENDENTE e pedido EM_PAGAMENTO, juntos.'],
+ [8,'02 · Publisher confirm: o broker assumiu a mensagem','O RabbitMQ gravou S1 na fila durável e confirmou ao produtor. Ninguém pagou nada.'],
+ [12,'03 · Só então: HTTP 202','A API promete ao cliente apenas isto: “aceitei e vou processar”.'],
+ [16,'04 · Consumer ack: o consumidor terminou','Pagamentos grava a decisão, publica o resultado e só depois confirma a entrega.'],
+ [20,'05 · Janela A: caiu entre o COMMIT e a publicação','S1 fica PENDENTE sem mensagem na fila. O cliente recebeu 503.','Recuperação: reenviar com a MESMA solicitacaoId.'],
+ [24,'06 · Janela B: caiu depois da decisão, antes do ack','O RabbitMQ reentrega S1. Pagamentos acha a decisão salva e republica o mesmo resultado.']
+]);
+window.__timelines['tres-confirmacoes']=tl;
+</script><script src="player-bridge.js"></script></body></html>

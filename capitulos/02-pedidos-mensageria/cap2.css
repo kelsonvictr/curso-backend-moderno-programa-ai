@@ -7,3 +7,67 @@ body{line-height:1.8}a{color:#b9b3ff}p{margin:14px 0}h2{line-height:1.25}h3{line
 @media print{.sidebar-nav,.menu-toggle,.sidebar-overlay,.progress-track,.bg-grid,.flow-toolbar{display:none!important}.hero{padding:20px;min-height:0}.hero-receipt{position:static;transform:none}.container{max-width:none}.step-section,.prompt,details{break-inside:avoid}body{background:white;color:#151515}mark.hl{background:#ffe282}.prompt pre{color:#151515}.prompt,aside,details,.decision{background:#f6f6f6!important}h2,h3,a,.section-kicker{color:#222!important}}
 
 aside.concept,aside.story,aside.tip,aside.warning{display:block}
+
+/* ===== Expansão 26/09: teoria, desenhos, fluxos e simuladores ===== */
+.codigo,.codigo code,.desenho .m,.rt-fila code,.classificador code{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+.part-head{margin:55px 0 10px;padding:22px 26px;border-radius:16px;background:linear-gradient(120deg,#2a2133,#1a1a28);border:1px solid #5c4a6b}
+.part-head .ph-n{font-size:.78rem;letter-spacing:2px;font-weight:900;color:var(--chapter-accent);text-transform:uppercase}
+.part-head h2{margin:6px 0 8px;font-size:clamp(1.5rem,3vw,2rem)}.part-head p{margin:0;color:#cfd3e4}
+.relogio{display:inline-block;margin-left:10px;padding:2px 10px;border-radius:99px;background:#2b2638;color:#e3d8ff;font-size:.72rem;letter-spacing:.5px;text-transform:none;font-weight:700}
+.teoria{margin:26px 0;padding:24px 26px;border-radius:14px;background:#171b28;border:1px solid #3d4b6b;border-left:5px solid #7ea6ff}
+.teoria>h3{color:#bcd0ff;margin-top:0}.teoria>h3::before{content:"📖 ";}
+.teoria p:last-child{margin-bottom:0}
+.limite{margin:22px 0;padding:18px 22px;border-radius:12px;background:#2a1f1b;border:1px dashed #a0704c}
+.limite h3{margin:0 0 6px;font-size:1rem;color:#ffc79a}.limite p{margin:6px 0 0}
+.passo-a-passo{counter-reset:pp;list-style:none;padding:0;margin:22px 0;display:grid;gap:10px}
+.passo-a-passo li{counter-increment:pp;position:relative;padding:14px 16px 14px 58px;background:#191926;border:1px solid #34344d;border-radius:12px;margin:0}
+.passo-a-passo li::before{content:counter(pp);position:absolute;left:14px;top:12px;width:30px;height:30px;border-radius:50%;background:var(--chapter-accent);color:#241505;font-weight:900;display:grid;place-items:center}
+.desenho{margin:28px 0;padding:18px;border-radius:16px;background:#141420;border:1px solid #3a3a52}
+.desenho .svg-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.desenho svg{display:block;width:100%;height:auto;min-width:640px}
+.desenho figcaption{margin-top:12px;font-size:.92rem;color:#c3c8da}.desenho figcaption b{color:#ffd09e}
+.desenho text{font-family:inherit;fill:#f1eee6;font-size:15px}.desenho .t{font-size:17px;font-weight:700}.desenho .s{fill:#c4c1d4;font-size:13.5px}
+.desenho .m{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:13px;fill:#e9e4ff}.desenho .a{fill:#ffcf9b;font-weight:800}.desenho .v{fill:#a1e5b3;font-weight:700}.desenho .r{fill:#ffa3a3;font-weight:700}.desenho .b{fill:#bcd0ff;font-weight:700}
+.desenho .n{fill:#23233a;stroke:#6b6684;stroke-width:1.5}.desenho .k{fill:#30271f;stroke:#b4814b;stroke-width:1.5}.desenho .d{fill:#1c2935;stroke:#6d96b1;stroke-width:1.5}.desenho .g{fill:#1b2a21;stroke:#5d9c73;stroke-width:1.5}.desenho .x{fill:#2e1a1a;stroke:#b86767;stroke-width:1.5}.desenho .z{fill:none;stroke:#5a566f;stroke-width:1.5;stroke-dasharray:6 6}
+.desenho .l{fill:none;stroke:#9a8466;stroke-width:2}.desenho .lv{fill:none;stroke:#6fbf8a;stroke-width:2}.desenho .lr{fill:none;stroke:#d67f7f;stroke-width:2}.desenho .lb{fill:none;stroke:#7ea6ff;stroke-width:2}
+.flow-lab .flow-toolbar button[aria-pressed=true]{border-color:#ffcf69;background:#3a3148}
+.flow-lab{margin:26px 0}.flow-lab:focus-within{border-color:#b98a57}
+.flow-proof[hidden]{display:none}
+.codigo{margin:22px 0;border:1px solid #3d4262;border-radius:14px;overflow:hidden;background:#10101a}
+.codigo .cod-top{display:flex;justify-content:space-between;gap:10px;padding:10px 18px;background:#1d2034;font-size:.82rem;color:#c7cbe6}
+.codigo pre{margin:0;padding:18px 20px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.86rem;line-height:1.75;overflow-x:auto;color:#dde1f2}
+.codigo .c{color:#8f97b8}.codigo .kw{color:#c4b3ff}.codigo .st{color:#a7e8bc}.codigo .an{color:#ffcf9b}
+.anotacoes{display:grid;gap:10px;margin:18px 0}.anotacoes p{margin:0;padding:12px 16px;border-radius:10px;background:#181824;border-left:3px solid #7ea6ff}
+.calc{margin:26px 0;padding:24px;border:1px solid #565078;border-radius:14px;background:#1c1b2c}
+.calc label{display:grid;gap:6px;margin:14px 0;font-weight:700}.calc label span{font-weight:500;color:#cfd3e4}
+.calc input[type=range]{width:100%;accent-color:#ffb466}
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.calc-col{padding:16px;border-radius:12px;background:#12121e;border:1px solid #3a3a52}.calc-col h4{margin:0 0 10px;color:#ffd09e}
+.calc-col p{margin:6px 0;font-size:.92rem}.calc-col b{color:#fff}
+.calc-bar{height:12px;border-radius:6px;background:#2a2a3e;overflow:hidden;margin-top:10px}.calc-bar i{display:block;height:100%;width:0;background:#ff8f8f;transition:width .3s}
+.calc-col.async .calc-bar i{background:#8fe0a8}
+.classificador{margin:26px 0;padding:22px;border:1px solid #565078;border-radius:14px;background:#1c1b2c}
+.cl-linha{padding:12px 0;border-bottom:1px solid #2f2f45}.cl-linha:last-of-type{border-bottom:0}
+.cl-linha code{display:inline-block;margin-bottom:8px;font-size:.92rem}
+.cl-botoes{display:flex;gap:8px;flex-wrap:wrap}.cl-botoes button{min-height:40px;padding:6px 14px}
+.cl-feedback{margin:8px 0 0;font-size:.9rem;min-height:0}.cl-feedback[data-correct=true]{color:#a7e8bc}.cl-feedback[data-correct=false]{color:#ffc79a}
+.placar{font-weight:800;color:#ffd09e}
+.roteador{margin:26px 0;padding:22px;border:1px solid #6e563d;border-radius:14px;background:#1d1a1f}
+.rt-tipos{display:flex;gap:10px;flex-wrap:wrap;border:0;padding:0;margin:0 0 14px}.rt-tipos legend{font-weight:800;margin-bottom:8px}
+.rt-tipos label{display:flex;gap:8px;align-items:center;padding:8px 14px;border:1px solid #51516b;border-radius:9px;cursor:pointer}
+.rt-tipos label:has(input:checked){border-color:#ffcf69;background:#342c22}
+.rt-linha{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.rt-linha input{flex:1 1 220px;min-height:44px;padding:8px 12px;border-radius:9px;border:1px solid #51516b;background:#12121e;color:var(--text);font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-ligatures:none}
+.rt-sugestoes{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.rt-sugestoes button{min-height:36px;padding:4px 10px;font-size:.82rem;font-family:'JetBrains Mono',ui-monospace,monospace}
+.rt-filas{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+.rt-fila{padding:14px;border-radius:12px;border:1px solid #6d5a44;background:#241f1a;transition:border-color .2s,background .2s}
+.rt-fila b{display:block}.rt-fila code{font-size:.8rem}.rt-fila.recebe{border-color:#8fe0a8;background:#1c2c22}.rt-fila.recebe b::after{content:" ✓ recebe";color:#a7e8bc}
+.rt-fila.nao{opacity:.6}.rt-fila.nao b::after{content:" · não recebe";color:#c3c8da;font-weight:500}
+.rt-saida{padding:12px;border-radius:8px;background:#11111e;min-height:52px}.rt-saida[data-correct=true]{border-left:4px solid #89d9a4}.rt-saida[data-correct=false]{border-left:4px solid #ffba72}
+.duplicate-lab [data-duplicate-result][data-correct=true]{color:#a7e8bc}.duplicate-lab [data-duplicate-result][data-correct=false]{color:#ffc79a}
+.painel-passos li{margin:12px 0}.painel-passos code{white-space:nowrap}
+.glossario dl{display:grid;grid-template-columns:minmax(150px,220px) 1fr;gap:0;margin:20px 0;border:1px solid #3c3c51;border-radius:12px;overflow:hidden}
+.glossario dt,.glossario dd{margin:0;padding:12px 16px;border-bottom:1px solid #2f2f45}.glossario dt{font-weight:800;color:#ffd09e;background:#1d1a26}
+.glossario dt:last-of-type,.glossario dd:last-of-type{border-bottom:0}
+.duas-colunas{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:22px 0}.duas-colunas>div{padding:18px;border-radius:12px;background:#181824;border:1px solid #3a3a52}.duas-colunas h4{margin:0 0 8px;color:#ffd09e}.duas-colunas p{margin:6px 0}
+@media(max-width:700px){.calc-grid,.rt-filas,.duas-colunas{grid-template-columns:1fr}.glossario dl{grid-template-columns:1fr}.glossario dt{border-bottom:0;padding-bottom:4px}.part-head{padding:18px}.teoria{padding:18px}}
+@media print{.flow-lab,.calc,.roteador,.classificador{break-inside:avoid}.desenho{background:#fff!important}.desenho text{fill:#111!important}.teoria,.limite,.part-head{background:#f6f6f6!important}}

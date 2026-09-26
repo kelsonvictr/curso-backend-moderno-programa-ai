@@ -1,0 +1,81 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>A exchange roteia: direct, sem rota, fanout e topic</title><script src="gsap.min.js"></script><script src="hf-kit.js"></script><style>
+html,body{margin:0;width:100%;height:100%;background:#11111d;color:#f4f1e9;font-family:system-ui,sans-serif}#root{width:100%;height:100%;overflow:hidden}svg{width:100%;height:100%;display:block}
+text{font-family:system-ui,sans-serif;fill:#f4f1e9}.title{font-size:34px;font-weight:750}.sub{font-size:20px;fill:#c9c5d8}.lane{font-size:18px;font-weight:800;letter-spacing:1.5px;fill:#ffce95}
+.label{font-size:24px;font-weight:700}.small{font-size:18px;fill:#c9c5d8}.status{font-size:19px;font-weight:800;fill:#ffce95}.ok{font-size:19px;font-weight:800;fill:#a1e5b3}.bad{font-size:19px;font-weight:800;fill:#ffa3a3}
+.mono{font-family:ui-monospace,Menlo,monospace;font-size:18px;fill:#e8e4f5;font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+.caption-title{font-size:28px;font-weight:750;fill:#ffce95}.caption{font-size:22px}
+.node{fill:#252538;stroke:#666176;stroke-width:2}.broker{fill:#30271f;stroke:#b4814b;stroke-width:2}.db{fill:#1c2935;stroke:#6d96b1;stroke-width:2}.card{fill:#161625;stroke:#5b567a;stroke-width:2}
+.down{fill:none;stroke:#ff8a8a;stroke-width:4}.up{fill:none;stroke:#8fe0a8;stroke-width:4}.route{fill:none;stroke:#7a6448;stroke-width:4}.return{stroke:#4f7a61}.dash{stroke-dasharray:8 8}
+</style></head><body>
+<div id="root" data-composition-id="roteamento" data-start="0" data-width="1280" data-height="720" data-duration="22"><svg id="cena" viewBox="0 0 1280 720" role="img" aria-labelledby="t d"><title id="t">A exchange roteia: direct, sem rota, fanout e topic</title><desc id="d">Um produtor publica mensagens com chaves de roteamento. A exchange compara a chave com os bindings de três filas. Direct entrega só na fila com chave igual; sem binding correspondente, a mensagem não tem rota; fanout copia para todas; topic usa curingas.</desc></svg></div>
+<script>
+window.__timelines=window.__timelines||{};const svg=document.getElementById('cena');const tl=gsap.timeline({paused:true});const K=new HFKit(svg,tl);
+K.text(72,58,'A exchange roteia. A fila guarda.','title');K.text(72,92,'Mesmo produtor, três filas, quatro regras de roteamento','sub');
+const inicio=K.mark();
+const monoBad={style:'fill:#ffa3a3'};
+
+// Produtor e chave de roteamento.
+K.node(60,230,220,110,'Pedidos','produtor');
+K.text(60,382,'chave de roteamento:','small');
+K.variants(60,410,'mono',[[0,'pagamento.solicitar'],[4.2,'pagamento.solcitar'],[8.2,'pagamento.resultado']]);
+const typo=K.el('line',{x1:60,y1:418,x2:250,y2:418,stroke:'#ff8a8a','stroke-width':3,opacity:0});K.show(typo,4.2);K.hide(typo,8.2);
+
+// Exchange.
+K.el('line',{x1:280,y1:285,x2:430,y2:285,class:'route'});
+K.node(430,220,260,130,'Exchange',null,'broker');
+K.variants(450,292,'status',[[0,'tipo: DIRECT'],[8.2,'tipo: FANOUT'],[12.2,'tipo: TOPIC']]);
+K.variants(450,330,'small',[[0,'compara chave × binding'],[5.4,'nenhum binding casa','bad'],[8.2,'ignora a chave'],[12.2,'compara padrões']]);
+
+// Três filas com seus bindings.
+const filas=[
+ {y:130,nome:'Fila A · cobrança',b:[[0,'binding: pagamento.solicitar'],[8.2,'binding: (qualquer chave)'],[12.2,'binding: pagamento.*']],n:[[0,'msgs: 0'],[3,'msgs: 1'],[11,'msgs: 2'],[15,'msgs: 3']]},
+ {y:250,nome:'Fila B · e-mail',b:[[0,'binding: pagamento.resultado'],[8.2,'binding: (qualquer chave)'],[12.2,'binding: *.resultado']],n:[[0,'msgs: 0'],[11,'msgs: 1'],[15,'msgs: 2']]},
+ {y:370,nome:'Fila C · auditoria',b:[[0,'binding: auditoria'],[8.2,'binding: (qualquer chave)'],[12.2,'binding: estoque.#']],n:[[0,'msgs: 0'],[11,'msgs: 1']]}
+];
+filas.forEach(function(f){
+ K.el('line',{x1:690,y1:285,x2:890,y2:f.y+40,class:'route'});
+ K.el('rect',{x:890,y:f.y,width:340,height:84,rx:14,class:'broker'});
+ K.text(910,f.y+32,f.nome,'label');
+ K.variants(1210,f.y+32,'status',f.n,null,{'text-anchor':'end'});
+ K.variants(910,f.y+64,'mono',f.b,null,{style:'font-size:16px'});
+});
+function copia(t,alvo){const tok=K.token('M','#ffbd79','#26180a');const fim=K.travel(tok,[[560,285],[1060,alvo+40]],t,520);K.fadeOut(tok,fim);}
+
+// 01 · direct com chave certa.
+const m1=K.token('M','#ffbd79','#26180a');K.travel(m1,[[170,285],[560,285]],.4,520);K.hide(m1,1.7);copia(1.6,130);
+// 02 · chave com erro de digitação: sem rota, volta ao produtor (mandatory).
+const m2=K.token('M','#ffbd79','#26180a');K.travel(m2,[[170,285],[560,285]],4.5,520);
+tl.to(m2,{x:548,duration:.1,ease:'none'},5.4);tl.to(m2,{x:572,duration:.1,ease:'none'},5.5);tl.to(m2,{x:560,duration:.1,ease:'none'},5.6);K.hide(m2,5.9);
+const volta=K.token('sem rota ↩','#ff9d9d','#2a0c0c');const fimVolta=K.travel(volta,[[560,300],[170,300]],5.9,380);
+K.fadeOut(volta,7.5);
+// 03 · fanout: três cópias.
+const m3=K.token('M','#ffbd79','#26180a');K.travel(m3,[[170,285],[560,285]],8.5,520);K.hide(m3,9.7);
+copia(9.6,130);copia(9.6,250);copia(9.6,370);
+// 04 · topic: casam pagamento.* e *.resultado.
+const m4=K.token('M','#ffbd79','#26180a');K.travel(m4,[[170,285],[560,285]],12.5,520);K.hide(m4,13.7);
+copia(13.6,130);copia(13.6,250);
+const xC=K.text(1245,420,'✗','bad',null,{opacity:0,style:'font-size:30px'});K.show(xC,14.4);K.hide(xC,16.8);
+
+const palco=K.wrapFrom(inicio);tl.to(palco,{opacity:0,duration:.4},20.2);
+const quadro=K.g({opacity:0});
+K.el('rect',{x:70,y:120,width:1140,height:400,rx:18,class:'card'},quadro);
+K.text(110,172,'NO NOSSO LABORATÓRIO','lane',quadro);
+[['exchange pagamentos.comandos (direct)','chave pagamento.solicitar','fila pagamentos.solicitacoes'],
+ ['exchange pagamentos.eventos (direct)','chave pagamento.resultado','fila pedidos.resultados'],
+ ['exchange padrão "" (direct)','chave = nome da fila','filas *.erros']].forEach(function(l,i){
+  const y=230+i*78,f={style:'font-size:16px'};K.text(110,y,l[0],'mono',quadro,f);K.text(530,y,l[1],'mono',quadro,f);K.text(855,y,l[2],'mono',quadro,f);
+  K.text(500,y,'›','status',quadro);K.text(825,y,'›','status',quadro);
+ });
+K.text(110,478,'Cada comando tem um destino único e conhecido: direct basta.','label',quadro);
+K.fadeIn(quadro,20.4,.5);
+
+K.captions([
+ [0,'A exchange roteia; a fila guarda','O produtor publica na exchange com uma chave. Os bindings dizem para qual fila copiar.'],
+ [4,'01 · Direct: a chave precisa ser igual','"pagamento.solicitar" casa exatamente com o binding da Fila A. Só ela recebe.'],
+ [8,'02 · Sem rota: a mensagem não tem para onde ir','Um erro de digitação e nenhum binding casa. Por padrão, o RabbitMQ descarta.','Com mandatory = true, ela volta ao produtor. É assim que detectamos.'],
+ [12,'03 · Fanout: uma cópia para cada fila ligada','A chave é ignorada. Útil para avisar vários interessados sobre o mesmo fato.'],
+ [16,'04 · Topic: padrões com curingas','* vale exatamente uma palavra; # vale zero ou mais. Casam A e B, não C.'],
+ [20,'05 · Nosso laboratório usa direct','Comandos com destino único. Curingas e fanout ficam para quando houver vários interessados.']
+]);
+window.__timelines['roteamento']=tl;
+</script><script src="player-bridge.js"></script></body></html>

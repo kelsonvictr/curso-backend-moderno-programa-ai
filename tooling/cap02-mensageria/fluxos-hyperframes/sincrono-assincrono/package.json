@@ -1,0 +1,9 @@
+{
+  "name": "sincrono-assincrono",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "npx --yes hyperframes@0.8.78 check",
+    "dev": "npx --yes hyperframes@0.8.78 preview"
+  }
+}

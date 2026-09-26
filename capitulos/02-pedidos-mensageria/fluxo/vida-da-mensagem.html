@@ -1,0 +1,65 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vida de uma mensagem na fila: Ready, Unacked e ack</title><script src="gsap.min.js"></script><script src="hf-kit.js"></script><style>
+html,body{margin:0;width:100%;height:100%;background:#11111d;color:#f4f1e9;font-family:system-ui,sans-serif}#root{width:100%;height:100%;overflow:hidden}svg{width:100%;height:100%;display:block}
+text{font-family:system-ui,sans-serif;fill:#f4f1e9}.title{font-size:34px;font-weight:750}.sub{font-size:20px;fill:#c9c5d8}.lane{font-size:18px;font-weight:800;letter-spacing:1.5px;fill:#ffce95}
+.label{font-size:24px;font-weight:700}.small{font-size:18px;fill:#c9c5d8}.status{font-size:19px;font-weight:800;fill:#ffce95}.ok{font-size:19px;font-weight:800;fill:#a1e5b3}.bad{font-size:19px;font-weight:800;fill:#ffa3a3}
+.mono{font-family:ui-monospace,Menlo,monospace;font-size:18px;fill:#e8e4f5;font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+.caption-title{font-size:28px;font-weight:750;fill:#ffce95}.caption{font-size:22px}
+.node{fill:#252538;stroke:#666176;stroke-width:2}.broker{fill:#30271f;stroke:#b4814b;stroke-width:2}.db{fill:#1c2935;stroke:#6d96b1;stroke-width:2}.card{fill:#161625;stroke:#5b567a;stroke-width:2}
+.down{fill:none;stroke:#ff8a8a;stroke-width:4}.up{fill:none;stroke:#8fe0a8;stroke-width:4}.route{fill:none;stroke:#7a6448;stroke-width:4}.return{stroke:#4f7a61}.dash{stroke-dasharray:8 8}
+</style></head><body>
+<div id="root" data-composition-id="vida-da-mensagem" data-start="0" data-width="1280" data-height="720" data-duration="26"><svg id="cena" viewBox="0 0 1280 720" role="img" aria-labelledby="t d"><title id="t">Vida de uma mensagem na fila: Ready, Unacked e ack</title><desc id="d">Três mensagens chegam à fila e ficam Ready. Uma é entregue ao consumidor e vira Unacked até o ack. Quando o consumidor cai antes do ack, a mensagem volta. Com dois consumidores, cada mensagem vai para um só. Uma mensagem que falha além do limite vai para a fila de erros.</desc></svg></div>
+<script>
+window.__timelines=window.__timelines||{};const svg=document.getElementById('cena');const tl=gsap.timeline({paused:true});const K=new HFKit(svg,tl);
+K.text(72,58,'Fila: Ready, Unacked e ack','title');K.text(72,92,'O que acontece com cada mensagem entre chegar e sair','sub');
+
+// Produtor, fila e contadores.
+K.node(60,250,190,90,'Pedidos','produtor');
+K.el('line',{x1:250,y1:295,x2:300,y2:295,class:'route'});
+K.el('rect',{x:300,y:230,width:520,height:130,rx:16,class:'broker'});
+K.text(320,262,'pagamentos.solicitacoes','mono');
+K.variants(300,200,'status',[[0,'Ready: 0'],[1.6,'Ready: 1'],[2.6,'Ready: 2'],[3.6,'Ready: 3'],[4.5,'Ready: 2'],[9.5,'Ready: 1'],[14.2,'Ready: 2'],[16.8,'Ready: 1'],[17,'Ready: 0']]);
+K.variants(460,200,'status',[[0,'Unacked: 0'],[4.5,'Unacked: 1'],[8.8,'Unacked: 0'],[9.5,'Unacked: 1'],[12.6,'Unacked: 0'],[16.8,'Unacked: 1'],[17,'Unacked: 2'],[20.6,'Unacked: 1'],[22.2,'Unacked: 0']]);
+K.variants(650,200,'status',[[0,'Consumers: 1'],[12.4,'Consumers: 0'],[16.3,'Consumers: 2']]);
+K.variants(320,392,'small',[[0,''],[14.2,'M2 voltou marcada como redelivered = true'],[16.8,'']]);
+
+// Consumidores.
+K.el('line',{x1:820,y1:295,x2:960,y2:200,class:'route'});
+K.node(960,150,260,100,'Pagamentos #1');
+K.variants(980,228,'status',[[0,'conectado · prefetch 1'],[4.5,'processando M1'],[8.4,'✓ ack de M1','ok'],[9.5,'processando M2'],[12.4,'caiu antes do ack!','bad'],[16.3,'reconectou','ok'],[16.9,'processando M2'],[20.3,'✓ ack de M2','ok']]);
+const down=K.el('rect',{x:960,y:150,width:260,height:100,rx:16,class:'down',opacity:0});K.show(down,12.4);K.hide(down,16.3);
+const c2=K.g({opacity:0});
+K.el('line',{x1:820,y1:295,x2:960,y2:380,class:'route'},c2);
+K.el('rect',{x:960,y:330,width:260,height:100,rx:16,class:'node'},c2);K.text(980,366,'Pagamentos #2','label',c2);
+K.fadeIn(c2,16.3);
+K.variants(980,408,'status',[[0,''],[16.3,'conectado'],[17.1,'processando M3'],[20.8,'erro 1/3','bad'],[21.3,'erro 2/3','bad'],[21.8,'erro 3/3: rejeita','bad']]);
+
+// Fila de erros.
+K.el('rect',{x:420,y:432,width:470,height:76,rx:14,class:'broker'});
+K.text(440,463,'pagamentos.solicitacoes.erros','mono');
+K.variants(440,492,'small',[[0,'msgs: 0'],[23.2,'msgs: 1 · aguardando análise']]);
+
+// Mensagens.
+const M1=K.token('M1','#ffbd79','#26180a',70),M2=K.token('M2','#ffbd79','#26180a',70),M3=K.token('M3','#ffbd79','#26180a',70);
+K.travel(M1,[[155,295],[740,310]],.4,560);K.travel(M2,[[155,295],[660,310]],1.4,560);K.travel(M3,[[155,295],[580,310]],2.4,560);
+tl.to(M1,{x:915,y:200,duration:.9,ease:'none'},4.5);
+tl.to(M2,{x:740,duration:.5,ease:'none'},5.5);tl.to(M3,{x:660,duration:.5,ease:'none'},5.5);
+K.fadeOut(M1,8.8);
+tl.to(M2,{x:915,y:200,duration:.9,ease:'none'},9.5);tl.to(M3,{x:740,duration:.5,ease:'none'},10.5);
+// #1 cai: M2 volta para a cabeça da fila.
+tl.to(M3,{x:660,duration:.5,ease:'none'},12.6);tl.to(M2,{x:740,y:310,duration:1,ease:'none'},13.2);
+// Dois consumidores: cada mensagem vai para um só.
+tl.to(M2,{x:915,y:200,duration:.9,ease:'none'},16.8);tl.to(M3,{x:915,y:380,duration:1.1,ease:'none'},17);
+K.fadeOut(M2,20.6);
+tl.to(M3,{x:690,y:470,duration:1,ease:'none'},22.2);K.fadeOut(M3,23.2);
+
+K.captions([
+ [0,'Uma fila, um consumidor','Pagamentos #1 está conectado com prefetch 1: recebe uma mensagem por vez.'],
+ [4,'01 · Chegaram três solicitações','Ready = 3: disponíveis, esperando alguém que as consuma, na ordem de chegada.'],
+ [8,'02 · Entregue não é o mesmo que processado','M1 foi entregue ao #1 e virou Unacked. O RabbitMQ ainda guarda a mensagem.'],
+ [12,'03 · Ack: agora pode apagar','#1 terminou e confirmou. M1 sai da fila. Só então M2 é entregue (prefetch 1).'],
+ [16,'04 · Caiu antes do ack? A mensagem volta','A conexão do #1 fechou. M2 retorna para Ready, marcada como reentregue.','Se o #1 já tinha salvo algo no banco, o trabalho vai chegar de novo.'],
+ [20,'05 · Consumidores concorrentes','Com duas instâncias, cada mensagem vai para UM consumidor, não para os dois.'],
+ [24,'06 · Falhou além do limite: fila de erros','M3 falhou 3 vezes. Em vez de voltar para sempre, vai para .erros, para análise.']
+]);
+window.__timelines['vida-da-mensagem']=tl;
+</script><script src="player-bridge.js"></script></body></html>

@@ -216,5 +216,8 @@ passo a passo. Cada estado deve responder: **antes, ação, depois, como provar 
   Python Web Cap 07, cópia de texto puro; desenhos prontos no lugar de pranchetas.
 - Fontes e referência em `tooling/cap02-mensageria/`; validar com
   `python3 tooling/validate-cap02-mensageria.py --integration`.
-- Manter 20 pontos e os dois TXTs sincronizados. Não inserir links dos TXTs na página.
+- Manter 29 pontos (expansão de 26/09) e os dois TXTs sincronizados. Sem links dos TXTs.
+- Nível iniciante explícito neste capítulo: teoria antes da prática, termo definido antes do
+  uso, desenho ou fluxo para cada mecanismo. Fluxos HyperFrames: editar em
+  tooling/cap02-mensageria/fluxos-hyperframes/_kit e rodar build.py; nunca editar fluxo/*.html.
 - Pagamentos são simulados. Explicitar limites banco/publicação e deduplicação.

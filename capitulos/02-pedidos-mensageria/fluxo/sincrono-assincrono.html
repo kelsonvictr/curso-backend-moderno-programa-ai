@@ -1,0 +1,74 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ligação ou comanda: síncrono e assíncrono</title><script src="gsap.min.js"></script><script src="hf-kit.js"></script><style>
+html,body{margin:0;width:100%;height:100%;background:#11111d;color:#f4f1e9;font-family:system-ui,sans-serif}#root{width:100%;height:100%;overflow:hidden}svg{width:100%;height:100%;display:block}
+text{font-family:system-ui,sans-serif;fill:#f4f1e9}.title{font-size:34px;font-weight:750}.sub{font-size:20px;fill:#c9c5d8}.lane{font-size:18px;font-weight:800;letter-spacing:1.5px;fill:#ffce95}
+.label{font-size:24px;font-weight:700}.small{font-size:18px;fill:#c9c5d8}.status{font-size:19px;font-weight:800;fill:#ffce95}.ok{font-size:19px;font-weight:800;fill:#a1e5b3}.bad{font-size:19px;font-weight:800;fill:#ffa3a3}
+.mono{font-family:ui-monospace,Menlo,monospace;font-size:18px;fill:#e8e4f5;font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+.caption-title{font-size:28px;font-weight:750;fill:#ffce95}.caption{font-size:22px}
+.node{fill:#252538;stroke:#666176;stroke-width:2}.broker{fill:#30271f;stroke:#b4814b;stroke-width:2}.db{fill:#1c2935;stroke:#6d96b1;stroke-width:2}.card{fill:#161625;stroke:#5b567a;stroke-width:2}
+.down{fill:none;stroke:#ff8a8a;stroke-width:4}.up{fill:none;stroke:#8fe0a8;stroke-width:4}.route{fill:none;stroke:#7a6448;stroke-width:4}.return{stroke:#4f7a61}.dash{stroke-dasharray:8 8}
+</style></head><body>
+<div id="root" data-composition-id="sincrono-assincrono" data-start="0" data-width="1280" data-height="720" data-duration="26"><svg id="cena" viewBox="0 0 1280 720" role="img" aria-labelledby="t d"><title id="t">Ligação ou comanda: síncrono e assíncrono</title><desc id="d">Duas faixas. Na síncrona, Pedidos chama Pagamentos e espera; quando Pagamentos cai, o cliente recebe erro. Na assíncrona, Pedidos registra a solicitação, deixa a mensagem na fila e responde 202; a fila guarda até Pagamentos voltar e o resultado chega depois.</desc></svg></div>
+<script>
+window.__timelines=window.__timelines||{};const svg=document.getElementById('cena');const tl=gsap.timeline({paused:true});const K=new HFKit(svg,tl);
+K.text(72,58,'Ligação ou comanda?','title');K.text(72,92,'O mesmo pedido de pagamento, desenhado de dois jeitos','sub');
+
+const inicio=K.mark();
+// Faixa 1: síncrono. Pedidos segura a chamada até Pagamentos responder.
+K.text(72,140,'SÍNCRONO · PEDIDOS CHAMA PAGAMENTOS E ESPERA NA LINHA','lane');
+K.el('line',{x1:262,y1:205,x2:440,y2:205,class:'route'});K.el('line',{x1:660,y1:205,x2:960,y2:205,class:'route'});
+K.node(72,160,190,90,'Cliente');K.node(440,160,220,90,'Pedidos');K.node(960,160,250,90,'Pagamentos');
+K.variants(92,230,'status',[[0,'Insomnia'],[4,'aguardando…'],[7.7,'erro 504: pagou?','bad']]);
+K.variants(460,230,'status',[[0,'porta 8080'],[1.2,'thread ocupada'],[6.5,'tempo esgotado','bad']]);
+K.variants(980,230,'status',[[0,'responde em 3 s'],[2.4,'processando…'],[5,'FORA DO AR','bad']]);
+const downA=K.el('rect',{x:960,y:160,width:250,height:90,rx:16,class:'down',opacity:0});K.show(downA,5);
+K.el('rect',{x:680,y:224,width:260,height:12,rx:6,fill:'#2c2b3e'});
+const bar=K.el('rect',{x:680,y:224,width:260,height:12,rx:6,fill:'#ffb466'});
+tl.fromTo(bar,{scaleX:0,transformOrigin:'0% 50%'},{scaleX:.55,duration:1.5,ease:'none'},2.4);
+tl.to(bar,{scaleX:1,duration:1.8,ease:'none'},4.6);tl.set(bar,{fill:'#ff8a8a'},6.4);
+K.text(680,262,'tempo esperando (limite: 5 s)','small');
+const post=K.token('POST','#ffbd79','#26180a');
+K.travel(post,[[167,205],[550,205],[1085,205]],.3,520);K.hide(post,2.5);
+const erro=K.token('504','#ff9d9d','#2a0c0c');K.travel(erro,[[550,205],[167,205]],6.6,420);K.fadeOut(erro,7.7);
+
+// Faixa 2: assíncrono. A fila guarda a solicitação enquanto o consumidor está fora.
+K.text(72,330,'ASSÍNCRONO · PEDIDOS REGISTRA, PUBLICA E RESPONDE','lane');
+K.el('line',{x1:262,y1:395,x2:340,y2:395,class:'route'});K.el('line',{x1:560,y1:395,x2:640,y2:395,class:'route'});K.el('line',{x1:870,y1:395,x2:960,y2:395,class:'route'});
+K.el('path',{d:'M1085 440 L1085 482 L450 482 L450 440',class:'route return'});
+K.node(72,350,190,90,'Cliente');K.node(340,350,220,90,'Pedidos');K.node(640,350,230,90,'RabbitMQ',null,'broker');K.node(960,350,250,90,'Pagamentos');
+K.variants(92,420,'status',[[0,'Insomnia'],[11.3,'recebeu 202'],[14.2,'vê EM_PAGAMENTO'],[19.6,'vê PAGO','ok']]);
+K.variants(360,420,'status',[[0,'porta 8080'],[9.2,'S1 · EM_PAGAMENTO'],[19.3,'PAGO','ok']]);
+K.variants(660,420,'status',[[0,'fila · Ready: 0'],[10.3,'fila · Ready: 1'],[16.7,'fila · Ready: 0']]);
+K.variants(980,420,'status',[[0,'responde em 3 s'],[5,'FORA DO AR','bad'],[16.4,'de volta','ok'],[17.6,'aprovou S1','ok']]);
+const downB=K.el('rect',{x:960,y:350,width:250,height:90,rx:16,class:'down',opacity:0});K.show(downB,5);K.hide(downB,16.4);
+const upB=K.el('rect',{x:960,y:350,width:250,height:90,rx:16,class:'up',opacity:0});K.show(upB,16.4);
+const s1=K.token('S1','#ffbd79','#26180a');
+K.travel(s1,[[167,395],[450,395]],8.3,480);
+K.travel(s1,[[450,395],[825,382]],9.4,480);
+tl.to(s1,{x:1085,y:395,duration:.9,ease:'none'},16.7);K.fadeOut(s1,17.6);
+const aceito=K.token('202','#b9b3ff','#15123a');K.travel(aceito,[[450,395],[167,395]],10.5,480);K.fadeOut(aceito,11.3);
+const get=K.token('GET','#d8d4e8','#1d1b2b');K.travel(get,[[167,395],[450,395]],12.4,480);K.fadeOut(get,13.2);
+const pend=K.token('EM_PAGAMENTO','#ffce95','#2a1a05');K.travel(pend,[[450,395],[167,395]],13.4,480);K.fadeOut(pend,14.3);
+const ok=K.token('OK','#a1e5b3','#102719');K.travel(ok,[[1085,440],[1085,482],[450,482],[450,440]],17.8,560);K.fadeOut(ok,19.3);
+
+const palco=K.wrapFrom(inicio);tl.to(palco,{opacity:0,duration:.4},20.2);
+// Parada 6: o quadro da troca.
+const quadro=K.g({opacity:0,'data-layout-allow-overlap':'true'});
+K.el('rect',{x:90,y:118,width:1100,height:392,rx:18,class:'card'},quadro);
+K.text(130,172,'SÍNCRONO','lane',quadro);K.text(660,172,'ASSÍNCRONO','lane',quadro);
+[['+ resposta final na mesma chamada','ok'],['+ menos peças para operar','ok'],['− soma a espera de quem é chamado','bad'],['− herda a queda do outro serviço','bad']].forEach(function(l,i){K.text(130,222+i*46,l[0],l[1],quadro);});
+[['+ aceita mesmo com o consumidor fora','ok'],['+ a fila absorve picos de pedidos','ok'],['− cria estado intermediário','bad'],['− mais uma peça: o broker','bad']].forEach(function(l,i){K.text(660,222+i*46,l[0],l[1],quadro);});
+K.el('line',{x1:620,y1:150,x2:620,y2:400,stroke:'#3a3850','stroke-width':2},quadro);
+K.text(130,462,'Escolha pelo que o cliente precisa saber AGORA — e pelo que pode esperar.','label',quadro);
+K.fadeIn(quadro,20.4,.5);
+
+K.captions([
+ [0,'Mesmo pedido, dois desenhos','A cliente pede o pagamento de R$ 37,80. Pagamentos leva 3 s para responder.'],
+ [4,'01 · Síncrono: Pedidos espera na linha','A thread de Pedidos fica presa até Pagamentos responder. O cliente também espera.'],
+ [8,'02 · Quem espera herda a falha','Pagamentos cai. Pedidos estoura o tempo limite e devolve erro ao cliente.','E agora: o pagamento foi feito ou não? Ninguém sabe dizer.'],
+ [12,'03 · Assíncrono: aceitar não é concluir','Pedidos registra S1, deixa a mensagem na fila e responde 202 em milissegundos.'],
+ [16,'04 · A fila guarda enquanto o consumidor está fora','Pagamentos continua fora do ar. Ao consultar, a cliente vê EM_PAGAMENTO.'],
+ [20,'05 · O resultado volta depois','Pagamentos retorna, consome S1 e publica o resultado. Pedidos aplica: PAGO.'],
+ [24,'06 · Uma troca, não mágica','Assíncrono tolera a queda do consumidor, mas cobra estado intermediário e mais uma peça.']
+]);
+window.__timelines['sincrono-assincrono']=tl;
+</script><script src="player-bridge.js"></script></body></html>

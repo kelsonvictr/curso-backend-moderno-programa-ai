@@ -428,6 +428,16 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
 - Conferidos sequência/títulos dos dois TXTs e 27 marcadores no HTML. Inspeção visual
   em 1440 e 390 px, sem overflow horizontal ou erros JS, com ligaduras desativadas.
 
+## 2026-09-19 — Quatro apresentações para os grupos do Cap 1
+- Kelson pediu quatro apresentações completas, com abordagens diferentes, e confirmou slides simples.
+- Acrescentados quatro links no fim do capítulo e acesso na sidebar. Cada HTML tem 20 slides: abertura, 18 tópicos comuns e defesa final.
+- Narrativas: investigação do Pedido 4711, percurso do café, conselho de arquitetura e clínica de revisão. Conteúdo reformulado em cada grupo, com perguntas orais e apoio recolhido.
+- Preservados os conceitos, contratos HTTP e limites do capítulo. Pagamento/consulta aparecem como continuidade de casa. Eventos, e-mail confiável e duplicidade não são apresentados como resolvidos.
+- HTML/CSS/JS local, sem framework, áudio ou dependência de rede. Botões, teclado, índice, tela cheia, retorno ao capítulo e impressão. Conteúdo visível sem JavaScript.
+- Tempo sugerido ajustável de 10–12 minutos por grupo. A página explica que é necessário reservar um bloco próprio além dos 15 minutos do fechamento original.
+- Verificação: 80 slides navegados em desktop e 390 px, sem overflow horizontal ou erros JS. Teclado, notas, hash/reload, tela cheia, links locais e fallback sem JS conferidos. Quatro impressões com 20 páginas cada. Inspeção visual em 1280×720.
+- Fonte editorial e gerador em tooling/cap01-slides/. Contrato em 12-cap1-apresentacoes-grupos.md. Checkpoints e Java preservados. Alterações locais, sem commit ou publicação neste pedido.
+
 ## 2026-09-19 — Cap 2: OO e SOLID com prática e revisão
 - Pedido: iniciar Sábado 02 no padrão didático/técnico do Cap 01 e criar apoio
   docente com professor-txt. Mantidos três momentos e plano de 240 minutos.
@@ -476,3 +486,14 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
   em tooling/cap02-mensageria/VALIDACAO.json. Não é cobrança real, não tem outbox nem
   garantia global de exactly-once; operações da aula são sequenciais.
 - Contrato didático em .specs/13-cap2-mensageria-pagamentos.md. Alterações locais.
+
+## 2026-09-26 — Cap 02 expandido: teoria para iniciantes e seis fluxos HyperFrames
+- Professor achou o Cap 02 curto, raso e com poucos desenhos. Pediu nível iniciante para
+  todos os públicos, fluxos HyperFrames melhor aproveitados e 4 horas sem sobras.
+- Reescrito em 29 pontos com teoria antes de cada prática, desenhos SVG, simuladores e
+  quizzes com distratores plausíveis. Detalhe em 13-cap2-mensageria-pagamentos.md.
+- Player genérico por postMessage para qualquer composição; texto das paradas no HTML
+  também vira versão sem animação. Prompts, apoio, ZIPs e Java inalterados.
+- professor.txt e professor-resolucoes.txt renumerados para 29 pontos, com gabaritos novos.
+- Verificação: hyperframes check nos seis projetos; âncoras/IDs/JSON; simuladores por JS;
+  sem erros de console; 375 px sem overflow horizontal. Sem commit nem publicação.

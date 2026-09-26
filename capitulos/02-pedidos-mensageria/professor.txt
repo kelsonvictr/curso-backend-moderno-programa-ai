@@ -1,104 +1,149 @@
-CAP 02 — DO PEDIDO AO PAGAMENTO
+CAP 02 — DO PEDIDO AO PAGAMENTO (versão expandida, 29 pontos)
 Use o capítulo e esta cola lado a lado. Não presuma o progresso da turma.
 Resoluções e dúvidas: professor-resolucoes.txt. Guia executável em apoio/.
 Amarelo nos prompts = trecho para ler em voz alta e conferir.
+Seis fluxos HyperFrames: avance manualmente e peça previsão ANTES de cada clique.
 
 [01] O PEDIDO CONTINUA. O PAGAMENTO GANHA SEU TEMPO.
-  Comece pelo café: 2 x 18,90 = 37,80.
-  Pergunte: quem concluiu o Cap 01? Use a última prova, não presuma.
-  Diga: solicitação recebida ainda não é pagamento aprovado.
+  Mostre o desenho do Cap 01: tudo dentro de uma chamada HTTP.
+  Café: 2 x 18,90 = 37,80. Pergunte quem concluiu o Cap 01; peça a última prova.
+  Diga: hoje o pagamento sai da caixa tracejada e vira trabalho de outro programa.
 
 [02] UMA TARDE, UMA HISTÓRIA VERIFICÁVEL
-  Mostre o ritmo e os pontos de retomada.
-  Leia amarelos antes de copiar. O restante dá contexto ao agente.
-  Avise que copiar o prompt não substitui conferir a evidência.
+  Quatro partes: por que fila → como o RabbitMQ entrega → construção → falhas.
+  Intervalo 15:15. Atrasou? conclusão no ponto 20; prompts 8/9 vão para casa.
+  Sobrou? extra de consumidores concorrentes no ponto 20.
 
-[03] ESPERAR NA LIGAÇÃO OU DEIXAR UMA SOLICITAÇÃO?
-  Compare uma ligação com uma comanda.
-  Pergunte: 202 é pago? Não; é aceito para processamento.
-  Diga que assíncrono não significa automaticamente mais rápido.
+[03] COLOQUE O AGENTE PARA LER ENQUANTO CONVERSAMOS
+  Dispare o Prompt 1 e siga para a teoria; revise a resposta depois.
+  Confira 201, ID real, consulta e total 37,80. Não aprove reconstrução inteira.
+  Faltou operação? base de retomada em outra pasta.
 
-[04] QUEM FAZ O QUÊ NO CAMINHO DA MENSAGEM?
-  Apresente produtor, mensagem, broker, exchange, fila e consumidor.
-  Leia exchange + chave + fila no quadro.
-  Pergunte quem aprova: Pagamentos, nunca o RabbitMQ.
+[04] ESPERAR NA LIGAÇÃO OU DEIXAR UMA COMANDA?
+  Conte as duas lanchonetes. Nomeie: acoplamento temporal.
+  Fluxo 1 (7 passos): pare no passo 3 e pergunte "pagou ou não?".
+  Quiz 202: aceito ≠ pago. Leia o limite da analogia (bytes, reentrega, broker não decide).
 
-[05] SIGA A MENSAGEM. OBSERVE O ESTADO.
-  Avance manualmente e peça uma previsão antes de cada passo.
-  Pause na fila: ainda não há consumidor e o pedido não está pago.
-  Volte um passo; o desenho deve reconstruir o estado inteiro.
+[05] A CONTA DA DEPENDÊNCIA
+  Calculadora: Pagamentos 99% → síncrono 475 min/mês; assíncrono 86 min/mês.
+  Arraste a latência acima de 5 s: síncrono vira 0%. Explique timeout.
+  Load leveling (500 pedidos/min). Leia o preço da fila; quiz do CEP.
 
-[06] DOIS SERVIÇOS, CADA UM COM SEUS DADOS
-  Mostre 8080/8081 como processos e 5672/15672 como funções distintas.
-  Diga: mesmos recursos Docker não significam banco compartilhado.
-  Lembre: no container, localhost é o próprio container.
+[06] O QUE VIAJA DENTRO DE UMA MENSAGEM
+  Envelope (propriedades) × carta (corpo JSON). Broker não abre a carta.
+  Serialização em 4 passos; leia o record Solicitacao e o campo versao.
+  Não compartilhe a classe; compartilhe o contrato. Quiz: quem pega o JSON errado?
 
-[07] DESCUBRA O QUE JÁ FUNCIONA
-  Peça o diagnóstico. Não aprove uma reconstrução inteira.
-  Confira 201, ID real, consulta e total 37,80.
-  Se faltar operação, use a base em outra pasta.
+[07] COMANDO, EVENTO E CONSULTA
+  Desenho das três intenções. Nomes das exchanges revelam a intenção.
+  Classificador em dupla (6 itens). Discuta EnviarEmailConfirmacao.
+  Heurística: "se ninguém ouvir, algo quebra?" → comando.
 
-[08] UMA FILA PRECISA DE UM LUGAR PARA EXISTIR
-  Leia os amarelos: preservar volume e separar as portas.
-  Confira painel e saúde do broker. Fila ainda pode não existir.
+[08] SEIS PEÇAS, UMA FUNÇÃO CADA
+  Desenho do correio: produtor → exchange → binding → fila → consumidor.
+  Conexão e canal: só para ler o painel. Na volta, papéis se invertem.
+  Quiz: quem guarda com Pagamentos desligado? A fila, não a exchange.
+
+[09] A EXCHANGE ROTEIA; NÃO GUARDA
+  Fluxo 2: direct, sem rota, fanout, topic, nosso lab.
+  Simulador: peça para testarem pagamento.cartao.aprovado e Pagamento.Solicitar.
+  Sem rota é silencioso: por isso mandatory + confirm antes do 202.
+
+[10] FILA: READY, UNACKED E ACK
+  Fluxo 3 (vida da mensagem): pause no passo 5 (caiu antes do ack).
+  Prefetch, consumidores concorrentes, poison message, fila de erros.
+  Máquina de estados: cada seta vermelha precisa de código. Quiz do Unacked parado.
+
+[11] UMA FILA PRECISA DE UM LUGAR PARA EXISTIR
+  Leia os amarelos: preservar volume e separar as portas 5672/15672.
+  Confira painel e saúde do broker. Filas da aula ainda não existem.
   Porta ocupada pede ajuste, nunca apagar banco.
 
-[09] ANTES DO CÓDIGO, COMBINE A MENSAGEM
+[12] SUA PRIMEIRA FILA, À MÃO
+  Fila treino.cafe; cada um prevê antes de cada passo (tabela com 👀).
+  Nack requeue → Redelivered; Automatic ack → sumiu (at-most-once ao vivo).
+  amq.topic + cafe.# → cha.verde "not routed". Apagar só treino.cafe.
+
+[13] SIGA A MENSAGEM. OBSERVE O ESTADO.
+  Fluxo principal (8 passos). Previsão antes de cada passo.
+  Pause na fila: sem consumidor, pedido não está pago.
+  Máquina de estados do pedido: por que EM_PAGAMENTO trava os itens.
+
+[14] DOIS SERVIÇOS, CADA UM COM SEUS DADOS
+  Desenho da bancada: apps no host, infra no Docker.
+  Por que cada serviço tem seu banco: sem UPDATE atravessado.
+  No container, localhost é o próprio container.
+
+[15] ANTES DO CÓDIGO, COMBINE A MENSAGEM
   Peça aos alunos para explicar os dois IDs.
-  Confira o valor vindo do pedido e o bloqueio dos itens.
-  Leia os estados; só depois aprove a spec.
+  Transação local não inclui o RabbitMQ (volta no 25).
+  Revise a spec com a lista do quadro verde antes do OK.
 
-[10] PEDIDOS PUBLICA. AINDA NÃO APROVA.
-  Construa apenas o produtor. Mantenha Pagamentos parado.
-  Confira 202 + EM_PAGAMENTO + Ready.
-  Pergunte: quem confirmou? O broker; o pagamento ainda não terminou.
+[16] O QUE O AGENTE VAI ESCREVER: SPRING AMQP EM TRÊS PEÇAS
+  Topologia, RabbitTemplate, @RabbitListener; depois o application.yml.
+  Frise: acknowledge-mode auto do Spring ≠ Automatic ack do painel.
+  Quiz: 3 falhas → .erros.
 
-[11] MONTE SUA BANCADA NO INSOMNIA
-  Importe o JSON. Crie primeiro, copie o id, depois consulte.
+[17] PEDIDOS PUBLICA. AINDA NÃO APROVA.
+  Construa só o produtor. Pagamentos parado.
+  Revise o diff com o ponto 16 aberto: onde está o COMMIT? e o confirm?
+  Confira 202 + EM_PAGAMENTO + Ready. Quem confirmou? O broker.
+
+[18] MONTE SUA BANCADA NO INSOMNIA
+  Importe o JSON. Crie, copie o id, consulte.
   Não confunda copiar ID do pedido com criar ID da solicitação.
-  Na recusa use outro pedido; não reutilize um pedido já pago.
+  Na recusa use outro pedido.
 
-[12] DESLIGUE O CONSUMIDOR. A FILA CONTINUA ALI.
-  Pare só Pagamentos, antes de publicar.
-  Confira Consumers=0, Ready aumentando e EM_PAGAMENTO.
-  Não use Purge, Delete ou Get messages para apenas observar.
+[19] DESLIGUE O CONSUMIDOR. A FILA CONTINUA ALI.
+  O fluxo do ponto 04 agora é real. Pare só Pagamentos.
+  Consumers=0, Ready aumentando, EM_PAGAMENTO.
+  Nada de Purge/Delete/Get nas filas da aula.
 
-[13] PAGAMENTOS RECEBE UMA TAREFA
-  Abra uma segunda aplicação/terminal, sem fechar Pedidos.
-  Leia: salvar decisão antes de publicar resultado.
-  Repita que Pagamentos não acessa a tabela de pedidos.
+[20] PAGAMENTOS RECEBE UMA TAREFA
+  Segunda aplicação/terminal, sem fechar Pedidos.
+  Restrição única = memória durável da idempotência.
+  Extra se sobrar: PAGAMENTOS_PORT=8082, Consumers 2.
 
-[14] O RESULTADO PRECISA VOLTAR
-  Confira PAGO pela consulta real, não só pelo log.
-  Use outro pedido para recusa e espere voltar a ABERTO.
-  Mostre o resultado ligado à solicitação pelo mesmo ID.
+[21] O RESULTADO PRECISA VOLTAR
+  PAGO pela consulta real, não pelo log.
+  Recusa em outro pedido volta a ABERTO.
+  Alerta: catch que engole exceção no listener = ack e mensagem perdida.
 
-[15] TRÊS CONFIRMAÇÕES QUE NÃO SIGNIFICAM A MESMA COISA
-  Leia cada seta: quem confirma para quem?
-  Explique AUTO do Spring: depois do listener, não antes do trabalho.
-  Pergunte sobre cair depois do commit e antes do ack.
+[22] QUANTAS VEZES UMA MENSAGEM CHEGA?
+  At-most / at-least / "exactly" once no desenho.
+  Efeito único = at-least-once + idempotência.
+  Quiz: notificação informativa pode aceitar perda (decisão de negócio).
 
-[16] A MESMA MENSAGEM PODE CHEGAR DUAS VEZES
-  Clique nas duas estratégias e compare os efeitos.
-  Publique duas vezes antes de ligar o consumidor.
-  Depois do reinício, republique mensagem para testar o consumidor.
+[23] TRÊS CONFIRMAÇÕES QUE NÃO SIGNIFICAM A MESMA COISA
+  Fluxo 5 (diagrama de sequência): ① 202, ② publisher confirm, ③ ack.
+  Janela A: COMMIT sem publicação → 503 → mesma chave.
+  Janela B: decisão sem ack → reentrega → decisão reutilizada.
 
-[17] QUANDO O FLUXO PARA, ENCONTRE A FRONTEIRA
-  Use a tabela como roteiro de diagnóstico.
-  Diga explicitamente: banco + Rabbit não são uma transação única.
-  Mesma chave recupera publicação incerta; nunca marcar pago na mão.
+[24] A MESMA MENSAGEM PODE CHEGAR DUAS VEZES
+  Idempotente × não idempotente (status=PAGO × saldo-37,80).
+  Fluxo 6: sem memória 4 efeitos, com registro 2. Conflito ≠ repetição.
+  Prompt 8 se houver tempo; senão casa. Set em memória não basta.
 
-[18] AGORA CONDUZA UMA RECUSA E UMA NOVA TENTATIVA
-  Peça o prompt autoral antes da ajuda.
+[25] QUANDO O FLUXO PARA, ENCONTRE A FRONTEIRA
+  Escrita dupla: banco + Rabbit sem transação comum. Outbox só citado.
+  Tabela como roteiro de diagnóstico. Nunca marcar pago na mão.
+  Quiz: seguir a solicitacaoId; chave nova é outra tentativa.
+
+[26] AGORA CONDUZA UMA RECUSA E UMA NOVA TENTATIVA
+  Em sala: previsão escrita + recusa. Aprovação e reenvio em casa.
   Resposta: A recusa, B aprova, A repetida não reabre.
-  Aceite uma revisão sem defeitos, se bem justificada.
+  Aceite revisão sem defeitos, se bem justificada.
 
-[19] EXPLIQUE O SISTEMA SEM DECORAR ANOTAÇÕES
-  Faça as cinco perguntas sem abrir código.
-  Peça uma evidência por resposta, não nome de anotação.
-  Conecte as decisões à próxima aula de OO/SOLID.
+[27] EXPLIQUE O SISTEMA SEM DECORAR ANOTAÇÕES
+  Cinco perguntas sem abrir código; uma evidência por resposta.
+  Pergunta 3 nova: por que at-least-once e o que exige.
+  Ponte para OO/SOLID no Cap 03.
 
-[20] TRAGA UMA PROVA E UMA DÚVIDA
-  Peça spec, testes e narrativa da falha investigada.
-  Reforce: nenhum pagamento real foi integrado.
-  Guarde uma dúvida para justificar o desenho na próxima aula.
+[28] TRAGA UMA PROVA E UMA DÚVIDA
+  Spec, testes e narrativa da falha investigada.
+  Rever os seis fluxos narrando antes de clicar.
+  Nenhum pagamento real foi integrado.
+
+[29] GLOSSÁRIO DE BOLSO
+  Consulta rápida durante os labs.
+  Aponte quando um aluno travar num termo.

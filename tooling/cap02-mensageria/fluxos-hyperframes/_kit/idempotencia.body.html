@@ -1,0 +1,43 @@
+<div id="root" data-composition-id="idempotencia" data-start="0" data-width="1280" data-height="720" data-duration="18"><svg id="cena" viewBox="0 0 1280 720" role="img" aria-labelledby="t d"><title id="t">Idempotência: a mesma mensagem duas vezes</title><desc id="d">Dois consumidores recebem as mesmas entregas. O consumidor sem memória aplica o efeito a cada entrega. O consumidor com registro persistido consulta a tabela pela chave da solicitação: reentrega reutiliza a decisão, conteúdo divergente vira conflito e chave nova é tentativa nova.</desc></svg></div>
+<script>
+window.__timelines=window.__timelines||{};const svg=document.getElementById('cena');const tl=gsap.timeline({paused:true});const K=new HFKit(svg,tl);
+K.text(72,58,'A mesma mensagem, duas vezes','title');K.text(72,92,'Consumidor sem memória × consumidor que consulta um registro persistido','sub');
+
+const entregas=[['S1',.4],['S1 de novo',4.4],['S1 · 99,00',8.4],['S2',12.4]];
+function faixa(y,titulo){
+ K.text(72,y-14,titulo,'lane');
+ K.el('line',{x1:230,y1:y+50,x2:400,y2:y+50,class:'route'});
+ K.node(60,y,170,100,'Fila');K.node(400,y,300,100,'Pagamentos');
+ entregas.forEach(function(e){const tok=K.token(e[0],e[0]==='S1 · 99,00'?'#ffce95':'#ffbd79','#26180a');const fim=K.travel(tok,[[145,y+50],[315,y+50]],e[1],300);K.fadeOut(tok,fim+.2);});
+}
+
+// Faixa de cima: sem verificar a chave.
+faixa(150,'SEM VERIFICAR A CHAVE');
+K.variants(420,228,'status',[[0,'aguardando'],[1.4,'processou S1'],[5.4,'processou S1 de novo!','bad'],[9.4,'processou valor errado!','bad'],[13.4,'processou S2']]);
+K.el('rect',{x:740,y:150,width:480,height:100,rx:16,class:'node'});
+K.text(760,186,'Efeitos aplicados','label');
+K.variants(1200,190,'title',[[0,'0'],[1.8,'1'],[5.8,'2'],[9.8,'3'],[13.8,'4']],null,{'text-anchor':'end'});
+K.variants(760,228,'small',[[0,''],[5.8,'S1 aplicada duas vezes','bad'],[9.8,'S1 aplicada com valor errado','bad'],[13.8,'4 efeitos para 2 tentativas reais','bad']]);
+
+// Faixa de baixo: consulta o registro antes de agir.
+faixa(350,'CONSULTA O REGISTRO ANTES DE AGIR');
+K.variants(420,428,'status',[[0,'aguardando'],[1.4,'S1 nova: salva'],[5.4,'S1 já existe: reutiliza','ok'],[9.4,'S1 divergente: conflito','bad'],[13.4,'S2 nova: salva']]);
+K.el('rect',{x:740,y:340,width:480,height:170,rx:16,class:'db'});
+K.text(760,374,'pagamento_processado','mono');
+K.variants(1200,374,'status',[[0,'efeitos: 0'],[1.8,'efeitos: 1'],[13.8,'efeitos: 2']],null,{'text-anchor':'end'});
+K.el('line',{x1:760,y1:390,x2:1200,y2:390,stroke:'#3f5d72','stroke-width':2});
+const destaque=K.el('rect',{x:752,y:398,width:456,height:32,rx:6,fill:'#27405a',opacity:0});
+K.show(destaque,5.4);K.hide(destaque,8.2);K.show(destaque,9.4);K.hide(destaque,12.2);
+const l1=K.text(764,420,'S1 | pedido 4711 | 37.80 | RECUSAR','mono',null,{opacity:0});K.fadeIn(l1,1.8);
+const l2=K.text(764,460,'S2 | pedido 4711 | 37.80 | APROVAR','mono',null,{opacity:0});K.fadeIn(l2,13.8);
+const erro=K.token('.erros','#ff9d9d','#2a0c0c');const fimErro=K.travel(erro,[[550,450],[550,506]],9.8,200);K.fadeOut(erro,fimErro+.8);
+
+K.captions([
+ [0,'Mesma entrega, dois consumidores','Em cima, um consumidor sem memória. Embaixo, um que consulta a tabela antes de agir.'],
+ [4,'01 · Primeira entrega de S1','Os dois processam. O de baixo grava S1 em pagamento_processado, com chave única.'],
+ [8,'02 · S1 chega de novo (reentrega)','Sem memória: segundo efeito. Com registro: encontra S1 e reutiliza a decisão salva.'],
+ [12,'03 · Mesma chave, conteúdo diferente','S1 com R$ 99,00 não é repetição: é conflito. Rejeita e vai para a fila de erros.'],
+ [16,'04 · Nova tentativa, nova chave','Depois de uma recusa, S2 é outra tentativa. Chave nova, efeito novo e legítimo.']
+]);
+window.__timelines['idempotencia']=tl;
+</script><script src="player-bridge.js"></script></body></html>

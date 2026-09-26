@@ -51,3 +51,27 @@ Não mudar silenciosamente a numeração de capítulos futuros nem suas datas.
 - Verificar HTML/JS, âncoras, recursos, cópia exata, controles por teclado,
   desktop/mobile, movimento reduzido; Java unitários e integração real quando
   Docker disponível. Não publicar nem criar commit sem pedido.
+
+## Expansão didática (26/09/2026, manhã)
+Pedido do professor: mais didático, nível iniciante para todos os públicos da sala,
+teoria mais profunda, mais desenhos e fluxos HyperFrames melhor aproveitados, preenchendo
+as 4 horas sem sobras.
+- 29 pontos (antes 20), em quatro partes: Por que uma fila (04–07) · Como o RabbitMQ
+  entrega (08–10) · Lab A sem código (11–12) · Do desenho ao código (13–21) · Quando algo
+  dá errado (22–25) · fechamento (26–27) · casa (28) · glossário (29).
+- Teoria nova: acoplamento temporal, disponibilidade composta e latência somada (com
+  calculadora), load leveling, consistência eventual, anatomia da mensagem, serialização,
+  versionamento de contrato, comando/evento/consulta, conexão/canal, tipos de exchange
+  (direct/fanout/topic/headers, exchange padrão, mandatory), Ready/Unacked/ack, prefetch,
+  consumidores concorrentes, poison message, garantias de entrega, idempotência formal,
+  escrita dupla. Outbox só citado.
+- Seis fluxos HyperFrames (5 novos + principal) com paradas manuais, controlados por
+  postMessage (funciona em file://). Fonte em tooling/cap02-mensageria/fluxos-hyperframes/_kit;
+  build.py gera projetos verificáveis e as cópias em fluxo/. Todos com check aprovado.
+- Nove desenhos SVG inline (bancada, envelope, intenções, correio, estados da mensagem,
+  estados do pedido, bancada Docker, garantias). Simuladores: calculadora, classificador,
+  roteador (topic real), duplicidade com conflito.
+- Lab A novo sem código: fila treino.cafe no painel (Nack requeue, Automatic ack,
+  amq.topic + cafe.#, "not routed"). Leitura guiada do código Spring AMQP antes de gerar.
+- Cronograma com contingência (atrasou: conclusão no 20; prompts 8/9 para casa) e extra
+  (segunda instância de Pagamentos na 8082). Prompts 1–10 preservados literalmente.
