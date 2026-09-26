@@ -1,0 +1,11 @@
+# Serviço de Pedidos — contrato da aula
+- Java 21, Spring Boot 3.5.16; Maven Wrapper (./mvnw ou mvnw.cmd).
+- Regras em dominio/; casos de uso e ports em aplicacao/. Ambos sem Spring/JPA/web.
+- Adapters REST/JPA e config/ ficam fora do núcleo. Sem Lombok/MapStruct.
+- Domínio imutável com records e List.copyOf. Dinheiro BigDecimal; ID String UUID.
+- Leia a spec relevante antes de planejar. Mostre arquivos/testes e aguarde OK para implementar.
+- Não adicione dependências, remova dados ou faça commit sem autorização.
+- No checkpoint 4B, Data JPA e PostgreSQL Driver são as únicas adições previstas.
+- Mostre testes, git status (incluindo novos), diff e evidências antes de encerrar.
+- Unitários: ./mvnw test. Após 4B, integração real: ./mvnw -Dtest='*IT' test com Postgres pronto.
+- A pasta .specs/ é uma convenção; ler a spec é parte do ritual, não efeito mágico da pasta.

@@ -1,0 +1,14 @@
+[
+  {
+    "file": "pedidos-base.zip",
+    "files": 55,
+    "sha256": "78428559606a45573cbe1f451488bfd6b07d80601cd7bea5c7bb6528d65656d1",
+    "bytes": 36457
+  },
+  {
+    "file": "pedidos-pagamentos-conclusao.zip",
+    "files": 85,
+    "sha256": "818c1bf74fbd9bacbb102ab450884127f8001e833b50576bbf4dd3d344597d50",
+    "bytes": 64456
+  }
+]

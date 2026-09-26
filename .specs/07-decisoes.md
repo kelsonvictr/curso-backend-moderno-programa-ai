@@ -457,3 +457,22 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
   nem erros JS. Diagrama amplo tem rolagem interna indicada e foco por teclado.
 - Referências primárias ligadas à teoria: Oracle Java 21, textos de Robert Martin
   para SRP/OCP/LSP/ISP/DIP e documentação Claude Code para skills, consultadas hoje.
+
+## 2026-09-26 — Cap 02 prático: mensageria e pagamentos
+- Professor aprovou antecipar RabbitMQ/Pagamentos simulados para o Cap 02 e aprofundar
+  OO/SOLID a partir do Cap 03, com explicações úteis também à condução do professor.
+- Novo `capitulos/02-pedidos-mensageria/`; anterior OO/SOLID preservado no endereço
+  original. Sem apagar/renumerar o conteúdo futuro, cuja sequência requer revisão.
+- Marca-texto `mark.hl` do Cap 07 de sistemas-web-python: tinta escura/amarelo,
+  trechos curtos de decisão, restrição e aceite. Copiar textContent preserva texto puro.
+- Sem pranchetas no novo capítulo; desenhos prontos, oito estados de fluxo HyperFrames
+  com controle manual, pausa, reset e movimento reduzido; quiz e simulador de duplicidade.
+- Java 21/Boot 3.5.16, duas aplicações, dois bancos, RabbitMQ local. 202 após confirmação
+  de publicação e rota; resultado assíncrono; registros persistidos para deduplicação.
+- Contrato antigo de aprovação via HTTP removido na conclusão, preservado na base.
+- Insomnia importável, base e conclusão em ZIPs, guia de execução; 20 pontos sincronizados
+  no HTML/professor.txt/professor-resolucoes.txt. Nenhum link dos TXTs no capítulo.
+- Validação executável em tooling/validate-cap02-mensageria.py; evidências e limites
+  em tooling/cap02-mensageria/VALIDACAO.json. Não é cobrança real, não tem outbox nem
+  garantia global de exactly-once; operações da aula são sequenciais.
+- Contrato didático em .specs/13-cap2-mensageria-pagamentos.md. Alterações locais.

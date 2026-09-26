@@ -1,0 +1,54 @@
+{
+  "validatedAt": "2026-09-26",
+  "checks": [
+    "consumidor parado: 202, EM_PAGAMENTO e mensagem Ready",
+    "repetição pendente, conflito 409, ausente 404, formato 400 e itens bloqueados",
+    "aprovação e duas entregas geram uma decisão persistida",
+    "recusa, nova tentativa aprovada e recusa antiga repetida sem reabrir",
+    "reentrega real após reiniciar os dois processos preserva registro e estado",
+    "conteúdo divergente nas duas direções vai para erro sem alterar decisão",
+    "broker indisponível: 503, registro preservado e recuperação com mesma chave",
+    "atalho HTTP de aprovação antigo removido"
+  ],
+  "java": "21",
+  "springBoot": "3.5.16",
+  "infrastructure": "PostgreSQL 16 e RabbitMQ 4.1-management isolados; aplicações reais; HTTP, AMQP e SQL",
+  "limits": [
+    "Não é cobrança real",
+    "Sem outbox/republicação automática",
+    "Concorrência ampla entre escritores fora do recorte"
+  ],
+  "html": {
+    "points": 20,
+    "prompts": 10,
+    "viewportWidths": [
+      1440,
+      390
+    ],
+    "checks": [
+      "cópia exata sem tags",
+      "quizzes: todas as alternativas e reset",
+      "controle de oito estados em ambos os sentidos",
+      "pausa",
+      "movimento reduzido",
+      "sem overflow horizontal",
+      "caderno carregado",
+      "recursos e âncoras locais",
+      "ZIPs com hash e bytes das fontes",
+      "teclado",
+      "funcionamento sem recursos externos",
+      "salvamento do caderno após recarregar",
+      "tela cheia"
+    ]
+  },
+  "hyperframes": {
+    "version": "0.8.78",
+    "check": "lint/runtime/layout/contrast aprovados, sem findings",
+    "output": "composição local incorporada ao HTML; sem exportação de vídeo"
+  },
+  "unitTests": {
+    "baseZipExtraido": 12,
+    "pedidosConclusao": 15,
+    "pagamentosConclusao": 3
+  }
+}

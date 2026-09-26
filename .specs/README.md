@@ -28,7 +28,7 @@ padrão de qualidade.
 | [08-imagens-e-memes.md](08-imagens-e-memes.md) | Política de imagens, memes e diagramas (aprovação prévia do professor) |
 | [09-divulgacao-cards.md](09-divulgacao-cards.md) | **Guia de estilo dos cards de divulgação** (Instagram/WhatsApp): tokens, formatos, receita da capa aprovada |
 | [10-cap1-fluidez-preservando-atos.md](10-cap1-fluidez-preservando-atos.md) | Ajustes incrementais do Cap 1, checkpoints e cronograma de 4h |
-| [11-cap2-oo-solid.md](11-cap2-oo-solid.md) | Cap 2: OO/SOLID por decisões, revisão avaliativa, cancelamento e apoio do professor |
+| [11-cap2-oo-solid.md](11-cap2-oo-solid.md) | Plano anterior preservado: OO/SOLID por decisões, revisão avaliativa, cancelamento e apoio do professor |
 
 ## Regra de ouro
 
@@ -43,3 +43,5 @@ Alta referência de engenharia e design: os materiais irmãos `../novo-material-
 (design system em `shared/`, Motion via CDN, Remotion pré-renderizado, máquinas didáticas
 page-local com fallback offline, padrão olhinho) e **trocamos o registro** para um público
 sênior. O que muda e o que se mantém está em [`02-padroes-didaticos.md`](02-padroes-didaticos.md).
+
+- [13-cap2-mensageria-pagamentos.md](13-cap2-mensageria-pagamentos.md): Cap 02 vigente, RabbitMQ/Pagamentos, prompts marcados e apoio docente.

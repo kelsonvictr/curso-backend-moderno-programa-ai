@@ -1,0 +1,153 @@
+CAP 02 — CONSULTA E RESOLUÇÕES
+Código completo: apoio/pedidos-pagamentos-conclusao.zip.
+Roteiro operacional: apoio/GUIA-EXECUCAO.md.
+Os pontos abaixo seguem exatamente os marcadores do capítulo.
+
+[01] O PEDIDO CONTINUA. O PAGAMENTO GANHA SEU TEMPO.
+
+A base mantém o endpoint síncrono POST /pedidos/{id}/pagamento, que recebe aprovado/motivo.
+A conclusão remove esse endpoint HTTP e introduz POST /pedidos/{id}/pagamentos.
+O aluno não informa uma aprovação real: escolhe apenas o cenário do simulador.
+Não mover a pasta antiga de OO/SOLID: ela está preservada para reorganização posterior.
+
+[02] UMA TARDE, UMA HISTÓRIA VERIFICÁVEL
+
+Os 240 minutos incluem 15 minutos de intervalo. A conclusão permite retomar sem
+apagar o projeto do aluno. O caderno é opcional; não há pranchetas a preencher.
+A collection usa variáveis editáveis: o ID do pedido deve vir da resposta real.
+
+[03] ESPERAR NA LIGAÇÃO OU DEIXAR UMA SOLICITAÇÃO?
+
+O ganho aqui é desacoplar o momento de solicitar do momento de processar.
+HTTP ainda responde; não confundir uma resposta rápida com conclusão do negócio.
+Mensageria também acrescenta operação, estados intermediários e falhas próprias.
+Não vender fila como necessária em todo sistema ou como solução para toda lentidão.
+
+[04] QUEM FAZ O QUÊ NO CAMINHO DA MENSAGEM?
+
+Na volta, os papéis mudam: Pagamentos é produtor do resultado e Pedidos é consumidor.
+Direct usa correspondência exata da chave. Não precisamos introduzir fanout/topic agora.
+Fila deve existir e estar ligada antes do envio. Consumidor ausente é diferente de fila ausente.
+
+[05] SIGA A MENSAGEM. OBSERVE O ESTADO.
+
+O fluxo tem oito estados revisitáveis e uma composição HyperFrames local.
+Reproduzir é opcional; pausar interrompe o movimento. Movimento reduzido troca estados
+sem deslocamento automático. A legenda fora do desenho facilita leitura em celular.
+Consumer ack não é a resposta HTTP 202: são confirmações para destinatários diferentes.
+
+[06] DOIS SERVIÇOS, CADA UM COM SEUS DADOS
+
+As aplicações estão no host, por isso se conectam a localhost nas portas publicadas.
+Se alguém as colocar no Compose, o host passa a ser o nome do serviço, não localhost.
+O kit compartilha usuário local de demonstração entre bancos; não é modelo de isolamento de produção.
+A separação lógica e o contrato por mensagens são o foco desta aula.
+
+[07] DESCUBRA O QUE JÁ FUNCIONA
+
+Base: pedidos-base.zip. Há um README externo e RETOMADA.md dentro de pedidos.
+Unitários: ./mvnw test (Windows: mvnw.cmd test).
+A base não tem RabbitMQ; preservar a infraestrutura existente ao evoluir o próprio projeto.
+
+[08] UMA FILA PRECISA DE UM LUGAR PARA EXISTIR
+
+No kit independente: docker compose -f infra/compose.yml up -d --wait.
+O init.sql cria pagamentos só quando o volume Postgres nasce. Com volume antigo,
+crie o banco faltante explicitamente após diagnóstico; não destrua o volume.
+No projeto do aluno, adicionar RabbitMQ ao Compose já existente.
+A imagem management contém o painel; porta 15672 não fala o protocolo AMQP.
+
+[09] ANTES DO CÓDIGO, COMBINE A MENSAGEM
+
+HTTP body: {"solicitacaoId":"11111111-1111-4111-8111-111111111111","cenario":"APROVAR"}.
+Mensagem: {"versao":1,"solicitacaoId":"...","pedidoId":"...","valor":37.80,"cenario":"APROVAR"}.
+Resultado: {"versao":1,"solicitacaoId":"...","pedidoId":"...","valor":37.80,"aprovado":true,"motivo":"Aprovação simulada"}.
+A versão atual aceita somente 1. UUIDs do desenho são abreviados; os dados executados são completos.
+A recusa reabre o pedido. Um resultado atrasado repetido da tentativa anterior é ignorado pelo seu registro concluído.
+
+[10] PEDIDOS PUBLICA. AINDA NÃO APROVA.
+
+Na referência: RegistroService.registrar confirma a transação local antes de PublicadorConfirmado.enviar.
+O publicador usa mensagem persistente, mandatory, CorrelationData e espera limitada de 5s.
+Uma falha pode ser incerta: broker recebeu, mas a confirmação se perdeu. Reenviar pode duplicar.
+A mesma chave pendente é republicável; concluída retorna 200 com resultado conhecido.
+A janela banco/publicação é intencional e documentada. Outbox será evolução futura.
+
+[11] MONTE SUA BANCADA NO INSOMNIA
+
+Collection export format 4 com workspace, environment e requests. O aluno edita o ambiente.
+Para recusa: envie Criar pedido novamente e copie o novo id para pedido_recusa_id.
+As chaves ilustrativas são fixas para possibilitar repetição; nova rodada usa novos UUIDs.
+Repetição pendente pode produzir duas mensagens mas uma decisão persistida.
+Se abrir a collection ainda na base síncrona, /pagamentos não existe; isso é esperado até o Prompt 4.
+
+[12] DESLIGUE O CONSUMIDOR. A FILA CONTINUA ALI.
+
+Não há garantia de mostrar Unacked num processamento muito rápido. A evidência principal
+com consumidor parado é Ready. Ao ligá-lo, Ready pode ir direto a zero visualmente.
+Se fila estiver vazia: confira exchange, binding, usuário/vhost e se outro consumidor está ativo.
+Fila vazia sozinha nunca prova aprovação; consultar o pedido e os registros do pagamento.
+
+[13] PAGAMENTOS RECEBE UMA TAREFA
+
+Referência: DecisaoService usa INSERT ... ON CONFLICT DO NOTHING, depois lê e compara o conteúdo.
+O banco pagamentos é separado. Não há estado em um Set apenas na memória Java.
+SolicitacaoListener recebe bytes JSON, persiste decisão e publica resultado confirmado.
+A tipagem Java é local em cada serviço; não depende do nome da classe Java do outro serviço.
+Consumer AUTO do Spring confirma após retorno bem-sucedido do listener, não no início.
+
+[14] O RESULTADO PRECISA VOLTAR
+
+Na referência: RegistroService.concluir bloqueia a linha do pedido, confere o registro e
+atualiza pedido e solicitação na mesma transação local. O listener retorna depois do commit.
+Resultado duplicado com os mesmos dados retorna sem aplicar efeito novamente.
+A validação de cenário existe por ser um simulador determinístico; não representa
+a validação/autorização de um gateway financeiro real. Não expor isso como sistema de cobrança.
+
+[15] TRÊS CONFIRMAÇÕES QUE NÃO SIGNIFICAM A MESMA COISA
+
+O broker não participa da transação PostgreSQL. Confirmação de publicação e ack de
+consumo resolvem fronteiras distintas. Nenhuma delas é uma promessa de exactly-once.
+A referência configura AUTO, prefetch 1 e um consumidor por aplicação para observação.
+Erro do listener passa por 3 tentativas limitadas; depois a mensagem vai para uma fila de erro.
+
+[16] A MESMA MENSAGEM PODE CHEGAR DUAS VEZES
+
+COUNT(*) em pagamento_processado WHERE id = chave deve retornar 1.
+A resposta HTTP 200 para chave concluída evita republicar; portanto NÃO prova sozinha
+a deduplicação do consumidor após reinício. Para isso, republique o JSON no exchange.
+Repetir uma operação com ID novo não é duplicidade detectável pelo contrato.
+A deduplicação local não promete exactly-once em todo o sistema ou em um banco externo.
+
+[17] QUANDO O FLUXO PARA, ENCONTRE A FRONTEIRA
+
+Falha de publicação pode ocorrer após o registro local: pedido permanece EM_PAGAMENTO.
+Reenvie POST com a mesma chave após recuperar o broker. A duplicidade é tolerada.
+Se resultado falhou após persistir a decisão em Pagamentos, republicar a solicitação
+reutiliza a decisão e tenta publicar o resultado novamente. Inspecionar filas de erro.
+Não há scheduler de republicação, outbox, saga, gateway financeiro ou garantia global.
+A referência não cobre corrida entre edição HTTP de itens já iniciada e nova solicitação;
+a aula usa operações sequenciais. Concorrência ampla será uma evolução específica.
+
+[18] AGORA CONDUZA UMA RECUSA E UMA NOVA TENTATIVA
+
+Usar o mesmo pedido e dois IDs diferentes. Após a primeira recusa, conferir ABERTO.
+Após a segunda aprovação, conferir PAGO. Republicar o resultado completo da primeira.
+A deduplicação por solicitacaoId concluída retorna antes de tentar mudar o estado.
+Resultados com pedido/valor incompatíveis não passam na validação.
+A tentativa anterior continua registrada; não apagar seu histórico para permitir uma nova.
+
+[19] EXPLIQUE O SISTEMA SEM DECORAR ANOTAÇÕES
+
+1. RabbitMQ, na fila previamente declarada e corretamente roteada.
+2. HTTP aceita solicitação; broker confirma publicação; consumidor confirma entrega processada.
+3. A chave liga o reenvio ao registro existente e permite evitar repetir o efeito.
+4. O caso de conclusão acionado pelo consumidor de resultados, após validação.
+5. Não há commit único Postgres/Rabbit nem republicador automático/outbox.
+Não dizer que separar serviços por si só garante bom design ou confiabilidade.
+
+[20] TRAGA UMA PROVA E UMA DÚVIDA
+
+Fontes consultadas em 26/09/2026. O kit preserva Java 21/Boot 3.5.16 da aula anterior.
+Não prometer produção ou segurança financeira a partir deste simulador.
+Colete dúvidas sobre posição das regras e dependências como entrada para OO/SOLID.

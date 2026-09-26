@@ -45,7 +45,7 @@ java-avancado/
 └── capitulos/
     ├── 00-como-um-agente-pensa/              (pré: leitura antes do Sáb 1, ~1h30, só teoria + simuladores)
     ├── 01-sdd-na-pratica-spring-hexagonal/   (05/09)
-    ├── 02-oo-de-verdade-e-solid/             (19/09)
+    ├── 02-pedidos-mensageria/                (Cap 02 revisado em 26/09)
     ├── 03-padroes-hexagonal-e-testes/        (26/09)
     ├── 04-eda-e-rabbitmq/                    (10/10)
     ├── 05-kafka-e-quando-usar-qual/          (17/10)
@@ -141,19 +141,24 @@ uma prancheta por ato.
   saida.jpa} config/`.
 > ⚠️ Hexagonal saiu do Sáb 3 e entrou aqui. O Sáb 3 fica com padrões + Testcontainers + Flyway + o port de eventos.
 
-### Sábado 2 — 19/09 — `02-oo-de-verdade-e-solid` *(avaliativo)*
-OO de verdade + SOLID como checklist de revisão. (Funde os antigos Sáb 2 e 3.)
-- 📖 **Antes:** encapsulamento real, composição vs herança, coesão/acoplamento, domínio rico vs
-  anêmico; os 5 princípios, cada um **violação → refatoração** no domínio de Pedidos. Simulador
-  **"Onde mora a regra?"** (aluno coloca a invariante no controller/service/entidade e vê o custo:
-  duplicação, teste impossível, bug na segunda porta de entrada).
-- 🏫 **Em sala:** provocação (PR do agente: `Pedido` anêmico + `PedidoService` gordo) → 🧭 Dirigir:
-  mover invariantes pra dentro de `Pedido` via spec, revisar → SOLID como **checklist de revisão de
-  PR** (recap rápido, foco no vocabulário) → **🔬 Lab avaliativo Revisar PR:** código com 5
-  violações plantadas (uma por princípio), identificar nominalmente e dirigir a refatoração →
-  fechamento: primeira **skill** do Claude Code (`revisar-solid`, o checklist virando ferramenta).
-- 🏠 **Até 26/09:** refatoração aplicada no repo; skill `revisar-solid` criada e usada num PR do
-  próprio agente. Leitura do Cap 3 + apêndice "catálogo de padrões".
+### Capítulo 2 — `02-pedidos-mensageria` *(revisado em 26/09/2026)*
+Do pedido ao pagamento: introdução prática a RabbitMQ, guiada por prompts.
+- Antes: síncrono/assíncrono; produtor, broker, exchange, fila e consumidor;
+  comando/evento; recebido não significa aprovado. Conceitos graduais em sala também.
+- Em sala: retomar Pedidos/Postgres → adicionar RabbitMQ ao Docker → contrato JSON →
+  produtor de solicitações → serviço separado de Pagamentos simulados → consumidor
+  de resultados → Insomnia e painel → consumidor parado, duplicidade e diagnóstico.
+- Dez prompts com `mark.hl` no padrão Python Web Cap 07; desenhos prontos e composição
+  HyperFrames local com passos manuais, sem pranchetas obrigatórias. Apoio docente.
+- Base e conclusão executáveis; dois bancos, sem cobrança real. Limite banco/publicação
+  explícito; registros persistidos e recuperação manual com mesma chave, sem outbox.
+- Avaliação: prever e demonstrar aprovação/recusa/reentrega; explicar as três confirmações.
+- Contrato completo: `13-cap2-mensageria-pagamentos.md`.
+- OO/SOLID deslocado para aprofundamento a partir do Cap 03. O material anterior
+  permanece em `02-oo-de-verdade-e-solid/`, ainda sem renumeração definitiva.
+
+> **Reorganização:** a proposta de Cap 03 abaixo é histórica e será ajustada para
+> começar por OO/SOLID. O Cap 04 aprofunda mensageria após a introdução do Cap 02.
 
 ### Sábado 3 — 26/09 — `03-padroes-hexagonal-e-testes` *(avaliativo)*
 Padrões que pagam o próprio custo + testes de verdade (Testcontainers, Flyway) + o hexagonal ganhando o port de eventos.

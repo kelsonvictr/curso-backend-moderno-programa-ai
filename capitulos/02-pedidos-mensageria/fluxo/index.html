@@ -1,0 +1,78 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Uma solicitação, dois serviços</title><script src="gsap.min.js"></script><style>
+html,body{margin:0;width:100%;height:100%;background:#11111d;color:#f4f1e9;font-family:system-ui,sans-serif}#root{width:100%;height:100%;overflow:hidden}svg{width:100%;height:100%;display:block}text{font-family:system-ui,sans-serif;fill:#f4f1e9} .title{font-size:34px;font-weight:750}.label{font-size:26px;font-weight:700}.small{font-size:20px;fill:#c2bfd0}.badge{font-size:23px;font-weight:800;fill:#ffce95}.counter{font-size:24px;font-weight:700}.caption-title{font-size:30px;font-weight:750;fill:#ffce95}.caption{font-size:23px}.route{fill:none;stroke:#756044;stroke-width:4}.return{stroke:#638a72}.chip{fill:#ffbd79}.node{fill:#252538;stroke:#666176;stroke-width:2}.broker{fill:#30271f;stroke:#b4814b;stroke-width:2}.db{fill:#1c2935;stroke:#6d96b1;stroke-width:2}code{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0}
+</style></head><body><div id="root" data-composition-id="fluxo" data-start="0" data-width="1280" data-height="720" data-duration="32"><svg viewBox="0 0 1280 720" role="img" aria-labelledby="diagram-title diagram-desc"><title id="diagram-title">Uma solicitação, dois serviços</title><desc id="diagram-desc">Pedidos envia uma solicitação por RabbitMQ. Pagamentos recebe, salva uma decisão e envia o resultado. Pedidos atualiza o estado. O player externo descreve cada etapa.</desc>
+<text x="72" y="70" class="title">Uma solicitação. Dois serviços.</text><text x="72" y="108" class="small">Mensagem de ida → trabalho separado → resultado de volta</text>
+<rect class="node" x="60" y="150" width="285" height="125" rx="18"/><text x="82" y="189" class="label">API de Pedidos</text><text x="82" y="255" class="small">HTTP · porta 8080</text>
+<rect class="broker" x="458" y="150" width="350" height="285" rx="18"/><text x="482" y="190" class="label">RabbitMQ</text><text x="482" y="227" class="small">Exchange: roteia pela chave</text><rect x="484" y="268" width="298" height="145" rx="12" fill="#181821" stroke="#90704e"/><text x="510" y="305" class="label">Fila de solicitações</text>
+<rect class="node" x="940" y="150" width="285" height="125" rx="18"/><text x="965" y="189" class="label">Pagamentos</text><text x="965" y="255" class="small">Simulador · porta 8081</text>
+<path class="route" id="out" d="M345 260 L415 260 L415 335 L750 335"/><path class="route" id="consume" d="M782 335 L875 335 L875 295 L1200 295"/>
+<path class="route return" id="back" d="M1080 415 L1080 448 L380 448 L380 275"/>
+<rect x="450" y="465" width="370" height="48" rx="10" fill="#1c2c24" stroke="#638a72"/><text x="477" y="496" class="small">Exchange + fila de resultados ←</text>
+<rect class="db" x="60" y="320" width="285" height="95" rx="12"/><text x="82" y="356" class="label">Banco pedidos</text><text x="82" y="391" class="small">Pedido + solicitação S1</text>
+<rect class="db" x="940" y="320" width="285" height="95" rx="12"/><text x="962" y="356" class="label">Banco pagamentos</text><text x="962" y="391" class="small">Decisão única para S1</text>
+<g id="packet" opacity="0"><rect x="0" y="0" width="56" height="34" rx="7" class="chip"/><text x="12" y="24" style="fill:#26180a;font-size:21px;font-weight:800">S1</text></g>
+<g id="result" opacity="0"><rect x="0" y="0" width="60" height="34" rx="7" fill="#a1e5b3"/><text x="9" y="24" style="fill:#102719;font-size:20px;font-weight:800">OK</text></g>
+<g class="state" id="s0" opacity="1">
+ <text x="82" y="220" class="badge">ABERTO</text>
+ <text x="510" y="378" class="counter">Ready: 0</text><text x="650" y="405" class="counter">Unacked: 0</text>
+ <text x="970" y="220" class="badge">DESLIGADO</text>
+ <text x="72" y="590" class="caption-title">01 · Pedido criado</text><text x="72" y="639" class="caption">2 cafés × R$ 18,90 = R$ 37,80. Nenhuma solicitação enviada.</text>
+ </g><g class="state" id="s1" opacity="0">
+ <text x="82" y="220" class="badge">EM_PAGAMENTO</text>
+ <text x="510" y="378" class="counter">Ready: 0</text><text x="650" y="405" class="counter">Unacked: 0</text>
+ <text x="970" y="220" class="badge">DESLIGADO</text>
+ <text x="72" y="590" class="caption-title">02 · Solicitação S1 registrada</text><text x="72" y="639" class="caption">Itens protegidos enquanto o resultado não chega.</text>
+ </g><g class="state" id="s2" opacity="0">
+ <text x="82" y="220" class="badge">EM_PAGAMENTO</text>
+ <text x="510" y="378" class="counter">Ready: 1</text><text x="650" y="405" class="counter">Unacked: 0</text>
+ <text x="970" y="220" class="badge">DESLIGADO</text>
+ <text x="72" y="590" class="caption-title">03 · Publicação confirmada → HTTP 202</text><text x="72" y="639" class="caption">A mensagem chegou à fila. Isso ainda não aprova o pagamento.</text>
+ </g><g class="state" id="s3" opacity="0">
+ <text x="82" y="220" class="badge">EM_PAGAMENTO</text>
+ <text x="510" y="378" class="counter">Ready: 1</text><text x="650" y="405" class="counter">Unacked: 0</text>
+ <text x="970" y="220" class="badge">DESLIGADO</text>
+ <text x="72" y="590" class="caption-title">04 · A mensagem pode esperar</text><text x="72" y="639" class="caption">Pagamentos desligado. RabbitMQ continua guardando a solicitação.</text>
+ </g><g class="state" id="s4" opacity="0">
+ <text x="82" y="220" class="badge">EM_PAGAMENTO</text>
+ <text x="510" y="378" class="counter">Ready: 0</text><text x="650" y="405" class="counter">Unacked: 1</text>
+ <text x="970" y="220" class="badge">LIGADO</text>
+ <text x="72" y="590" class="caption-title">05 · Entrega recebida, ainda sem ack</text><text x="72" y="639" class="caption">Pagamentos processa S1 e guarda sua decisão no próprio banco.</text>
+ </g><g class="state" id="s5" opacity="0">
+ <text x="82" y="220" class="badge">EM_PAGAMENTO</text>
+ <text x="510" y="378" class="counter">Ready: 0</text><text x="650" y="405" class="counter">Unacked: 0</text>
+ <text x="970" y="220" class="badge">LIGADO</text>
+ <text x="72" y="590" class="caption-title">06 · Resultado publicado</text><text x="72" y="639" class="caption">A decisão volta em outra mensagem. Solicitação original confirmada.</text>
+ </g><g class="state" id="s6" opacity="0">
+ <text x="82" y="220" class="badge">PAGO</text>
+ <text x="510" y="378" class="counter">Ready: 0</text><text x="650" y="405" class="counter">Unacked: 0</text>
+ <text x="970" y="220" class="badge">LIGADO</text>
+ <text x="72" y="590" class="caption-title">07 · Resultado aplicado em Pedidos</text><text x="72" y="639" class="caption">Estado e conclusão salvos juntos. Agora a entrega é confirmada.</text>
+ </g><g class="state" id="s7" opacity="0">
+ <text x="82" y="220" class="badge">PAGO</text>
+ <text x="510" y="378" class="counter">Ready: 0</text><text x="650" y="405" class="counter">Unacked: 0</text>
+ <text x="970" y="220" class="badge">LIGADO</text>
+ <text x="72" y="590" class="caption-title">08 · S1 chega novamente</text><text x="72" y="639" class="caption">O registro persistido reconhece a chave e preserva o mesmo efeito.</text>
+ </g></svg></div><script>
+window.__timelines=window.__timelines||{};
+const tl=gsap.timeline({paused:true});
+for(let i=1;i<8;i++){tl.set('#s'+(i-1),{opacity:0},i*4);tl.set('#s'+i,{opacity:1},i*4);}
+// O mesmo pacote sai da API, espera na fila e depois chega ao consumidor.
+tl.fromTo('#packet',{x:355,y:279,opacity:0},{x:355,y:279,opacity:1,duration:.2},4.2);
+tl.to('#packet',{x:420,y:279,duration:.5,ease:'none'},4.4);
+tl.to('#packet',{x:420,y:318,duration:.4,ease:'none'},4.9);
+tl.to('#packet',{x:704,y:318,duration:1.7,ease:'none'},5.3);
+tl.to('#packet',{x:820,y:318,duration:.7,ease:'none'},13);
+tl.to('#packet',{x:878,y:280,duration:.5,ease:'none'},13.7);
+tl.to('#packet',{x:1140,y:280,duration:1.2,ease:'none'},14.2);
+tl.to('#packet',{opacity:0,duration:.25},18.4);
+tl.fromTo('#result',{x:1050,y:425,opacity:0},{x:1050,y:425,opacity:1,duration:.2},18.6);
+tl.to('#result',{x:365,y:425,duration:3.7,ease:'none'},19);
+tl.to('#result',{x:365,y:275,duration:.7,ease:'none'},22.7);
+tl.to('#result',{opacity:0,duration:.2},23.7);
+tl.fromTo('#packet',{x:704,y:318,opacity:0},{x:704,y:318,opacity:1,duration:.2,immediateRender:false},25);
+tl.to('#packet',{x:820,y:318,duration:.5,ease:'none'},25.3);
+tl.to('#packet',{x:878,y:280,duration:.5,ease:'none'},25.8);
+tl.to('#packet',{x:1140,y:280,duration:1.1,ease:'none'},26.3);
+tl.to('#packet',{opacity:0,duration:.3},28);
+window.__timelines['fluxo']=tl;
+</script><script src="player-bridge.js"></script></body></html>

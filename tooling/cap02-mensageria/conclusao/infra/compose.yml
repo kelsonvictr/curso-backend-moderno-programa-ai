@@ -1,0 +1,33 @@
+name: cap02-mensageria
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: pedidos
+      POSTGRES_USER: pedidos
+      POSTGRES_PASSWORD: pedidos
+    ports: ["127.0.0.1:${POSTGRES_PORT:-5432}:5432"]
+    volumes:
+      - dados-pedidos:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/01-pagamentos.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pedidos -d pedidos"]
+      interval: 5s
+      retries: 20
+  rabbitmq:
+    image: rabbitmq:4.1-management
+    hostname: rabbit-cap02
+    environment:
+      RABBITMQ_DEFAULT_USER: aula
+      RABBITMQ_DEFAULT_PASS: aula-local
+    ports:
+      - "127.0.0.1:${RABBIT_PORT:-5672}:5672"
+      - "127.0.0.1:${RABBIT_MANAGEMENT_PORT:-15672}:15672"
+    volumes: ["dados-rabbit:/var/lib/rabbitmq"]
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      retries: 30
+volumes:
+  dados-pedidos:
+  dados-rabbit:

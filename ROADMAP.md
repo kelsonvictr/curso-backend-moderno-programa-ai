@@ -38,7 +38,7 @@ O efeito colateral é que o aluno aprende os fundamentos com mais profundidade, 
 
 ## O artefato contínuo: o serviço de Pedidos & Pagamentos
 
-Um único domínio atravessa o curso: nasce no Sáb 1 como domínio rico em Java moderno, é refatorado contra SOLID e hexagonal (Sáb 2–3), ganha eventos em RabbitMQ e Kafka (Sáb 4–5) e vai pra AWS serverless (Sáb 6–7), fechando como capstone (Sáb 8). Cada sábado diz o que o repositório do aluno ganha em sala e em casa.
+Um único domínio atravessa o curso: nasce no Sáb 1 como domínio rico em Java moderno, ganha pagamentos simulados por RabbitMQ no Cap 02, aprofunda OO/SOLID a partir do Cap 03 e retoma eventos e brokers nos Caps 4–5 e vai pra AWS serverless (Sáb 6–7), fechando como capstone (Sáb 8). Cada sábado diz o que o repositório do aluno ganha em sala e em casa.
 
 ---
 
@@ -61,10 +61,12 @@ Um único domínio atravessa o curso: nasce no Sáb 1 como domínio rico em Java
 - Java moderno de sênior: imutabilidade, `records`, `sealed`, pattern matching, `Optional` sem abuso, enums ricos, streams com parcimônia.
 - **Lab:** spec de `Pedido`, gerar, primeira **revisão crítica** linha a linha.
 
-### Sábado 2 (19/09) — OO de verdade + SOLID na prática *(avaliativo)*
-- Domínio rico vs *anemic model*, composição vs herança, coesão e acoplamento.
-- Os cinco princípios como **checklist de revisão de PR** do agente, cada um com violação → refatoração.
-- **Lab avaliativo:** PR com violações plantadas; identificar nominalmente e dirigir a refatoração. Primeira skill.
+### Capítulo 2 — Do pedido ao pagamento *(revisão 26/09)*
+- RabbitMQ no Docker, mensageria gradual e serviço separado de pagamentos simulados.
+- Prompts marcados, fluxo HyperFrames, collection Insomnia e provas de aprovação,
+  recusa, consumidor parado e duplicidade persistida após reinício.
+- OO/SOLID passa para aprofundamento a partir do Cap 03; material anterior preservado.
+- A sequência abaixo é o plano anterior, pendente de ajuste para acomodar OO/SOLID.
 
 ### Sábado 3 (26/09) — Padrões que pagam o custo + arquitetura hexagonal + testes *(avaliativo)*
 - Strategy, Factory, Adapter, Observer no domínio de Pedidos; **quando o padrão paga o custo** vs over-engineering (demais padrões em apêndice).

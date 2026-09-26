@@ -1,0 +1,104 @@
+CAP 02 — DO PEDIDO AO PAGAMENTO
+Use o capítulo e esta cola lado a lado. Não presuma o progresso da turma.
+Resoluções e dúvidas: professor-resolucoes.txt. Guia executável em apoio/.
+Amarelo nos prompts = trecho para ler em voz alta e conferir.
+
+[01] O PEDIDO CONTINUA. O PAGAMENTO GANHA SEU TEMPO.
+  Comece pelo café: 2 x 18,90 = 37,80.
+  Pergunte: quem concluiu o Cap 01? Use a última prova, não presuma.
+  Diga: solicitação recebida ainda não é pagamento aprovado.
+
+[02] UMA TARDE, UMA HISTÓRIA VERIFICÁVEL
+  Mostre o ritmo e os pontos de retomada.
+  Leia amarelos antes de copiar. O restante dá contexto ao agente.
+  Avise que copiar o prompt não substitui conferir a evidência.
+
+[03] ESPERAR NA LIGAÇÃO OU DEIXAR UMA SOLICITAÇÃO?
+  Compare uma ligação com uma comanda.
+  Pergunte: 202 é pago? Não; é aceito para processamento.
+  Diga que assíncrono não significa automaticamente mais rápido.
+
+[04] QUEM FAZ O QUÊ NO CAMINHO DA MENSAGEM?
+  Apresente produtor, mensagem, broker, exchange, fila e consumidor.
+  Leia exchange + chave + fila no quadro.
+  Pergunte quem aprova: Pagamentos, nunca o RabbitMQ.
+
+[05] SIGA A MENSAGEM. OBSERVE O ESTADO.
+  Avance manualmente e peça uma previsão antes de cada passo.
+  Pause na fila: ainda não há consumidor e o pedido não está pago.
+  Volte um passo; o desenho deve reconstruir o estado inteiro.
+
+[06] DOIS SERVIÇOS, CADA UM COM SEUS DADOS
+  Mostre 8080/8081 como processos e 5672/15672 como funções distintas.
+  Diga: mesmos recursos Docker não significam banco compartilhado.
+  Lembre: no container, localhost é o próprio container.
+
+[07] DESCUBRA O QUE JÁ FUNCIONA
+  Peça o diagnóstico. Não aprove uma reconstrução inteira.
+  Confira 201, ID real, consulta e total 37,80.
+  Se faltar operação, use a base em outra pasta.
+
+[08] UMA FILA PRECISA DE UM LUGAR PARA EXISTIR
+  Leia os amarelos: preservar volume e separar as portas.
+  Confira painel e saúde do broker. Fila ainda pode não existir.
+  Porta ocupada pede ajuste, nunca apagar banco.
+
+[09] ANTES DO CÓDIGO, COMBINE A MENSAGEM
+  Peça aos alunos para explicar os dois IDs.
+  Confira o valor vindo do pedido e o bloqueio dos itens.
+  Leia os estados; só depois aprove a spec.
+
+[10] PEDIDOS PUBLICA. AINDA NÃO APROVA.
+  Construa apenas o produtor. Mantenha Pagamentos parado.
+  Confira 202 + EM_PAGAMENTO + Ready.
+  Pergunte: quem confirmou? O broker; o pagamento ainda não terminou.
+
+[11] MONTE SUA BANCADA NO INSOMNIA
+  Importe o JSON. Crie primeiro, copie o id, depois consulte.
+  Não confunda copiar ID do pedido com criar ID da solicitação.
+  Na recusa use outro pedido; não reutilize um pedido já pago.
+
+[12] DESLIGUE O CONSUMIDOR. A FILA CONTINUA ALI.
+  Pare só Pagamentos, antes de publicar.
+  Confira Consumers=0, Ready aumentando e EM_PAGAMENTO.
+  Não use Purge, Delete ou Get messages para apenas observar.
+
+[13] PAGAMENTOS RECEBE UMA TAREFA
+  Abra uma segunda aplicação/terminal, sem fechar Pedidos.
+  Leia: salvar decisão antes de publicar resultado.
+  Repita que Pagamentos não acessa a tabela de pedidos.
+
+[14] O RESULTADO PRECISA VOLTAR
+  Confira PAGO pela consulta real, não só pelo log.
+  Use outro pedido para recusa e espere voltar a ABERTO.
+  Mostre o resultado ligado à solicitação pelo mesmo ID.
+
+[15] TRÊS CONFIRMAÇÕES QUE NÃO SIGNIFICAM A MESMA COISA
+  Leia cada seta: quem confirma para quem?
+  Explique AUTO do Spring: depois do listener, não antes do trabalho.
+  Pergunte sobre cair depois do commit e antes do ack.
+
+[16] A MESMA MENSAGEM PODE CHEGAR DUAS VEZES
+  Clique nas duas estratégias e compare os efeitos.
+  Publique duas vezes antes de ligar o consumidor.
+  Depois do reinício, republique mensagem para testar o consumidor.
+
+[17] QUANDO O FLUXO PARA, ENCONTRE A FRONTEIRA
+  Use a tabela como roteiro de diagnóstico.
+  Diga explicitamente: banco + Rabbit não são uma transação única.
+  Mesma chave recupera publicação incerta; nunca marcar pago na mão.
+
+[18] AGORA CONDUZA UMA RECUSA E UMA NOVA TENTATIVA
+  Peça o prompt autoral antes da ajuda.
+  Resposta: A recusa, B aprova, A repetida não reabre.
+  Aceite uma revisão sem defeitos, se bem justificada.
+
+[19] EXPLIQUE O SISTEMA SEM DECORAR ANOTAÇÕES
+  Faça as cinco perguntas sem abrir código.
+  Peça uma evidência por resposta, não nome de anotação.
+  Conecte as decisões à próxima aula de OO/SOLID.
+
+[20] TRAGA UMA PROVA E UMA DÚVIDA
+  Peça spec, testes e narrativa da falha investigada.
+  Reforce: nenhum pagamento real foi integrado.
+  Guarde uma dúvida para justificar o desenho na próxima aula.

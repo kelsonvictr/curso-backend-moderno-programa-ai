@@ -208,3 +208,13 @@ passo a passo. Cada estado deve responder: **antes, ação, depois, como provar 
   Não colocar links dos TXTs no capítulo. Caderno usa armazenamento próprio cap02.
 - Fontes de apoio em tooling/cap02-*. Empacotar com build-cap02-checkpoints.py;
   validar ZIPs extraídos com validate-cap02.py --integration (Postgres isolado).
+
+## Cap 02 vigente — mensageria e pagamentos (2026-09-26)
+- Substitui OO/SOLID como tema imediato: `capitulos/02-pedidos-mensageria/`.
+- OO/SOLID anterior preservado; aprofundamento a partir do Cap 03, sequência a revisar.
+- Leia `.specs/13-cap2-mensageria-pagamentos.md`. Prompts com marca-texto amarelo do
+  Python Web Cap 07, cópia de texto puro; desenhos prontos no lugar de pranchetas.
+- Fontes e referência em `tooling/cap02-mensageria/`; validar com
+  `python3 tooling/validate-cap02-mensageria.py --integration`.
+- Manter 20 pontos e os dois TXTs sincronizados. Não inserir links dos TXTs na página.
+- Pagamentos são simulados. Explicitar limites banco/publicação e deduplicação.
