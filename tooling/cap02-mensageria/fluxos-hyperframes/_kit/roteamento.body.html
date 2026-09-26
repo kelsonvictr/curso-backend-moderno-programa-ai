@@ -61,7 +61,7 @@ K.text(110,478,'Cada comando tem um destino único e conhecido: direct basta.','
 K.fadeIn(quadro,20.4,.5);
 
 K.captions([
- [0,'A exchange roteia; a fila guarda','O produtor publica na exchange com uma chave. Os bindings dizem para qual fila copiar.'],
+ [0,'A exchange roteia; a fila guarda','A exchange compara a chave com cada binding e copia para toda fila que casar.'],
  [4,'01 · Direct: a chave precisa ser igual','"pagamento.solicitar" casa exatamente com o binding da Fila A. Só ela recebe.'],
  [8,'02 · Sem rota: a mensagem não tem para onde ir','Um erro de digitação e nenhum binding casa. Por padrão, o RabbitMQ descarta.','Com mandatory = true, ela volta ao produtor. É assim que detectamos.'],
  [12,'03 · Fanout: uma cópia para cada fila ligada','A chave é ignorada. Útil para avisar vários interessados sobre o mesmo fato.'],
