@@ -3,6 +3,23 @@ Código completo: apoio/pedidos-pagamentos-conclusao.zip.
 Roteiro operacional: apoio/GUIA-EXECUCAO.md.
 Os pontos abaixo seguem exatamente os marcadores do capítulo.
 
+RABBITMQ EM 12 FRASES (para o professor revisar antes da aula)
+ 1. Broker = RabbitMQ: recebe, guarda e entrega mensagens. Não decide negócio.
+ 2. Produtor publica numa EXCHANGE, nunca direto na fila, sempre com uma routing key.
+ 3. Binding = regra "desta exchange, chave X vai para a fila Y". Fica no broker.
+ 4. A exchange compara a chave com os bindings e copia para cada fila que casar.
+ 5. direct = chave igual; fanout = todas as filas; topic = * (1 palavra) e # (0+).
+ 6. Exchange padrão "" liga toda fila pelo próprio nome. Publicar "na fila" pelo painel usa ela.
+ 7. Fila guarda. Ready = esperando; Unacked = entregue, sem confirmação.
+ 8. Ack = "terminei, apague". Nack/reject = "falhei"; com requeue volta, sem requeue sai.
+ 9. Saiu sem requeue e a fila tem DLX configurada → vai para a DLQ (.erros no kit).
+10. Consumidor caiu antes do ack → a mensagem volta (redelivered). Daí a idempotência.
+11. Publisher confirm = broker → produtor "assumi". Ack = consumidor → broker "processei".
+12. Porta 5672 = aplicações (AMQP). Porta 15672 = painel no navegador. Login aula/aula-local.
+Perguntas prováveis: "a exchange guarda?" não. "binding decide?" é a regra; quem aplica
+é a exchange. "Automatic ack do painel = auto do Spring?" não: o do painel confirma na
+entrega; o auto do Spring confirma depois que o método termina sem exceção.
+
 [01] O PEDIDO CONTINUA. O PAGAMENTO GANHA SEU TEMPO.
 
 A base mantém o endpoint síncrono POST /pedidos/{id}/pagamento, que recebe aprovado/motivo.
