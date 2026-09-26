@@ -88,7 +88,8 @@
   .start-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   @media(max-width:720px){.start-grid{grid-template-columns:1fr}}
   .start-card{display:flex;gap:16px;align-items:center;text-decoration:none;color:inherit;cursor:pointer;height:100%}
-  .start-card.cap1-start{grid-column:1/-1;background:linear-gradient(135deg,rgba(248,152,32,0.12),rgba(217,119,87,0.08));border-color:rgba(248,152,32,0.38)}
+  .start-card.cap1-start{background:linear-gradient(135deg,rgba(248,152,32,0.12),rgba(217,119,87,0.08));border-color:rgba(248,152,32,0.38)}
+  .start-card.cap2-start{background:linear-gradient(135deg,rgba(255,180,102,0.16),rgba(185,179,255,0.08));border-color:rgba(255,180,102,0.50);box-shadow:0 0 0 1px rgba(255,180,102,0.18)}
   .start-card .big{font-size:2.6rem;line-height:1}
   .start-card .go{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:50px;font-weight:800;font-size:0.8rem;color:var(--bg);flex-shrink:0}
 </style>
@@ -192,11 +193,20 @@
       <a href="capitulos/01-sdd-na-pratica-spring-hexagonal/" class="card start-card cap1-start">
         <div class="big" data-motion="float">☕</div>
         <div style="flex:1;min-width:0">
-          <span style="display:inline-block;background:var(--spring);color:var(--bg);font-size:0.6rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:50px;margin-bottom:6px">3º · material da aula disponível</span>
+          <span style="display:inline-block;background:var(--spring);color:var(--bg);font-size:0.6rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:50px;margin-bottom:6px">3º · aula do Sábado 1</span>
           <h3 style="margin-bottom:4px;font-size:1.1rem">Cap 1 — SDD na prática com Spring hexagonal</h3>
           <p style="color:var(--text-dim);font-size:0.86rem">Instalações, IntelliJ, prompts por ato, checkpoints de retomada, <code>AGENTS.md</code>, <code>CLAUDE.md</code>, oficina de <code>.specs/</code>, arquitetura hexagonal e Postgres no Docker.</p>
         </div>
         <span class="go" style="background:linear-gradient(135deg,var(--java),var(--claude))">Abrir aula →</span>
+      </a>
+      <a href="capitulos/02-pedidos-mensageria/" class="card start-card cap2-start">
+        <div class="big" data-motion="float">🧩</div>
+        <div style="flex:1;min-width:0">
+          <span style="display:inline-block;background:#ffb466;color:var(--bg);font-size:0.6rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:50px;margin-bottom:6px">4º · aula atual</span>
+          <h3 style="margin-bottom:4px;font-size:1.1rem">Cap 2 — Do pedido ao pagamento com RabbitMQ</h3>
+          <p style="color:var(--text-dim);font-size:0.86rem">Por que filas existem, exchanges, ack e idempotência, com seis fluxos animados e simuladores. Depois, dois serviços Java conversando por mensagens.</p>
+        </div>
+        <span class="go" style="background:linear-gradient(135deg,#ffb466,var(--claude))">Abrir aula →</span>
       </a>
     </div>
   </section>
@@ -452,6 +462,7 @@
       <p class="text-dim" style="max-width:560px;margin:0 auto 20px">Prepare o ambiente, leia o capítulo 1, e chegue no dia 05/09 já no comando do agente.</p>
       <a href="setup/" style="display:inline-block;padding:14px 28px;background:linear-gradient(135deg,var(--accent4),var(--spring));color:var(--bg);text-decoration:none;font-weight:900;border-radius:50px;letter-spacing:1px;font-size:0.95rem;margin:4px">🧰 Sábado 0 — setup</a>
       <a href="capitulos/01-sdd-na-pratica-spring-hexagonal/" style="display:inline-block;padding:14px 28px;background:linear-gradient(135deg,var(--java),var(--claude));color:var(--bg);text-decoration:none;font-weight:900;border-radius:50px;letter-spacing:1px;font-size:0.95rem;margin:4px">☕ Sábado 1 — começar →</a>
+      <a href="capitulos/02-pedidos-mensageria/" style="display:inline-block;padding:14px 28px;background:linear-gradient(135deg,#ffb466,var(--claude));color:var(--bg);text-decoration:none;font-weight:900;border-radius:50px;letter-spacing:1px;font-size:0.95rem;margin:4px">🧩 Sábado 2 — mensageria →</a>
     </div>
   </section>
 
