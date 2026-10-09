@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: analytics
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:9092}
+    consumer:
+      # Nome do grupo: o Kafka guarda "até onde este grupo já leu" (offset) por partição.
+      group-id: ${ANALYTICS_GRUPO:analytics}
+      # Grupo que nunca leu nada começa do início do tópico.
+      auto-offset-reset: earliest
+
+server:
+  port: ${ANALYTICS_PORT:8082}

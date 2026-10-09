@@ -221,3 +221,12 @@ passo a passo. Cada estado deve responder: **antes, ação, depois, como provar 
   uso, desenho ou fluxo para cada mecanismo. Fluxos HyperFrames: editar em
   tooling/cap02-mensageria/fluxos-hyperframes/_kit e rodar build.py; nunca editar fluxo/*.html.
 - Pagamentos são simulados. Explicitar limites banco/publicação e deduplicação.
+
+## Cap 03 — Kafka (2026-10-09)
+- `capitulos/03-pedidos-kafka/`; contrato em `.specs/14-cap3-kafka.md`. OO/SOLID passa a Cap 04 (17/10).
+- Pedido explícito: "o mais simples possível, até para o professor". Sem HyperFrames; simuladores
+  page-local em `cap3.js`. Analytics sem banco, de propósito (reinício zera, replay reconstrói).
+- Referência em `tooling/cap03-kafka/conclusao`; empacotar com `tooling/build-cap03-kafka.py`;
+  validar com `python3 tooling/validate-cap03-kafka.py --integration`.
+- Manter 23 pontos do HTML, professor.txt e professor-resolucoes.txt sincronizados. Sem links dos TXTs.
+- Dentro do container do Kafka sempre `kafka:19092`; no host, `localhost:9092`. Tópicos com hífen.

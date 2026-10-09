@@ -1,0 +1,23 @@
+{
+  "validatedAt": "2026-10-09",
+  "checks": [
+    "Postgres, RabbitMQ, Kafka (KRaft) e painel do Kafka sobem com --wait",
+    "Pedidos declara o tópico pedidos-pagos com 3 partições",
+    "aprovado → PedidoPago no Kafka → analytics soma 1 pedido, R$ 37.80 (partição 1)",
+    "recusa não publica PedidoPago",
+    "resultado repetido no RabbitMQ republica; analytics lê 2 mensagens e conta 1 pedido, mesma partição",
+    "reiniciar analytics zera a memória; o grupo lembra o offset e não relê",
+    "replay: reset do grupo para o início reconstrói o painel",
+    "outro grupo (auditoria) lê o tópico inteiro sem afetar o grupo analytics",
+    "Kafka parado: pedido fica PAGO no Postgres, PedidoPago falha e o resultado vai para .erros",
+    "recuperação manual: republicar o resultado com a mesma chave entrega o PedidoPago perdido"
+  ],
+  "java": "21",
+  "springBoot": "3.5.16",
+  "infrastructure": "PostgreSQL 16, RabbitMQ 4.1-management, Kafka 3.9.1 (KRaft, 1 broker) e kafka-ui isolados; três aplicações reais",
+  "limits": [
+    "Escrita dupla Postgres → Kafka sem outbox: recuperação manual pela fila de erros",
+    "Painel em memória; tópico é a fonte da verdade",
+    "Um broker, fator de replicação 1: só para aula"
+  ]
+}

@@ -181,6 +181,10 @@ Padrões que pagam o próprio custo + testes de verdade (Testcontainers, Flyway)
 
 ---
 
+> **Reorganização 09/10/2026:** Sáb 4 (10/10) = `03-pedidos-kafka` (Kafka + quadro RabbitMQ × Kafka,
+> contrato em `14-cap3-kafka.md`). Sáb 5 (17/10) = OO/SOLID (Cap 04, base em `02-oo-de-verdade-e-solid`).
+> Os planos abaixo dos Sáb 4–5 são históricos.
+
 ## BLOCO 2 — Arquitetura Orientada a Eventos / Brokers (Sáb 4–5, 8h)
 > **Objetivo:** entender EDA como conceito **uma vez**, e escolher entre RabbitMQ e Kafka com
 > argumento técnico.

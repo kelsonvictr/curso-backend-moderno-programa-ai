@@ -89,6 +89,7 @@
   @media(max-width:720px){.start-grid{grid-template-columns:1fr}}
   .start-card{display:flex;gap:16px;align-items:center;text-decoration:none;color:inherit;cursor:pointer;height:100%}
   .start-card.cap1-start{background:linear-gradient(135deg,rgba(248,152,32,0.12),rgba(217,119,87,0.08));border-color:rgba(248,152,32,0.38)}
+  .start-card.cap3-start{background:linear-gradient(135deg,rgba(111,214,192,0.16),rgba(185,179,255,0.08));border-color:rgba(111,214,192,0.55);box-shadow:0 0 0 1px rgba(111,214,192,0.2)}
   .start-card.cap2-start{background:linear-gradient(135deg,rgba(255,180,102,0.16),rgba(185,179,255,0.08));border-color:rgba(255,180,102,0.50);box-shadow:0 0 0 1px rgba(255,180,102,0.18)}
   .start-card .big{font-size:2.6rem;line-height:1}
   .start-card .go{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:50px;font-weight:800;font-size:0.8rem;color:var(--bg);flex-shrink:0}
@@ -202,11 +203,20 @@
       <a href="capitulos/02-pedidos-mensageria/" class="card start-card cap2-start">
         <div class="big" data-motion="float">🧩</div>
         <div style="flex:1;min-width:0">
-          <span style="display:inline-block;background:#ffb466;color:var(--bg);font-size:0.6rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:50px;margin-bottom:6px">4º · aula atual</span>
+          <span style="display:inline-block;background:#ffb466;color:var(--bg);font-size:0.6rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:50px;margin-bottom:6px">4º · aula anterior</span>
           <h3 style="margin-bottom:4px;font-size:1.1rem">Cap 2 — Do pedido ao pagamento com RabbitMQ</h3>
           <p style="color:var(--text-dim);font-size:0.86rem">Por que filas existem, exchanges, ack e idempotência, com seis fluxos animados e simuladores. Depois, dois serviços Java conversando por mensagens.</p>
         </div>
         <span class="go" style="background:linear-gradient(135deg,#ffb466,var(--claude))">Abrir aula →</span>
+      </a>
+      <a href="capitulos/03-pedidos-kafka/" class="card start-card cap3-start">
+        <div class="big" data-motion="float">📒</div>
+        <div style="flex:1;min-width:0">
+          <span style="display:inline-block;background:#6fd6c0;color:var(--bg);font-size:0.6rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:50px;margin-bottom:6px">5º · aula atual · 10/10</span>
+          <h3 style="margin-bottom:4px;font-size:1.1rem">Cap 3 — O pagamento vira história: Kafka</h3>
+          <p style="color:var(--text-dim);font-size:0.86rem">Fila × caderno, offset, grupos, partições e chave, com três simuladores. Kafka no Docker, Pedidos publicando PedidoPago e um serviço Analytics com replay.</p>
+        </div>
+        <span class="go" style="background:linear-gradient(135deg,#6fd6c0,var(--claude))">Abrir aula →</span>
       </a>
     </div>
   </section>
@@ -365,7 +375,7 @@
       <span class="ai-ribbon">🤖 TDD c/ agente</span>
       <span class="num">SÁB · 03 <span class="date">📅 <b>26/09</b></span></span><span class="ic">🧪</span>
       <span class="title">OO e SOLID: entendendo nossas decisões</span>
-      <span class="desc">A partir do Cap 03: aprofundar encapsulamento, responsabilidades e contratos usando os serviços que construímos. Sequência de padrões e testes em reorganização.</span>
+      <span class="desc">Movido para 17/10 (Cap 04), depois do Kafka: encapsulamento, responsabilidades e contratos usando os serviços que construímos.</span>
       <span class="pills"><span class="pill aval">avaliativo</span><span class="pill">padrões</span><span class="pill">Testcontainers</span></span>
     </a>
   </div>
@@ -376,19 +386,19 @@
     <div><h3>Arquitetura Orientada a Eventos / Brokers</h3><div class="obj">Entender EDA como conceito uma vez, e escolher entre RabbitMQ e Kafka com argumento técnico.</div></div>
   </div>
   <div class="hub-grid">
-    <a class="hub-card bloco2 em-breve" href="capitulos/04-eda-e-rabbitmq/">
-      <span class="ai-ribbon">🤖 spec→arquitetura</span>
-      <span class="num">SÁB · 04 <span class="date">📅 <b>10/10</b></span></span><span class="ic"><img src="assets/svg/rabbitmq.svg" alt="RabbitMQ" width="36" height="36"></span>
-      <span class="title">EDA: os conceitos + RabbitMQ</span>
-      <span class="desc">Síncrono vs assíncrono, pub/sub, filas, DLQ, idempotência, garantias de entrega. Exchanges, bindings, routing keys. Spring AMQP com DLQ.</span>
-      <span class="pills"><span class="pill aval">spec avaliada</span><span class="pill">idempotência</span><span class="pill">DLQ</span></span>
-    </a>
-    <a class="hub-card bloco2 em-breve" href="capitulos/05-kafka-e-quando-usar-qual/">
+    <a class="hub-card bloco2" href="capitulos/03-pedidos-kafka/">
       <span class="ai-ribbon">🤖 defender/refutar</span>
-      <span class="num">SÁB · 05 <span class="date">📅 <b>17/10</b></span></span><span class="ic"><img src="assets/svg/kafka.svg" alt="Kafka" width="32" height="32"></span>
-      <span class="title">Kafka + "quando usar qual"</span>
-      <span class="desc">Tópicos, partições, offsets, consumer groups, replay. O quadro de decisão RabbitMQ × Kafka — o diferencial no mercado.</span>
-      <span class="pills"><span class="pill aval">avaliativo</span><span class="pill">partições</span></span>
+      <span class="num">SÁB · 04 <span class="date">📅 <b>10/10</b></span></span><span class="ic"><img src="assets/svg/kafka.svg" alt="Kafka" width="32" height="32"></span>
+      <span class="title">O pagamento vira história · Kafka</span>
+      <span class="desc">Log, offset, grupos, partições e chave. Pedidos publica PedidoPago; Analytics lê, reinicia e faz replay. Quadro RabbitMQ × Kafka.</span>
+      <span class="pills"><span class="pill aval">avaliativo</span><span class="pill">Kafka · Docker</span><span class="pill">replay</span></span>
+    </a>
+    <a class="hub-card bloco2 em-breve" href="capitulos/02-oo-de-verdade-e-solid/">
+      <span class="ai-ribbon">🤖 revisar PR</span>
+      <span class="num">SÁB · 05 <span class="date">📅 <b>17/10</b></span></span><span class="ic">🧱</span>
+      <span class="title">OO e SOLID: julgando nossas decisões</span>
+      <span class="desc">Cap 04. Encapsulamento, responsabilidades e contratos, revisando o que o agente escreveu nos três serviços.</span>
+      <span class="pills"><span class="pill aval">avaliativo</span><span class="pill">SOLID</span></span>
     </a>
   </div>
 
@@ -463,6 +473,7 @@
       <a href="setup/" style="display:inline-block;padding:14px 28px;background:linear-gradient(135deg,var(--accent4),var(--spring));color:var(--bg);text-decoration:none;font-weight:900;border-radius:50px;letter-spacing:1px;font-size:0.95rem;margin:4px">🧰 Sábado 0 — setup</a>
       <a href="capitulos/01-sdd-na-pratica-spring-hexagonal/" style="display:inline-block;padding:14px 28px;background:linear-gradient(135deg,var(--java),var(--claude));color:var(--bg);text-decoration:none;font-weight:900;border-radius:50px;letter-spacing:1px;font-size:0.95rem;margin:4px">☕ Sábado 1 — começar →</a>
       <a href="capitulos/02-pedidos-mensageria/" style="display:inline-block;padding:14px 28px;background:linear-gradient(135deg,#ffb466,var(--claude));color:var(--bg);text-decoration:none;font-weight:900;border-radius:50px;letter-spacing:1px;font-size:0.95rem;margin:4px">🧩 Sábado 2 — mensageria →</a>
+      <a href="capitulos/03-pedidos-kafka/" style="display:inline-block;padding:14px 28px;background:linear-gradient(135deg,#6fd6c0,var(--claude));color:var(--bg);text-decoration:none;font-weight:900;border-radius:50px;letter-spacing:1px;font-size:0.95rem;margin:4px">📒 Kafka — aula atual →</a>
     </div>
   </section>
 

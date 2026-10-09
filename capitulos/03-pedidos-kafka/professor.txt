@@ -1,0 +1,131 @@
+CAP 03 — O PAGAMENTO VIRA HISTÓRIA: KAFKA (23 pontos, 10/10/2026)
+Use o capítulo e esta cola lado a lado. Resoluções e dúvidas: professor-resolucoes.txt.
+Guia executável e ZIP em apoio/. Amarelo nos prompts = ler em voz alta.
+Três simuladores na página (pontos 04, 06, 07): peça previsão ANTES de cada clique.
+
+ANTES DE SAIR DE CASA (5 min)
+  docker pull apache/kafka:3.9.1 && docker pull ghcr.io/kafbat/kafka-ui:v1.3.0
+  Teste o ZIP da conclusão (apoio/pedidos-kafka-conclusao.zip): sobe com
+  docker compose -f infra/compose.yml up -d --wait. Peça à turma o mesmo pull pelo grupo.
+
+[01] O PEDIDO FOI PAGO. QUEM MAIS QUER SABER?
+  Desenho do Cap 02: Pedidos ⇄ RabbitMQ ⇄ Pagamentos. Funciona.
+  Pergunta nova: financeiro (painel), auditoria (histórico), marketing. Sem Pedidos ligar pra cada um.
+  Frase do dia: "a fila entrega e esquece; o Kafka anota e deixa reler".
+
+[02] O PLANO DA TARDE
+  Ideia (65 min) → terminal (30) → ☕ 15:20 → código (75) → falhas e decisão (32).
+  Atrasou? ponto 15 com a conclusão; Analytics próprio vai pra casa.
+  Sobrou? extra do ponto 17 (duas instâncias no mesmo grupo).
+
+[03] COLOQUE O AGENTE PARA LER
+  Prompt 1 e segue pra teoria. Conferir: testes verdes, portas 9092/8090 livres,
+  e onde o pedido vira PAGO (RegistroService.concluir ← ResultadoListener).
+  Circuito do Cap 02 quebrado? conclusão do Cap 02 em outra pasta.
+
+[04] A FILA ENTREGA E ESQUECE
+  Conte as duas cozinhas: comanda (jogada fora) × caderno (fica).
+  Fanout do Cap 02 até cria fila por interessado, mas quem nasce depois perde o passado.
+  Simulador 1: publicar 3, Financeiro lê 3, Analytics lê → fila vazia × caderno com P1.
+  Quiz: necessidade que a fila atende mal = serviço novo calcular desde o dia 1º.
+  Limite: retenção padrão 7 dias.
+
+[05] UM CADERNO QUE SÓ CRESCE
+  Log = só acrescenta no fim (append-only). Offset = número da linha, começa em 0.
+  Registro = chave + valor + horário. Tópico = log com nome. Broker = servidor.
+  Sem exchange/binding: roteamento rico não é o forte do Kafka.
+  Quiz: lido não some; só o marcador anda.
+
+[06] CADA GRUPO, SEU MARCADOR
+  Grupo de consumidores = nome. Marcador (offset commitado) fica NO KAFKA.
+  Lag = fim − marcador (como o Ready crescendo do Cap 02). Replay = rebobinar.
+  Simulador 2: publicar 4 → analytics "Ler tudo" → "Reiniciar programa" → painel 0, marcador 4
+  → "Rebobinar" → "Ler tudo" → painel volta. Auditoria segue independente.
+  Quiz: reiniciou e zerou porque a soma estava na memória e o marcador no fim.
+
+[07] PARTIÇÕES E CHAVE
+  Partição = pedaço do tópico, offsets próprios. Hoje: 3.
+  No grupo, 1 partição = 1 consumidor. 4º consumidor fica ocioso.
+  Chave → hash → partição. Mesma chave, mesma partição. ORDEM SÓ DENTRO DA PARTIÇÃO.
+  Simulador 3: modo com chave (A sempre na mesma) × sem chave (A espalha → alerta).
+  Consumidores 5 → 2 ociosos. Limite: mudar nº de partições muda o destino das chaves.
+
+[08] SEIS PEÇAS
+  Broker, tópico, partição, offset, produtor, grupo. Tabela liga cada um ao RabbitMQ.
+  KRaft = Kafka sem Zookeeper (tutorial antigo com Zookeeper: ignorar).
+
+[09] KAFKA NO DOCKER
+  Duas portas: apps no PC usam localhost:9092; container (painel, terminal) usa kafka:19092.
+  Prompt 2. Conferir: kafka healthy, painel localhost:8090 com cluster "aula".
+  Referência do Compose no 👀. Imagens ~1 GB: rede lenta = pull antes.
+
+[10] LAB A — CADERNO DO CAFÉ (👥 junto, projete seu terminal)
+  docker compose exec kafka bash → cd /opt/kafka/bin
+  1 criar treino-cafe (3 partições) · 2 produtor com chave (mesa1:cafe … Ctrl+C)
+  3 consumidor --group barista --from-beginning → mesa1 toda numa partição, em ordem;
+    mesa3 pode aparecer antes (entre partições não há ordem)
+  4 mesmo comando de novo → nada (marcador no fim) · describe → LAG 0
+  5 --group caixa → lê tudo · 6 reset barista --to-earliest → relê. exit.
+  Erros: localhost dentro do container = timeout; reset com consumidor ligado = "not inactive".
+
+[☕] 15:20–15:35
+
+[11] ONDE O KAFKA ENTRA
+  RabbitMQ fica (comando). Kafka é novo (evento PedidoPago). Pedidos não conhece os leitores.
+  Revisão: comando pode ser recusado; evento é fato no passado.
+
+[12] COMBINE O EVENTO
+  Chave = pedidoId. JSON v1: versao, pedidoId, solicitacaoId, valor.
+  Publica DEPOIS do commit do APROVADO. Recusa não publica. Repetição pode acontecer.
+  Prompt 3 (spec .specs/06-evento-pedido-pago.md). Não compartilhar classe, só contrato.
+
+[13] LEIA ANTES DE GERAR
+  NewTopic (3 partições, 1 réplica). send(tópico, chave, valor).get(10s) = publisher confirm.
+  @KafkaListener com ConsumerRecord (partição/offset). Grupo vem do application.yml.
+  Quiz: sem .get(), Kafka fora = evento perdido em silêncio.
+
+[14] PEDIDOS PUBLICA (🧭 Prompt 4)
+  Prova: log "PEDIDO_PAGO publicado: … partição=X offset=0"; painel Topics → pedidos-pagos.
+  Insomnia Cap 03: "10 · Pagar com chave nova" (uuid automático).
+
+[15] ANALYTICS LÊ (🧭 Prompt 5)
+  Serviço novo, 8082, sem banco, grupo analytics, earliest.
+  Ao subir lê o pedido de antes (grupo novo + earliest). "11 · Resumo".
+  Pague mais 2 → 3 pedidos, R$ 113,40. Anotar partições.
+
+[16] REINICIOU E ZEROU
+  Ctrl+C e sobe → resumo 0, sem LIDO no log. Painel → Consumers → lag 0.
+  Parar → reset-offsets --to-earliest → subir → volta 3 / R$ 113,40.
+  Lição: painel é visão derivada; o tópico é a fonte da verdade.
+
+[17] UM TIME NOVO: AUDITORIA
+  ANALYTICS_GRUPO=auditoria ANALYTICS_PORT=8083 → "12 · Resumo da auditoria" = mesmos 3.
+  Pague mais um: os dois sobem. Extra: 2 instâncias no MESMO grupo dividem partições e o painel.
+
+[18] O MESMO EVENTO DUAS VEZES
+  Republicar o resultado no RabbitMQ (pagamentos.eventos / pagamento.resultado).
+  Pedidos republica: mesma partição, offset maior. Analytics: mensagensLidas +1, pedidos igual,
+  "repetida": true. Quiz: pedidos++ contaria duas vezes.
+
+[19] KAFKA DESLIGADO
+  docker compose stop kafka → pagar → PAGO, erro no log, ~30 s depois 1 msg em
+  pedidos.resultados.erros. Subir kafka → Prompt 6 (diagnóstico) → republicar o MESMO resultado
+  → PedidoPago chega. Escrita dupla; nome da solução: outbox (só citar).
+
+[20] RABBITMQ OU KAFKA? (⚖️)
+  Quadro: depois de lida, leitor novo, reprocessar, roteamento, ordem, paralelismo, melhor para.
+  1 trocar Rabbit das solicitações por Kafka → REFUTA (comando, sem replay)
+  2 recalcular 30 dias de comissão → DEFENDE se retenção ≥ 30 dias (padrão 7!)
+  3 roteamento cartão/Pix/antifraude → REFUTA (roteamento é do RabbitMQ)
+  4 publicar sem chave → REFUTA (perde ordem por pedido)
+
+[21] FECHAMENTO
+  Frase: na fila ler consome; no log ler só avança o marcador. Cinco perguntas da lista.
+  Anuncie Cap 04 = OO e SOLID (leitura: capítulo 02-oo-de-verdade-e-solid).
+
+[22] EM CASA (até 17/10)
+  Provas 14–19 no próprio projeto; .specs/07-quando-usar-qual.md; desafio faturamento
+  por partição; três frases (marcador / zerou / replay); leitura de OO/SOLID.
+
+[23] GLOSSÁRIO
+  Consulta. Termos na ordem em que aparecem.

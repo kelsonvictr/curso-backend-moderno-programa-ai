@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: pagamentos
+  datasource:
+    url: ${PAGAMENTOS_DB_URL:jdbc:postgresql://localhost:5432/pagamentos}
+    username: ${PAGAMENTOS_DB_USER:pedidos}
+    password: ${PAGAMENTOS_DB_PASSWORD:pedidos}
+  rabbitmq:
+    host: ${RABBIT_HOST:localhost}
+    port: ${RABBIT_PORT:5672}
+    username: ${RABBIT_USER:aula}
+    password: ${RABBIT_PASSWORD:aula-local}
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    template:
+      mandatory: true
+    listener:
+      simple:
+        acknowledge-mode: auto
+        prefetch: 1
+        concurrency: 1
+        default-requeue-rejected: false
+        retry:
+          enabled: true
+          max-attempts: 3
+          initial-interval: 500ms
+          multiplier: 2
+  sql:
+    init:
+      mode: always
+
+server:
+  port: ${PAGAMENTOS_PORT:8081}

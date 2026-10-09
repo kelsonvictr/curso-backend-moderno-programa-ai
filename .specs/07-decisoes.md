@@ -497,3 +497,15 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
 - professor.txt e professor-resolucoes.txt renumerados para 29 pontos, com gabaritos novos.
 - Verificação: hyperframes check nos seis projetos; âncoras/IDs/JSON; simuladores por JS;
   sem erros de console; 375 px sem overflow horizontal. Sem commit nem publicação.
+
+## 2026-10-09 — Cap 03 = Kafka; OO/SOLID vira Cap 04 (17/10)
+- Professor pediu, de véspera, outro capítulo prático "o mais simples possível" para adiar
+  OO/SOLID. Recomendado e aprovado: Kafka (continua o Cap 02, já estava no plano do Sáb 5).
+- Nova sequência: 10/10 Kafka · 17/10 OO/SOLID (material pronto em 02-oo-de-verdade-e-solid)
+  · 24/10 SQS/SNS/Lambda · 31/10 DynamoDB/S3 + kickoff · 07/11 capstone. Testcontainers/
+  hexagonal profundo ficam comprimidos no Cap 04 ou fora.
+- `capitulos/03-pedidos-kafka/`: 23 pontos, 240 min, três simuladores, seis prompts, Lab A no
+  terminal, professor.txt e professor-resolucoes.txt sincronizados. Contrato em 14-cap3-kafka.md.
+- Validação: 10 cenários reais (Postgres, RabbitMQ, Kafka, kafka-ui, três apps). Browser:
+  simuladores, quizzes, sem erros de console, 375 px sem overflow, ligaduras desligadas.
+- Hub: Cap 3 como aula atual; card Sáb 04 → Kafka; Sáb 05 → OO/SOLID (em breve).
