@@ -1,0 +1,92 @@
+{
+  "01": [
+    {
+      "role": "LLM",
+      "text": "Duas cozinhas, um mesmo café. Aperte start!"
+    }
+  ],
+  "02": [
+    {
+      "role": "LLM",
+      "text": "Fase um: a cozinha da comanda."
+    }
+  ],
+  "03": [
+    {
+      "role": "BETO",
+      "text": "Comanda no trilho! Um café... pronto! Pro lixo!"
+    }
+  ],
+  "04": [
+    {
+      "role": "BETO",
+      "text": "Pão de queijo, pronto! Bolo, pronto! Lixo, lixo, lixo!"
+    }
+  ],
+  "05": [
+    {
+      "role": "LIA",
+      "text": "Beto, fechando o caixa: quantos cafés a gente vendeu hoje?"
+    }
+  ],
+  "06": [
+    {
+      "role": "BETO",
+      "text": "Ih, Lia... as comandas foram todas pro lixo."
+    }
+  ],
+  "07": [
+    {
+      "role": "LLM",
+      "text": "A fila entrega e esquece. Ótima pra fazer o prato. Péssima pra contar a história."
+    }
+  ],
+  "08": [
+    {
+      "role": "LLM",
+      "text": "Fase dois: a cozinha do caderno."
+    }
+  ],
+  "09": [
+    {
+      "role": "BETO",
+      "text": "Linha zero: café. Linha um: pão de queijo. Linha dois: bolo."
+    }
+  ],
+  "10": [
+    {
+      "role": "BETO",
+      "text": "Li tudo. Meu marcador tá na linha três. E ninguém arranca página!"
+    }
+  ],
+  "11": [
+    {
+      "role": "LIA",
+      "text": "Agora eu! Começo na linha zero... três pedidos. Tá tudo aqui!"
+    }
+  ],
+  "12": [
+    {
+      "role": "LLM",
+      "text": "E eu? Sou o contador. Só cheguei no fim do mês!"
+    }
+  ],
+  "13": [
+    {
+      "role": "LIA",
+      "text": "Pode ler desde o começo, Tico. O caderno não esquece."
+    }
+  ],
+  "14": [
+    {
+      "role": "LLM",
+      "text": "Comanda é fila: ler consome. Caderno é log: ler só avança o seu marcador."
+    }
+  ],
+  "15": [
+    {
+      "role": "LLM",
+      "text": "No Kafka, quem chega depois ainda lê desde o começo. Fase completa!"
+    }
+  ]
+}

@@ -32,3 +32,12 @@ auditoria lê tudo; Kafka parado → .erros; recuperação com mesma chave.
 
 ## Limites
 Escrita dupla sem outbox; um broker; sem Streams, Schema Registry ou transações Kafka.
+
+## Vídeo 8-bit "Duas cozinhas" (09/10/2026, noite)
+- Pedido do prof: vídeo estilo jogo antigo logo abaixo da história do ponto 04, vozes ElevenLabs,
+  efeitos e música, sem autoplay. Player `<video controls preload="none">` com capa e transcrição.
+- Projeto HyperFrames em `tooling/cap03-kafka/video-duas-cozinhas/` (BRIEF.md, scripts/gerar.sh).
+  Vozes: elenco aprovado (Tico/Beto/Lia), 15 falas, 815 caracteres. Trilha e blips chiptune
+  sintetizados (scripts/chiptune.py); SFX da biblioteca local programaai-agent-helper.
+- "Caderno" é analogia; o termo técnico é log (commit log). O vídeo mostra "CADERNO = LOG".
+- Saída: `capitulos/03-pedidos-kafka/video/duas-cozinhas.mp4` (71 s, 1080p30, 12,1 MB, faststart).
