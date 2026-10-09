@@ -3,3 +3,5 @@ snapshots/
 renders/
 scripts/_wt/
 .hyperframes/
+.thumbnails/
+.waveform-cache/
