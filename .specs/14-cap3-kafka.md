@@ -41,3 +41,12 @@ Escrita dupla sem outbox; um broker; sem Streams, Schema Registry ou transaçõe
   sintetizados (scripts/chiptune.py); SFX da biblioteca local programaai-agent-helper.
 - "Caderno" é analogia; o termo técnico é log (commit log). O vídeo mostra "CADERNO = LOG".
 - Saída: `capitulos/03-pedidos-kafka/video/duas-cozinhas.mp4` (71 s, 1080p30, 12,1 MB, faststart).
+
+## Mundo 2: mais quatro vídeos na sala da Programa AI (09/10/2026, noite)
+- Pedido do prof: personagens dentro da sala (fotos de programaai.dev/a-escola) e vídeos 1–4 do plano.
+- Sala redesenhada em pixel art (parede azul, letreiro "programa AI", mesão, LED, telão), sem rostos
+  reais. Biblioteca comum `tooling/cap03-kafka/pixel8/` (lib.py + chiptune.py); cada vídeo tem
+  `scripts/build.py` com ordem das falas e tempos-chave sincronizados por palavra (whisper).
+- Vídeos: save-game (ponto 06), tres-pontas (07), chefao (19), lutador (20; cenários diferentes
+  dos 4 do quiz, com contagem de 3 s). Abertura do "Duas cozinhas" passou a acontecer na sala.
+- Vozes ElevenLabs: 2.604 caracteres (elenco aprovado). Player: max 720 px, sem autoplay.

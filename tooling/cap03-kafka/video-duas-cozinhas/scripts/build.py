@@ -215,44 +215,54 @@ def local(k, cena_ini):
 
 # ---------------------------------------------------------------- cena: título
 def cena_titulo():
-    css = """
-#titulo-root .cena{background:#1a1c2c}
-.tt-grade{position:absolute;inset:0;background-image:linear-gradient(#29366f 3px,transparent 3px),linear-gradient(90deg,#29366f 3px,transparent 3px);background-size:80px 80px;opacity:.55}
-.tt-linha{position:absolute;left:0;top:536px;width:100%;height:8px;background:#f4f4f4}
-.tt-logo{position:absolute;left:0;right:0;top:170px;text-align:center}
-.tt-sobre{font-size:30px;color:#73eff7;letter-spacing:6px}
-.tt-titulo{margin-top:30px;font-size:120px;line-height:1.15;color:#ffcd75;text-shadow:10px 10px 0 #b13e53,20px 20px 0 #1a1c2c}
-.tt-sub{margin-top:34px;font-size:30px;color:#f4f4f4}
-.tt-elenco{position:absolute;left:0;right:0;top:640px;display:flex;justify-content:center;gap:120px}
-.tt-elenco .boneco{position:relative}
-.tt-press{position:absolute;left:0;right:0;top:560px;text-align:center;font-size:38px;color:#f4f4f4}
-.tt-coin{position:absolute;right:80px;top:60px;font-size:24px;color:#a7f070}
+    """Abertura na sala da Programa AI (pixel8): o jogo começa no telão."""
+    import sys as _sys
+    _sys.path.insert(0, str(ROOT.parent / 'pixel8'))
+    import lib as px
+    sala = px.sala('titulo')
+    troca = lambda h: h.replace('class="parede"', 'class="s-parede"').replace('class="chao"', 'class="s-chao"')
+    css_sala = '\n'.join(l for l in px.CSS_SALA.strip().splitlines()
+                          if l.split('{')[0].strip() in ('.teto', '.led', '.parede', '.letreiro', '.letreiro .palavra',
+                                                         '.letreiro .ai', '.letreiro .raio', '.telao', '.telao .tela', '.projetor',
+                                                         '.mesa-topo', '.mesa-frente', '.brilho', '.chao')
+                          or l.startswith(' background-image')).replace('.parede{', '.s-parede{').replace('.chao{', '.s-chao{')
+    css = css_sala + """
+#titulo-root .cena{background:#1d2340}
+.telao{background:#1a1c2c}
+.tt-linha{position:absolute;left:0;top:226px;width:100%;height:8px;background:#f4f4f4}
+.tt-logo{position:absolute;left:0;right:0;top:40px;text-align:center}
+.tt-sobre{font-size:22px;color:#73eff7;letter-spacing:4px}
+.tt-titulo{margin-top:26px;font-size:62px;line-height:1.2;color:#ffcd75;text-shadow:6px 6px 0 #b13e53,12px 12px 0 #000}
+.tt-sub{margin-top:24px;font-size:20px;color:#f4f4f4}
+.tt-press{position:absolute;left:0;right:0;top:300px;text-align:center;font-size:30px;color:#f4f4f4}
+.tt-coin{position:absolute;right:16px;top:8px;font-size:16px;color:#a7f070}
+.tt-pos{position:absolute;top:480px}
 """
-    corpo = (f'<div class="tt-grade" id="titulo-grade" data-layout-allow-overflow></div>'
-             f'<div class="tt-logo" id="titulo-logo"><div class="tt-sobre">CAP 03 · KAFKA</div>'
-             f'<div class="tt-titulo" id="titulo-texto" data-layout-allow-overlap>DUAS COZINHAS</div>'
-             f'<div class="tt-sub" id="titulo-sub">uma aventura sobre filas e logs</div></div>'
-             f'<div class="tt-elenco">{boneco("beto", BETO, BETO_BOCA, 10, "titulo")}'
-             f'{boneco("lia", LIA, LIA_BOCA, 10, "titulo")}{boneco("tico", TICO, TICO_BOCA, 10, "titulo")}</div>'
-             f'<div class="tt-coin" id="titulo-coin">CREDIT 01</div>'
-             f'<div class="tt-press" id="titulo-press">PRESS START</div>'
-             f'<div class="tt-linha" id="titulo-linha"></div>')
+    tela = ('<div class="tela" id="titulo-tela"><div class="tt-logo" id="titulo-logo"><div class="tt-sobre">CAP 03 · KAFKA</div>'
+            '<div class="tt-titulo" id="titulo-texto" data-layout-allow-overlap>DUAS COZINHAS</div>'
+            '<div class="tt-sub" id="titulo-sub">uma aventura sobre filas e logs</div></div>'
+            '<div class="tt-coin" id="titulo-coin">CREDIT 01</div><div class="tt-press" id="titulo-press">PRESS START</div>'
+            '<div class="tt-linha" id="titulo-linha"></div></div>')
+    corpo = (troca(sala['fundo']) + f'<div class="telao" id="titulo-telao">{tela}</div>'
+             + f'<div class="tt-pos" style="left:150px">{boneco("beto", BETO, BETO_BOCA, 10, "titulo")}</div>'
+             + f'<div class="tt-pos" style="left:400px">{boneco("lia", LIA, LIA_BOCA, 10, "titulo")}</div>'
+             + f'<div class="tt-pos" style="left:650px">{boneco("tico", TICO, TICO_BOCA, 10, "titulo")}</div>'
+             + troca(sala['mesa']))
     v = local('01', 0)
     js = f"""
 tl.fromTo(P("linha"), {{ scaleX: 0 }}, {{ scaleX: 1, duration: 0.25, ease: "steps(5)" }}, 0);
-tl.to(P("linha"), {{ scaleY: 140, opacity: 0, duration: 0.35, ease: "steps(6)" }}, 0.3);
-tl.from(P("grade"), {{ opacity: 0, duration: 0.4, ease: "steps(4)" }}, 0.4);
-tl.from(P("texto"), {{ y: -420, duration: 0.6, ease: "steps(8)" }}, 0.5);
+tl.to(P("linha"), {{ scaleY: 60, opacity: 0, duration: 0.35, ease: "steps(6)" }}, 0.3);
+tl.from(P("texto"), {{ y: -260, duration: 0.6, ease: "steps(8)" }}, 0.5);
 tl.from(".tt-sobre", {{ opacity: 0, duration: 0.3, ease: "steps(3)" }}, 0.9);
 tl.from(P("sub"), {{ opacity: 0, y: 20, duration: 0.3, ease: "steps(3)" }}, 1.1);
 tl.from(P("coin"), {{ opacity: 0, duration: 0.1 }}, 0.8);
-tl.from([P("beto"), P("lia"), P("tico")], {{ y: 260, duration: 0.4, ease: "steps(5)", stagger: 0.15 }}, 1.0);
+tl.from([P("beto"), P("lia"), P("tico")], {{ y: 200, duration: 0.4, ease: "steps(5)", stagger: 0.15 }}, 0.6);
 falar("tico", {v}, {FALA['01']['dur']});
 tl.to(P("beto-corpo"), {{ y: -8, duration: 0.25, ease: "steps(1)", repeat: 7, yoyo: true }}, 2.0);
 tl.to(P("lia-corpo"), {{ y: -8, duration: 0.25, ease: "steps(1)", repeat: 7, yoyo: true }}, 2.25);
 tl.fromTo(P("press"), {{ opacity: 0 }}, {{ opacity: 1, duration: 0.3, ease: "steps(1)", repeat: 5, yoyo: true }}, {v + 2.04});
 tl.to(P("press"), {{ color: "#ffcd75", scale: 1.15, duration: 0.1, ease: "steps(1)" }}, 5.0);
-tl.to(P("grade"), {{ y: 40, duration: 6, ease: "none" }}, 0);
+tl.to(P("telao"), {{ scale: 2.4, x: -500, y: 120, duration: 0.5, ease: "steps(6)" }}, 5.3);
 """
     return doc_sub('titulo', css, corpo, js)
 

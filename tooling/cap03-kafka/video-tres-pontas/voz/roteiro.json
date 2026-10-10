@@ -1,0 +1,68 @@
+{
+  "B01": [
+    {
+      "role": "LLM",
+      "text": "Fase dois: as três pontas do mesão. O tópico agora tem três partições."
+    }
+  ],
+  "B02": [
+    {
+      "role": "LLM",
+      "text": "Cada partição é uma ponta da mesa, com seus próprios registros e offsets."
+    }
+  ],
+  "B03": [
+    {
+      "role": "LIA",
+      "text": "E como o Kafka escolhe a ponta de cada pedido?"
+    }
+  ],
+  "B04": [
+    {
+      "role": "LLM",
+      "text": "Pela chave. Mesma chave, mesma partição. Aqui, a chave é o número do pedido."
+    }
+  ],
+  "B05": [
+    {
+      "role": "BETO",
+      "text": "Pedido A: criado, pago, enviado. Tudo na partição um, em ordem. Perfeito!"
+    }
+  ],
+  "B06": [
+    {
+      "role": "LLM",
+      "text": "Agora, sem chave. O produtor espalha os registros pelas pontas."
+    }
+  ],
+  "B07": [
+    {
+      "role": "LIA",
+      "text": "Eita! Eu li \"A enviado\" antes de o Beto ler \"A pago\"!"
+    }
+  ],
+  "B08": [
+    {
+      "role": "BETO",
+      "text": "Enviou antes de pagar? Isso vai dar problema!"
+    }
+  ],
+  "B09": [
+    {
+      "role": "LLM",
+      "text": "Ordem só existe dentro da partição. Por isso a chave importa."
+    }
+  ],
+  "B10": [
+    {
+      "role": "LIA",
+      "text": "E esse quarto colega aí, parado?"
+    }
+  ],
+  "B11": [
+    {
+      "role": "LLM",
+      "text": "Três partições, quatro consumidores no mesmo grupo. Um fica de reserva, sem partição."
+    }
+  ]
+}

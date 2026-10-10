@@ -1,0 +1,56 @@
+{
+  "C01": [
+    {
+      "role": "LLM",
+      "text": "Chefão do mundo dois: a escrita dupla!"
+    }
+  ],
+  "C02": [
+    {
+      "role": "BETO",
+      "text": "Pagamento aprovado. Gravei PAGO no Postgres. Agora é só avisar o Kafka..."
+    }
+  ],
+  "C03": [
+    {
+      "role": "BETO",
+      "text": "O Kafka está fora do ar! A mensagem não sai!"
+    }
+  ],
+  "C04": [
+    {
+      "role": "LIA",
+      "text": "Peraí: o pedido está pago, mas o meu painel não sabe de nada."
+    }
+  ],
+  "C05": [
+    {
+      "role": "LLM",
+      "text": "São duas escritas, sem uma transação que una as duas. O chefão mora nesse intervalo."
+    }
+  ],
+  "C06": [
+    {
+      "role": "LLM",
+      "text": "Por sorte, o RabbitMQ tentou três vezes e guardou o resultado na fila de erros."
+    }
+  ],
+  "C07": [
+    {
+      "role": "BETO",
+      "text": "O Kafka voltou! Vou reenviar o mesmo resultado, com a mesma chave."
+    }
+  ],
+  "C08": [
+    {
+      "role": "LIA",
+      "text": "Chegou! Pedido pago no painel. Chefão derrotado!"
+    }
+  ],
+  "C09": [
+    {
+      "role": "LLM",
+      "text": "Próximo mundo: o outbox. O evento é gravado no banco, na mesma transação, e publicado depois."
+    }
+  ]
+}

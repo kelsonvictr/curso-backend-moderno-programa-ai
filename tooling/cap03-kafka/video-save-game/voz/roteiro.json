@@ -1,0 +1,68 @@
+{
+  "A01": [
+    {
+      "role": "LLM",
+      "text": "Mundo dois: a sala da Programa AI. Fase um: o save game."
+    }
+  ],
+  "A02": [
+    {
+      "role": "LIA",
+      "text": "Beto, o painel do Analytics já mostra quatro pedidos pagos. Lindo!"
+    }
+  ],
+  "A03": [
+    {
+      "role": "BETO",
+      "text": "Vou só trocar o carregador... Ops! Tirei o fio da tomada!"
+    }
+  ],
+  "A04": [
+    {
+      "role": "BETO",
+      "text": "Religuei. Zero pedidos?! Sumiu tudo!"
+    }
+  ],
+  "A05": [
+    {
+      "role": "LIA",
+      "text": "Calma. Será que o Kafka apagou os pedidos?"
+    }
+  ],
+  "A06": [
+    {
+      "role": "LLM",
+      "text": "Não. O tópico continua com os quatro registros. Ler não apaga."
+    }
+  ],
+  "A07": [
+    {
+      "role": "LLM",
+      "text": "O que zerou foi a memória do programa. O marcador do grupo ficou salvo no Kafka, lá no fim."
+    }
+  ],
+  "A08": [
+    {
+      "role": "BETO",
+      "text": "Então, pro Kafka, está tudo lido... e o meu painel ficou vazio."
+    }
+  ],
+  "A09": [
+    {
+      "role": "LLM",
+      "text": "É como no videogame: o progresso fica no save, não na tela. Vamos rebobinar o marcador."
+    }
+  ],
+  "A10": [
+    {
+      "role": "LIA",
+      "text": "Um, dois, três, quatro! O painel voltou inteirinho."
+    }
+  ],
+  "A11": [
+    {
+      "role": "LLM",
+      "text": "O painel é só uma visão. A fonte da verdade é o log."
+    }
+  ]
+}

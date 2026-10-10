@@ -224,8 +224,9 @@ passo a passo. Cada estado deve responder: **antes, ação, depois, como provar 
 
 ## Cap 03 — Kafka (2026-10-09)
 - `capitulos/03-pedidos-kafka/`; contrato em `.specs/14-cap3-kafka.md`. OO/SOLID passa a Cap 04 (17/10).
-- Pedido explícito: "o mais simples possível, até para o professor". Sem HyperFrames; simuladores
-  page-local em `cap3.js`. Analytics sem banco, de propósito (reinício zera, replay reconstrói).
+- Pedido explícito: "o mais simples possível, até para o professor". Simuladores page-local em
+  `cap3.js`; cinco vídeos 8-bit (HyperFrames) nos pontos 04/06/07/19/20, fontes em
+  `tooling/cap03-kafka/video-*` + biblioteca `pixel8/` (sala da Programa AI em pixel art). Analytics sem banco, de propósito (reinício zera, replay reconstrói).
 - Referência em `tooling/cap03-kafka/conclusao`; empacotar com `tooling/build-cap03-kafka.py`;
   validar com `python3 tooling/validate-cap03-kafka.py --integration`.
 - Manter 23 pontos do HTML, professor.txt e professor-resolucoes.txt sincronizados. Sem links dos TXTs.

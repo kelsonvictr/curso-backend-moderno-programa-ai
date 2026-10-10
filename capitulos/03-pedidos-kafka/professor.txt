@@ -24,6 +24,7 @@ ANTES DE SAIR DE CASA (5 min)
   Circuito do Cap 02 quebrado? conclusão do Cap 02 em outra pasta.
 
 [04] A FILA ENTREGA E ESQUECE
+  VÍDEO 8-bit "Duas cozinhas" (1:11) logo após a história: play com a turma, depois o simulador.
   Conte as duas cozinhas: comanda (jogada fora) × caderno (fica).
   Fanout do Cap 02 até cria fila por interessado, mas quem nasce depois perde o passado.
   Simulador 1: publicar 3, Financeiro lê 3, Analytics lê → fila vazia × caderno com P1.
@@ -37,6 +38,7 @@ ANTES DE SAIR DE CASA (5 min)
   Quiz: lido não some; só o marcador anda.
 
 [06] CADA GRUPO, SEU MARCADOR
+  VÍDEO "O save game" (1:00) antes do simulador 2: fio na tomada, painel zera, marcador fica.
   Grupo de consumidores = nome. Marcador (offset commitado) fica NO KAFKA.
   Lag = fim − marcador (como o Ready crescendo do Cap 02). Replay = rebobinar.
   Simulador 2: publicar 4 → analytics "Ler tudo" → "Reiniciar programa" → painel 0, marcador 4
@@ -44,6 +46,7 @@ ANTES DE SAIR DE CASA (5 min)
   Quiz: reiniciou e zerou porque a soma estava na memória e o marcador no fim.
 
 [07] PARTIÇÕES E CHAVE
+  VÍDEO "Três pontas do mesão" (1:00) antes do simulador 3: com chave, sem chave, 4º ocioso.
   Partição = pedaço do tópico, offsets próprios. Hoje: 3.
   No grupo, 1 partição = 1 consumidor. 4º consumidor fica ocioso.
   Chave → hash → partição. Mesma chave, mesma partição. ORDEM SÓ DENTRO DA PARTIÇÃO.
@@ -108,11 +111,13 @@ ANTES DE SAIR DE CASA (5 min)
   "repetida": true. Quiz: pedidos++ contaria duas vezes.
 
 [19] KAFKA DESLIGADO
+  VÍDEO "Chefão: a escrita dupla" (0:50) antes de desligar o Kafka de verdade.
   docker compose stop kafka → pagar → PAGO, erro no log, ~30 s depois 1 msg em
   pedidos.resultados.erros. Subir kafka → Prompt 6 (diagnóstico) → republicar o MESMO resultado
   → PedidoPago chega. Escrita dupla; nome da solução: outbox (só citar).
 
 [20] RABBITMQ OU KAFKA? (⚖️)
+  VÍDEO "Escolha seu lutador" (1:12): em cada contagem 3-2-1 a turma grita FILA ou LOG.
   Quadro: depois de lida, leitor novo, reprocessar, roteamento, ordem, paralelismo, melhor para.
   1 trocar Rabbit das solicitações por Kafka → REFUTA (comando, sem replay)
   2 recalcular 30 dias de comissão → DEFENDE se retenção ≥ 30 dias (padrão 7!)

@@ -1,0 +1,68 @@
+{
+  "D01": [
+    {
+      "role": "LLM",
+      "text": "Modo arcade: escolha seu lutador!"
+    }
+  ],
+  "D02": [
+    {
+      "role": "LLM",
+      "text": "De um lado, a fila: entrega e esquece, roteamento afiado. Do outro, o log: guarda tudo e aceita replay."
+    }
+  ],
+  "D03": [
+    {
+      "role": "LIA",
+      "text": "Rodada um: cinco impressoras dividindo notas fiscais. Cada nota sai uma vez só."
+    }
+  ],
+  "D04": [
+    {
+      "role": "BETO",
+      "text": "Fila! É trabalho pra distribuir, ninguém precisa reler."
+    }
+  ],
+  "D05": [
+    {
+      "role": "LIA",
+      "text": "Rodada dois: o time de BI chega mês que vem e quer todo o histórico."
+    }
+  ],
+  "D06": [
+    {
+      "role": "BETO",
+      "text": "Log! Quem chega depois lê desde o começo."
+    }
+  ],
+  "D07": [
+    {
+      "role": "LIA",
+      "text": "Rodada três: um alerta só para as lojas do Nordeste."
+    }
+  ],
+  "D08": [
+    {
+      "role": "BETO",
+      "text": "Fila! Roteamento por chave é o forte do RabbitMQ."
+    }
+  ],
+  "D09": [
+    {
+      "role": "LIA",
+      "text": "Rodada quatro: três times querem os mesmos cliques do app, cada um no seu ritmo."
+    }
+  ],
+  "D10": [
+    {
+      "role": "BETO",
+      "text": "Log! Cada time é um grupo, com o seu próprio marcador."
+    }
+  ],
+  "D11": [
+    {
+      "role": "LLM",
+      "text": "Não existe lutador melhor. Existe o lutador certo pra cada fase."
+    }
+  ]
+}
