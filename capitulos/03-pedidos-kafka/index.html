@@ -2,7 +2,7 @@
 <nav class="sidebar-nav" aria-label="Capítulo"><button class="sidebar-close" onclick="closeSidebar()" aria-label="Fechar menu">✕</button><div class="sidebar-header"><h3>CAPÍTULO 03</h3><a href="../../">← Curso</a> · <a href="caderno.html">Caderno livre</a></div>
 <a class="sidebar-link" href="#retomada">01 · Quem mais quer saber?</a>
 <a class="sidebar-link" href="#roteiro">02 · O plano da tarde</a>
-<a class="sidebar-link" href="#diagnostico">03 · Coloque o agente para ler</a>
+<a class="sidebar-link" href="#diagnostico">03 · O plano de hoje</a>
 <a class="sidebar-link" href="#esquece">04 · A fila esquece</a>
 <a class="sidebar-link" href="#caderno-log">05 · Um caderno que só cresce</a>
 <a class="sidebar-link" href="#marcadores">06 · Cada grupo, seu marcador</a>
@@ -10,8 +10,10 @@
 <a class="sidebar-link" href="#pecas">08 · Seis peças</a>
 <a class="sidebar-link" href="#docker">09 · Kafka no Docker</a>
 <a class="sidebar-link" href="#lab-terminal">10 · Lab A: Kafka à mão</a>
+<a class="sidebar-link" href="#lab-mais">10+ · Lab A+: um grupo, dois consumidores</a>
 <a class="sidebar-link" href="#desenho">11 · Onde o Kafka entra</a>
 <a class="sidebar-link" href="#contrato">12 · Combine o evento</a>
+<a class="sidebar-link" href="#lab-b">12+ · Lab B: o PedidoPago à mão</a>
 <a class="sidebar-link" href="#leia">13 · Leia antes de gerar</a>
 <a class="sidebar-link" href="#publica">14 · Pedidos publica</a>
 <a class="sidebar-link" href="#analytics">15 · Analytics lê</a>
@@ -49,38 +51,44 @@
 
 <section class="step-section visible" id="roteiro"><div class="section-kicker">Antes da aula · organização</div><h2>O plano da tarde <span class="ponto-ref" data-ponto="02">[02]</span></h2>
 <p>Quatro partes. Primeiro a <strong>ideia</strong> (por que um caderno e não uma fila), com três simuladores. Depois o Kafka <strong>na mão</strong>, pelo terminal, sem Java. Só então o agente faz Pedidos publicar e cria um serviço novo que lê. No fim, provocamos falhas e comparamos RabbitMQ com Kafka.</p>
+<aside class="concept"><h3>Hoje: Kafka do zero, com prática no terminal</h3><p>A tarde é para entender a ideia e <strong>pôr a mão no Kafka</strong>: três laboratórios no terminal, quase duas horas de prática. Ninguém precisa mexer no projeto de Pedidos hoje. A parte de código (Pedidos publicando, serviço Analytics) fica para casa, com prompts prontos para o agente.</p></aside>
 <div class="table-scroll"><table><thead><tr><th>Início</th><th>Tempo</th><th>Etapa</th><th>Pontos</th></tr></thead><tbody>
-<tr><td>13:30</td><td>15 min</td><td>Abertura: o agente lê o projeto enquanto conversamos</td><td>03</td></tr>
-<tr><td>13:45</td><td>65 min</td><td>Parte 1 · A ideia: fila × caderno, offset, grupos, partições e chave</td><td>04–08</td></tr>
-<tr><td>14:50</td><td>30 min</td><td>Parte 2 · Kafka no Docker e Lab A no terminal</td><td>09–10</td></tr>
-<tr><td>15:20</td><td>15 min</td><td>☕ Intervalo</td><td>—</td></tr>
-<tr><td>15:35</td><td>25 min</td><td>Parte 3 · Desenho, contrato do evento e leitura do código</td><td>11–13</td></tr>
-<tr><td>16:00</td><td>50 min</td><td>Pedidos publica, Analytics lê, reinício e replay, um time novo</td><td>14–17</td></tr>
-<tr><td>16:50</td><td>32 min</td><td>Parte 4 · Repetição, Kafka desligado, RabbitMQ × Kafka</td><td>18–20</td></tr>
-<tr><td>17:22</td><td>8 min</td><td>Fechamento</td><td>21</td></tr>
+<tr><td>13:30</td><td>10 min</td><td>Abertura: o plano de hoje</td><td>01–03</td></tr>
+<tr><td>13:40</td><td>70 min</td><td>Parte 1 · A ideia: três vídeos, três simuladores, as seis peças</td><td>04–08</td></tr>
+<tr><td>14:50</td><td>15 min</td><td>Parte 2 · Subir o Kafka pronto (um comando)</td><td>09</td></tr>
+<tr><td>15:05</td><td>30 min</td><td>Lab A · o caderno do café no terminal</td><td>10</td></tr>
+<tr><td>15:35</td><td>15 min</td><td>☕ Intervalo</td><td>—</td></tr>
+<tr><td>15:50</td><td>30 min</td><td>Lab A+ · dois consumidores no mesmo grupo, lag e painel</td><td>10</td></tr>
+<tr><td>16:20</td><td>10 min</td><td>Parte 3 · Onde o Kafka entra no nosso sistema e o contrato do evento</td><td>11–12</td></tr>
+<tr><td>16:30</td><td>30 min</td><td>Lab B · o PedidoPago à mão: chave, dois grupos, repetição e replay</td><td>12</td></tr>
+<tr><td>17:00</td><td>20 min</td><td>Parte 4 · Vídeo do chefão, escolha seu lutador, defender ou refutar</td><td>19–20</td></tr>
+<tr><td>17:20</td><td>10 min</td><td>Fechamento e tarefa de casa</td><td>21–22</td></tr>
 </tbody></table></div>
-<p>Cada prática segue <strong>entender → prever → orientar o agente → executar → conferir</strong>. Os prompts funcionam em Claude Code, Codex CLI ou outro agente que trabalhe no projeto.</p>
-<aside class="tip"><h3>Se atrasar ou se sobrar tempo</h3><p><strong>Atrasou?</strong> No ponto 15, use a <a href="apoio/pedidos-kafka-conclusao.zip" download>conclusão do Cap 03</a> em outra pasta e siga as provas 16–19 com ela; o seu Analytics fica para casa. <strong>Sobrou tempo?</strong> Rode duas instâncias do Analytics no <em>mesmo</em> grupo e veja as partições sendo divididas (extra no ponto 17).</p></aside>
-<aside class="concept"><h3>Como ler os prompts</h3><p>O <mark class="hl">marca-texto amarelo</mark> destaca decisões, limites e provas. Leia esses trechos em voz alta antes de copiar. O botão leva o texto inteiro, limpo. A linha <code>[COMMIT]</code> fecha cada etapa: depois do seu OK, o agente faz commit e push para a <code>main</code>, como no Cap 02.</p></aside>
+<aside class="tip"><h3>Se atrasar ou se sobrar tempo</h3><p><strong>Atrasou?</strong> Encurte o Lab A+ (pule o passo do lag) e faça o Lab B até o passo 5. <strong>Sobrou tempo?</strong> Repita o Lab A+ com três consumidores e depois com quatro: o quarto fica sem partição.</p></aside>
 <p><a href="caderno.html">📓 Abrir caderno livre</a> · <a href="apoio/insomnia-pedidos.json" download>Baixar collection do Insomnia (Cap 03)</a> · <a href="apoio/GUIA-EXECUCAO.md">Guia de execução e recuperação</a></p></section>
 <div class="section-connector" aria-hidden="true">↓</div>
 
 <div class="zone-head" id="z-sala"><h2>🏫 Em sala</h2><p>Entenda, preveja, execute e confira</p></div>
 
-<section class="step-section visible" id="diagnostico"><div class="section-kicker">Abertura · juntos · antes de alterar <span class="relogio">13:30 · 15 min</span></div><h2>Coloque o agente para ler enquanto conversamos <span class="ponto-ref" data-ponto="03">[03]</span></h2>
-<p>O diagnóstico leva alguns minutos. Dispare agora e siga para a teoria; quando voltar ao terminal, a resposta estará pronta para você <strong>revisar</strong>. O que interessa é evidência: o circuito do Cap 02 funciona hoje, na sua máquina?</p>
+<section class="step-section visible" id="diagnostico"><div class="section-kicker">Abertura · juntos <span class="relogio">13:30 · 10 min</span></div><h2>O plano de hoje: sair do zero no Kafka <span class="ponto-ref" data-ponto="03">[03]</span></h2>
+<p>Hoje ninguém vai escrever Java com Kafka em sala. O objetivo é que você saia sabendo <strong>o que é</strong> o Kafka, <strong>por que</strong> ele existe ao lado do RabbitMQ, e que tenha <strong>usado</strong> um Kafka de verdade pelo terminal: criado um tópico, escrito, lido, visto o marcador de um grupo e relido tudo desde o começo.</p>
+<ol class="passo-a-passo"><li><strong>Ideia</strong> (vídeos + simuladores): fila × log, offset, grupos, partições e chave.</li>
+<li><strong>Mão no Kafka</strong>: um arquivo pronto sobe o Kafka e um painel. Nada muda no seu projeto.</li>
+<li><strong>Visão de sistema</strong>: onde o Kafka entraria no Pedidos e Pagamentos, e quando escolher fila ou log.</li></ol>
+<aside class="tip"><h3>Antes de começar</h3><p>Docker Desktop aberto. Se a rede da sala estiver lenta, baixe as imagens já: <code>docker pull apache/kafka:3.9.1</code> e <code>docker pull ghcr.io/kafbat/kafka-ui:v1.3.0</code> (cerca de 1 GB).</p></aside>
+<details><summary>🏠 Para casa: o Prompt 1 (diagnóstico do projeto com o agente)</summary>
 <div class="prompt"><div class="prompt-top"><strong>Prompt 1 · diagnóstico do circuito do Cap 02</strong><button type="button" data-copy>Copiar prompt</button></div><pre><span class="prompt-key">[CONTEXTO]</span> Vou continuar o projeto de Pedidos e Pagamentos do Cap 02 (RabbitMQ). Hoje vamos adicionar Kafka para publicar um evento quando um pedido for pago.
 <span class="prompt-key">[TAREFA]</span> <mark class="hl">Sem criar nem editar arquivos</mark>, leia AGENTS.md, CLAUDE.md, as specs e o Docker Compose. Liste os serviços do Compose e as portas ocupadas. Encontre o ponto do código em que um resultado APROVADO deixa o pedido PAGO. Rode os testes unitários de Pedidos e de Pagamentos pelo Maven Wrapper.
 <span class="prompt-key">[LIMITES]</span> Não instale nada, não reinicie nem remova containers. Não presuma que concluí as tarefas do Cap 02.
 <span class="prompt-key">[ACEITE]</span> Separe <mark class="hl">funcionando com prova, falhando e ausente</mark>. Diga se as portas <mark class="hl">9092 e 8090</mark> estão livres. Aponte arquivo e método onde o pedido vira PAGO.
 <span class="prompt-key">[PAUSA]</span> Proponha o menor ponto de retomada e <mark class="hl">aguarde meu OK antes de editar</mark>.</pre><p class="copy-status" aria-live="polite"></p></div>
-<aside class="tip"><h3>Confira quando voltar ao terminal</h3><p>Os testes passam e o agente apontou o lugar em que o pedido vira PAGO (na referência: <code>RegistroService.concluir</code>, chamado pelo <code>ResultadoListener</code>). É exatamente ali que o evento de hoje vai nascer. Se o circuito não funciona, use a conclusão do Cap 02.</p></aside>
+</details>
 </section>
 <div class="section-connector" aria-hidden="true">↓</div>
 
-<div class="part-head"><div class="ph-n">Parte 1 · 13:45–14:50</div><h2>A ideia: um caderno, não uma fila</h2><p>Antes da ferramenta, o modelo mental. Se você entender estes cinco pontos, o resto do dia é aplicar.</p></div>
+<div class="part-head"><div class="ph-n">Parte 1 · 13:40–14:50</div><h2>A ideia: um caderno, não uma fila</h2><p>Antes da ferramenta, o modelo mental. Se você entender estes cinco pontos, o resto do dia é aplicar.</p></div>
 
-<section class="step-section visible" id="esquece"><div class="section-kicker">Parte 1 · primeiro o problema <span class="relogio">13:45 · 15 min</span></div><h2>A fila entrega e esquece <span class="ponto-ref" data-ponto="04">[04]</span></h2>
+<section class="step-section visible" id="esquece"><div class="section-kicker">Parte 1 · primeiro o problema <span class="relogio">13:40 · 20 min</span></div><h2>A fila entrega e esquece <span class="ponto-ref" data-ponto="04">[04]</span></h2>
 <aside class="story"><h3>Duas cozinhas</h3><p>Na primeira, o garçom pendura a <strong>comanda</strong> no trilho. O cozinheiro pega, prepara e <strong>joga a comanda fora</strong>. Funciona muito bem para fazer o prato. Mas, no fim do dia, o dono pergunta: “quantos cafés vendemos?”. A comanda não existe mais. Na segunda, cada pedido também é anotado num <strong>caderno</strong>, linha por linha, em ordem. O cozinheiro lê o caderno; o dono lê o mesmo caderno à noite; o contador lê no fim do mês. Ninguém arranca páginas.</p></aside>
 <figure class="video-8bit" aria-labelledby="v8-cap"><video controls preload="none" playsinline poster="video/duas-cozinhas-capa.jpg" width="1920" height="1080"><source src="video/duas-cozinhas.mp4" type="video/mp4">Seu navegador não reproduz vídeo. Use a transcrição abaixo.</video>
 <figcaption id="v8-cap"><b>🎮 Duas cozinhas, versão 8-bit</b> (1 min 11 s, com som). Aperte play quando a turma estiver pronta. A caixa de diálogo funciona como legenda.</figcaption>
@@ -202,9 +210,9 @@
 </section>
 <div class="section-connector" aria-hidden="true">↓</div>
 
-<div class="part-head"><div class="ph-n">Parte 2 · 14:50–15:20</div><h2>Kafka na mão, sem código</h2><p>Subir o broker e o painel, e repetir no terminal o que os simuladores mostraram.</p></div>
+<div class="part-head"><div class="ph-n">Parte 2 · 14:50–16:20 (com intervalo)</div><h2>Kafka na mão, sem código</h2><p>Subir um Kafka pronto com um comando e repetir no terminal o que os simuladores mostraram.</p></div>
 
-<section class="step-section visible" id="docker"><div class="section-kicker">Parte 2 · infraestrutura <span class="relogio">14:50 · 10 min</span></div><h2>Kafka no Docker, com um painel <span class="ponto-ref" data-ponto="09">[09]</span></h2>
+<section class="step-section visible" id="docker"><div class="section-kicker">Parte 2 · um comando <span class="relogio">14:50 · 15 min</span></div><h2>Kafka no Docker, com um painel <span class="ponto-ref" data-ponto="09">[09]</span></h2>
 <div class="teoria"><h3>Por que duas portas</h3>
 <p>Quando um programa se conecta ao Kafka, o broker responde com um endereço: “para falar comigo, use este aqui”. Esse endereço anunciado se chama <strong>advertised listener</strong>. O problema é que o Kafka roda num container e é procurado de dois lugares diferentes.</p>
 <p>Seus apps Java rodam <strong>no seu computador</strong> e encontram o Kafka em <code>localhost:9092</code>. O painel roda <strong>em outro container</strong>, onde <code>localhost</code> é ele mesmo; lá dentro, o Kafka se chama <code>kafka</code>, o nome do serviço no Compose. Por isso configuramos duas portas de entrada, cada uma anunciando o endereço certo para quem está daquele lado.</p></div>
@@ -217,6 +225,15 @@
 <path class="lb" d="M650 120 H560"/><text class="b" x="568" y="110">kafka:19092</text>
 <path class="l" d="M120 170 V195 H760 V170"/><text class="s" x="330" y="210">navegador → localhost:8090 → painel</text>
 </svg></div><figcaption id="d4-cap"><b>Regra prática.</b> No seu computador, <code>localhost:9092</code>. Dentro de um container (painel, terminal do Kafka), <code>kafka:19092</code>.</figcaption></figure>
+<div class="teoria"><h3>Hoje: um Kafka pronto, separado do seu projeto</h3>
+<p>Para não arriscar o projeto de ninguém, o Lab usa um arquivo pronto: <a href="apoio/kafka-lab/compose.yml" download>compose.yml do Kafka</a>. Ele sobe só o Kafka e o painel, sem tocar no Postgres nem no RabbitMQ do Cap 02. Testado em 09/10/2026.</p></div>
+<ol class="passo-a-passo"><li>Crie uma pasta nova, por exemplo <code>kafka-lab</code>, e salve nela o <a href="apoio/kafka-lab/compose.yml" download>compose.yml</a>.</li>
+<li>Abra o terminal nessa pasta e suba tudo:
+<div class="cmd"><div class="cod-top"><span>seu terminal, dentro de kafka-lab</span><button type="button" data-copy-cmd>Copiar</button></div><pre>docker compose up -d --wait</pre><p class="copy-status" aria-live="polite"></p></div>
+Esperado: <code>Container kafka-lab-kafka-1 Healthy</code> e <code>Container kafka-lab-kafka-ui-1 Healthy</code>. Na primeira vez demora mais, porque baixa as imagens.</li>
+<li>Abra o painel: <a href="http://localhost:8090" target="_blank" rel="noopener">localhost:8090</a>. O cluster <strong>aula</strong> aparece online, ainda sem tópicos seus.</li></ol>
+<aside class="warning"><h3>Se a porta estiver ocupada</h3><p>Se aparecer erro de porta 9092 ou 8090 em uso, suba com outras portas: <code>KAFKA_PORT=29092 KAFKA_UI_PORT=28090 docker compose up -d --wait</code> (no Windows PowerShell: <code>$env:KAFKA_PORT="29092"; $env:KAFKA_UI_PORT="28090"; docker compose up -d --wait</code>) e abra o painel na 28090.</p></aside>
+<details><summary>🏠 Para casa: colocar o Kafka no SEU projeto com o agente (Prompt 2) e ver o Compose comentado</summary>
 <div class="prompt"><div class="prompt-top"><strong>Prompt 2 · Kafka e painel no Compose</strong><button type="button" data-copy>Copiar prompt</button></div><pre><span class="prompt-key">[CONTEXTO]</span> O Compose já tem Postgres e RabbitMQ do Cap 02. Quero adicionar um broker Kafka e um painel web.
 <span class="prompt-key">[TAREFA]</span> Proponha dois serviços novos. kafka: imagem apache/kafka:3.9.1, <mark class="hl">modo KRaft com um único nó</mark> (broker e controller), listeners HOST na 9092 anunciado como localhost:9092 e INTERNO na 19092 anunciado como kafka:19092, controller na 9093, fatores de replicação 1, 3 partições por padrão, volume nomeado dados-kafka em /var/lib/kafka/data e healthcheck com kafka-topics.sh --list em kafka:19092. kafka-ui: imagem ghcr.io/kafbat/kafka-ui:v1.3.0, cluster chamado aula apontando para kafka:19092, depende do kafka saudável. Publique 9092 e 8090 <mark class="hl">somente em 127.0.0.1</mark>.
 <span class="prompt-key">[LIMITES]</span> <mark class="hl">Preserve Postgres, RabbitMQ e seus volumes</mark>. Não use down -v. Não altere código Java nesta etapa.
@@ -262,14 +279,15 @@
 # e, na lista de volumes no fim do arquivo:
 #   dados-kafka:</code></pre></div>
 <p>Se o healthcheck usasse <code>localhost:9092</code>, funcionaria só por coincidência: dentro do container, o endereço anunciado da porta HOST aponta para o próprio container. Com outra porta no host, quebraria. Por isso o teste usa <code>kafka:19092</code>.</p></details>
+</details>
 <aside class="tip"><h3>Primeira vez é lenta</h3><p>As duas imagens somam cerca de 1 GB. Se a rede da sala estiver lenta, baixe antes, em casa: <code>docker pull apache/kafka:3.9.1</code> e <code>docker pull ghcr.io/kafbat/kafka-ui:v1.3.0</code>. Depois de baixadas, o Kafka liga em uns 10 segundos.</p></aside>
 </section>
 <div class="section-connector" aria-hidden="true">↓</div>
 
-<section class="step-section visible" id="lab-terminal"><div class="section-kicker">Parte 2 · Lab A · 👥 junto com o professor <span class="relogio">15:00 · 20 min</span></div><h2>Lab A: o caderno do café, à mão <span class="ponto-ref" data-ponto="10">[10]</span></h2>
+<section class="step-section visible" id="lab-terminal"><div class="section-kicker">Parte 2 · Lab A · 👥 junto com o professor <span class="relogio">15:05 · 30 min</span></div><h2>Lab A: o caderno do café, à mão <span class="ponto-ref" data-ponto="10">[10]</span></h2>
 <p>Antes de qualquer Java, vamos repetir no Kafka de verdade o que os simuladores mostraram. Usaremos os programas de linha de comando que já vêm dentro do container. É um tópico de treino, <code>treino-cafe</code>: pedidos de mesas de uma cafeteria. Ele não tem nada a ver com o projeto e pode ficar lá.</p>
 <ol class="passo-a-passo">
-<li><strong>Entre no container.</strong> Na pasta do seu arquivo do Compose (se ele está em <code>infra/</code>, acrescente <code>-f infra/compose.yml</code> logo depois de <code>compose</code>):
+<li><strong>Entre no container.</strong> No terminal, dentro da pasta <code>kafka-lab</code>:
 <div class="cmd"><div class="cod-top"><span>seu terminal</span><button type="button" data-copy-cmd>Copiar</button></div><pre>docker compose exec kafka bash</pre><p class="copy-status" aria-live="polite"></p></div>
 O prompt muda: agora você está <em>dentro</em> do container. Vá para a pasta dos programas:
 <div class="cmd"><div class="cod-top"><span>dentro do container</span><button type="button" data-copy-cmd>Copiar</button></div><pre>cd /opt/kafka/bin</pre><p class="copy-status" aria-live="polite"></p></div></li>
@@ -308,11 +326,32 @@ A coluna <code>NEW-OFFSET</code> mostra 0 nas três partições. Rode o consumid
 </section>
 <div class="section-connector" aria-hidden="true">↓</div>
 
-<div class="part-head"><div class="ph-n">☕ 15:20–15:35</div><h2>Intervalo</h2><p>Na volta, Pedidos começa a escrever no caderno.</p></div>
+<div class="part-head"><div class="ph-n">☕ 15:35–15:50</div><h2>Intervalo</h2><p>Na volta, dois consumidores dividem o mesmo caderno.</p></div>
 
-<div class="part-head"><div class="ph-n">Parte 3 · 15:35–16:50</div><h2>Pedidos conta a novidade</h2><p>Desenho, contrato, leitura do código e três apps conversando: Pedidos, Pagamentos e o novo Analytics.</p></div>
+<section class="step-section visible" id="lab-mais"><div class="section-kicker">Parte 2 · Lab A+ · 👥 junto com o professor <span class="relogio">15:50 · 30 min</span></div><h2>Lab A+: dois cozinheiros, um grupo <span class="ponto-ref" data-ponto="10">[10 · continuação]</span></h2>
+<p>É o simulador do ponto 07 de verdade: dois consumidores no <strong>mesmo grupo</strong> dividem as partições. Você vai precisar de <strong>três terminais</strong> abertos na pasta <code>kafka-lab</code>.</p>
+<ol class="passo-a-passo">
+<li><strong>Terminal 1 · consumidor A.</strong> Grupo novo, chamado <code>cozinha</code>:
+<div class="cmd"><div class="cod-top"><span>terminal 1</span><button type="button" data-copy-cmd>Copiar</button></div><pre>docker compose exec kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka:19092 --topic treino-cafe --group cozinha --property print.partition=true --property print.key=true</pre><p class="copy-status" aria-live="polite"></p></div>
+Ele lê o que já existe no tópico (grupo novo começa do início) e fica esperando.</li>
+<li><strong>Terminal 2 · consumidor B.</strong> O <em>mesmo</em> comando, no mesmo grupo. Espere uns 5 segundos: o Kafka redistribui as 3 partições entre os dois. Isso se chama <strong>rebalanceamento</strong>.</li>
+<li><strong>Terminal 3 · produtor.</strong> Escreva pedidos de mesas diferentes:
+<div class="cmd"><div class="cod-top"><span>terminal 3</span><button type="button" data-copy-cmd>Copiar</button></div><pre>docker compose exec kafka /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server kafka:19092 --topic treino-cafe --property parse.key=true --property key.separator=:</pre><p class="copy-status" aria-live="polite"></p></div>
+Digite, uma linha por vez: <code>mesa1:cafe</code>, <code>mesa2:pao</code>, <code>mesa3:suco</code>, <code>mesa4:bolo</code>, <code>mesa5:agua</code>, <code>mesa6:torta</code>.</li>
+<li><strong>Observe.</strong> Cada linha aparece em <strong>um só</strong> dos dois consumidores, nunca nos dois. Quem recebe depende da partição. Um teste real em 09/10/2026: o consumidor A ficou com a partição 2 (mesa6), o B com as partições 0 e 1 (mesa1, 2, 3, 4, 5).</li>
+<li><strong>Veja a divisão no Kafka.</strong> Num quarto terminal, ou no painel (<strong>Consumers → cozinha</strong>):
+<div class="cmd"><div class="cod-top"><span>outro terminal</span><button type="button" data-copy-cmd>Copiar</button></div><pre>docker compose exec kafka /opt/kafka/bin/kafka-consumer-groups.sh --bootstrap-server kafka:19092 --describe --group cozinha</pre><p class="copy-status" aria-live="polite"></p></div>
+A coluna <code>CONSUMER-ID</code> mostra dois donos diferentes para as três partições.</li>
+<li><strong>Lag na prática.</strong> Feche os dois consumidores (Ctrl+C). No produtor, escreva mais 3 linhas. Rode o <code>--describe</code> de novo: a coluna <code>LAG</code> mostra o que o grupo ainda não leu. Ligue um consumidor de novo: ele lê só as 3 novas.</li>
+</ol>
+<div class="decision"><h3>Antes de revelar: e se você abrir um TERCEIRO consumidor no grupo cozinha, depois um QUARTO?</h3><div class="choices"><button type="button" data-correct="true" data-feedback="Isso. Com três, cada um fica com uma partição. O quarto entra no grupo, mas não recebe nada: só existem três partições.">Com três, cada um fica com uma partição; o quarto fica parado.</button><button type="button" data-correct="false" data-feedback="Num mesmo grupo, uma partição nunca é lida por dois consumidores ao mesmo tempo. O quarto fica sem trabalho.">Os quatro dividem as mensagens igualmente.</button></div><p class="feedback" aria-live="polite">Escolha uma previsão. Depois confira a explicação.</p><button type="button" data-reset-quiz>Tentar novamente</button></div>
+<aside class="tip"><h3>Para encerrar o lab</h3><p>Ctrl+C em cada terminal. Para desligar o Kafka sem apagar nada: <code>docker compose stop</code>, dentro de <code>kafka-lab</code>.</p></aside>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
 
-<section class="step-section visible" id="desenho"><div class="section-kicker">Parte 3 · o mapa <span class="relogio">15:35 · 5 min</span></div><h2>Onde o Kafka entra (e onde não entra) <span class="ponto-ref" data-ponto="11">[11]</span></h2>
+<div class="part-head"><div class="ph-n">Parte 3 · 16:20–17:00 · em sala: pontos 11, 12 e o Lab B</div><h2>Pedidos conta a novidade</h2><p>Em sala: o desenho, o contrato e o Lab B no terminal. Do ponto 13 ao 18 (código Java com o agente) é tarefa de casa.</p></div>
+
+<section class="step-section visible" id="desenho"><div class="section-kicker">Parte 3 · o mapa <span class="relogio">16:20 · 5 min</span></div><h2>Onde o Kafka entra (e onde não entra) <span class="ponto-ref" data-ponto="11">[11]</span></h2>
 <p>Não vamos trocar o RabbitMQ pelo Kafka. Os dois ficam, cada um no trabalho que faz melhor. O pagamento continua um <strong>comando</strong> pela fila: “Pagamentos, decida isto”. O que é novo é um <strong>evento</strong>: “o pedido 4711 foi pago”, contado para quem quiser ouvir.</p>
 <figure class="desenho" aria-labelledby="d5-cap"><div class="svg-scroll"><svg viewBox="0 0 900 330" role="img" aria-labelledby="d5-t"><title id="d5-t">Arquitetura do Cap 03: RabbitMQ para o comando de pagamento, Kafka para o evento PedidoPago</title>
 <rect class="n" x="20" y="40" width="170" height="100" rx="12"/><text class="t" x="40" y="75">Pedidos</text><text class="s" x="40" y="98">8080 · Postgres</text><text class="s" x="40" y="118">pedido → PAGO</text>
@@ -335,7 +374,7 @@ A coluna <code>NEW-OFFSET</code> mostra 0 nas três partições. Rode o consumid
 </section>
 <div class="section-connector" aria-hidden="true">↓</div>
 
-<section class="step-section visible" id="contrato"><div class="section-kicker">Parte 3 · contrato antes do código <span class="relogio">15:40 · 10 min</span></div><h2>Combine o evento antes de escrever Java <span class="ponto-ref" data-ponto="12">[12]</span></h2>
+<section class="step-section visible" id="contrato"><div class="section-kicker">Parte 3 · contrato antes do código <span class="relogio">16:25 · 5 min</span></div><h2>Combine o evento antes de escrever Java <span class="ponto-ref" data-ponto="12">[12]</span></h2>
 <p>Quem lê o tópico não tem acesso ao banco de Pedidos nem às classes Java dele. Tudo o que o leitor sabe é o que está no registro. Por isso o contrato precisa ser explícito.</p>
 <div class="codigo"><div class="cod-top"><span>registro no tópico pedidos-pagos</span><span>chave + valor JSON</span></div><pre><code><span class="c">chave:</span> <span class="st">"89e83d74-29b8-4a52-aaf0-2f33877c9f99"</span>   <span class="c">← o pedidoId</span>
 <span class="c">valor:</span>
@@ -352,17 +391,44 @@ A coluna <code>NEW-OFFSET</code> mostra 0 nas três partições. Rode o consumid
 <tr><td>Versão</td><td><code>"versao": 1</code></td><td>Mesmo motivo do Cap 02: produtor e leitores mudam em dias diferentes.</td></tr>
 <tr><td>Repetição</td><td>Pode acontecer</td><td>Reentrega do resultado no RabbitMQ republica o evento. Leitor conta cada pedido uma vez.</td></tr>
 </tbody></table></div>
+<details><summary>🏠 Para casa: a spec do evento com o agente (Prompt 3)</summary>
 <div class="prompt"><div class="prompt-top"><strong>Prompt 3 · spec do evento PedidoPago</strong><button type="button" data-copy>Copiar prompt</button></div><pre><span class="prompt-key">[CONTEXTO]</span> Vamos publicar um evento no Kafka quando um pedido ficar PAGO. Ainda não quero código.
 <span class="prompt-key">[TAREFA]</span> Escreva .specs/06-evento-pedido-pago.md com: objetivo; produtor (Pedidos) e momento exato da publicação (<mark class="hl">depois de gravar o resultado APROVADO no Postgres</mark>); tópico pedidos-pagos com 3 partições; <mark class="hl">chave = pedidoId</mark>; valor JSON versão 1 com versao, pedidoId, solicitacaoId e valor; recusa não publica; reentrega do resultado republica o evento; leitores devem contar cada pedidoId uma vez; leitor previsto Analytics (porta 8082, sem banco).
 <span class="prompt-key">[LIMITES]</span> Não altere código. Não prometa exactly-once. Registre o limite: Postgres e Kafka não têm transação única; se o Kafka estiver fora, o pedido fica PAGO e o evento falha.
 <span class="prompt-key">[ACEITE]</span> Spec curta, com uma seção de provas: aprovação publica 1 registro; recusa publica 0; repetição gera registro repetido com a mesma chave e mesma partição.
 <span class="prompt-key">[PAUSA]</span> Mostre a spec e <mark class="hl">aguarde meu OK</mark>.
 <span class="prompt-key">[COMMIT]</span> Depois do meu OK: commit só da spec, mensagem em português, push para origin main.</pre><p class="copy-status" aria-live="polite"></p></div>
+</details>
 <aside class="limite"><h3>⚠️ Não compartilhe a classe, compartilhe o contrato</h3><p>Como no Cap 02: Analytics terá o <em>seu próprio</em> record <code>PedidoPago</code>, com os mesmos campos. Um <code>.jar</code> compartilhado amarraria a implantação dos dois. O que eles compartilham é o JSON documentado na spec.</p></aside>
 </section>
 <div class="section-connector" aria-hidden="true">↓</div>
 
-<section class="step-section visible" id="leia"><div class="section-kicker">Parte 3 · leitura guiada <span class="relogio">15:50 · 10 min</span></div><h2>Leia antes de gerar: o código é curto <span class="ponto-ref" data-ponto="13">[13]</span></h2>
+<section class="step-section visible" id="lab-b"><div class="section-kicker">Parte 3 · Lab B · 👥 junto · sem Java <span class="relogio">16:30 · 30 min</span></div><h2>Lab B: o PedidoPago à mão <span class="ponto-ref" data-ponto="12">[12 · Lab B]</span></h2>
+<p>Agora o tópico do nosso sistema. Você vai fazer, no terminal, exatamente o que o Pedidos e o Analytics farão em Java: publicar o evento com o contrato que acabamos de combinar e ler com dois grupos. Mesma pasta <code>kafka-lab</code>.</p>
+<ol class="passo-a-passo">
+<li><strong>Crie o tópico do sistema</strong>, com 3 partições:
+<div class="cmd"><div class="cod-top"><span>seu terminal, em kafka-lab</span><button type="button" data-copy-cmd>Copiar</button></div><pre>docker compose exec kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:19092 --create --topic pedidos-pagos --partitions 3</pre><p class="copy-status" aria-live="polite"></p></div></li>
+<li><strong>Seja o Pedidos.</strong> Abra o produtor. Aqui a chave é separada do valor por uma barra <code>/</code>, porque o JSON já usa dois-pontos:
+<div class="cmd"><div class="cod-top"><span>terminal do produtor</span><button type="button" data-copy-cmd>Copiar</button></div><pre>docker compose exec kafka /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server kafka:19092 --topic pedidos-pagos --property parse.key=true --property key.separator=/</pre><p class="copy-status" aria-live="polite"></p></div>
+Cole uma linha por vez (chave = id do pedido):
+<div class="terminal-saida"><div class="cod-top"><span>cole no produtor</span><span>chave/valor</span></div><pre>4711/{"versao":1,"pedidoId":"4711","valor":37.80}
+5120/{"versao":1,"pedidoId":"5120","valor":18.90}
+4800/{"versao":1,"pedidoId":"4800","valor":56.70}</pre></div>
+Deixe esse terminal aberto.</li>
+<li><strong>Seja o Analytics.</strong> Em outro terminal, leia com o grupo <code>analytics</code>, mostrando partição e offset:
+<div class="cmd"><div class="cod-top"><span>terminal do analytics</span><button type="button" data-copy-cmd>Copiar</button></div><pre>docker compose exec kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka:19092 --topic pedidos-pagos --group analytics --from-beginning --property print.key=true --property print.partition=true --property print.offset=true</pre><p class="copy-status" aria-live="polite"></p></div>
+Some de cabeça: 3 pedidos, R$ 113,40. Anote em que partição caiu o 4711.</li>
+<li><strong>Seja a Auditoria.</strong> Num terceiro terminal, o mesmo comando trocando o grupo para <code>--group auditoria</code>. Ela lê os 3 também, sem tirar nada do Analytics. É o vídeo do save game, ao vivo.</li>
+<li><strong>A repetição.</strong> No produtor, cole de novo a linha do <code>4711</code>. O Analytics recebe um registro novo, <strong>na mesma partição</strong> do primeiro 4711, com offset maior. Pergunta para a turma: o painel deve somar R$ 37,80 de novo? (Não: o leitor precisa contar cada pedido uma vez. Isso é idempotência.)</li>
+<li><strong>O replay.</strong> Feche o terminal do Analytics (Ctrl+C) e rebobine o grupo:
+<div class="cmd"><div class="cod-top"><span>qualquer terminal</span><button type="button" data-copy-cmd>Copiar</button></div><pre>docker compose exec kafka /opt/kafka/bin/kafka-consumer-groups.sh --bootstrap-server kafka:19092 --group analytics --topic pedidos-pagos --reset-offsets --to-earliest --execute</pre><p class="copy-status" aria-live="polite"></p></div>
+Rode o comando do passo 3 de novo: os 4 registros voltam. Num teste real (09/10/2026), 4711 e 5120 caíram na partição 1 e 4800 na partição 2; a sua divisão pode ser outra.</li>
+</ol>
+<div class="decision"><h3>Antes de revelar: se você publicar o 4711 sem chave, ele vai para a mesma partição de antes?</h3><div class="choices"><button type="button" data-correct="false" data-feedback="Sem chave, o produtor escolhe a partição sozinho. Pode cair em qualquer uma, e aí a ordem entre os eventos do 4711 deixa de ser garantida.">Sim, o Kafka lembra do pedido.</button><button type="button" data-correct="true" data-feedback="Isso. Quem garante a mesma partição é a chave. Sem ela, o Kafka não sabe que é o mesmo pedido.">Não necessariamente: é a chave que garante a mesma partição.</button></div><p class="feedback" aria-live="polite">Escolha uma previsão. Depois confira a explicação.</p><button type="button" data-reset-quiz>Tentar novamente</button></div>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<section class="step-section visible" id="leia"><div class="section-kicker">🏠 Em casa · leitura guiada antes do Prompt 4</div><h2>Leia antes de gerar: o código é curto <span class="ponto-ref" data-ponto="13">[13]</span></h2>
 <p>O agente vai gerar o código, mas você precisa reconhecer o que é certo. São três peças pequenas. Leia uma por vez com a explicação ao lado.</p>
 <div class="codigo"><div class="cod-top"><span>Pedidos · KafkaConfig.java · declara o tópico</span><span>Spring Kafka</span></div><pre><code><span class="an">@Bean</span> NewTopic pedidosPagos() {
     <span class="kw">return</span> TopicBuilder.name(<span class="st">"pedidos-pagos"</span>).partitions(3).replicas(1).build();
@@ -383,7 +449,7 @@ System.out.printf(<span class="st">"PEDIDO_PAGO publicado: partição=%d offset=
 </section>
 <div class="section-connector" aria-hidden="true">↓</div>
 
-<section class="step-section visible" id="publica"><div class="section-kicker">Parte 3 · 🧭 dirigir o agente · 🧍 cada um no seu projeto <span class="relogio">16:00 · 15 min</span></div><h2>Pedidos publica o PedidoPago <span class="ponto-ref" data-ponto="14">[14]</span></h2>
+<section class="step-section visible" id="publica"><div class="section-kicker">🏠 Em casa · com o agente · 🧭 dirigir o agente · 🧍 cada um no seu projeto</div><h2>Pedidos publica o PedidoPago <span class="ponto-ref" data-ponto="14">[14]</span></h2>
 <p>Agora o agente implementa a spec aprovada. Só a publicação: o leitor vem no próximo ponto.</p>
 <div class="prompt"><div class="prompt-top"><strong>Prompt 4 · Pedidos publica no Kafka</strong><button type="button" data-copy>Copiar prompt</button></div><pre><span class="prompt-key">[CONTEXTO]</span> Implemente a spec .specs/06-evento-pedido-pago.md aprovada, só do lado de Pedidos.
 <span class="prompt-key">[TAREFA]</span> Adicione spring-kafka ao pom. No application.yml: bootstrap-servers de KAFKA_BOOTSTRAP com padrão localhost:9092, producer com <mark class="hl">acks=all</mark> e timeouts curtos (max.block.ms, request.timeout.ms 5000 e delivery.timeout.ms 10000) para falhar em segundos na aula. Crie o pacote adapters/eventos com o record PedidoPago, um bean NewTopic pedidos-pagos (3 partições, 1 réplica) e um PublicadorPedidoPago que envia com <mark class="hl">chave pedidoId</mark>, espera a confirmação com get de 10 segundos e imprime partição e offset. O método que aplica o resultado passa a informar se o pedido está pago por aquela solicitação, inclusive numa reentrega; o listener do resultado publica só nesse caso, depois do commit.
@@ -402,7 +468,7 @@ System.out.printf(<span class="st">"PEDIDO_PAGO publicado: partição=%d offset=
 </section>
 <div class="section-connector" aria-hidden="true">↓</div>
 
-<section class="step-section visible" id="analytics"><div class="section-kicker">Parte 3 · 🧭 dirigir o agente · um serviço novo <span class="relogio">16:15 · 20 min</span></div><h2>Analytics lê o tópico <span class="ponto-ref" data-ponto="15">[15]</span></h2>
+<section class="step-section visible" id="analytics"><div class="section-kicker">🏠 Em casa · com o agente · 🧭 dirigir o agente · um serviço novo</div><h2>Analytics lê o tópico <span class="ponto-ref" data-ponto="15">[15]</span></h2>
 <p>Um serviço novo, o terceiro do projeto, de propósito pequeno: sem banco, só o Kafka e um endpoint para mostrar o painel. A simplicidade é intencional: queremos ver o que o Kafka faz, não o que um banco faz.</p>
 <div class="prompt"><div class="prompt-top"><strong>Prompt 5 · serviço Analytics</strong><button type="button" data-copy>Copiar prompt</button></div><pre><span class="prompt-key">[CONTEXTO]</span> Quero um terceiro serviço que leia o tópico pedidos-pagos, conforme a spec do evento.
 <span class="prompt-key">[TAREFA]</span> Crie a pasta analytics/ ao lado de pedidos/ e pagamentos/: Spring Boot 3.5.16, Java 21, web e spring-kafka, Maven Wrapper copiado de pagamentos. Porta de ANALYTICS_PORT com padrão 8082. Grupo de <mark class="hl">ANALYTICS_GRUPO com padrão analytics</mark>, auto-offset-reset earliest. Um record PedidoPago próprio. Um PainelVendas <mark class="hl">em memória</mark> que conta cada pedidoId uma vez e guarda as 10 últimas leituras (pedidoId, partição, offset, repetida). Um @KafkaListener que recebe ConsumerRecord e imprime partição e offset. GET /analytics/resumo devolve mensagensLidas, pedidosPagos, faturamento e ultimas.
@@ -437,7 +503,7 @@ System.out.printf(<span class="st">"PEDIDO_PAGO publicado: partição=%d offset=
 </section>
 <div class="section-connector" aria-hidden="true">↓</div>
 
-<section class="step-section visible" id="replay"><div class="section-kicker">Parte 3 · prova no seu computador <span class="relogio">16:35 · 10 min</span></div><h2>Reiniciou e zerou: agora rebobine <span class="ponto-ref" data-ponto="16">[16]</span></h2>
+<section class="step-section visible" id="replay"><div class="section-kicker">🏠 Em casa · com o agente · prova no seu computador</div><h2>Reiniciou e zerou: agora rebobine <span class="ponto-ref" data-ponto="16">[16]</span></h2>
 <p>É o simulador do ponto 06, agora de verdade. <strong>Preveja antes de cada passo.</strong></p>
 <ol class="passo-a-passo"><li>Pare o Analytics (Ctrl+C) e suba de novo. Consulte o resumo. <em>Previsão?</em><br>Resultado: <code>"pedidosPagos": 0</code>. Nenhuma linha <code>LIDO</code> no log. A memória zerou; o marcador do grupo <code>analytics</code> está no fim.</li>
 <li>Confirme no painel do Kafka → <strong>Consumers</strong> → <code>analytics</code>: lag 0 em todas as partições. Para o Kafka, está tudo lido.</li>
@@ -449,7 +515,7 @@ System.out.printf(<span class="st">"PEDIDO_PAGO publicado: partição=%d offset=
 </section>
 <div class="section-connector" aria-hidden="true">↓</div>
 
-<section class="step-section visible" id="auditoria"><div class="section-kicker">Parte 3 · um leitor que chegou atrasado <span class="relogio">16:45 · 5 min</span></div><h2>Um time novo chega: o grupo auditoria <span class="ponto-ref" data-ponto="17">[17]</span></h2>
+<section class="step-section visible" id="auditoria"><div class="section-kicker">🏠 Em casa · com o agente · um leitor que chegou atrasado</div><h2>Um time novo chega: o grupo auditoria <span class="ponto-ref" data-ponto="17">[17]</span></h2>
 <p>A auditoria quer o histórico inteiro. Em vez de pedir a Pedidos para mandar tudo de novo, ela só precisa ler o tópico com <strong>outro nome de grupo</strong>. Usaremos o mesmo programa, em outra porta.</p>
 <div class="cmd"><div class="cod-top"><span>outro terminal, dentro de analytics/ · macOS/Linux</span><button type="button" data-copy-cmd>Copiar</button></div><pre>ANALYTICS_GRUPO=auditoria ANALYTICS_PORT=8083 ./mvnw spring-boot:run</pre><p class="copy-status" aria-live="polite"></p></div>
 <div class="cmd"><div class="cod-top"><span>outro terminal, dentro de analytics/ · Windows PowerShell</span><button type="button" data-copy-cmd>Copiar</button></div><pre>$env:ANALYTICS_GRUPO="auditoria"; $env:ANALYTICS_PORT="8083"; .\mvnw.cmd spring-boot:run</pre><p class="copy-status" aria-live="polite"></p></div>
@@ -458,9 +524,9 @@ System.out.printf(<span class="st">"PEDIDO_PAGO publicado: partição=%d offset=
 </section>
 <div class="section-connector" aria-hidden="true">↓</div>
 
-<div class="part-head"><div class="ph-n">Parte 4 · 16:50–17:22</div><h2>Quando algo dá errado, e quando usar qual</h2><p>Duas falhas provocadas de propósito e o quadro de decisão RabbitMQ × Kafka.</p></div>
+<div class="part-head"><div class="ph-n">Parte 4 · 17:00–17:20 · em sala os pontos 19 (vídeo) e 20</div><h2>Quando algo dá errado, e quando usar qual</h2><p>Em sala: o vídeo do chefão e a escolha do lutador. As provas práticas de falha ficam para casa.</p></div>
 
-<section class="step-section visible" id="repeticao"><div class="section-kicker">Parte 4 · pelo menos uma vez, de novo <span class="relogio">16:50 · 10 min</span></div><h2>O mesmo evento duas vezes <span class="ponto-ref" data-ponto="18">[18]</span></h2>
+<section class="step-section visible" id="repeticao"><div class="section-kicker">🏠 Em casa · com o agente · pelo menos uma vez, de novo</div><h2>O mesmo evento duas vezes <span class="ponto-ref" data-ponto="18">[18]</span></h2>
 <div class="teoria"><h3>Por que o evento pode se repetir</h3>
 <p>Lembre do Cap 02: o RabbitMQ entrega <strong>pelo menos uma vez</strong>. Se o resultado do pagamento chegar duas vezes a Pedidos, o pedido não muda (já estava PAGO), mas o nosso código publica o <code>PedidoPago</code> de novo. Escolhemos isso de propósito: na dúvida, publicar outra vez é melhor do que não publicar. O preço é que <strong>todo leitor precisa tolerar repetição</strong>.</p>
 <p>No Kafka também existe o caso oposto: o consumidor processou, mas caiu antes do commit do offset. Ao voltar, relê o mesmo registro. Mesmo remédio: o leitor precisa ser <strong>idempotente</strong>, ou seja, aplicar duas vezes deve dar o mesmo resultado de aplicar uma.</p></div>
@@ -472,7 +538,7 @@ System.out.printf(<span class="st">"PEDIDO_PAGO publicado: partição=%d offset=
 </section>
 <div class="section-connector" aria-hidden="true">↓</div>
 
-<section class="step-section visible" id="kafka-fora"><div class="section-kicker">Parte 4 · a fronteira que continua aberta <span class="relogio">17:00 · 10 min</span></div><h2>Kafka desligado: o pedido pagou, o painel não soube <span class="ponto-ref" data-ponto="19">[19]</span></h2>
+<section class="step-section visible" id="kafka-fora"><div class="section-kicker">Parte 4 · em sala: só o vídeo · 🏠 a prática é em casa <span class="relogio">17:00 · 5 min</span></div><h2>Kafka desligado: o pedido pagou, o painel não soube <span class="ponto-ref" data-ponto="19">[19]</span></h2>
 <div class="teoria"><h3>Escrita dupla, de novo</h3>
 <p>No Cap 02 vimos a <strong>escrita dupla</strong>: gravar no banco e publicar numa fila são duas operações separadas, sem uma transação que una as duas. Aqui é igual. Primeiro o Postgres grava PAGO (commit). Depois publicamos no Kafka. Se o Kafka estiver fora nesse intervalo, o banco já mudou e o evento não saiu.</p>
 <p>No nosso código, a falha não passa em silêncio: o <code>.get()</code> lança exceção, o RabbitMQ tenta de novo três vezes e manda o resultado para a fila <code>pedidos.resultados.erros</code>. O pedido continua PAGO (correto), e o resultado guardado na fila de erros é a pista para recuperar.</p></div>
@@ -490,6 +556,7 @@ System.out.printf(<span class="st">"PEDIDO_PAGO publicado: partição=%d offset=
 <figure class="video-8bit" aria-labelledby="v8-chefao"><video controls preload="none" playsinline poster="video/chefao-capa.jpg" width="1920" height="1080"><source src="video/chefao.mp4" type="video/mp4">Seu navegador não reproduz vídeo. Use a transcrição abaixo.</video>
 <figcaption id="v8-chefao"><b>🎮 Mundo 2 · Chefão: a escrita dupla</b> (50 s, com som). Assista antes de desligar o Kafka de verdade nos passos abaixo.</figcaption>
 <details><summary>Transcrição do vídeo</summary><ol class="transcricao"><li><strong>Tico:</strong> Chefão do mundo dois: a escrita dupla!</li><li><strong>Beto:</strong> Pagamento aprovado. Gravei PAGO no Postgres. Agora é só avisar o Kafka...</li><li><strong>Beto:</strong> O Kafka está fora do ar! A mensagem não sai!</li><li><strong>Lia:</strong> Peraí: o pedido está pago, mas o meu painel não sabe de nada.</li><li><strong>Tico:</strong> São duas escritas, sem uma transação que una as duas. O chefão mora nesse intervalo.</li><li><strong>Tico:</strong> Por sorte, o RabbitMQ tentou três vezes e guardou o resultado na fila de erros.</li><li><strong>Beto:</strong> O Kafka voltou! Vou reenviar o mesmo resultado, com a mesma chave.</li><li><strong>Lia:</strong> Chegou! Pedido pago no painel. Chefão derrotado!</li><li><strong>Tico:</strong> Próximo mundo: o outbox. O evento é gravado no banco, na mesma transação, e publicado depois.</li></ol></details></figure>
+<p><strong>🏠 Em casa</strong>, no seu projeto, depois de fazer os pontos 14 e 15:</p>
 <ol class="passo-a-passo"><li>Pare só o Kafka: <code>docker compose stop kafka</code> (ajuste <code>-f</code> se precisar).</li>
 <li>Pague um pedido novo. Ele fica <strong>PAGO</strong>. No log de Pedidos, erros de conexão com o Kafka. Em ~30 segundos, o painel do RabbitMQ mostra 1 mensagem em <code>pedidos.resultados.erros</code>. O resumo do Analytics não muda (ele também perdeu a conexão).</li>
 <li>Suba o Kafka: <code>docker compose up -d --wait kafka</code>. Peça ao agente o diagnóstico (Prompt 6) antes de recuperar.</li>
@@ -503,7 +570,7 @@ System.out.printf(<span class="st">"PEDIDO_PAGO publicado: partição=%d offset=
 </section>
 <div class="section-connector" aria-hidden="true">↓</div>
 
-<section class="step-section visible" id="qual"><div class="section-kicker">Parte 4 · ⚖️ defender ou refutar <span class="relogio">17:10 · 12 min</span></div><h2>RabbitMQ ou Kafka? Depende da pergunta <span class="ponto-ref" data-ponto="20">[20]</span></h2>
+<section class="step-section visible" id="qual"><div class="section-kicker">Parte 4 · ⚖️ defender ou refutar <span class="relogio">17:05 · 15 min</span></div><h2>RabbitMQ ou Kafka? Depende da pergunta <span class="ponto-ref" data-ponto="20">[20]</span></h2>
 <p>Nenhum dos dois é “melhor”. São modelos diferentes. Este é o quadro que você leva para o resto do curso. Na AWS, mais adiante, vamos acrescentar uma terceira coluna.</p>
 <div class="table-scroll"><table class="quadro-decisao"><thead><tr><th>Critério</th><th>RabbitMQ (fila)</th><th>Kafka (log)</th></tr></thead><tbody>
 <tr><td>Depois de lida</td><td>A mensagem sai da fila</td><td>O registro fica até vencer a retenção</td></tr>
@@ -525,7 +592,7 @@ System.out.printf(<span class="st">"PEDIDO_PAGO publicado: partição=%d offset=
 </section>
 <div class="section-connector" aria-hidden="true">↓</div>
 
-<section class="step-section visible" id="fechamento"><div class="section-kicker">Fechamento · cinco perguntas <span class="relogio">17:22 · 8 min</span></div><h2>Explique o sistema sem decorar comandos <span class="ponto-ref" data-ponto="21">[21]</span></h2>
+<section class="step-section visible" id="fechamento"><div class="section-kicker">Fechamento · cinco perguntas <span class="relogio">17:20 · 10 min</span></div><h2>Explique o sistema sem decorar comandos <span class="ponto-ref" data-ponto="21">[21]</span></h2>
 <div class="decision"><h3>Antes de revelar: qual frase resume a diferença do dia?</h3><div class="choices"><button type="button" data-correct="true" data-feedback="Isso. Todo o resto (offset, grupo, replay, retenção) é consequência de “ler não apaga”.">Na fila, ler consome. No log, ler só avança o marcador de quem leu.</button><button type="button" data-correct="false" data-feedback="Velocidade depende de muitas coisas. A diferença que muda o desenho do sistema é o que acontece com a mensagem depois de lida.">Kafka é mais rápido que RabbitMQ.</button></div><p class="feedback" aria-live="polite">Escolha uma previsão. Depois confira a explicação.</p><button type="button" data-reset-quiz>Tentar novamente</button></div>
 <ol class="review-list"><li>Onde fica o marcador de um grupo, e por que reiniciar o Analytics zerou o painel sem zerar o marcador?</li><li>Por que a chave é o <code>pedidoId</code>, e o que se perde sem ela?</li><li>Quantos consumidores de um grupo trabalham com 3 partições? E o quarto?</li><li>Por que o mesmo PedidoPago pode aparecer duas vezes, e como o Analytics se protege?</li><li>O que acontece entre o commit no Postgres e a publicação no Kafka, e qual é o nome da solução definitiva?</li></ol>
 <aside class="concept"><h3>Próximo sábado: OO e SOLID</h3><p>Você agora tem três serviços, dois brokers e várias decisões de desenho espalhadas pelo código. No Cap 04 vamos estudar os princípios que ajudam a julgar essas decisões e a revisar o que o agente escreve: responsabilidade única, dependências apontando para dentro, contratos que não quebram quem usa.</p></aside>
@@ -534,7 +601,7 @@ System.out.printf(<span class="st">"PEDIDO_PAGO publicado: partição=%d offset=
 <div class="zone-head" id="z-casa"><h2>🏠 Em casa</h2><p>Consolide com provas, não com capturas de tela</p></div>
 
 <section class="step-section visible" id="casa"><div class="section-kicker">Em casa · até 17/10</div><h2>Traga provas e o seu quadro <span class="ponto-ref" data-ponto="22">[22]</span></h2>
-<ol class="passo-a-passo"><li><strong>Reproduza</strong> as provas 14 a 19 no seu projeto. Se usou a conclusão em sala, faça o seu Analytics em casa com o Prompt 5.</li>
+<ol class="passo-a-passo"><li><strong>Leve o Kafka para o seu projeto</strong> com o agente: Prompt 2 (ponto 09), Prompt 3 (spec, ponto 12), Prompt 4 (Pedidos publica, ponto 14) e Prompt 5 (Analytics, ponto 15). Depois faça as provas 16 a 19. Travou? Compare com a <a href="apoio/pedidos-kafka-conclusao.zip" download>conclusão pronta</a>.</li>
 <li><strong>Escreva o seu quadro</strong> RabbitMQ × Kafka com suas palavras, em <code>.specs/07-quando-usar-qual.md</code>: três critérios que você mais usaria e um exemplo do projeto para cada.</li>
 <li><strong>Desafio curto:</strong> faça o Analytics mostrar também o faturamento <em>por partição</em> no resumo. Antes de pedir ao agente, preveja: depois de um replay, os números por partição mudam?</li>
 <li><strong>Entregue</strong> o link do repositório (branch <code>main</code>, um commit por etapa) e três frases: “O marcador do grupo fica… Reiniciar zerou porque… O replay reconstruiu porque…”.</li>

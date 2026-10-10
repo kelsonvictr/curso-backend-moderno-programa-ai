@@ -1,3 +1,44 @@
+CAP 03 — KAFKA DO ZERO · ROTEIRO SIMPLES (versão de 10/10, sem Java em sala)
+=========================================================================
+Objetivo: a turma sai sabendo o que é Kafka e tendo usado um de verdade no terminal.
+Código Java com Kafka (pontos 13–18) é TAREFA DE CASA, com os prompts.
+
+ANTES DA AULA (10 min, na sua máquina)
+  docker pull apache/kafka:3.9.1 && docker pull ghcr.io/kafbat/kafka-ui:v1.3.0
+  Baixe apoio/kafka-lab/compose.yml numa pasta kafka-lab e rode: docker compose up -d --wait
+  Abra localhost:8090. Se abriu, você está pronto. É o mesmo arquivo da turma.
+
+13:30 (10)  Abertura, ponto 03: "hoje é Kafka do zero, com prática no terminal".
+13:40 (70)  IDEIA. Ponto 04: vídeo Duas cozinhas + simulador 1. Ponto 05: log e offset.
+            Ponto 06: vídeo Save game + simulador 2. Ponto 07: vídeo Três pontas + simulador 3.
+            Ponto 08: as seis peças. Faça as perguntas "antes de revelar" em voz alta.
+14:50 (15)  Ponto 09: todos baixam o compose.yml e sobem o Kafka. Painel em localhost:8090.
+15:05 (30)  LAB A, ponto 10 (projete o seu terminal): tópico treino-cafe, produtor, grupo
+            barista, relê nada, describe, grupo caixa, reset e replay.
+15:35 (15)  ☕
+15:50 (30)  LAB A+: dois consumidores no grupo cozinha dividem as partições; lag.
+16:20 (10)  Pontos 11 e 12: desenho e contrato (só ler e comentar).
+16:30 (30)  LAB B: tópico pedidos-pagos, produtor com chave (separador /), grupos analytics
+            e auditoria, repetição do 4711 na mesma partição, reset e replay.
+17:00 (20)  Ponto 19: só o VÍDEO do chefão. Ponto 20: quadro + vídeo do lutador + 4 cenários.
+17:20 (10)  Ponto 21: cinco perguntas. Ponto 22: tarefa de casa (prompts 2 a 5).
+
+SE ALGO DER ERRADO NO TERMINAL
+  "Timed out waiting for a node assignment" → usou localhost dentro do container; é kafka:19092.
+  "group ... is not inactive" no reset → feche o consumidor daquele grupo (Ctrl+C).
+  Porta 9092/8090 ocupada → KAFKA_PORT=29092 KAFKA_UI_PORT=28090 docker compose up -d --wait
+  Aviso sobre "period ('.')" → só aparece em nome com ponto; usamos hífen. Não é erro.
+  Alguém sem Docker funcionando → faz em dupla com o vizinho. Não depure Docker em sala.
+
+CINCO FRASES
+  1 Na fila, ler consome; no log, ler só avança o marcador.
+  2 O marcador fica no Kafka; a soma fica no programa.
+  3 Mesma chave, mesma partição; ordem só dentro da partição.
+  4 "Pelo menos uma vez" exige leitor idempotente.
+  5 Banco e Kafka são duas escritas; a solução tem nome: outbox.
+
+=========================================================================
+DETALHES POR PONTO (versão completa, para consulta)
 CAP 03 — O PAGAMENTO VIRA HISTÓRIA: KAFKA (23 pontos, 10/10/2026)
 Use o capítulo e esta cola lado a lado. Resoluções e dúvidas: professor-resolucoes.txt.
 Guia executável e ZIP em apoio/. Amarelo nos prompts = ler em voz alta.
