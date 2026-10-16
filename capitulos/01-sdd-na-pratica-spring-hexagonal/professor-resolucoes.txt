@@ -938,7 +938,6 @@ que as decisões anteriores estavam certas.
 Entregas: repositório com contrato, specs e commits revisados; desenhos 3/4
 no README; justificativa de hexagonal; uma pergunta sobre responsabilidade.
 Aceitar/rejeitar sugestões ao contrato por necessidade real, sem cota de rejeição.
-A data 19/09 é a data impressa no capítulo, não confirmação do próximo encontro.
 Pagamento/GET abaixo são soluções de referência para a tarefa proposta.
 
 [26] PAGAMENTO — tarefa

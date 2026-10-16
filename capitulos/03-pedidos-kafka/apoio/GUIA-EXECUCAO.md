@@ -1,7 +1,7 @@
 # Cap 03 · Loja Café — guia de execução e recuperação
 
 Sistema da prática do Cap 03: front React, API Spring, Pagamentos em Flask, Analytics em Python
-e Kafka no Docker. Testado de ponta a ponta, do zero, em 16/10/2026 (34 cenários).
+e Kafka no Docker. Testado de ponta a ponta, do zero (34 cenários).
 
 ## ZIPs
 

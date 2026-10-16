@@ -1,4 +1,4 @@
-CAP 03 — KAFKA DO ZERO · LOJA CAFÉ (versão de 17/10; aula de 10/10 foi cancelada)
+CAP 03 — KAFKA DO ZERO · LOJA CAFÉ
 =========================================================================
 Objetivo: a turma sai sabendo o que é Kafka e tendo VISTO, num sistema que ela montou,
 onde ele faz diferença: primeiro sem Kafka (HTTP), depois com Kafka.
@@ -51,7 +51,7 @@ CINCO FRASES
 
 =========================================================================
 DETALHES POR PONTO (versão completa, para consulta)
-CAP 03 — O PAGAMENTO VIRA HISTÓRIA: KAFKA (23 pontos, 17/10/2026)
+CAP 03 — O PAGAMENTO VIRA HISTÓRIA: KAFKA (23 pontos)
 Use o capítulo e esta cola lado a lado. Resoluções e dúvidas: professor-resolucoes.txt.
 ZIPs por ato, collection do Insomnia e guia em apoio/. Amarelo nos prompts = ler em voz alta.
 Três simuladores na Parte 1 (pontos 04, 06, 07): peça previsão ANTES de cada clique.

@@ -1,7 +1,7 @@
 CAP 03 — CONSULTA E RESOLUÇÕES
 Código de referência: apoio/loja-cafe-ato1.zip … loja-cafe-ato4.zip (um por ato).
 Histórico git completo: tooling/cap03-kafka/loja-cafe.bundle (git clone loja-cafe.bundle).
-Validado em 16/10/2026 de ponta a ponta, do zero, com infraestrutura real:
+Validado de ponta a ponta, do zero, com infraestrutura real:
 python3 tooling/validate-loja-cafe.py <repo> → 34/34 cenários (tooling/cap03-kafka/VALIDACAO-loja-cafe.json).
 Stack real testada: Spring Boot 4.1.1 (padrão do Initializr), Java 21, React 19 + Vite 8,
 Python 3.13, Flask 3.1.3, confluent-kafka 2.16.0, Kafka 3.9.1.
