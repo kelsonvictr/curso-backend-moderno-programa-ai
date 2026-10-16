@@ -1,0 +1,175 @@
+{
+  "data": "2026-10-16 20:40",
+  "cenarios": [
+    {
+      "cenario": "POST /pedidos responde 201 e calcula valor",
+      "ok": true,
+      "detalhe": "status 201"
+    },
+    {
+      "cenario": "Pedido nasce AGUARDANDO_PAGAMENTO",
+      "ok": true,
+      "detalhe": ""
+    },
+    {
+      "cenario": "Dado inválido → 400",
+      "ok": true,
+      "detalhe": ""
+    },
+    {
+      "cenario": "GET /pedidos lista o mais novo primeiro",
+      "ok": true,
+      "detalhe": ""
+    },
+    {
+      "cenario": "CORS libera localhost:5173",
+      "ok": true,
+      "detalhe": ""
+    },
+    {
+      "cenario": "Front compila (vite build)",
+      "ok": true,
+      "detalhe": ""
+    },
+    {
+      "cenario": "Com Flask no ar: PAGO na própria resposta",
+      "ok": true,
+      "detalhe": ""
+    },
+    {
+      "cenario": "…mas o cliente esperou ~3 s",
+      "ok": true,
+      "detalhe": "3.2 s"
+    },
+    {
+      "cenario": "Valor > R$ 100 → RECUSADO com motivo",
+      "ok": true,
+      "detalhe": ""
+    },
+    {
+      "cenario": "Flask fora: cliente recebe erro 500",
+      "ok": true,
+      "detalhe": "status 500"
+    },
+    {
+      "cenario": "…e o pedido ficou gravado AGUARDANDO para sempre",
+      "ok": true,
+      "detalhe": ""
+    },
+    {
+      "cenario": "Kafka + painel sobem (compose up --wait)",
+      "ok": true,
+      "detalhe": ""
+    },
+    {
+      "cenario": "Spring criou pedidos-criados com 3 partições",
+      "ok": true,
+      "detalhe": ""
+    },
+    {
+      "cenario": "Sem Pagamentos no ar: POST 201 em menos de 1 s",
+      "ok": true,
+      "detalhe": "13 ms"
+    },
+    {
+      "cenario": "…e o pedido fica AGUARDANDO",
+      "ok": true,
+      "detalhe": ""
+    },
+    {
+      "cenario": "Pagamentos volta e alcança os pedidos acumulados",
+      "ok": true,
+      "detalhe": ""
+    },
+    {
+      "cenario": "processadoPor = caixa-1",
+      "ok": true,
+      "detalhe": ""
+    },
+    {
+      "cenario": "Log do Flask mostra partição e offset",
+      "ok": true,
+      "detalhe": ""
+    },
+    {
+      "cenario": "Log do Flask sem ruído de IPv6",
+      "ok": true,
+      "detalhe": ""
+    },
+    {
+      "cenario": "Com tudo no ar: resposta rápida e PAGO alguns segundos depois",
+      "ok": true,
+      "detalhe": "resposta 20 ms"
+    },
+    {
+      "cenario": "Resultado repetido é ignorado (pedido continua PAGO)",
+      "ok": true,
+      "detalhe": ""
+    },
+    {
+      "cenario": "Python (murmur2) e terminal Java põem a mesma chave na mesma partição",
+      "ok": true,
+      "detalhe": "['Partition:2']"
+    },
+    {
+      "cenario": "1ª execução lê o histórico inteiro",
+      "ok": true,
+      "detalhe": "📊 pedidos vistos: 3 · pagos: 2 · faturamento: R$ 14.50 · mais vendido: Pão de queijo (1)"
+    },
+    {
+      "cenario": "2ª execução: marcador salvo, memória zerada (painel não aparece)",
+      "ok": true,
+      "detalhe": ""
+    },
+    {
+      "cenario": "Reset de offsets do grupo analytics funciona com o grupo parado",
+      "ok": true,
+      "detalhe": "GROUP                          TOPIC                          PARTITION  NEW-OFFSET     analytics                      pedidos-criados                2          0              analytics                      pedidos-criados                0          0              analytics                      pagamentos-resultados          2          0              analytics                      pagamentos-resultados          0          0"
+    },
+    {
+      "cenario": "Replay reconstrói o mesmo painel",
+      "ok": true,
+      "detalhe": "📊 pedidos vistos: 3 · pagos: 2 · faturamento: R$ 14.50 · mais vendido: Café coado (1)"
+    },
+    {
+      "cenario": "Grupo novo (auditoria) também lê tudo",
+      "ok": true,
+      "detalhe": ""
+    },
+    {
+      "cenario": "9 pedidos processados",
+      "ok": true,
+      "detalhe": "24 s"
+    },
+    {
+      "cenario": "Os dois caixas trabalharam",
+      "ok": true,
+      "detalhe": "['caixa-1', 'caixa-2']"
+    },
+    {
+      "cenario": "Grupo pagamentos tem 2 membros",
+      "ok": true,
+      "detalhe": "pagamentos      rdkafka-19c28748-5172-4bde-a6c4-b9045cb5314e /172.19.0.1     rdkafka         2"
+    },
+    {
+      "cenario": "Caixa-2 saiu com Ctrl+C: caixa-1 assume tudo em poucos segundos",
+      "ok": true,
+      "detalhe": ""
+    },
+    {
+      "cenario": "Kafka fora: POST falha em ~5 s (não trava 1 min)",
+      "ok": true,
+      "detalhe": "status 500, 5.1 s"
+    },
+    {
+      "cenario": "…mas o pedido ficou gravado sem evento (escrita dupla)",
+      "ok": true,
+      "detalhe": ""
+    },
+    {
+      "cenario": "Kafka de volta: sistema segue funcionando",
+      "ok": true,
+      "detalhe": ""
+    }
+  ]
+}

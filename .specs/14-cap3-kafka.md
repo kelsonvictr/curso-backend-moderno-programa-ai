@@ -1,37 +1,57 @@
 # 14 — Cap 03: O pagamento vira história (Kafka)
 
-Aula de 10/10/2026. Pedido do professor (09/10): capítulo prático, "o mais simples possível,
+Aula prevista para 10/10/2026 (cancelada) e dada em 17/10/2026. Pedido do professor (09/10): capítulo prático, "o mais simples possível,
 até para o professor", para adiar OO/SOLID para 17/10 (Cap 04).
 
 ## Regra central
 Na fila, ler consome. No log, ler só avança o marcador de quem leu. Offset, grupo, lag,
 replay e retenção são consequências dessa frase.
 
-## Decisões de simplicidade
-- RabbitMQ do Cap 02 fica intacto. Kafka entra só para o evento `PedidoPago`.
-- Um broker Kafka 3.9.1 em KRaft + painel kafbat/kafka-ui v1.3.0 (8090). Dois listeners:
-  HOST localhost:9092 (apps) e INTERNO kafka:19092 (containers, terminal, painel).
-- Analytics (8082) sem banco: painel em memória, idempotente por pedidoId. Reiniciar zera
-  de propósito, para tornar visível "marcador no broker, estado no programa" e o replay.
-- Sem HyperFrames: três simuladores page-local em `cap3.js` (fila × caderno, marcadores,
-  partições/consumidores) e seis SVGs inline. Lab A no terminal do container, sem Java.
-- Seis prompts com `mark.hl` e `[COMMIT]`, como no Cap 02.
+## Prática v2 · Loja Café (16/10/2026)
+O professor aprovou a Parte 1 (pontos 01–08: teoria, vídeos, simuladores) e julgou a prática
+antiga (Labs A, A+ e B no terminal, sem código; código Java só em casa) "overkill". Pedido:
+um sistema simples e funcional, front React + back Spring + consumidor Python/Flask
+(pagamentos simulados), integrados primeiro sem Kafka, com o desenho da arquitetura mostrado o
+tempo todo e o diferencial do Kafka explícito. Labs antigos APAGADOS a pedido dele.
 
-## Recorte técnico (referência em tooling/cap03-kafka/conclusao)
-- Pedidos publica em `pedidos-pagos` (3 partições, réplica 1), chave pedidoId, JSON v1
-  {versao, pedidoId, solicitacaoId, valor}, acks=all, `.get(10s)`, timeouts curtos.
-- Publica depois do commit do APROVADO (no ResultadoListener). `RegistroService.concluir`
-  devolve boolean; reentrega aprovada republica. Recusa não publica.
-- Kafka fora: PAGO no Postgres, resultado em `pedidos.resultados.erros`; recuperação manual
-  republicando o mesmo resultado. Outbox só citado.
+### Desenho
+- Projeto novo (não o do Cap 02): `front/` React+Vite 5173 · `pedidos-api/` Spring Boot 4.1.1 +
+  H2 em arquivo 8080 · `pagamentos-py/` Flask 5001/5002 · `analytics-py/` script · `infra/`
+  Kafka 3.9.1 KRaft + kafbat/kafka-ui 1.3.0 (mesmo compose do lab antigo).
+- Cinco atos (pontos 09–18): 1 API + front · 2 Pagamentos por HTTP síncrono e o teste do
+  Flask desligado (500 + pedido órfão; 0,99^4) · 3 Kafka no meio, front intocado, mesmo teste
+  (lag e alcance) · 4 Analytics chega depois e lê o passado, reinício zera, replay, auditoria
+  (o diferencial frente ao RabbitMQ) · 5 caixa-2 no mesmo grupo. Ponto 19 (Kafka fora, escrita
+  dupla, outbox) virou casa. 20–23 mantidos/ajustados. Continua com 23 pontos.
+- Contratos prontos no ZIP inicial (`specs/api.md`, `pagamentos.md`, `eventos.md`) +
+  `AGENTS.md` e `CLAUDE.md` = `@AGENTS.md`. Sete prompts `[CONTEXTO]…[COMMIT]`.
+- Tópicos `pedidos-criados` e `pagamentos-resultados` (3 partições), chave pedidoId, JSON
+  texto (sem JsonSerializer do Spring). Grupos pagamentos, pedidos-api, analytics.
+- Mapa vivo: um `<template>` SVG com elementos `data-de`/`data-ate` por ato, clonado em cada
+  `.mapa-vivo[data-estagio]` por `cap3.js`; o do ponto 09 tem botões Ato 1–5; todos têm
+  "▶ Ver um pedido passar" (bolinha em `getPointAtLength`, sem animação com movimento reduzido).
 
-## Provas (tooling/validate-cap03-kafka.py --integration, 10 cenários, 09/10/2026)
-Tópico com 3 partições; aprovado → analytics 1 pedido; recusa não publica; repetição na mesma
-partição contada uma vez; reinício zera memória e mantém offset; reset → replay; grupo
-auditoria lê tudo; Kafka parado → .erros; recuperação com mesma chave.
+### Descobertas do teste real
+- Initializr só aceita Boot ≥ 4.0; `bootVersion=4.1.1.RELEASE` gera pom inválido (sem
+  bootVersion sai certo). Boot 4 = Jackson 3 (`tools.jackson.databind.json.JsonMapper`).
+- librdkafka particiona com crc32 (consistent_random); Java com murmur2. Mesma chave em
+  partições diferentes conforme a linguagem → Python usa `partitioner: murmur2_random`.
+- Flask com reloader duplica o consumidor (`use_reloader=False`); `broker.address.family: v4`
+  evita ruído IPv6; `close()` no Ctrl+C + `session.timeout.ms 10000` rebalanceia em segundos.
+- Analytics: vale o primeiro status (igual à API), senão replay e 1ª leitura podiam divergir.
 
-## Limites
-Escrita dupla sem outbox; um broker; sem Streams, Schema Registry ou transações Kafka.
+### Fontes e provas
+- Histórico git com tags inicio/ato1–ato4: `tooling/cap03-kafka/loja-cafe.bundle`.
+- `tooling/build-loja-cafe.py` → `apoio/loja-cafe-{inicio,ato1..ato4}.zip` + checkpoints.json
+  (COMO-RODAR.md em `tooling/cap03-kafka/loja-cafe-extras/`).
+- `tooling/validate-loja-cafe.py <repo>`: 34 cenários do zero, todos OK em 16/10/2026
+  (`tooling/cap03-kafka/VALIDACAO-loja-cafe.json`).
+- Removidos: `apoio/kafka-lab/`, `insomnia-pedidos.json`, `pedidos-kafka-conclusao.zip`,
+  `tooling/cap03-kafka/conclusao/`, `build-cap03-kafka.py`, `validate-cap03-kafka.py`.
+
+## Limites (v2)
+Escrita dupla sem outbox (só proposta, em casa); um broker; status por polling; sem Streams,
+Schema Registry ou transações Kafka; pagamentos simulados.
 
 ## Vídeo 8-bit "Duas cozinhas" (09/10/2026, noite)
 - Pedido do prof: vídeo estilo jogo antigo logo abaixo da história do ponto 04, vozes ElevenLabs,

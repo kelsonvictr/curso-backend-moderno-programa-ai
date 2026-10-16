@@ -222,12 +222,15 @@ passo a passo. Cada estado deve responder: **antes, ação, depois, como provar 
   tooling/cap02-mensageria/fluxos-hyperframes/_kit e rodar build.py; nunca editar fluxo/*.html.
 - Pagamentos são simulados. Explicitar limites banco/publicação e deduplicação.
 
-## Cap 03 — Kafka (2026-10-09)
-- `capitulos/03-pedidos-kafka/`; contrato em `.specs/14-cap3-kafka.md`. OO/SOLID passa a Cap 04 (17/10).
-- Pedido explícito: "o mais simples possível, até para o professor". Simuladores page-local em
-  `cap3.js`; cinco vídeos 8-bit (HyperFrames) nos pontos 04/06/07/19/20, fontes em
-  `tooling/cap03-kafka/video-*` + biblioteca `pixel8/` (sala da Programa AI em pixel art). Analytics sem banco, de propósito (reinício zera, replay reconstrói).
-- Referência em `tooling/cap03-kafka/conclusao`; empacotar com `tooling/build-cap03-kafka.py`;
-  validar com `python3 tooling/validate-cap03-kafka.py --integration`.
+## Cap 03 — Kafka (2026-10-09; prática refeita em 2026-10-16)
+- `capitulos/03-pedidos-kafka/`; contrato em `.specs/14-cap3-kafka.md`. Aula dada em 17/10 (10/10 cancelada).
+- Parte 1 (pontos 01–08: teoria, vídeos 8-bit, simuladores page-local em `cap3.js`) aprovada: não mexer.
+- Cinco vídeos 8-bit (HyperFrames) nos pontos 04/06/07/19/20, fontes em `tooling/cap03-kafka/video-*`
+  + biblioteca `pixel8/` (sala da Programa AI em pixel art).
+- Prática = **Loja Café** (pontos 09–18): React + Spring Boot 4 + Flask, primeiro por HTTP, depois com
+  Kafka; Analytics em Python lê o passado. Mapa vivo (`#tpl-mapa-loja` + `.mapa-vivo[data-estagio]`).
+- Referência: `tooling/cap03-kafka/loja-cafe.bundle` (tags inicio, ato1–ato4); ZIPs com
+  `tooling/build-loja-cafe.py`; validar com `python3 tooling/validate-loja-cafe.py <clone do bundle>`.
 - Manter 23 pontos do HTML, professor.txt e professor-resolucoes.txt sincronizados. Sem links dos TXTs.
 - Dentro do container do Kafka sempre `kafka:19092`; no host, `localhost:9092`. Tópicos com hífen.
+  Produtor Python com `partitioner: murmur2_random` (mesma partição que o Java).

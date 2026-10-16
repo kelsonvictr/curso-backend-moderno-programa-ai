@@ -1,7 +1,10 @@
 CAP 03 — CONSULTA E RESOLUÇÕES
-Código completo: apoio/pedidos-kafka-conclusao.zip (conclusão do Cap 02 + Kafka + analytics).
-Roteiro operacional: apoio/GUIA-EXECUCAO.md. Validado em 09/10/2026 com infraestrutura real
-(tooling/validate-cap03-kafka.py --integration, 10 cenários; VALIDACAO.json).
+Código de referência: apoio/loja-cafe-ato1.zip … loja-cafe-ato4.zip (um por ato).
+Histórico git completo: tooling/cap03-kafka/loja-cafe.bundle (git clone loja-cafe.bundle).
+Validado em 16/10/2026 de ponta a ponta, do zero, com infraestrutura real:
+python3 tooling/validate-loja-cafe.py <repo> → 34/34 cenários (tooling/cap03-kafka/VALIDACAO-loja-cafe.json).
+Stack real testada: Spring Boot 4.1.1 (padrão do Initializr), Java 21, React 19 + Vite 8,
+Python 3.13, Flask 3.1.3, confluent-kafka 2.16.0, Kafka 3.9.1.
 Os pontos abaixo seguem exatamente os marcadores do capítulo.
 
 KAFKA EM 12 FRASES (para o professor revisar antes da aula)
@@ -17,7 +20,8 @@ KAFKA EM 12 FRASES (para o professor revisar antes da aula)
  9. Lag = log-end-offset − offset commitado. auto-offset-reset só vale para grupo sem commit.
 10. Replay = kafka-consumer-groups --reset-offsets (grupo PARADO) ou grupo novo.
 11. Retenção padrão 168 h (7 dias). Replay só alcança o que ainda está retido.
-12. acks=all + .get() = produtor espera confirmação (papel do publisher confirm do RabbitMQ).
+12. acks=all (padrão) + .get() = produtor espera confirmação (papel do publisher confirm do RabbitMQ).
+13. Hash do Java = murmur2; librdkafka (Python) usa crc32 por padrão → murmur2_random no Python.
 Perguntas prováveis: "Kafka substitui RabbitMQ?" Não: modelos diferentes (ponto 20).
 "Kafka garante exactly-once?" Existe (transações/idempotência do produtor), fora do recorte;
 hoje o leitor é idempotente por pedidoId. "Precisa de Zookeeper?" Não, KRaft.
@@ -25,17 +29,14 @@ hoje o leitor é idempotente por pedidoId. "Precisa de Zookeeper?" Não, KRaft.
 kafka (containers). "Tópico com ponto dá warning?" Sim (métricas), por isso hífen.
 
 [01] O PEDIDO FOI PAGO. QUEM MAIS QUER SABER?
-Base de hoje = conclusão do Cap 02 (../02-pedidos-mensageria/apoio/pedidos-pagamentos-conclusao.zip).
-Nada do fluxo de pagamento muda. Pagamentos continua simulado (APROVAR/RECUSAR).
+O projeto do Cap 02 não é pré-requisito. A Loja Café começa do ZIP inicial.
 
 [02] O PLANO DA TARDE
-Contingência: no 15, quem não tem Analytics usa a conclusão (pasta separada; portas 8080–8082
-iguais: pare o próprio projeto antes, ou use PEDIDOS_PORT/PAGAMENTOS_PORT/ANALYTICS_PORT e
-POSTGRES_PORT/RABBIT_PORT/KAFKA_PORT diferentes + KAFKA_BOOTSTRAP=localhost:<porta>).
+Contingência: cada ato tem ZIP de fim. Quem travar descompacta numa pasta nova, segue o
+COMO-RODAR.md e continua no ato seguinte. Portas iguais: pare o próprio projeto antes.
 
-[03] COLOQUE O AGENTE PARA LER
-Na referência: RegistroService.concluir aplica o resultado e grava; ResultadoListener chama.
-Portas novas: 9092 (Kafka para apps) e 8090 (painel). 19092 e 9093 ficam só dentro do Docker.
+[03] O PLANO DE HOJE
+Sem resolução: abertura.
 
 [04] A FILA ENTREGA E ESQUECE
 Resposta do quiz: "um serviço novo, criado hoje, calcular o total vendido desde o dia 1º".
@@ -57,93 +58,77 @@ o texto da página avisa que o real é murmur2.
 [08] SEIS PEÇAS
 Sem resolução: é consulta.
 
-[09] KAFKA NO DOCKER
-Compose testado (09/10/2026, Docker 28.4): ver o 👀 na página ou infra/compose.yml do ZIP.
-Armadilha: healthcheck com localhost:9092 quebra se KAFKA_PORT ≠ 9092, porque o broker anuncia
-localhost:<porta do host>, que não existe dentro do container. Use kafka:19092.
-Primeira subida: ~10 s até healthy; kafka-ui depende do kafka saudável.
-Comando do bash no container: docker compose [-f infra/compose.yml] exec kafka bash
+[09] A LOJA CAFÉ
+Portas: 5173 front, 8080 API, 5001/5002 pagamentos, 9092 Kafka (apps), 8090 painel.
+19092 e 9093 ficam só dentro do Docker. CLAUDE.md = "@AGENTS.md" (funciona nos três agentes).
 
-[10] LAB A
-Saída real (09/10/2026, 3 partições):
-  Partition:1 Offset:0 mesa3 suco
-  Partition:0 Offset:0 mesa1 cafe
-  Partition:0 Offset:1 mesa2 pao
-  Partition:0 Offset:2 mesa1 bolo
-  Partition:0 Offset:3 mesa1 conta
-mesa1 e mesa2 caíram juntas na 0 por coincidência do hash; não é regra.
-Segunda leitura com --group barista: nada (from-beginning só vale para grupo sem commit).
-describe: CURRENT-OFFSET = LOG-END-OFFSET, LAG 0. Reset: NEW-OFFSET 0 nas três.
-Quiz: nada muda para o barista; grupos são independentes.
+[10] ATO 1 · API — resolução (referência, loja-cafe-ato1.zip)
+Pedido (@Entity: id IDENTITY, cliente, item, quantidade, valor BigDecimal, status enum STRING,
+motivo, processadoPor, criadoEm Instant). Construtor calcula valor e status AGUARDANDO.
+concluir(aprovado, motivo, instancia) devolve boolean e só muda se AGUARDANDO.
+NovoPedido record com @NotBlank, @Min(1) @Max(50), @NotNull @Positive. PedidoRepository com
+findAllByOrderByIdDesc. CorsConfig: allowedOrigins http://localhost:5173, GET e POST.
+application.properties: jdbc:h2:file:./dados/pedidos, ddl-auto=update, open-in-view=false.
+Armadilha: forçar bootVersion=4.1.1.RELEASE no Initializr gera pom com versão inválida
+(4.1.1.RELEASE). Sem bootVersion, sai 4.1.1 correto.
 
-[11] ONDE O KAFKA ENTRA
-Sem resolução: desenho de referência.
+[11] ATO 1 · FRONT — resolução
+src/api.js (listarPedidos, criarPedido com fetch). App.jsx: CARDAPIO fixo, useEffect com
+setInterval 2000, performance.now() no envio, erro "Failed to fetch" → "Não consegui falar com
+a API (porta 8080)". Quiz: ninguém cobra.
 
-[12] COMBINE O EVENTO
-Spec modelo (.specs/06-evento-pedido-pago.md) deve conter: produtor Pedidos; momento = após
-commit do APROVADO; tópico pedidos-pagos (3 partições, 1 réplica); chave pedidoId; JSON v1
-{versao, pedidoId, solicitacaoId, valor}; recusa não publica; reentrega republica (pelo menos
-uma vez); leitor conta pedidoId uma vez; limite escrita dupla (Kafka fora → PAGO sem evento →
-.erros → recuperação manual); provas (1 registro na aprovação, 0 na recusa, repetido mesma
-partição). Reprovar spec que promete exactly-once ou publica antes do commit.
+[12] ATO 2 · HTTP — resolução
+app.py: decidir() com sleep(3), LIMITE 100.00; POST /pagamentos devolve pedidoId, status,
+motivo, instancia. PagamentosClient com RestClient.create("http://localhost:5001").
+Controller: save → pagar → concluir → save. Validado: 3,2 s; 170,00 → RECUSADO.
 
-[13] LEIA ANTES DE GERAR
-Quiz: sem .get(), o método termina feliz e o evento se perde em silêncio (ack no RabbitMQ).
+[13] ATO 2 · DESLIGUE
+Validado: Flask fora → 500 (ResourceAccessException), pedido fica AGUARDANDO.
+Quiz: a API passaria a esperar e depender de todos. 0,99^4 = 0,9606 → 3,94% de 720 h ≈ 28 h.
 
-[14] PEDIDOS PUBLICA — resolução (referência)
-pom: spring-kafka. application.yml:
-  spring.kafka.bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:9092}
-  spring.kafka.producer.acks: all
-  spring.kafka.producer.properties: max.block.ms 5000, request.timeout.ms 5000,
-    delivery.timeout.ms 10000   (delivery ≥ linger + request timeout)
-adapters/eventos/KafkaConfig: TopicBuilder.name("pedidos-pagos").partitions(3).replicas(1).
-adapters/eventos/PedidoPago: record(int versao, String pedidoId, String solicitacaoId, BigDecimal valor).
-adapters/eventos/PublicadorPedidoPago: kafka.send(TOPICO, pedidoId, json).get(10, SECONDS),
-  imprime "PEDIDO_PAGO publicado: pedido=… partição=… offset=…".
-RegistroService.concluir passa a devolver boolean: resultado.aprovado() tanto no caminho novo
-quanto no "já concluído" (registro.concluido()). ResultadoListener: if (pago) publicar(resultado).
-Revisar no diff: publicação DEPOIS do concluir (fora da transação); recusa não publica; domínio
-Pedido intocado; Pagamentos intocado. Testes unitários do Cap 02 continuam verdes.
-Erro comum do agente: publicar dentro de RegistroService (@Transactional) → evento sai mesmo se
-o commit falhar depois. Pedir para mover para o listener.
+[14] ATO 3 · KAFKA E CONTRATO
+compose = o mesmo do lab antigo (KRaft, HOST 9092 / INTERNO 19092, kafka-ui v1.3.0), project
+name loja-cafe. Armadilha descoberta no teste: o produtor Python (librdkafka) usa
+consistent_random (crc32); Java usa murmur2. Sem "partitioner": "murmur2_random", um resultado
+publicado pelo terminal/painel (Java) e outro pelo Python, com a mesma chave, caem em
+partições diferentes e a ordem entre eles some (o analytics chegou a dar replay diferente da
+1ª leitura). Com murmur2_random: mesma partição (validado).
 
-[15] ANALYTICS LÊ — resolução (referência)
-analytics/: pom (web + spring-kafka), mvnw copiado de pagamentos, AGENTS.md/CLAUDE.md.
-application.yml: group-id ${ANALYTICS_GRUPO:analytics}, auto-offset-reset earliest,
-  server.port ${ANALYTICS_PORT:8082}.
-PainelVendas (memória): Map<String,BigDecimal> pagos + putIfAbsent; Deque das 10 últimas;
-  mensagensLidas. synchronized (listener e HTTP em threads diferentes).
-PedidoPagoListener: @KafkaListener(topics="pedidos-pagos"), ConsumerRecord<String,String>.
-AnalyticsController: GET /analytics/resumo → {mensagensLidas, pedidosPagos, faturamento, ultimas}.
-PainelVendasTest: dois pedidos somam 75,60; mesmo pedido duas vezes = 2 lidas, 1 pedido.
-Ao subir pela primeira vez, lê o histórico (grupo novo + earliest).
+[15] ATO 3 · CÓDIGO — resolução (loja-cafe-ato3.zip)
+pom: spring-boot-starter-kafka. application.properties: bootstrap localhost:9092,
+consumer.group-id pedidos-api, auto-offset-reset earliest, producer max.block.ms 5000.
+KafkaTopicos (NewTopic ×2, 3 partições, 1 réplica). PedidoEventos: KafkaTemplate<String,String> +
+tools.jackson.databind.json.JsonMapper; send(...).get(5, SECONDS). ResultadoPagamentoListener:
+readValue → findById → concluir → save; repetição só loga.
+Flask: Consumer(group pagamentos, earliest, session.timeout.ms 10000, broker.address.family v4),
+Producer(partitioner murmur2_random), poll(1.0), produce + flush, processados em memória,
+GET /pagamentos e /saude, use_reloader=False, parar.set() no finally para close().
+Revisar no diff: JsonSerializer do Spring (grava __TypeId__) → pedir String; Flask com
+debug=True → dois consumidores; publicar antes do save → evento de pedido sem id.
+Validado: resposta 15–20 ms; Pago ~3 s depois; resultado repetido ignorado.
 
-[16] REINICIOU E ZEROU
-Esperado após reinício: mensagensLidas 0. Reset só com o app parado:
-  docker compose exec kafka /opt/kafka/bin/kafka-consumer-groups.sh --bootstrap-server kafka:19092
-  --group analytics --topic pedidos-pagos --reset-offsets --to-earliest --execute
-Erro "consumer group is not inactive" = app ainda ligado (ou outro terminal com o mesmo grupo).
+[16] ATO 3 · DESLIGUE DE NOVO
+Validado: sem Flask, POST 201 em 15 ms; ao religar, os acumulados são processados.
+O lag aparece em Consumers → pagamentos (ou kafka-consumer-groups --describe --group pagamentos).
 
-[17] UM TIME NOVO: AUDITORIA
-Validado: grupo auditoria em 8083 lê 2 mensagens / 1 pedido no cenário do validador.
-Extra (mesmo grupo, 2 instâncias): rebalanceamento divide 3 partições em 2+1; cada painel
-mostra parte. É o custo de estado em memória com consumidores escalados.
+[17] ATO 4 · ANALYTICS — resolução (loja-cafe-ato4.zip)
+analytics.py: Consumer(GRUPO, earliest, v4), subscribe nos dois tópicos, consume(100, 1.0),
+dict por pedidoId (setdefault no status = vale o primeiro), painel após cada lote.
+Validado: 1ª leitura = histórico; 2ª = nada; reset --all-topics --to-earliest → mesmo painel;
+grupo auditoria lê tudo. Quiz: nada, marcador no Kafka e painel na memória.
+Reset exige grupo parado: "Assignments can only be reset if the group 'analytics' is inactive".
 
-[18] O MESMO EVENTO DUAS VEZES
-Pegue a solicitacaoId: docker compose exec postgres psql -U pedidos -d pedidos -c
-  "select id, pedido_id, estado from solicitacao_pagamento order by id;"
-Republicar em pagamentos.eventos / pagamento.resultado, content_type application/json,
-delivery_mode 2. Concluir devolve true no caminho "já concluído" → publica de novo.
-Validado: mesma partição, mensagensLidas 2, pedidosPagos 1, "repetida": true.
-Quiz: pedidos++ contaria o mesmo pedido duas vezes (4 / R$ 151,20 em vez de 3 / R$ 113,40).
+[18] ATO 5 · DOIS CAIXAS
+Validado: 9 pedidos, os dois caixas trabalharam; Ctrl+C no caixa-2 → caixa-1 assume em segundos
+(close() no finally + session.timeout.ms 10000; sem isso o grupo esperaria até 45 s).
+Com 3 partições a divisão é 2+1, então um caixa trabalha o dobro.
 
 [19] KAFKA DESLIGADO
-Validado: Kafka parado → pedido PAGO → resultado em pedidos.resultados.erros (3 tentativas,
-cada uma falha em ~10 s pelo delivery.timeout). Kafka de volta + republicar o mesmo resultado
-→ PedidoPago entregue, faturamento sobe. O Analytics reconecta sozinho.
-Resposta esperada do Prompt 6 sobre outbox: gravar o evento numa tabela na mesma transação
-do PAGO; um publicador separado lê a tabela e publica até conseguir; escrita dupla vira única
-e a entrega continua pelo menos uma vez (leitor ainda idempotente).
+Validado: docker compose stop kafka → POST falha em 5,1 s (max.block.ms + get 5 s) com 500;
+pedido gravado AGUARDANDO sem evento. Kafka de volta: pedidos novos funcionam, o órfão não.
+Resposta esperada do Prompt 7: tabela outbox (id, pedido_id, topico, payload, publicado_em),
+gravada na mesma @Transactional do pedido; @Scheduled a cada 1–2 s publica pendentes e marca;
+publicar duas vezes é seguro porque concluir() e o analytics são idempotentes.
 
 [20] RABBITMQ OU KAFKA?
 1 Refuta: comando, processado uma vez, sem necessidade de replay; "escala mais" sem número.
@@ -154,14 +139,14 @@ Aceite argumentos alternativos fundamentados (ex.: Kafka no 3 com tópicos por t
 já opera Kafka e aceita filtrar no leitor).
 
 [21] FECHAMENTO
-Respostas curtas: marcador no broker, painel na memória; chave = ordem por pedido; 3 trabalham,
-4º ocioso; reentrega do resultado republica, leitor deduplica por pedidoId; janela da escrita
-dupla, outbox.
+Respostas curtas: HTTP prende ao tempo/saúde do Pagamentos, Kafka desacopla; o diferencial foi o
+Analytics lendo o passado; marcador no broker, painel na memória; chave = ordem por pedido,
+3 caixas no máximo; janela da escrita dupla, outbox.
 
 [22] EM CASA
-Desafio "faturamento por partição": depois do replay os números por partição NÃO mudam, porque
-cada pedido continua na mesma partição (mesma chave) e o painel deduplica.
-Cap 04 = OO/SOLID: capítulo pronto em ../02-oo-de-verdade-e-solid/ (renumerar quando for usar).
+Repetição via painel: o pedido NÃO muda (concluir ignora) e o analytics também não (vale o
+primeiro status), porque com murmur2 a repetição cai na mesma partição, depois do original.
+notificacoes-py: 0 linhas na API. Cap 04 = OO/SOLID (../02-oo-de-verdade-e-solid/).
 
 [23] GLOSSÁRIO
 Sem resolução: consulta.

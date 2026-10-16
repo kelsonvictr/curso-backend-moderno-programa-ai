@@ -1,0 +1,221 @@
+{
+ "_type": "export",
+ "__export_format": 4,
+ "__export_date": "2026-10-16T00:00:00.000Z",
+ "__export_source": "backend-moderno-cap03-loja-cafe",
+ "resources": [
+  {
+   "_id": "wrk_cap03_loja_cafe",
+   "_type": "workspace",
+   "name": "Cap 03 · Loja Café",
+   "description": "API de pedidos (8080) e Pagamentos simulado (5001/5002). Contratos em specs/ do ZIP.",
+   "scope": "collection"
+  },
+  {
+   "_id": "env_loja_base",
+   "_type": "environment",
+   "parentId": "wrk_cap03_loja_cafe",
+   "name": "Base Environment",
+   "data": {
+    "api": "http://localhost:8080",
+    "caixa1": "http://localhost:5001",
+    "caixa2": "http://localhost:5002"
+   },
+   "dataPropertyOrder": null,
+   "color": null,
+   "isPrivate": false
+  },
+  {
+   "_id": "req_loja_01",
+   "_type": "request",
+   "parentId": "wrk_cap03_loja_cafe",
+   "name": "01 · Criar pedido (R$ 17,00)",
+   "method": "POST",
+   "url": "{{ _.api }}/pedidos",
+   "description": "Esperado 201, valor 17.0. Ato 1: AGUARDANDO_PAGAMENTO. Ato 2: PAGO na resposta, ~3 s. Ato 3: AGUARDANDO na resposta (~20 ms) e PAGO no GET alguns segundos depois.",
+   "body": {
+    "mimeType": "application/json",
+    "text": "{\n  \"cliente\": \"Ana\",\n  \"item\": \"Café coado\",\n  \"quantidade\": 2,\n  \"precoUnitario\": 8.5\n}"
+   },
+   "parameters": [],
+   "headers": [
+    {
+     "name": "Content-Type",
+     "value": "application/json"
+    }
+   ],
+   "authentication": {},
+   "metaSortKey": 1,
+   "isPrivate": false,
+   "settingStoreCookies": true,
+   "settingSendCookies": true,
+   "settingDisableRenderRequestBody": false,
+   "settingEncodeUrl": true,
+   "settingRebuildPath": true,
+   "settingFollowRedirects": "global"
+  },
+  {
+   "_id": "req_loja_02",
+   "_type": "request",
+   "parentId": "wrk_cap03_loja_cafe",
+   "name": "02 · Pedido grande (recusa)",
+   "method": "POST",
+   "url": "{{ _.api }}/pedidos",
+   "description": "20 cafés = R$ 170,00, acima do limite de R$ 100,00. Esperado: RECUSADO com motivo 'limite do cartão de teste' (Ato 2 na resposta; Ato 3 no GET).",
+   "body": {
+    "mimeType": "application/json",
+    "text": "{\n  \"cliente\": \"Caio\",\n  \"item\": \"Café coado\",\n  \"quantidade\": 20,\n  \"precoUnitario\": 8.5\n}"
+   },
+   "parameters": [],
+   "headers": [
+    {
+     "name": "Content-Type",
+     "value": "application/json"
+    }
+   ],
+   "authentication": {},
+   "metaSortKey": 2,
+   "isPrivate": false,
+   "settingStoreCookies": true,
+   "settingSendCookies": true,
+   "settingDisableRenderRequestBody": false,
+   "settingEncodeUrl": true,
+   "settingRebuildPath": true,
+   "settingFollowRedirects": "global"
+  },
+  {
+   "_id": "req_loja_03",
+   "_type": "request",
+   "parentId": "wrk_cap03_loja_cafe",
+   "name": "03 · Pedido inválido (400)",
+   "method": "POST",
+   "url": "{{ _.api }}/pedidos",
+   "description": "Cliente vazio e quantidade 0. Esperado 400.",
+   "body": {
+    "mimeType": "application/json",
+    "text": "{\n  \"cliente\": \"\",\n  \"item\": \"Café coado\",\n  \"quantidade\": 0,\n  \"precoUnitario\": 8.5\n}"
+   },
+   "parameters": [],
+   "headers": [
+    {
+     "name": "Content-Type",
+     "value": "application/json"
+    }
+   ],
+   "authentication": {},
+   "metaSortKey": 3,
+   "isPrivate": false,
+   "settingStoreCookies": true,
+   "settingSendCookies": true,
+   "settingDisableRenderRequestBody": false,
+   "settingEncodeUrl": true,
+   "settingRebuildPath": true,
+   "settingFollowRedirects": "global"
+  },
+  {
+   "_id": "req_loja_04",
+   "_type": "request",
+   "parentId": "wrk_cap03_loja_cafe",
+   "name": "04 · Listar pedidos",
+   "method": "GET",
+   "url": "{{ _.api }}/pedidos",
+   "description": "Mais novo primeiro. Confira status, motivo e processadoPor.",
+   "body": {},
+   "parameters": [],
+   "headers": [],
+   "authentication": {},
+   "metaSortKey": 4,
+   "isPrivate": false,
+   "settingStoreCookies": true,
+   "settingSendCookies": true,
+   "settingDisableRenderRequestBody": false,
+   "settingEncodeUrl": true,
+   "settingRebuildPath": true,
+   "settingFollowRedirects": "global"
+  },
+  {
+   "_id": "req_loja_05",
+   "_type": "request",
+   "parentId": "wrk_cap03_loja_cafe",
+   "name": "05 · Saúde do caixa-1",
+   "method": "GET",
+   "url": "{{ _.caixa1 }}/saude",
+   "description": "Esperado {ok: true, instancia: caixa-1}.",
+   "body": {},
+   "parameters": [],
+   "headers": [],
+   "authentication": {},
+   "metaSortKey": 5,
+   "isPrivate": false,
+   "settingStoreCookies": true,
+   "settingSendCookies": true,
+   "settingDisableRenderRequestBody": false,
+   "settingEncodeUrl": true,
+   "settingRebuildPath": true,
+   "settingFollowRedirects": "global"
+  },
+  {
+   "_id": "req_loja_06",
+   "_type": "request",
+   "parentId": "wrk_cap03_loja_cafe",
+   "name": "06 · O que o caixa-1 processou (Ato 3+)",
+   "method": "GET",
+   "url": "{{ _.caixa1 }}/pagamentos",
+   "description": "Lista em memória: zera quando o Flask reinicia.",
+   "body": {},
+   "parameters": [],
+   "headers": [],
+   "authentication": {},
+   "metaSortKey": 6,
+   "isPrivate": false,
+   "settingStoreCookies": true,
+   "settingSendCookies": true,
+   "settingDisableRenderRequestBody": false,
+   "settingEncodeUrl": true,
+   "settingRebuildPath": true,
+   "settingFollowRedirects": "global"
+  },
+  {
+   "_id": "req_loja_07",
+   "_type": "request",
+   "parentId": "wrk_cap03_loja_cafe",
+   "name": "07 · Saúde do caixa-2 (Ato 5)",
+   "method": "GET",
+   "url": "{{ _.caixa2 }}/saude",
+   "description": "Só existe com a segunda instância rodando.",
+   "body": {},
+   "parameters": [],
+   "headers": [],
+   "authentication": {},
+   "metaSortKey": 7,
+   "isPrivate": false,
+   "settingStoreCookies": true,
+   "settingSendCookies": true,
+   "settingDisableRenderRequestBody": false,
+   "settingEncodeUrl": true,
+   "settingRebuildPath": true,
+   "settingFollowRedirects": "global"
+  },
+  {
+   "_id": "req_loja_08",
+   "_type": "request",
+   "parentId": "wrk_cap03_loja_cafe",
+   "name": "08 · O que o caixa-2 processou (Ato 5)",
+   "method": "GET",
+   "url": "{{ _.caixa2 }}/pagamentos",
+   "description": "Compare com o caixa-1: cada pedido aparece em um só.",
+   "body": {},
+   "parameters": [],
+   "headers": [],
+   "authentication": {},
+   "metaSortKey": 8,
+   "isPrivate": false,
+   "settingStoreCookies": true,
+   "settingSendCookies": true,
+   "settingDisableRenderRequestBody": false,
+   "settingEncodeUrl": true,
+   "settingRebuildPath": true,
+   "settingFollowRedirects": "global"
+  }
+ ]
+}

@@ -154,3 +154,63 @@ function vazio(t){const p=document.createElement('span');p.className='vazio';p.t
  });
  reset();
 })();
+
+/* ===== Loja Café · mapa vivo: o mesmo desenho em cada ato, com a parte nova acesa ===== */
+(function(){
+ const tpl=document.getElementById('tpl-mapa-loja');
+ if(!tpl)return;
+ const LEGENDA={
+  1:'<b>Ato 1.</b> O front fala com a API por HTTP; a API grava no H2. Ninguém cobra: todo pedido fica Aguardando.',
+  2:'<b>Ato 2.</b> A API liga para o Pagamentos e espera na linha (~3 s). Funciona, mas a API depende de o Pagamentos estar no ar.',
+  3:'<b>Ato 3.</b> ① a API anota o pedido em pedidos-criados e responde na hora · ② o Pagamentos lê no seu ritmo · ③ anota a decisão em pagamentos-resultados · ④ a API lê e atualiza o status. O front não mudou.',
+  4:'<b>Ato 4.</b> ⑤ Um leitor novo, com grupo próprio, chega depois e lê os dois tópicos desde o offset 0. Ninguém mais mudou uma linha.',
+  5:'<b>Ato 5.</b> Um segundo caixa entra no mesmo grupo e as partições se dividem entre os dois. Mais caixas, mais pedidos por minuto, até o número de partições.'
+ };
+ const CAMINHO={1:['front-api','api-h2'],2:['front-api','api-h2','api-pag'],3:['front-api','api-h2','a1','a2','a3','a4'],4:['front-api','api-h2','a1','a2','a3','a4','a5'],5:['front-api','api-h2','a1','a6','a3','a4']};
+ const calmo=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ let seq=0;
+ document.querySelectorAll('.mapa-vivo').forEach(fig=>{
+  const svg=tpl.content.firstElementChild.cloneNode(true),id='mapa-'+(++seq);
+  svg.querySelector('title').id=id+'-t';svg.setAttribute('aria-labelledby',id+'-t');
+  const barra=document.createElement('div');barra.className='mapa-barra';
+  const rotulo=document.createElement('p');rotulo.className='mapa-rotulo';
+  const scroll=document.createElement('div');scroll.className='svg-scroll';scroll.appendChild(svg);
+  const cap=document.createElement('figcaption');
+  const play=document.createElement('button');play.type='button';play.className='mapa-play';play.textContent='▶ Ver um pedido passar';
+  if(fig.hasAttribute('data-interativo')){
+   for(let n=1;n<=5;n++){const b=document.createElement('button');b.type='button';b.textContent='Ato '+n;b.dataset.n=n;b.addEventListener('click',()=>mostrar(n));barra.appendChild(b);}
+  }else{rotulo.textContent='A arquitetura neste ato';}
+  barra.appendChild(play);
+  fig.append(rotulo,barra,scroll,cap);
+  let estagio=Number(fig.dataset.estagio)||1,rodando=false;
+  function mostrar(n){
+   estagio=n;fig.dataset.estagio=n;
+   svg.querySelectorAll('[data-de]').forEach(el=>{
+    const de=Number(el.dataset.de),ate=Number(el.dataset.ate||9);
+    if(n>=de&&n<=ate)el.removeAttribute('data-oculto');else el.setAttribute('data-oculto','');
+    el.classList.toggle('novo',de===n&&n>1);
+   });
+   svg.querySelectorAll('.ativo').forEach(p=>p.classList.remove('ativo'));
+   barra.querySelectorAll('[data-n]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.n)===n)));
+   cap.innerHTML=LEGENDA[n];
+  }
+  function andar(path){
+   return new Promise(ok=>{
+    path.classList.add('ativo');
+    if(calmo){setTimeout(ok,500);return;}
+    const total=path.getTotalLength(),bola=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    bola.setAttribute('r','8');bola.setAttribute('class','bolinha');svg.appendChild(bola);
+    const dur=Math.max(450,total*4),t0=performance.now();
+    (function passo(t){const f=Math.min(1,(t-t0)/dur),p=path.getPointAtLength(total*f);bola.setAttribute('cx',p.x);bola.setAttribute('cy',p.y);
+     if(f<1)requestAnimationFrame(passo);else{bola.remove();ok();}})(t0);
+   });
+  }
+  play.addEventListener('click',async()=>{
+   if(rodando)return;rodando=true;play.disabled=true;
+   svg.querySelectorAll('.ativo').forEach(p=>p.classList.remove('ativo'));
+   for(const nome of CAMINHO[estagio]){const p=svg.querySelector(`[data-fluxo="${nome}"]`);if(p)await andar(p);}
+   rodando=false;play.disabled=false;
+  });
+  mostrar(estagio);
+ });
+})();

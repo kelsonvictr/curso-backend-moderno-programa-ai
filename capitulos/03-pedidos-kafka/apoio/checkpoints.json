@@ -1,8 +1,37 @@
 [
   {
-    "file": "pedidos-kafka-conclusao.zip",
-    "files": 101,
-    "sha256": "6ed4a751f6308345713ed8a1ef152ba37900f56b13cbf3e0630486d580d8e713",
-    "bytes": 77397
+    "file": "loja-cafe-inicio.zip",
+    "tag": "inicio",
+    "files": 8,
+    "sha256": "b8faf366f8874105d08072c9b2f05269da108e89d7f626ea1529f3293c471bb5",
+    "bytes": 5461
+  },
+  {
+    "file": "loja-cafe-ato1.zip",
+    "tag": "ato1",
+    "files": 34,
+    "sha256": "50f08ead1146360b33f68d610887871c0d2dea8a8ce5fb6cf768b7e399b05f0a",
+    "bytes": 33312
+  },
+  {
+    "file": "loja-cafe-ato2.zip",
+    "tag": "ato2",
+    "files": 37,
+    "sha256": "ff6efd058d75e2d87cf544af44a154c66c276f8d86db53d2e94f4b12ff3cdf41",
+    "bytes": 35044
+  },
+  {
+    "file": "loja-cafe-ato3.zip",
+    "tag": "ato3",
+    "files": 39,
+    "sha256": "3f7f429dfb74a68e1fd0377bc15981e2b5d7b8cd5557e53280851347804ff395",
+    "bytes": 38214
+  },
+  {
+    "file": "loja-cafe-ato4.zip",
+    "tag": "ato4",
+    "files": 41,
+    "sha256": "504ada525d604a1b59cfcecda79451dace3354eaf7576c53f409b9540011d4bf",
+    "bytes": 39732
   }
 ]

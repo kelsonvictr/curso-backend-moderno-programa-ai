@@ -1,68 +1,73 @@
-CAP 03 — KAFKA DO ZERO · ROTEIRO SIMPLES (versão de 10/10, sem Java em sala)
+CAP 03 — KAFKA DO ZERO · LOJA CAFÉ (versão de 17/10; aula de 10/10 foi cancelada)
 =========================================================================
-Objetivo: a turma sai sabendo o que é Kafka e tendo usado um de verdade no terminal.
-Código Java com Kafka (pontos 13–18) é TAREFA DE CASA, com os prompts.
+Objetivo: a turma sai sabendo o que é Kafka e tendo VISTO, num sistema que ela montou,
+onde ele faz diferença: primeiro sem Kafka (HTTP), depois com Kafka.
 
-ANTES DA AULA (10 min, na sua máquina)
+ANTES DA AULA (15 min, na sua máquina)
   docker pull apache/kafka:3.9.1 && docker pull ghcr.io/kafbat/kafka-ui:v1.3.0
-  Baixe apoio/kafka-lab/compose.yml numa pasta kafka-lab e rode: docker compose up -d --wait
-  Abra localhost:8090. Se abriu, você está pronto. É o mesmo arquivo da turma.
+  Descompacte apoio/loja-cafe-ato4.zip numa pasta e suba tudo (COMO-RODAR.md).
+  Se o front mostrar pedido virando Pago, você está pronto. Pare tudo e use o
+  loja-cafe-inicio.zip para fazer AO VIVO com a turma.
+  Peça no grupo: Java 21, Node 20+, Python 3.10+, Docker e os dois docker pull.
 
-13:30 (10)  Abertura, ponto 03: "hoje é Kafka do zero, com prática no terminal".
-13:40 (70)  IDEIA. Ponto 04: vídeo Duas cozinhas + simulador 1. Ponto 05: log e offset.
-            Ponto 06: vídeo Save game + simulador 2. Ponto 07: vídeo Três pontas + simulador 3.
-            Ponto 08: as seis peças. Faça as perguntas "antes de revelar" em voz alta.
-14:50 (15)  Ponto 09: todos baixam o compose.yml e sobem o Kafka. Painel em localhost:8090.
-15:05 (30)  LAB A, ponto 10 (projete o seu terminal): tópico treino-cafe, produtor, grupo
-            barista, relê nada, describe, grupo caixa, reset e replay.
-15:35 (15)  ☕
-15:50 (30)  LAB A+: dois consumidores no grupo cozinha dividem as partições; lag.
-16:20 (10)  Pontos 11 e 12: desenho e contrato (só ler e comentar).
-16:30 (30)  LAB B: tópico pedidos-pagos, produtor com chave (separador /), grupos analytics
-            e auditoria, repetição do 4711 na mesma partição, reset e replay.
-17:00 (20)  Ponto 19: só o VÍDEO do chefão. Ponto 20: quadro + vídeo do lutador + 4 cenários.
-17:20 (10)  Ponto 21: cinco perguntas. Ponto 22: tarefa de casa (prompts 2 a 5).
+13:30 (10)  Abertura, ponto 03: ideia → sem Kafka → com Kafka.
+13:40 (70)  IDEIA (igual à versão aprovada). 04 Duas cozinhas + sim 1 · 05 log/offset ·
+            06 Save game + sim 2 · 07 Três pontas + sim 3 · 08 seis peças.
+14:50 (10)  09 Loja Café: mapa (clique Ato 1→5), baixar ZIP, conferir ferramentas.
+15:00 (15)  10 Prompt 1 (API Spring). Prova com curl/Insomnia.
+15:15 (15)  11 Prompt 2 (front React). ANOTE O TEMPO DE RESPOSTA (~30 ms).
+15:30 (15)  12 Prompt 3 (Flask HTTP + API chama). Tempo vira ~3 000 ms. 20 cafés = recusa.
+15:45 (10)  13 Ctrl+C no Flask → 500 + pedido órfão. Quiz dos 4 serviços. 99%^4 ≈ 96%.
+15:55 (15)  ☕  (deixe API e front rodando; religue o Flask)
+16:10 (10)  14 docker compose up -d --wait em infra/. Painel 8090. Contrato dos eventos.
+16:20 (20)  15 Prompts 4 (API) e 5 (Flask). Front NÃO muda. ~20 ms e vira Pago em 3 s.
+16:40 (10)  16 Ctrl+C no Flask, 3 pedidos, lag 3 no painel, religa e alcança. Tabela Ato 2×3.
+            "O RabbitMQ também faria isso" → gancho para o 17.
+16:50 (15)  17 ★ DIFERENCIAL ★ Prompt 6 (analytics). Lê pedidos de ANTES dele existir.
+            Ctrl+C e roda de novo → vazio (quiz). Reset → replay. GRUPO=auditoria.
+17:05 (5)   18 caixa-2 (INSTANCIA=caixa-2 PORTA=5002). Etiquetas alternam. Cortável.
+17:10 (10)  20 Quadro + vídeo do lutador + 4 cenários (pule o 19: é casa).
+17:20 (10)  21 cinco perguntas · 22 casa.
 
-SE ALGO DER ERRADO NO TERMINAL
-  "Timed out waiting for a node assignment" → usou localhost dentro do container; é kafka:19092.
-  "group ... is not inactive" no reset → feche o consumidor daquele grupo (Ctrl+C).
-  Porta 9092/8090 ocupada → KAFKA_PORT=29092 KAFKA_UI_PORT=28090 docker compose up -d --wait
-  Aviso sobre "period ('.')" → só aparece em nome com ponto; usamos hífen. Não é erro.
-  Alguém sem Docker funcionando → faz em dupla com o vizinho. Não depure Docker em sala.
+SE ATRASAR: 18 vai pra casa; 13 vira demonstração sua (sem a turma derrubar o Flask).
+QUEM TRAVAR: pega o ZIP do fim do ato anterior (ponto 09) e segue. Não depure em sala.
+
+SE ALGO DER ERRADO
+  Porta 8080 ocupada → API do Cap 02 ligada. Pare.
+  Porta 5000/5001 (macOS) → AirPlay usa 5000; usamos 5001. Ocupada? PORTA=5011 e ajuste a API.
+  "blocked by CORS" no console → allowedOrigins exatamente http://localhost:5173.
+  "package com.fasterxml.jackson.databind does not exist" → Boot 4: tools.jackson...JsonMapper.
+  Pedido processado 2× → Flask com reloader; use_reloader=False.
+  Log com "ipv6#[::1]" → broker.address.family v4 (só ruído).
+  Reset "not inactive" → feche o analytics daquele grupo.
+  Sem Docker funcionando → faz em dupla. Não depure Docker em sala.
 
 CINCO FRASES
   1 Na fila, ler consome; no log, ler só avança o marcador.
-  2 O marcador fica no Kafka; a soma fica no programa.
-  3 Mesma chave, mesma partição; ordem só dentro da partição.
-  4 "Pelo menos uma vez" exige leitor idempotente.
+  2 HTTP prende quem chama ao tempo e à saúde de quem atende.
+  3 Quem chega depois lê o passado: grupo novo + earliest = offset 0.
+  4 O marcador fica no Kafka; o painel fica no programa. Replay reconstrói.
   5 Banco e Kafka são duas escritas; a solução tem nome: outbox.
 
 =========================================================================
 DETALHES POR PONTO (versão completa, para consulta)
-CAP 03 — O PAGAMENTO VIRA HISTÓRIA: KAFKA (23 pontos, 10/10/2026)
+CAP 03 — O PAGAMENTO VIRA HISTÓRIA: KAFKA (23 pontos, 17/10/2026)
 Use o capítulo e esta cola lado a lado. Resoluções e dúvidas: professor-resolucoes.txt.
-Guia executável e ZIP em apoio/. Amarelo nos prompts = ler em voz alta.
-Três simuladores na página (pontos 04, 06, 07): peça previsão ANTES de cada clique.
-
-ANTES DE SAIR DE CASA (5 min)
-  docker pull apache/kafka:3.9.1 && docker pull ghcr.io/kafbat/kafka-ui:v1.3.0
-  Teste o ZIP da conclusão (apoio/pedidos-kafka-conclusao.zip): sobe com
-  docker compose -f infra/compose.yml up -d --wait. Peça à turma o mesmo pull pelo grupo.
+ZIPs por ato, collection do Insomnia e guia em apoio/. Amarelo nos prompts = ler em voz alta.
+Três simuladores na Parte 1 (pontos 04, 06, 07): peça previsão ANTES de cada clique.
+Mapa vivo da arquitetura nos pontos 09, 10, 12, 14, 17, 18: clique "▶ Ver um pedido passar".
 
 [01] O PEDIDO FOI PAGO. QUEM MAIS QUER SABER?
   Desenho do Cap 02: Pedidos ⇄ RabbitMQ ⇄ Pagamentos. Funciona.
   Pergunta nova: financeiro (painel), auditoria (histórico), marketing. Sem Pedidos ligar pra cada um.
-  Frase do dia: "a fila entrega e esquece; o Kafka anota e deixa reler".
+  Hoje o projeto é NOVO (Loja Café). Ninguém depende do Cap 02 estar pronto.
 
 [02] O PLANO DA TARDE
-  Ideia (65 min) → terminal (30) → ☕ 15:20 → código (75) → falhas e decisão (32).
-  Atrasou? ponto 15 com a conclusão; Analytics próprio vai pra casa.
-  Sobrou? extra do ponto 17 (duas instâncias no mesmo grupo).
+  Ideia (70) → sem Kafka (55) → ☕ → com Kafka (60) → quando usar qual (10) → fechamento (10).
+  Atrasou? 18 pra casa. Sobrou? caixa-3 e caixa-4 (o 4º fica ocioso).
 
-[03] COLOQUE O AGENTE PARA LER
-  Prompt 1 e segue pra teoria. Conferir: testes verdes, portas 9092/8090 livres,
-  e onde o pedido vira PAGO (RegistroService.concluir ← ResultadoListener).
-  Circuito do Cap 02 quebrado? conclusão do Cap 02 em outra pasta.
+[03] O PLANO DE HOJE
+  Três passos: ideia, sem Kafka, com Kafka. Confirme Docker aberto e ZIP baixado.
 
 [04] A FILA ENTREGA E ESQUECE
   VÍDEO 8-bit "Duas cozinhas" (1:11) logo após a história: play com a turma, depois o simulador.
@@ -98,64 +103,61 @@ ANTES DE SAIR DE CASA (5 min)
   Broker, tópico, partição, offset, produtor, grupo. Tabela liga cada um ao RabbitMQ.
   KRaft = Kafka sem Zookeeper (tutorial antigo com Zookeeper: ignorar).
 
-[09] KAFKA NO DOCKER
-  Duas portas: apps no PC usam localhost:9092; container (painel, terminal) usa kafka:19092.
-  Prompt 2. Conferir: kafka healthy, painel localhost:8090 com cluster "aula".
-  Referência do Compose no 👀. Imagens ~1 GB: rede lenta = pull antes.
+[09] A LOJA CAFÉ, PEÇA POR PEÇA
+  Tabela das peças e portas. Mapa interativo: clique Ato 1 → 5 com a turma.
+  ZIP inicial = AGENTS.md, CLAUDE.md (@AGENTS.md), COMO-RODAR.md, specs/ (api, pagamentos,
+  eventos) e infra/compose.yml. "Contrato antes do código" = SDD do Cap 01.
+  Ferramentas: java -version, node -v, python3 --version, docker version.
 
-[10] LAB A — CADERNO DO CAFÉ (👥 junto, projete seu terminal)
-  docker compose exec kafka bash → cd /opt/kafka/bin
-  1 criar treino-cafe (3 partições) · 2 produtor com chave (mesa1:cafe … Ctrl+C)
-  3 consumidor --group barista --from-beginning → mesa1 toda numa partição, em ordem;
-    mesa3 pode aparecer antes (entre partições não há ordem)
-  4 mesmo comando de novo → nada (marcador no fim) · describe → LAG 0
-  5 --group caixa → lê tudo · 6 reset barista --to-earliest → relê. exit.
-  Erros: localhost dentro do container = timeout; reset com consumidor ligado = "not inactive".
+[10] ATO 1 · API EM SPRING (🧭 Prompt 1)
+  Initializr com versão PADRÃO (hoje Boot 4.1.1). Web, JPA, H2, Validation. H2 em arquivo.
+  Prova: POST 201 valor 17.0 AGUARDANDO; inválido 400; GET mais novo primeiro.
 
-[☕] 15:20–15:35
+[11] ATO 1 · VITRINE EM REACT (🧭 Prompt 2)
+  Vite + React JS. Polling 2 s. "A API respondeu em N ms" → anotar ~30 ms.
+  CORS: navegador bloqueia 5173 → 8080 sem allowedOrigins. Quiz: ninguém cobra.
 
-[11] ONDE O KAFKA ENTRA
-  RabbitMQ fica (comando). Kafka é novo (evento PedidoPago). Pedidos não conhece os leitores.
-  Revisão: comando pode ser recusado; evento é fato no passado.
+[12] ATO 2 · PAGAMENTO POR HTTP (🧭 Prompt 3)
+  Flask, sleep(3), aprova até R$ 100. API chama com RestClient e ESPERA.
+  "Não trate a falha" é de propósito. Prova: ~3 000 ms e Pago caixa-1; 20 cafés = Recusado.
+  .venv explicado. Porta 5001 (AirPlay ocupa 5000 no macOS).
 
-[12] COMBINE O EVENTO
-  Chave = pedidoId. JSON v1: versao, pedidoId, solicitacaoId, valor.
-  Publica DEPOIS do commit do APROVADO. Recusa não publica. Repetição pode acontecer.
-  Prompt 3 (spec .specs/06-evento-pedido-pago.md). Não compartilhar classe, só contrato.
+[13] ATO 2 · DESLIGUE O PAGAMENTOS
+  Ctrl+C no Flask → faixa vermelha 500 → pedido órfão Aguardando para sempre.
+  Quiz Estoque/E-mail/Analytics: API espera e depende de todos. 0,99^4 ≈ 96% ≈ 29 h/mês fora.
+  Liga com o ponto 04: quem escreve não espera quem lê. Religue o Flask.
 
-[13] LEIA ANTES DE GERAR
-  NewTopic (3 partições, 1 réplica). send(tópico, chave, valor).get(10s) = publisher confirm.
-  @KafkaListener com ConsumerRecord (partição/offset). Grupo vem do application.yml.
-  Quiz: sem .get(), Kafka fora = evento perdido em silêncio.
+[☕] 15:55–16:10
 
-[14] PEDIDOS PUBLICA (🧭 Prompt 4)
-  Prova: log "PEDIDO_PAGO publicado: … partição=X offset=0"; painel Topics → pedidos-pagos.
-  Insomnia Cap 03: "10 · Pagar com chave nova" (uuid automático).
+[14] ATO 3 · KAFKA E CONTRATO
+  cd infra && docker compose up -d --wait. Painel 8090 (cluster "aula").
+  Duas portas (details). Dois tópicos: pedidos-criados e pagamentos-resultados, chave pedidoId.
+  Aviso murmur2: Python usa outro hash por padrão → partitioner murmur2_random.
 
-[15] ANALYTICS LÊ (🧭 Prompt 5)
-  Serviço novo, 8082, sem banco, grupo analytics, earliest.
-  Ao subir lê o pedido de antes (grupo novo + earliest). "11 · Resumo".
-  Pague mais 2 → 3 pedidos, R$ 113,40. Anotar partições.
+[15] ATO 3 · TELEFONE → CADERNO (🧭 Prompts 4 e 5)
+  API: NewTopic ×2, send(...).get(5 s), @KafkaListener com concluir() idempotente.
+  Flask: thread consumidora, grupo pagamentos, produce + flush, use_reloader=False.
+  Prova: front sem mudança, ~20 ms, Aguardando → Pago. Log "partição X · offset Y".
+  Painel: Topics → Messages. Quiz: front não mudou.
 
-[16] REINICIOU E ZEROU
-  Ctrl+C e sobe → resumo 0, sem LIDO no log. Painel → Consumers → lag 0.
-  Parar → reset-offsets --to-earliest → subir → volta 3 / R$ 113,40.
-  Lição: painel é visão derivada; o tópico é a fonte da verdade.
+[16] ATO 3 · DESLIGUE DE NOVO
+  Ctrl+C Flask, 3 pedidos, sem erro; Consumers → pagamentos → lag 3; religa → alcança.
+  Tabela Ato 2 × Ato 3. Honestidade: RabbitMQ também faria isso.
 
-[17] UM TIME NOVO: AUDITORIA
-  ANALYTICS_GRUPO=auditoria ANALYTICS_PORT=8083 → "12 · Resumo da auditoria" = mesmos 3.
-  Pague mais um: os dois sobem. Extra: 2 instâncias no MESMO grupo dividem partições e o painel.
+[17] ATO 4 · QUEM CHEGA DEPOIS (🧭 Prompt 6) ★ o diferencial
+  História: financeiro quer desde a abertura. Analytics sem banco (de propósito).
+  1ª execução: lê tudo desde o offset 0 (bate com o front). Pedido novo: atualiza ao vivo.
+  Ctrl+C e roda de novo: NADA (quiz). Reset (grupo parado) → replay → painel volta igual.
+  GRUPO=auditoria → lê tudo. Linhas mudadas nas outras peças: 0. Limite: retenção 7 dias.
 
-[18] O MESMO EVENTO DUAS VEZES
-  Republicar o resultado no RabbitMQ (pagamentos.eventos / pagamento.resultado).
-  Pedidos republica: mesma partição, offset maior. Analytics: mensagensLidas +1, pedidos igual,
-  "repetida": true. Quiz: pedidos++ contaria duas vezes.
+[18] ATO 5 · DOIS CAIXAS
+  INSTANCIA=caixa-2 PORTA=5002 python app.py. 6 pedidos: etiquetas caixa-1/caixa-2.
+  Consumers → pagamentos: 2 membros (2+1 partições). Ctrl+C no caixa-2 → rebalanceia.
+  Quiz: 4 caixas, 3 trabalham.
 
-[19] KAFKA DESLIGADO
-  VÍDEO "Chefão: a escrita dupla" (0:50) antes de desligar o Kafka de verdade.
-  docker compose stop kafka → pagar → PAGO, erro no log, ~30 s depois 1 msg em
-  pedidos.resultados.erros. Subir kafka → Prompt 6 (diagnóstico) → republicar o MESMO resultado
-  → PedidoPago chega. Escrita dupla; nome da solução: outbox (só citar).
+[19] KAFKA DESLIGADO (🏠 casa)
+  Escrita dupla: H2 grava, Kafka fora → .get(5 s) falha → 500 e pedido órfão.
+  Vídeo do chefão (feito com o sistema do Cap 02; a lição é a mesma). Prompt 7 = diagnóstico + outbox.
 
 [20] RABBITMQ OU KAFKA? (⚖️)
   VÍDEO "Escolha seu lutador" (1:12): em cada contagem 3-2-1 a turma grita FILA ou LOG.
@@ -169,9 +171,9 @@ ANTES DE SAIR DE CASA (5 min)
   Frase: na fila ler consome; no log ler só avança o marcador. Cinco perguntas da lista.
   Anuncie Cap 04 = OO e SOLID (leitura: capítulo 02-oo-de-verdade-e-solid).
 
-[22] EM CASA (até 17/10)
-  Provas 14–19 no próprio projeto; .specs/07-quando-usar-qual.md; desafio faturamento
-  por partição; três frases (marcador / zerou / replay); leitura de OO/SOLID.
+[22] EM CASA (até o próximo sábado)
+  Atos pendentes (ZIPs) · ponto 19 + Prompt 7 · repetição via Produce Message no painel ·
+  notificacoes-py sem tocar na API · specs/quando-usar-qual.md · três frases · leitura OO/SOLID.
 
 [23] GLOSSÁRIO
   Consulta. Termos na ordem em que aparecem.

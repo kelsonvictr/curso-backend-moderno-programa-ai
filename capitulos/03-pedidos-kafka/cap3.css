@@ -132,3 +132,18 @@ aside.concept,aside.story,aside.tip,aside.warning{display:block}
 .video-8bit video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#1a1c2c;image-rendering:pixelated}
 .video-8bit figcaption{margin-top:12px;font-size:.92rem;color:#c3c8da}.video-8bit figcaption b{color:#ffcd75}
 .video-8bit details{margin:12px 0 0}.transcricao{margin:0;padding-left:22px;font-size:.92rem}.transcricao li{margin:4px 0}
+
+/* ===== Loja Café · mapa vivo da arquitetura (pontos 09–18) ===== */
+.mapa-vivo .mapa-barra{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.mapa-vivo .mapa-barra button{min-height:38px;padding:6px 12px;font-size:.88rem}
+.mapa-vivo .mapa-barra button[aria-pressed=true]{border-color:#ffcf69;background:#3a3148}
+.mapa-vivo .mapa-barra .mapa-play{margin-left:auto}
+.mapa-vivo .mapa-rotulo{font-size:.78rem;letter-spacing:1.5px;font-weight:900;text-transform:uppercase;color:#ffcf9b;margin:0 0 8px}
+.mapa-vivo [data-oculto]{display:none}
+.mapa-vivo .novo rect,.mapa-vivo rect.novo{stroke:#ffcf69;stroke-width:2.5}
+.mapa-vivo path.novo{stroke:#ffcf69;stroke-width:3}
+.mapa-vivo path.ativo{stroke:#ffcf69;stroke-width:3.5}
+.mapa-vivo .selo circle{fill:#ffcf69;stroke:none}.mapa-vivo .selo text{fill:#241505;font-size:13px;font-weight:900;text-anchor:middle}
+.mapa-vivo .bolinha{fill:#ffcf69;stroke:#241505;stroke-width:2}
+@media(prefers-reduced-motion:no-preference){.mapa-vivo .novo rect,.mapa-vivo path.novo{animation:mapaBrilho 1.6s ease-in-out 2}}
+@keyframes mapaBrilho{50%{stroke-opacity:.35}}

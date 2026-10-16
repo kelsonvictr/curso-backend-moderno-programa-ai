@@ -509,3 +509,13 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
 - Validação: 10 cenários reais (Postgres, RabbitMQ, Kafka, kafka-ui, três apps). Browser:
   simuladores, quizzes, sem erros de console, 375 px sem overflow, ligaduras desligadas.
 - Hub: Cap 3 como aula atual; card Sáb 04 → Kafka; Sáb 05 → OO/SOLID (em breve).
+
+## 2026-10-16 — Cap 03: aula de 10/10 cancelada; prática trocada pela Loja Café
+- O Cap 03 é dado em 17/10. Professor aprovou a Parte 1 (01–08) e pediu outra prática: os labs
+  de terminal eram overkill. Labs antigos apagados a pedido dele.
+- Nova prática: sistema React + Spring + Flask montado com o agente, primeiro por HTTP (ver o
+  acoplamento: 3 s de espera, 500 e pedido órfão), depois com Kafka (front intocado), e um
+  Analytics em Python que chega depois e lê o histórico (o diferencial do Kafka). Mapa da
+  arquitetura redesenhado a cada ato. Detalhe e descobertas em 14-cap3-kafka.md.
+- Validação: 34 cenários reais do zero (cinco atos + Kafka fora). Browser: mapas, animação,
+  quizzes, sem erros de console. Calendário dos caps seguintes a confirmar com o professor.
