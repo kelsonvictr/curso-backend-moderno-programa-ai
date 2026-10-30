@@ -4,6 +4,28 @@
 > experiente e a competência avaliada é **julgamento de engenharia**. Ele não digita no piloto
 > automático — ele **dirige e critica a IA**. Toda peça didática aqui serve a esse objetivo.
 
+## ⭐ PADRÃO VIGENTE DE CAPÍTULO (a partir de 30/10/2026) — formato Fullstack/Iniciantes
+Decisão do professor ao reprovar o Cap 04 em dois formatos seguidos ("muito confuso",
+"tão ruim, até de dar aula… bem diferente do material-fullstack, prog iniciantes"). Vale para
+capítulos novos e refeitos; as seções abaixo (zonas, partes, labs, simuladores) ficam como
+histórico dos Caps 0–3 e **não** devem ser usadas como molde novo.
+- **Esqueleto do `novo-material-fullstack` (Cap 11) e do `programacao-iniciantes-v2`:** hero com
+  badge + chips + "Meta"; ~10–13 `step-section` com `step-header` (ícone ou letra, título curto,
+  subtítulo de uma linha, `[NN]` discreto) e **um** `card`. Sidebar com `goTo`.
+- **Prática guiada, teoria-chave curta:** cada item abre com um `analogy` de 2–3 frases + uma
+  linha "Regra:"; o resto é fazer: 👀 problema → ⌨️ digitar → 🚨 compilador → ✅ mesmo teste.
+- **Componentes do kit compartilhado só:** `analogy`, `tip`/`warning` (ícone + content),
+  `code-block`, `terminal`, `quiz` (`checkQuiz`), `toggler` (👀 Travou? / soluções),
+  `checkpoint`, `route-card`/`concept-card`. Um quiz por item, no máximo.
+- **Sem no HTML:** zonas Antes/Em sala/Em casa, `part-head`, horários, kickers, caixas
+  teoria/história/limite/prova, tabelas de cronograma, simuladores longos. O cronograma e o
+  roteiro ficam no `professor.txt` (pontos `[NN]` sincronizados).
+- **Fundamentos de código à mão:** o aluno digita `src/main`; testes vêm prontos para copiar;
+  o agente entra no fim como revisor que não edita. Fechar com 🐛 BugZilla, 💪 desafio
+  individual e 🎒 "O que você leva".
+- Referência viva: `capitulos/04-oo-e-solid-do-zero/` (gerado por
+  `tooling/cap04-oo-solid/montar_index.py`).
+
 ## O que MUDA em relação aos materiais de iniciante
 
 | Iniciante (irmãos) | Sênior (aqui) |

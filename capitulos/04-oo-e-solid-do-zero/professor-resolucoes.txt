@@ -1,8 +1,7 @@
 CAP 04 — CONSULTA E RESOLUÇÕES
-Código de referência: apoio/biblioteca-inicio.zip e biblioteca-{s,o,l,i,d}.zip (fim de cada ato).
-Histórico git com tags inicio, s, o, l, i, d: tooling/cap04-oo-solid/biblioteca.bundle
-(git clone biblioteca.bundle). O bundle é gerado por tooling/cap04-oo-solid/gerar_biblioteca.py
-e os ZIPs por tooling/build-cap04-biblioteca.py.
+Código de referência: apoio/biblioteca-inicio.zip e biblioteca-{s,o,l,i,d}.zip (fim de cada letra).
+Histórico git com tags inicio, s, o, l, i, d: tooling/cap04-oo-solid/biblioteca.bundle.
+Gerado por tooling/cap04-oo-solid/gerar_biblioteca.py; ZIPs por tooling/build-cap04-biblioteca.py.
 Validado: python3 tooling/validate-cap04-biblioteca.py → 6/6 ZIPs, testes, tempos e saída
 do App conferidos (tooling/cap04-oo-solid/VALIDACAO.json). Java 21, JUnit 5.12.2, Maven 3.9.
 Os pontos abaixo seguem os marcadores do capítulo.
@@ -11,114 +10,67 @@ Os pontos abaixo seguem os marcadores do capítulo.
   Livro já encapsulado no início (não é tema de hoje). Sustos: visitante paga zero,
   dicionário, e-books, testes lentos por causa do e-mail. Frase: uma mudança, um lugar.
 
-[02] O plano da tarde
-  240 min. Cortes previstos: 16 → casa; 14 → demonstração do professor.
+[02] Abrir o projeto e rodar
+  Esperado: 5 testes, ~4 s, BUILD SUCCESS. App: "Ana pegou Dom Casmurro", e-mail após 2 s,
+  "Multa: 300 centavos". Teste naoEmprestaOMesmoLivroDuasVezes já usa a lambda.
 
-[03] SOLID em uma tarde
-  Tabela das 5 letras com o ato correspondente. Martin (2000/2002), sigla por Feathers.
-
-[04] O mínimo de Java para hoje
-  Quiz: tipo novo não muda a linha da multa; basta classe nova (antecipa o O).
-  Pergunta provável: "e String?" String é objeto, mas não é tema. Não aprofundar.
-
-[05] S
-  Quiz: DOIS motivos no devolver() de hoje (multa = coordenação, aviso = TI); o
-  empréstimo já é do Livro. Limite: não é "um método por classe".
-
-[06] O
-  Quiz do limite: dois casos que nunca vão crescer → if basta.
-  Limite: mudar a REGRA (teto de multa) edita a calculadora, e tudo bem.
-
-[07] L
-  Quiz: LivroInfantil respeita. LivroDeConsulta (exceção) e LivroEmReforma (no-op
-  silencioso) quebram a promessa. Saída: não herdar; tipo separado. Liskov, 1987.
-
-[08] I
-  Contrato gordo força UnsupportedOperationException (dicionário: 3 métodos; livro:
-  baixarPdf; e-book: emprestar/devolver). Saída: ItemDoAcervo pequeno + Baixavel.
-
-[09] D
-  Quiz: new EmailSmtp() vai para o App (quem monta). Injeção pelo construtor.
-  Limite: CalculadoraDeMulta continua criada dentro (rápida, interna, sem variação).
-
-[10] Bancada
-  Esperado: 5 testes, ~4 s, BUILD SUCCESS. App: "Ana pegou Dom Casmurro", e-mail após
-  2 s, "Multa: 300 centavos". Teste naoEmprestaOMesmoLivroDuasVezes já usa a lambda.
-
-[11] Ato S
+[03] S · Uma classe, um motivo para mudar
   Prova inicial: -Dtest=BibliotecaTest#alunoPagaCemCentavosPorDiaDeAtraso → 1 teste, 2,04 s.
   CalculadoraDeMulta.calcular(Leitor, int): if ALUNO → dias*100; if PROFESSOR → dias*50;
   return 0. Biblioteca: campo "private final CalculadoraDeMulta calculadora = new ..." e
-  "int multa = calculadora.calcular(leitor, diasDeAtraso);". Testes copiados:
-  CalculadoraDeMultaTest (300, 150, 0) e BibliotecaTest com 4 casos.
-  Resultado: 7 testes, ~2 s; CalculadoraDeMultaTest em ~0,016 s. Aponte o return 0.
+  "int multa = calculadora.calcular(leitor, diasDeAtraso);". Testes copiados.
+  Resultado: 7 testes, ~2 s; CalculadoraDeMultaTest em ~0,016 s.
+  Quiz: coordenação.
 
-[12] Ato O
-  Quebra: Carla com "VISITANTE" no App → "Carla, visitante, 3 dias de atraso: 0 centavos".
-  Etapa 1: interface TipoDeLeitor { int multaPorDiaEmCentavos(); }; Aluno 100,
-  Professor 50; Leitor recebe TipoDeLeitor (campo, construtor, getter);
+[04] O · Crescer sem mexer no que funciona
+  Quebra: Carla com "VISITANTE" no App → "...3 dias de atraso: 0 centavos".
+  interface TipoDeLeitor { int multaPorDiaEmCentavos(); }; Aluno 100, Professor 50;
+  Leitor recebe TipoDeLeitor (campo, construtor, getter);
   calculadora = diasDeAtraso * leitor.getTipo().multaPorDiaEmCentavos().
   Compilador: App.java [12,57] e [20,63] "String cannot be converted to TipoDeLeitor".
-  Etapa 2: Visitante 200 (arquivo novo) + App com new Aluno() e new Visitante().
-  Testes copiados (BibliotecaTest e CalculadoraDeMultaTest com visitante 600).
-  Resultado: 8 testes; App imprime 600. Calculadora não é aberta na etapa 2.
-  Pergunta provável: "enum não é mais simples?" É, quando os tipos são fechados;
-  o enum exigiria editar o enum a cada tipo. Hoje o objetivo é ver o O.
+  Visitante 200 (arquivo novo) + App com new Aluno() e new Visitante(). Testes copiados.
+  Resultado: 8 testes; App imprime 600. Calculadora não é aberta para o Visitante.
+  Quiz: criar Funcionario.java. Pergunta provável: "enum não é mais simples?" É, quando
+  os tipos são fechados; o enum exigiria editar o enum a cada tipo.
 
-[13] Ato L
+[05] L · O filho cumpre a promessa do pai
   emprestarTodos(List<Livro>) com for. Quebra: LivroDeConsulta extends Livro com
   emprestar() lançando UnsupportedOperationException; teste com Iracema, dicionário e
-  O Cortiço → ERROR na linha do emprestarTodos. Iracema saiu, O Cortiço nunca foi tentado.
+  O Cortiço → ERROR. Iracema saiu, O Cortiço nunca foi tentado.
   Conserto: apagar LivroDeConsulta; ObraDeConsulta sem extends (codigo, titulo, getters).
-  new ObraDeConsulta(...) atribuído a Livro → "ObraDeConsulta cannot be converted to Livro".
-  Teste final só com livros. Resultado: 9 testes.
+  ObraDeConsulta atribuída a Livro → "cannot be converted to Livro". Resultado: 9 testes.
+  Quiz: LivroInfantil.
 
-[14] Ato I
-  Quebra: ItemDoAcervo com getCodigo, getTitulo, emprestar, devolver, baixarPdf;
-  Livro e ObraDeConsulta implements → "is not abstract and does not override abstract
-  method baixarPdf()". Conserto: ItemDoAcervo só getCodigo/getTitulo; interface
-  Baixavel { String baixarPdf(); }; EbookLivre implements ItemDoAcervo, Baixavel
-  (codigo, titulo, linkDoPdf). AcervoTest copiado (catálogo com 3 tipos; PDF do e-book).
-  Resultado: 11 testes, nenhuma UnsupportedOperationException no projeto.
+[06] I · Ninguém promete o que não faz
+  Quebra: ItemDoAcervo com getCodigo, getTitulo, emprestar, devolver, baixarPdf; Livro e
+  ObraDeConsulta implements → "does not override abstract method baixarPdf()".
+  Conserto: ItemDoAcervo só getCodigo/getTitulo; Baixavel { String baixarPdf(); };
+  EbookLivre implements ItemDoAcervo, Baixavel. AcervoTest copiado. Resultado: 11 testes.
+  Quiz: ItemDoAcervo e Baixavel.
 
-[15] Ato D
+[07] D · Dependa do contrato, não do detalhe
   interface Notificador { void avisar(Leitor leitor, String mensagem); }
-  EmailSmtp implements Notificador (avisar, sleep 2 s, println para leitor.getEmail()).
-  Biblioteca: campo final Notificador + construtor; devolver chama notificador.avisar
-  se multa > 0. Compilador: App.java [9,33] "constructor Biblioteca ... cannot be applied".
-  App: new Biblioteca(new EmailSmtp()). Copiados: NotificadorDeTeste (List<String> avisos)
-  e BibliotecaTest com @BeforeEach e texto exato "Ana: Multa de 300 centavos por 3 dia(s)
-  de atraso." Resultado: 11 testes em ~0,03 s. App ainda imprime o e-mail.
+  EmailSmtp implements Notificador (avisar, sleep 2 s). Biblioteca: campo final
+  Notificador + construtor; devolver chama notificador.avisar se multa > 0.
+  Compilador: App.java [9,33] "constructor Biblioteca ... cannot be applied".
+  App: new Biblioteca(new EmailSmtp()). Copiados: NotificadorDeTeste e BibliotecaTest com
+  texto exato do aviso. Resultado: 11 testes em ~0,03 s. Quiz: no App.
 
-[16] Bônus WhatsApp
-  class WhatsAppSimulado implements Notificador { avisar → println "[whatsapp] para "
-  + leitor.getNome() + ": " + mensagem }. App: new Biblioteca(new WhatsAppSimulado()).
-  Só o App muda (+ arquivo novo). Testado: saída "[whatsapp] para Ana: Multa de 300...".
+[08] BugZilla
+  Interface para cada classe (sem dor) · mais um if por tipo (O) · filha que não cumpre (L)
+  · new do detalhe dentro da regra (D). E o exagero: separar demais.
 
-[17] Classificador
-  1 S (Relatorio) · 2 O (else if PARCEIRO) · 3 L (Revista com devolver vazio) ·
-  4 I (Item gordo) · 5 D (new EmailSmtp dentro da Biblioteca).
+[09] Desafio individual
+  Funcionario implements TipoDeLeitor { return 0; } + teste 3 dias = 0 → 1 arquivo novo.
+  WhatsAppSimulado implements Notificador { println "[whatsapp] para " + getNome() + ...}
+  + 1 linha no App → Biblioteca nem aberta. Saída testada: "[whatsapp] para Ana: Multa...".
 
-[18] O agente revisa
-  Esperado do agente: S CalculadoraDeMulta; O TipoDeLeitor/Visitante; L ObraDeConsulta
-  fora de Livro; I ItemDoAcervo + Baixavel; D Notificador no construtor. Se ele propuser
-  ILivro/ILeitor/interfaces "por precaução", Lombok ou Spring → recusar (AGENTS.md proíbe).
-  Defender/refutar: REFUTAR ILivro/ILeitor/ICalculadoraDeMulta (uma implementação, sem
-  troca). Manter TipoDeLeitor, ItemDoAcervo, Baixavel e Notificador.
+[10] O agente revisa
+  Esperado: S CalculadoraDeMulta; O TipoDeLeitor; L ObraDeConsulta fora de Livro;
+  I ItemDoAcervo + Baixavel; D Notificador no construtor. Se propuser ILivro/ILeitor,
+  Lombok ou Spring → recusar (AGENTS.md proíbe). Quiz: recusar.
 
-[19] Explique sem decorar
-  Respostas: S teste da multa sem e-mail; O criou Visitante, não abriu a calculadora;
-  L laço confia na promessa de Livro; I compilador cobrou baixarPdf() do Livro;
-  D new EmailSmtp() foi para o App, teste pluga dublê. Strategy só citado.
-
-[20] Em casa
-  1 Funcionario implements TipoDeLeitor { return 0; } + teste 3 dias = 0. Abre 0 arquivos
-    existentes além do teste (O).
-  2 Revista: ambas aceitáveis com argumento. extends Livro é honesto se empresta/devolve
-    com as mesmas regras (L respeitado) e só acrescenta numeroDaEdicao. Classe separada
-    implements ItemDoAcervo também vale, mas aí não entra em emprestarTodos. Recusar
-    Revista extends Livro que sobrescreve emprestar/devolver mudando a promessa.
-  3 WhatsApp: só App + arquivo novo.
-
-[21] Glossário
-  Sem resolução.
+[11] O que você leva
+  Cinco frases. Strategy só citado. Casa (revistas): extends Livro é honesto se empresta e
+  devolve com as mesmas regras e só acrescenta numeroDaEdicao; classe separada assinando
+  ItemDoAcervo também vale, mas não entra em emprestarTodos. Vale o argumento.

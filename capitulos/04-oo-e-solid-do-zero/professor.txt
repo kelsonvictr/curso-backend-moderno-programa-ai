@@ -1,64 +1,56 @@
 CAP 04 — SOLID NA MÃO
 =========================================================================
-Objetivo: a turma sai sabendo o que cada letra do SOLID pede, que dor resolve e quando
-não vale a pena. Formato do Cap 03: primeiro a ideia (simuladores), depois um ato por
-letra no mesmo projeto. Código DIGITADO PELO ALUNO; testes copiados; agente só revisa (18).
+Prática guiada, pouca teoria. Cada letra: 💡 ideia (2 frases + regra) → 👀 problema →
+⌨️ digita → 🚨 compilador → ✅ mesmo teste → 🧠 1 quiz. Testes são COPIADOS; src/main é
+DIGITADO. Agente só no ponto 10, revisando sem editar.
 Projeto Biblioteca do Bairro: Java 21 puro + JUnit. Sem Spring, Docker ou banco.
 FRASE DO DIA (repita): "uma mudança, um lugar".
-Cada ato: 👀 veja o problema → ⌨️ digite → 🚨 leia o compilador → ✅ rode o mesmo teste.
 
 ANTES DA AULA (10 min, na sua máquina)
   Descompacte apoio/biblioteca-inicio.zip, abra no IntelliJ e rode ./mvnw test.
-  Deve dar 5 testes, ~4 s (o EmailSmtp falso dorme 2 s em dois testes). Isso aquece o
-  Maven Wrapper. Peça no grupo: Java 21 e rodar ./mvnw test em casa (baixa o Maven).
+  Deve dar 5 testes, ~4 s. Isso aquece o Maven Wrapper. Peça no grupo: Java 21 e rodar
+  ./mvnw test em casa (baixa o Maven).
 
-13:30 (10)  01–03 Dona Marta, frase do dia, tabela das 5 letras. Projeto é feito à mão.
-13:40 (10)  04 O mínimo: classe/objeto, Livro já encapsulado, interface, polimorfismo
-            (simulador), extends. Quiz: tipo novo não muda a linha.
-13:50 (15)  05 S: quem pede a mudança. Simulador (empréstimo já cai no Livro).
-14:05 (15)  06 O: if por texto paga zero em silêncio. Simulador if × contrato.
-14:20 (10)  07 L: a filha cumpre a promessa. Simulador do laço (para no dicionário).
-14:30 (10)  08 I: contrato gordo obriga a prometer. Simulador (3 itens).
-14:40 (15)  09 D: tomada, desenho das setas, simulador (8 s → 0 s). new vai pro App.
-14:55 (10)  10 Bancada: mapa vivo (botões Início…D), ZIP, IntelliJ, ./mvnw test, App.
-            AVISO DA LAMBDA () -> (hífen + maior que) no teste que já vem pronto.
-15:05 (20)  11 Ato S: teste de 3×100 leva 2 s → CalculadoraDeMulta. 7 testes, ~2 s.
-15:25 (25)  12 Ato O: Carla visitante paga 0 → contrato; compilador acha "ALUNO" e
-            "VISITANTE"; Visitante = arquivo novo. 8 testes; App mostra 600.
-15:50 (15)  ☕
-16:05 (20)  13 Ato L: emprestarTodos; QUEBRE DE PROPÓSITO com LivroDeConsulta extends
-            Livro (teste explode); conserta com ObraDeConsulta; compilador barra. 9 testes.
-16:25 (15)  14 Ato I: QUEBRE com ItemDoAcervo gordo (compilador cobra baixarPdf do Livro);
-            emagrece + Baixavel + EbookLivre; copia AcervoTest. 11 testes.
-16:40 (20)  15 Ato D: Notificador, EmailSmtp implementa, Biblioteca recebe no construtor,
-            App monta; copia dublê e teste. 11 testes em ~0,03 s.
-17:00 (5)   16 Bônus WhatsApp: classe nova + 1 linha no App. Pode ir pra casa.
-17:05 (5)   17 Classificador (5 trechos).
-17:10 (10)  18 Agente revisa SEM EDITAR + checklist + defender/refutar ILivro → refutar.
-17:20 (10)  19 Cinco perguntas, desenho final, Strategy (só o nome) · 20 casa.
+13:30 (10)  01 Dona Marta, as 5 letras em cartões, frase do dia.
+13:40 (20)  02 Abrir o projeto: ZIP, IntelliJ, ./mvnw test (5 testes, 4 s), App.
+            Mapa: clique Início → D para mostrar onde vamos chegar. Aviso da seta ->.
+14:00 (30)  03 S: teste de 3×100 leva 2 s → CalculadoraDeMulta. 7 testes, multa 0,016 s.
+14:30 (35)  04 O: Carla visitante paga 0 → interface TipoDeLeitor (explique interface,
+            implements, @Override aqui) → compilador acha "ALUNO" e "VISITANTE" →
+            Visitante = arquivo novo. 8 testes; App mostra 600.
+15:05 (15)  ☕
+15:20 (30)  05 L: emprestarTodos; QUEBRE com LivroDeConsulta extends Livro (explique
+            extends aqui) → teste explode → ObraDeConsulta sem herança → compilador barra.
+            9 testes.
+15:50 (25)  06 I: QUEBRE com ItemDoAcervo gordo → compilador cobra baixarPdf do Livro →
+            ItemDoAcervo pequeno + Baixavel + EbookLivre. 11 testes.
+16:15 (35)  07 D: Notificador, EmailSmtp implementa, Biblioteca recebe no construtor,
+            App monta, copia dublê + teste. 11 testes em ~0,03 s.
+16:50 (10)  08 BugZilla: 4 erros clássicos (ler junto, perguntar qual letra).
+17:00 (15)  09 Desafio individual: Funcionário (O) + WhatsApp (D). Conte arquivos.
+17:15 (10)  10 Agente revisa sem editar + quiz ILivro → recusar.
+17:25 (5)   11 O que você leva: 5 frases, Strategy (só o nome), casa (revistas).
 
-SE ATRASAR: 16 vai pra casa; 14 vira demonstração sua (projete e digite junto);
-quem travar pega o ZIP do fim do ato anterior (link no "Travou?" de cada ato).
-Não depure em sala. Testes são copiados de propósito: não gaste tempo digitando teste.
+SE ATRASAR: 09 vira casa; 06 você digita projetado e a turma acompanha.
+Quem travar pega o ZIP no "👀 Travou?" de cada letra. Não depure em sala.
 
 SE ALGO DER ERRADO
   "permission denied: ./mvnw" → chmod +x mvnw. Windows → mvnw.cmd test.
   "release version 21 not supported" → Java antigo; java -version.
-  -Dtest no Windows/PowerShell → use as aspas em volta de "-Dtest=..." ou o ▶ da IDE.
-  Ato S: NullPointerException → faltou "= new CalculadoraDeMulta()" no campo.
-  Ato O: multa da Ana = 0 → calculadora ainda com equals("ALUNO") (compila e nunca bate).
-  Ato L: "cannot find symbol List" → faltou import java.util.List.
-  Ato D: "cannot find symbol enviar" → sobrou chamada antiga na Biblioteca.
+  -Dtest no Windows → use as aspas em "-Dtest=..." ou o ▶ da IDE ao lado do teste.
+  S: NullPointerException → faltou "= new CalculadoraDeMulta()" no campo.
+  O: multa da Ana = 0 → calculadora ainda com equals("ALUNO") (compila e nunca bate).
+  L: "cannot find symbol List" → faltou import java.util.List.
+  D: "cannot find symbol enviar" → sobrou chamada antiga na Biblioteca.
   Seta digitada como → em vez de -> → não compila; hífen + maior que.
   Números de linha nos erros variam conforme onde o aluno digitou: tudo bem.
 
 TEMPOS DOS TESTES (a evidência que a turma vê)
-  início 5 testes ~4,06 s · S: 7, ~2,05 s · O: 8, ~2,05 s · L: 9, ~2,05 s ·
-  I: 11, ~2,06 s · D: 11, ~0,03 s.
+  início 5 testes ~4,06 s · S: 7, ~2,05 s · O: 8 · L: 9 · I: 11, ~2,06 s · D: 11, ~0,03 s.
 
 CINCO FRASES
-  1 S: separe por quem pede a mudança.
-  2 O: tipo novo é arquivo novo; nada que funciona é aberto.
-  3 L: se a filha não cumpre a promessa do pai, ela não é filha.
-  4 I: ninguém promete o que não faz; contratos pequenos.
-  5 D: a regra depende do contrato; quem monta escolhe o detalhe.
+  S: separe por quem pede a mudança.
+  O: tipo novo é arquivo novo; nada que funciona é aberto.
+  L: se a filha não cumpre a promessa do pai, não herde.
+  I: contratos pequenos; ninguém promete o que não faz.
+  D: a regra depende do contrato; quem monta escolhe o detalhe.

@@ -537,3 +537,10 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
 - Novo projeto (tags inicio, s, o, l, i, d), um ato por letra, cada um com "quebre de
   propósito" e mensagem real do compilador. Agente só revisa, sem editar (AGENTS.md diz isso).
 - 21 pontos, TXTs reescritos. Detalhe e motivos em 15-cap4-oo-solid-do-zero.md.
+
+## 2026-10-30 (noite) — Novo padrão de capítulo: formato Fullstack/Iniciantes
+- Professor reprovou também a v2 do Cap 04 (formato Kafka): "tão ruim, até de dar aula…
+  bem diferente do material-fullstack, prog iniciantes". Pediu refazer, **virar padrão** e
+  deixar "o mais simples possível": prática guiada, só a teoria-chave de cada item.
+- Cap 04 v3: 11 pontos em step-section + card, um quiz por letra, sem zonas/partes/horários
+  /simuladores. Padrão registrado no topo de 02-padroes-didaticos.md.

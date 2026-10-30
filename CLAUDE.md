@@ -235,13 +235,18 @@ passo a passo. Cada estado deve responder: **antes, ação, depois, como provar 
 - Dentro do container do Kafka sempre `kafka:19092`; no host, `localhost:9092`. Tópicos com hífen.
   Produtor Python com `partitioner: murmur2_random` (mesma partição que o Java).
 
-## Cap 04 — SOLID na mão (refeito em 2026-10-30)
-- `capitulos/04-oo-e-solid-do-zero/`; contrato em `.specs/15-cap4-oo-solid-do-zero.md`. A v1 (OO do zero,
-  passos com o agente) foi reprovada: "confuso". Agora: **formato do Cap 03**, **só SOLID**, **código à mão**.
-- Parte 1 ideia (04–09, simuladores) → atos S, O, L, I, D (11–15) com mapa vivo das classes; cada ato:
-  veja o problema → digite → leia o compilador → mesmo teste. Testes são copiados; `src/main` é digitado.
-  Agente só no ponto 18, como revisor que não edita. Padrões de Projeto fora (só o nome Strategy).
+## ⭐ Padrão de capítulo vigente (2026-10-30): formato Fullstack/Iniciantes
+- Capítulos novos ou refeitos seguem o esqueleto do `../novo-material-fullstack` (Cap 11) e do
+  `../programacao-iniciantes-v2`: hero + chips + Meta; ~10–13 `step-section` com `step-header` e um
+  `card`; teoria-chave curta (`analogy` + "Regra:") e prática guiada; quiz, `toggler`, `checkpoint`.
+- Nada de zonas, `part-head`, horários, kickers, caixas teoria/limite/prova ou simuladores longos no
+  HTML: cronograma só no `professor.txt`. Detalhe no topo de `.specs/02-padroes-didaticos.md`.
+- O professor reprovou dois formatos seguidos antes deste. Não volte ao formato dos Caps 0–3.
+
+## Cap 04 — SOLID na mão (v3, 2026-10-30)
+- `capitulos/04-oo-e-solid-do-zero/`; contrato em `.specs/15-cap4-oo-solid-do-zero.md`. Só SOLID, código
+  à mão (src/main digitado, testes copiados), uma seção por letra; agente só revisa (ponto 10).
 - Projeto: `tooling/cap04-oo-solid/gerar_biblioteca.py` → `biblioteca.bundle` (tags inicio, s, o, l, i, d);
   ZIPs com `tooling/build-cap04-biblioteca.py`; validar com `python3 tooling/validate-cap04-biblioteca.py`.
   Página gerada por `tooling/cap04-oo-solid/montar_index.py <clone do bundle>`: edite o script e regenere.
-- Manter 21 pontos do HTML, professor.txt e professor-resolucoes.txt sincronizados. Sem links dos TXTs.
+- Manter 11 pontos do HTML, professor.txt e professor-resolucoes.txt sincronizados. Sem links dos TXTs.
