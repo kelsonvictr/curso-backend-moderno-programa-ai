@@ -1,0 +1,123 @@
+CAP 04 — CONSULTA E RESOLUÇÕES
+Código de referência: apoio/biblioteca-inicio.zip, biblioteca-passo1.zip … passo4.zip.
+Histórico git com tags inicio, passo1..passo4: tooling/cap04-oo-solid/biblioteca.bundle
+(git clone biblioteca.bundle). ZIPs gerados por tooling/build-cap04-biblioteca.py.
+Validado: python3 tooling/validate-cap04-biblioteca.py → 5/5 ZIPs, testes e tempos
+conferidos (tooling/cap04-oo-solid/VALIDACAO.json). Java 21, JUnit 5.12.2, Maven 3.9 (wrapper).
+Os pontos abaixo seguem os marcadores do capítulo.
+
+[01] A biblioteca da Dona Marta
+  Dois sintomas: mesmo livro com Ana e Bruno (sem encapsulamento) e mudança na multa
+  quebrando o aviso (sem responsabilidade única). Frase do dia: uma mudança, um lugar.
+
+[02] O plano da tarde
+  240 min. Cortes previstos: 14 → casa, 16 → leitura, 19 → casa.
+
+[03] Classe e objeto
+  Quiz: imprime "Iracema". Livro c = a; copia a referência; há um só objeto (um só new).
+  Pergunta provável: "e String?" String é objeto também; mas é imutável, então
+  "mudar" uma String cria outra. Não aprofundar.
+
+[04] O que sabe, o que faz
+  Quiz: a regra mora no Livro. Tela não protege (outros caminhos pulam a tela);
+  if em todo lugar quebra "uma mudança, um lugar".
+
+[05] Encapsulamento
+  Quiz: vantagem do erro de compilação = o engano é barrado ao escrever, não no balcão.
+  Simulador: porta aberta termina com Ana e Bruno e disponivel=true (estado mentiroso).
+
+[06] Getter e setter
+  Quiz: tirar os setters; dados pelo construtor; campos final; manter getters usados.
+  Limite: DTO/formulário pode ter setters, não tem regra para proteger.
+
+[07] Interface
+  Quiz: tipo novo não muda a linha que chama; basta classe nova (antecipa o O).
+  Composição = Leitor TEM um TipoDeLeitor. Herança fica para o 15.
+
+[08] Bancada
+  Esperado: 5 testes, ~4 s, BUILD SUCCESS. Explicação do agente deve apontar: regra de
+  empréstimo inexistente (Biblioteca escreve no campo), multa por if de texto, e-mail
+  criado dentro de devolver. Teste bugConhecido documenta o bug (passa hoje).
+
+[09] Passo 1 — Livro e Leitor encapsulados
+  Livro: private final codigo/titulo, private boolean disponivel=true, construtor(codigo,
+  titulo), emprestar() lança IllegalStateException se !disponivel, devolver() lança se
+  disponivel, estaDisponivel(), getCodigo(), getTitulo(). Leitor: private final nome,
+  email, tipo (String), construtor, getters. Biblioteca: livro.emprestar()/devolver().
+  Testes: bugConhecido → naoEmprestaOMesmoLivroDuasVezes (assertThrows);
+  + naoDevolveLivroQueNaoFoiEmprestado. 6 testes, ~4 s.
+  Revisão: recusar setters; recusar classe nova; recusar mexer na multa.
+
+[10] SOLID
+  Quiz: interface para cada classe NÃO. Interface paga com várias implementações reais
+  ou troca real (teste). Origem: Robert C. Martin (2000); sigla por Michael Feathers.
+
+[11] S
+  Quiz: três motivos (balcão, coordenação, TI). Limite: não é "um método por classe".
+
+[12] Passo 2 — CalculadoraDeMulta
+  calcular(Leitor, int dias): if ALUNO → dias*100; if PROFESSOR → dias*50; return 0.
+  Biblioteca guarda "private final CalculadoraDeMulta calculadora = new ...".
+  CalculadoraDeMultaTest: 300, 150, 0. BibliotecaTest fica com 1 caso com atraso.
+  8 testes, ~2 s (só um teste ainda espera o e-mail). Aponte: return 0 silencioso.
+
+[13] O
+  Quiz do limite: dois casos que nunca vão crescer → if basta.
+  Simulador: if edita CalculadoraDeMulta a cada tipo; contrato só cria arquivo novo.
+
+[14] Passo 3 — contrato + Visitante
+  Etapa 1: interface TipoDeLeitor { int multaPorDiaEmCentavos(); } ; Aluno 100,
+  Professor 50; Leitor(nome, email, TipoDeLeitor); calculadora =
+  diasDeAtraso * leitor.getTipo().multaPorDiaEmCentavos(); App e testes com new Aluno().
+  Etapa 2: Visitante 200 + teste 3 dias = 600. diff --stat: Visitante.java + teste.
+  9 testes, ~2 s. Recusar enum/switch (o enum exigiria editar o enum a cada tipo).
+  Pergunta provável: "enum não é mais simples?" É, e é uma boa escolha quando os tipos
+  são fechados. Hoje o objetivo é ver o O; diga isso com honestidade.
+
+[15] L
+  Quiz: LivroInfantil respeita. LivroDeConsulta (exceção) e LivroEmReforma (no-op
+  silencioso) quebram a promessa. Saída: não herdar; tipo separado. Liskov, 1987.
+
+[16] I
+  Contrato gordo força UnsupportedOperationException. Emprestavel + Baixavel.
+  Limite: não uma interface por método.
+
+[17] D
+  Quiz: new EmailSmtp() vai para o App (quem monta). Injeção pelo construtor.
+  Limite: CalculadoraDeMulta continua criada dentro (rápida, interna, sem variação).
+
+[18] Passo 4 — Notificador
+  interface Notificador { void avisar(Leitor leitor, String mensagem); }
+  EmailSmtp implements Notificador (sleep 2 s + println "[e-mail] para <email>: <msg>").
+  Biblioteca(Notificador) ; devolver chama notificador.avisar(leitor, "Multa de N
+  centavos por D dia(s) de atraso.") se multa > 0. App: new Biblioteca(new EmailSmtp()).
+  src/test/NotificadorDeTeste: List<String> avisos; avisar → avisos.add(nome + ": " + msg).
+  BibliotecaTest com @BeforeEach montando new Biblioteca(notificador); casos: sem atraso
+  → avisos vazio; com atraso → 1 aviso "Ana: Multa de 300 centavos por 3 dia(s) de atraso."
+  9 testes em ~0,02 s. App ainda imprime o e-mail.
+
+[19] Classificador
+  1 Encapsulamento · 2 S · 3 O · 4 L · 5 I · 6 D.
+
+[20] Revisão
+  Defender/refutar: REFUTAR ILivro/ILeitor/ICalculadoraDeMulta (uma implementação, sem
+  troca). Manter Notificador (e-mail + teste) e TipoDeLeitor (três tipos).
+
+[21] Explique sem decorar
+  Respostas esperadas: 03 molde × instância; 05–06 setter pula a regra; 11 coordenação /
+  TI; 13–14 classe nova Visitante; 17–18 dublê + new no App.
+
+[22] Em casa — obra de consulta (LSP)
+  Resposta: LivroDeConsulta extends Livro viola Liskov (emprestarTodos explode no meio).
+  Desenho-modelo:
+    interface ItemDoAcervo { String getCodigo(); String getTitulo(); }
+    class Livro implements ItemDoAcervo { ...igual... }
+    class ObraDeConsulta implements ItemDoAcervo { private final codigo, titulo; getters }
+    Biblioteca.emprestarTodos(List<Livro> lista) { for (Livro l : lista) emprestar(l); }
+  ObraDeConsulta não tem emprestar(); não entra em List<Livro> (o compilador barra).
+  Testes: obra tem código/título; emprestarTodos com 2 livros deixa ambos indisponíveis.
+  Recusar instanceof para pular. Desafio: WhatsAppSimulado implements Notificador;
+  só o App muda.
+
+[23] Glossário
+  Sem resolução.

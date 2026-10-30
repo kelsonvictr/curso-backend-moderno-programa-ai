@@ -519,3 +519,12 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
   arquitetura redesenhado a cada ato. Detalhe e descobertas em 14-cap3-kafka.md.
 - Validação: 34 cenários reais do zero (cinco atos + Kafka fora). Browser: mapas, animação,
   quizzes, sem erros de console. Calendário dos caps seguintes a confirmar com o professor.
+
+## 2026-10-27 — Cap 04 novo: OO e SOLID do zero, independente
+- Professor pediu um Cap 04 novo, desacoplado dos anteriores, totalmente para iniciantes e
+  tranquilo. Criado `capitulos/04-oo-e-solid-do-zero/`; o OO/SOLID de 19/09 fica preservado.
+- Domínio Biblioteca do Bairro, Java 21 puro (sem Spring/Docker/banco). Regra central: "uma
+  mudança, um lugar". Teoria e prática entrelaçadas: quatro passos com o agente (encapsular, S, O, D).
+- Oito simuladores + classificador; sem áudio (geração paga não pedida). Contrato em
+  15-cap4-oo-solid-do-zero.md. Validação: 5/5 ZIPs com testes e tempos; browser sem erros,
+  375 px sem overflow, ligaduras desligadas. Hub: Cap 4 como aula atual.

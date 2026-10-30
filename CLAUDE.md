@@ -234,3 +234,11 @@ passo a passo. Cada estado deve responder: **antes, ação, depois, como provar 
 - Manter 23 pontos do HTML, professor.txt e professor-resolucoes.txt sincronizados. Sem links dos TXTs.
 - Dentro do container do Kafka sempre `kafka:19092`; no host, `localhost:9092`. Tópicos com hífen.
   Produtor Python com `partitioner: murmur2_random` (mesma partição que o Java).
+
+## Cap 04 — OO e SOLID do zero (2026-10-27)
+- `capitulos/04-oo-e-solid-do-zero/`; contrato em `.specs/15-cap4-oo-solid-do-zero.md`. Independente
+  dos caps anteriores, nível iniciante, ritmo tranquilo. `02-oo-de-verdade-e-solid/` é material antigo.
+- Projeto Biblioteca do Bairro: Java 21 puro + JUnit + Maven Wrapper. Fonte: `tooling/cap04-oo-solid/biblioteca.bundle`
+  (tags inicio, passo1–passo4); ZIPs com `tooling/build-cap04-biblioteca.py`; validar com
+  `python3 tooling/validate-cap04-biblioteca.py`. Código no HTML deve bater com as tags.
+- Manter 23 pontos do HTML, professor.txt e professor-resolucoes.txt sincronizados. Sem links dos TXTs.

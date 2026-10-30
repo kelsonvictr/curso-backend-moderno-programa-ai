@@ -1,0 +1,637 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Cap 04 — Objetos que se protegem: OO e SOLID do zero | Backend Moderno</title><link rel="stylesheet" href="../../shared/styles.css"><link rel="stylesheet" href="../../shared/components.css"><link rel="stylesheet" href="cap4.css"></head><body><div class="bg-grid"></div><div class="progress-track"><div class="progress-bar"></div></div><a class="skip" href="#conteudo">Ir para o conteúdo</a><button class="menu-toggle" onclick="openSidebar()" aria-label="Abrir menu">☰</button><div class="sidebar-overlay"></div>
+<nav class="sidebar-nav" aria-label="Capítulo"><button class="sidebar-close" onclick="closeSidebar()" aria-label="Fechar menu">✕</button><div class="sidebar-header"><h3>CAPÍTULO 04</h3><a href="../../">← Curso</a> · <a href="caderno.html">Caderno livre</a></div>
+<a class="sidebar-link" href="#historia">01 · A biblioteca da Dona Marta</a>
+<a class="sidebar-link" href="#plano">02 · O plano da tarde</a>
+<a class="sidebar-link" href="#classe-objeto">03 · Classe e objeto</a>
+<a class="sidebar-link" href="#estado">04 · O que sabe, o que faz</a>
+<a class="sidebar-link" href="#encapsulamento">05 · O objeto se protege</a>
+<a class="sidebar-link" href="#getset">06 · Getter e setter não bastam</a>
+<a class="sidebar-link" href="#interface">07 · Um contrato, vários jeitos</a>
+<a class="sidebar-link" href="#bancada">08 · Prática: a bancada</a>
+<a class="sidebar-link" href="#passo1">09 · Passo 1: o Livro se protege</a>
+<a class="sidebar-link" href="#solid">10 · SOLID: cinco conselhos</a>
+<a class="sidebar-link" href="#srp">11 · S: um motivo para mudar</a>
+<a class="sidebar-link" href="#passo2">12 · Passo 2: a multa ganha casa</a>
+<a class="sidebar-link" href="#ocp">13 · O: crescer sem mexer</a>
+<a class="sidebar-link" href="#passo3">14 · Passo 3: chega o Visitante</a>
+<a class="sidebar-link" href="#lsp">15 · L: a promessa do pai</a>
+<a class="sidebar-link" href="#isp">16 · I: contratos pequenos</a>
+<a class="sidebar-link" href="#dip">17 · D: depender do contrato</a>
+<a class="sidebar-link" href="#passo4">18 · Passo 4: o aviso de mentirinha</a>
+<a class="sidebar-link" href="#qual-letra">19 · Qual conselho é esse?</a>
+<a class="sidebar-link" href="#revisao">20 · Revisar o que o agente fez</a>
+<a class="sidebar-link" href="#fechamento">21 · Explique sem decorar</a>
+<a class="sidebar-link" href="#casa">22 · Em casa</a>
+<a class="sidebar-link" href="#glossario">23 · Glossário de bolso</a>
+</nav>
+<header class="hero"><div class="hero-badge">BACKEND MODERNO · CAPÍTULO 04</div><h1>Objetos que<br>se <span>protegem.</span></h1><p class="subtitle">Orientação a objetos e SOLID,<br>do zero e sem pressa.</p><p>Um sistema pequeno de biblioteca, em Java puro, sem Spring, sem Docker e sem banco. Primeiro entendemos o que é um objeto de verdade. Depois usamos os cinco conselhos do SOLID para arrumar o código com o agente, um passo de cada vez.</p><div class="hero-links"><a href="#z-sala">Começar a aula →</a><a href="#classe-objeto">Primeiro simulador</a><a href="#glossario">Glossário</a><a href="caderno.html">Meu caderno</a></div><div class="hero-ficha" aria-hidden="true"><span>Ficha do acervo · L-001</span><strong>Dom Casmurro</strong><small>Machado de Assis</small><b>EMPRESTADO</b></div></header>
+<main id="conteudo" class="container"><div class="zone-bar"><a href="#z-antes">📖 Antes</a><a href="#z-sala">🏫 Em sala</a><a href="#z-casa">🏠 Em casa</a><a href="#glossario">🔤 Glossário</a></div>
+
+<div class="zone-head" id="z-antes"><h2>📖 Antes da aula</h2><p>Leitura curta. Você não precisa ter visto nenhum capítulo anterior para acompanhar este.</p></div>
+
+<section class="step-section visible" id="historia"><div class="section-kicker">Antes da aula · ponto de partida</div><h2>A biblioteca da Dona Marta <span class="ponto-ref" data-ponto="01">[01]</span></h2>
+<aside class="story"><h3>A história de hoje</h3><p>A Dona Marta cuida da biblioteca do bairro. Um sobrinho fez um programa em Java para o balcão: empresta livros, recebe devoluções e cobra multa por atraso. Funciona. Até que, numa segunda-feira, a Ana e o Bruno aparecem com o <strong>mesmo exemplar</strong> de <em>Dom Casmurro</em> anotado no nome dos dois. Na sexta, a coordenação pede para mudar o valor da multa, e o sobrinho, mexendo nesse cálculo, quebra sem querer o envio dos avisos.</p></aside>
+<p>Nenhum desses problemas é falta de Java. O programa compila, os testes passam. O problema é <strong>onde as regras moram</strong>. Hoje elas estão espalhadas, e qualquer parte do código pode mexer em qualquer coisa.</p>
+<figure class="desenho" aria-labelledby="d1-cap"><div class="svg-scroll"><svg viewBox="0 0 900 280" role="img" aria-labelledby="d1-t"><title id="d1-t">O programa de hoje: uma classe Biblioteca faz tudo e os dados ficam abertos</title>
+<rect class="x" x="300" y="30" width="300" height="200" rx="14"/><text class="t" x="320" y="62">Biblioteca</text><text class="s" x="320" y="84">faz tudo sozinha</text>
+<rect class="n" x="320" y="100" width="260" height="34" rx="8"/><text class="s" x="335" y="122">muda o livro (disponivel = false)</text>
+<rect class="n" x="320" y="142" width="260" height="34" rx="8"/><text class="s" x="335" y="164">calcula a multa (if por tipo)</text>
+<rect class="n" x="320" y="184" width="260" height="34" rx="8"/><text class="s" x="335" y="206">manda o e-mail (new EmailSmtp())</text>
+<rect class="z" x="20" y="60" width="200" height="80" rx="12"/><text class="t" x="40" y="92">Livro</text><text class="m" x="40" y="116">public disponivel</text>
+<rect class="z" x="20" y="160" width="200" height="80" rx="12"/><text class="t" x="40" y="192">Leitor</text><text class="m" x="40" y="216">public tipo</text>
+<rect class="k" x="690" y="150" width="190" height="70" rx="12"/><text class="t" x="710" y="180">EmailSmtp</text><text class="s" x="710" y="202">demora 2 s</text>
+<path class="lr" d="M300 117 H220"/><path class="l" d="M600 200 H690"/>
+<text class="r" x="20" y="38">qualquer tela escreve direto ↓</text>
+<text class="a" x="20" y="270">Uma mudança na multa, no aviso ou no empréstimo cai sempre no mesmo arquivo.</text>
+</svg></div><figcaption id="d1-cap"><b>O ponto de partida.</b> Uma classe que faz tudo e dados que qualquer um pode alterar. É assim que começa quase todo sistema real, e não há vergonha nisso. Hoje vamos arrumar a casa.</figcaption></figure>
+<div class="regra-central"><p style="margin:0"><b>A frase do dia:</b> uma mudança, um lugar. Cada regra deveria morar em um lugar só, perto do dado que ela protege. Assim, quando algo muda, você mexe ali e mais nada quebra.</p></div>
+<p>Tudo o que veremos hoje, de <strong>objeto</strong> e <strong>encapsulamento</strong> até as cinco letras do <strong>SOLID</strong>, é um jeito diferente de cumprir essa frase. Guarde-a. Ela volta no fim.</p>
+<aside class="concept"><h3>Hoje o projeto é novo e independente</h3><p>Não usamos nada dos capítulos anteriores. O <a href="apoio/biblioteca-inicio.zip" download>ponto de partida</a> é um projeto Java pequeno: cinco classes, cinco testes, sem Spring, sem Docker e sem banco de dados. Cada passo da prática tem um ZIP de retomada. Se você travar, baixa o do passo anterior e segue com a turma.</p></aside>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<section class="step-section visible" id="plano"><div class="section-kicker">Antes da aula · organização</div><h2>O plano da tarde <span class="ponto-ref" data-ponto="02">[02]</span></h2>
+<p>Três partes. Na primeira, entendemos o que é um <strong>objeto</strong> e por que ele deve <strong>proteger as próprias regras</strong>. Logo em seguida, aplicamos isso no projeto. Na segunda, conhecemos os cinco conselhos do <strong>SOLID</strong>, um por vez, e cada conselho com prática vira um passo no projeto. Na terceira, revisamos o que o agente fez.</p>
+<div class="table-scroll"><table><thead><tr><th>Início</th><th>Tempo</th><th>Etapa</th><th>Pontos</th></tr></thead><tbody>
+<tr><td>13:30</td><td>10 min</td><td>Abertura: a biblioteca e a frase do dia</td><td>01–02</td></tr>
+<tr><td>13:40</td><td>70 min</td><td>Parte 1 · Objetos do zero: classe, objeto, encapsulamento e interface</td><td>03–07</td></tr>
+<tr><td>14:50</td><td>25 min</td><td>Prática 1 · A bancada e o passo 1 (o Livro se protege)</td><td>08–09</td></tr>
+<tr><td>15:15</td><td>15 min</td><td>☕ Intervalo</td><td>—</td></tr>
+<tr><td>15:30</td><td>15 min</td><td>Parte 2 · SOLID: o panorama e o S</td><td>10–11</td></tr>
+<tr><td>15:45</td><td>15 min</td><td>Passo 2 · a multa ganha uma classe</td><td>12</td></tr>
+<tr><td>16:00</td><td>25 min</td><td>O, e o passo 3 (chega o Visitante)</td><td>13–14</td></tr>
+<tr><td>16:25</td><td>25 min</td><td>L, I e D: três conselhos, três simuladores</td><td>15–17</td></tr>
+<tr><td>16:50</td><td>15 min</td><td>Passo 4 · o aviso de mentirinha</td><td>18</td></tr>
+<tr><td>17:05</td><td>15 min</td><td>Parte 3 · Qual conselho é esse? e a revisão do diff</td><td>19–20</td></tr>
+<tr><td>17:20</td><td>10 min</td><td>Fechamento e tarefa de casa</td><td>21–22</td></tr>
+</tbody></table></div>
+<aside class="tip"><h3>Se atrasar ou se sobrar tempo</h3><p><strong>Atrasou?</strong> O passo 3 vai para casa (o ZIP do passo 3 deixa você seguir no passo 4) e o ponto 16 vira leitura. Ninguém depura em sala: travou, pega o ZIP de retomada. <strong>Sobrou tempo?</strong> Comece a tarefa de casa: o dicionário que não pode sair da biblioteca.</p></aside>
+<aside class="concept"><h3>O que você precisa</h3><p><strong>Java 21</strong>, o <strong>IntelliJ</strong> (ou outra IDE com terminal) e <strong>um agente no terminal</strong>: Claude Code, Codex CLI ou Antigravity CLI. Maven <strong>não</strong> precisa estar instalado: o projeto traz o <em>Maven Wrapper</em> (<code>mvnw</code>), que baixa o Maven sozinho na primeira vez. Por isso, se puder, rode o passo da bancada (ponto 08) em casa, com internet boa.</p></aside>
+<p><a href="caderno.html">📓 Abrir caderno livre</a> · <a href="apoio/biblioteca-inicio.zip" download>Baixar o ponto de partida (biblioteca-inicio.zip)</a></p></section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<div class="zone-head" id="z-sala"><h2>🏫 Em sala</h2><p>Entenda, veja acontecer, decida e só então peça ao agente</p></div>
+
+<div class="part-head"><div class="ph-n">Parte 1 · 13:40–14:50</div><h2>Objetos, do zero</h2><p>Antes de qualquer sigla: o que é um objeto e por que ele deveria cuidar de si mesmo.</p></div>
+
+<section class="step-section visible" id="classe-objeto"><div class="section-kicker">Parte 1 · a base <span class="relogio">13:40 · 15 min</span></div><h2>Classe é a ficha em branco. Objeto é a ficha preenchida. <span class="ponto-ref" data-ponto="03">[03]</span></h2>
+<div class="teoria"><h3>Uma ficha, muitos livros</h3>
+<p>Na biblioteca da Dona Marta há uma gaveta de <strong>fichas em branco</strong>, todas iguais, com os campos <em>código</em>, <em>título</em> e <em>disponível</em>. Cada livro do acervo ganha <strong>uma ficha preenchida</strong>: a de <em>Dom Casmurro</em>, a de <em>Iracema</em>, a de <em>O Cortiço</em>.</p>
+<p>Em Java, a ficha em branco é a <strong>classe</strong>: ela descreve quais informações um livro tem. Cada ficha preenchida é um <strong>objeto</strong> (também chamado de <strong>instância</strong>): um livro de verdade, com os próprios valores. Quem cria um objeto a partir da classe é a palavra <code>new</code>.</p>
+<p>Repare: a classe não tem título nenhum. Ela só diz que <em>todo</em> livro terá um título. Quem tem título é cada objeto.</p></div>
+<div class="codigo"><div class="cod-top"><span>Livro.java · como está no projeto hoje</span><span>a ficha em branco</span></div><pre><code><span class="kw">public class</span> Livro {
+
+    <span class="kw">public</span> String codigo;
+    <span class="kw">public</span> String titulo;
+    <span class="kw">public boolean</span> disponivel = <span class="kw">true</span>;
+}</code></pre></div>
+<div class="codigo"><div class="cod-top"><span>criando dois objetos</span><span>duas fichas preenchidas</span></div><pre><code>Livro a = <span class="kw">new</span> Livro();      <span class="c">// uma ficha nova, em branco</span>
+a.titulo = <span class="st">"Dom Casmurro"</span>;    <span class="c">// preenchendo a ficha</span>
+
+Livro b = <span class="kw">new</span> Livro();      <span class="c">// outra ficha, independente da primeira</span>
+b.titulo = <span class="st">"Iracema"</span>;</code></pre></div>
+<p>Os valores guardados num objeto (o título, se está disponível) formam o seu <strong>estado</strong>. Dois objetos da mesma classe têm estados independentes: emprestar <em>Dom Casmurro</em> não muda nada em <em>Iracema</em>. O simulador mostra isso.</p>
+<div class="sim" id="sim-fabrica"><h3>🧪 Simulador · a gaveta de fichas</h3><p>Crie três livros com <code>new Livro()</code>. Depois empreste só um. Antes de clicar, diga: quais fichas mudam?</p>
+<div class="classe-molde" aria-label="Classe Livro, o molde"><b>class Livro</b> (a ficha em branco)<br>codigo = ?<br>titulo = ?<br>disponivel = true</div>
+<div class="sim-toolbar"><label class="linha" style="margin:0">Título: <select data-fb-titulo><option>Dom Casmurro</option><option>Iracema</option><option>O Cortiço</option><option>Memórias Póstumas de Brás Cubas</option></select></label><button type="button" data-fb="novo">new Livro()</button><button type="button" data-fb="reset">Recomeçar</button></div>
+<div class="objetos" data-fb-objetos></div>
+<p class="sim-saida" data-fb-saida aria-live="polite">A gaveta está vazia. Crie o primeiro livro.</p></div>
+<div class="teoria"><h3>A variável guarda o caminho até a ficha</h3>
+<p>Um detalhe que confunde muita gente: a variável <code>a</code> não <em>é</em> o objeto. Ela guarda uma <strong>referência</strong>, algo como o endereço da ficha na gaveta. Se você escreve <code>Livro c = a;</code>, não nasce uma ficha nova: <code>c</code> e <code>a</code> passam a apontar para <strong>a mesma</strong> ficha. Só <code>new</code> cria objeto.</p></div>
+<div class="decision"><h3>Preveja: o que este código imprime?</h3>
+<div class="codigo"><div class="cod-top"><span>três variáveis, quantos livros?</span></div><pre><code>Livro a = <span class="kw">new</span> Livro();
+a.titulo = <span class="st">"Dom Casmurro"</span>;
+Livro c = a;
+c.titulo = <span class="st">"Iracema"</span>;
+System.out.println(a.titulo);</code></pre></div>
+<div class="choices"><button type="button" data-correct="false" data-feedback="Pareceria lógico se c fosse uma cópia. Mas Livro c = a; não cria ficha nova: copia só o endereço. Há um objeto só, com dois nomes.">Dom Casmurro</button><button type="button" data-correct="true" data-feedback="Isso. Só existe um objeto (um só new). a e c são dois caminhos para a mesma ficha; mudar por c muda o que a vê.">Iracema</button><button type="button" data-correct="false" data-feedback="Compila e roda normalmente. Atribuir uma variável a outra do mesmo tipo é permitido; o que se copia é a referência.">Dá erro de compilação</button></div><p class="feedback" aria-live="polite">Escolha uma previsão. Depois confira a explicação.</p><button type="button" data-reset-quiz>Tentar novamente</button></div>
+<aside class="limite"><h3>⚠️ Limite da analogia</h3><p>A ficha de papel é só uma imagem. Na memória do computador, o objeto é um bloco de dados criado pela JVM (a máquina virtual que roda o Java), e ele some sozinho quando ninguém mais aponta para ele. Isso é a <em>coleta de lixo</em>, e você não precisa cuidar disso hoje.</p></aside>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<section class="step-section visible" id="estado"><div class="section-kicker">Parte 1 · dados e regras juntos <span class="relogio">13:55 · 10 min</span></div><h2>O que o objeto sabe e o que ele faz <span class="ponto-ref" data-ponto="04">[04]</span></h2>
+<div class="teoria"><h3>Atributos e métodos</h3>
+<p>Uma classe tem dois tipos de coisa. Os <strong>atributos</strong> (ou <em>campos</em>) são o que o objeto <strong>sabe</strong>: código, título, se está disponível. Os <strong>métodos</strong> são o que o objeto <strong>faz</strong>: emprestar, devolver, dizer se está disponível.</p>
+<p>No nosso <code>Livro</code> de hoje só existem atributos. Ele é um saquinho de dados. Quem decide o que acontece com ele é outra classe, a <code>Biblioteca</code>:</p></div>
+<div class="codigo"><div class="cod-top"><span>Biblioteca.java · como está hoje</span><span>a regra mora longe do dado</span></div><pre><code><span class="kw">public void</span> emprestar(Livro livro) {
+    livro.disponivel = <span class="kw">false</span>;   <span class="c">// ninguém pergunta se ele já estava emprestado</span>
+}</code></pre></div>
+<p>A regra "um livro emprestado não pode ser emprestado de novo" <strong>não está escrita em lugar nenhum</strong>. E, se alguém a escrevesse aqui, qualquer outra parte do programa que fizesse <code>livro.disponivel = false</code> pularia a regra. Foi assim que a Ana e o Bruno ficaram com o mesmo livro.</p>
+<div class="teoria"><h3>A ideia central da orientação a objetos</h3>
+<p><strong>Orientação a objetos</strong> (OO) é organizar o programa em objetos que juntam <strong>dados</strong> e as <strong>regras sobre esses dados</strong>. Em vez de um "chefe" que mexe em todos os saquinhos, cada objeto sabe cuidar de si. O livro sabe se pode ser emprestado. O balcão só pede: "livro, empreste-se".</p>
+<p>É por isso que este capítulo se chama "OO de verdade": dá para escrever Java com classes o dia todo sem nunca fazer orientação a objetos, se todas as classes forem saquinhos de dados. O nome técnico desse jeito é <strong>modelo anêmico</strong>, objetos sem comportamento.</p></div>
+<div class="duas-colunas"><div><h4>Saquinho de dados</h4><p>O <code>Livro</code> só guarda valores.</p><p>A regra vive em quem usa (a <code>Biblioteca</code>, uma tela, um relatório…).</p><p>Cada lugar novo que usa o livro precisa lembrar da regra.</p></div><div><h4>Objeto de verdade</h4><p>O <code>Livro</code> guarda valores <strong>e</strong> tem <code>emprestar()</code>.</p><p>A regra vive dentro do próprio livro.</p><p>Quem usa só chama o método; esquecer a regra fica impossível.</p></div></div>
+<div class="decision"><h3>Onde deve morar a regra “não emprestar livro já emprestado”?</h3><div class="choices"><button type="button" data-correct="false" data-feedback="A tela ajuda o usuário, mas não protege nada: outro caminho (um relatório, uma importação, um teste) pula a tela e escreve no livro direto.">Na tela do balcão, desabilitando o botão.</button><button type="button" data-correct="true" data-feedback="Exato. Perto do dado que ela protege. Assim, qualquer caminho que empreste passa obrigatoriamente pela regra. Uma mudança, um lugar.">Dentro do próprio Livro, num método emprestar().</button><button type="button" data-correct="false" data-feedback="Funciona até alguém esquecer um dos lugares. E, quando a regra mudar, você vai caçar todas as cópias. É o contrário de “uma mudança, um lugar”.">Em todo lugar que empresta, com um if antes.</button></div><p class="feedback" aria-live="polite">Escolha uma resposta. Depois confira a explicação.</p><button type="button" data-reset-quiz>Tentar novamente</button></div>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<section class="step-section visible" id="encapsulamento"><div class="section-kicker">Parte 1 · o conceito mais importante do dia <span class="relogio">14:05 · 20 min</span></div><h2>Encapsulamento: o objeto se protege <span class="ponto-ref" data-ponto="05">[05]</span></h2>
+<div class="teoria"><h3>Fechar a porta e deixar um guarda</h3>
+<p>Ter o método <code>emprestar()</code> não basta se o campo continuar aberto: alguém ainda pode escrever <code>livro.disponivel = true</code> e passar por fora. Precisamos de duas coisas juntas:</p>
+<ol class="passo-a-passo"><li><strong>Fechar a porta:</strong> o campo vira <code>private</code>. Só o código de dentro da própria classe <code>Livro</code> consegue ler ou mudar esse campo. De fora, o compilador recusa.</li>
+<li><strong>Deixar um guarda:</strong> um método <code>public</code> que é o <em>único</em> caminho para mudar o estado, e que confere a regra antes. Se a regra não deixa, ele recusa com uma <strong>exceção</strong> (um sinal de erro que interrompe a operação).</li></ol>
+<p>Esse par, dados escondidos mais comportamento que guarda as regras, se chama <strong>encapsulamento</strong>. A palavra vem de "cápsula": o que está dentro fica protegido do lado de fora.</p></div>
+<figure class="desenho" aria-labelledby="d2-cap"><div class="svg-scroll"><svg viewBox="0 0 900 250" role="img" aria-labelledby="d2-t"><title id="d2-t">Sem encapsulamento qualquer código entra no campo; com encapsulamento todos passam pelo método emprestar</title>
+<text class="a" x="20" y="30">SEM ENCAPSULAMENTO</text>
+<rect class="z" x="20" y="45" width="390" height="170" rx="14"/><text class="t" x="40" y="75">Livro</text><rect class="x" x="40" y="95" width="200" height="40" rx="8"/><text class="m" x="55" y="120">disponivel (public)</text>
+<text class="s" x="280" y="100">Balcão</text><path class="lr" d="M300 108 L242 113"/><text class="s" x="280" y="160">Relatório</text><path class="lr" d="M300 152 L242 128"/><text class="s" x="280" y="200">Importação</text><path class="lr" d="M300 192 L230 136"/>
+<text class="r" x="40" y="190">todo mundo escreve direto</text>
+<text class="a" x="480" y="30">COM ENCAPSULAMENTO</text>
+<rect class="g" x="480" y="45" width="400" height="170" rx="14"/><text class="t" x="500" y="75">Livro</text>
+<rect class="n" x="500" y="95" width="180" height="40" rx="8"/><text class="m" x="512" y="120">disponivel (private)</text>
+<rect class="d" x="500" y="150" width="180" height="44" rx="8"/><text class="m" x="512" y="177">emprestar()</text><text class="b" x="700" y="177">← o guarda</text>
+<path class="lv" d="M590 150 V135"/>
+<text class="s" x="760" y="110">Balcão</text><text class="s" x="760" y="135">Relatório</text><text class="s" x="760" y="160">Importação</text>
+<path class="lb" d="M755 106 C 720 120, 700 160, 682 168 M755 131 L682 170 M755 156 L682 172"/>
+<text class="v" x="500" y="235">um caminho só, e ele confere a regra</text>
+</svg></div><figcaption id="d2-cap"><b>A diferença.</b> À esquerda, três caminhos chegam ao campo e nenhum confere nada. À direita, o campo é privado e o único caminho é <code>emprestar()</code>, que recusa o segundo empréstimo.</figcaption></figure>
+<div class="codigo"><div class="cod-top"><span>Livro.java · encapsulado (é o que faremos no passo 1)</span><span>a regra mora no livro</span></div><pre><code><span class="kw">public class</span> Livro {
+
+    <span class="kw">private final</span> String codigo;
+    <span class="kw">private final</span> String titulo;
+    <span class="kw">private boolean</span> disponivel = <span class="kw">true</span>;
+
+    <span class="kw">public</span> Livro(String codigo, String titulo) {   <span class="c">// construtor: só nasce livro com código e título</span>
+        <span class="kw">this</span>.codigo = codigo;
+        <span class="kw">this</span>.titulo = titulo;
+    }
+
+    <span class="kw">public void</span> emprestar() {
+        <span class="kw">if</span> (!disponivel) {
+            <span class="kw">throw new</span> IllegalStateException(<span class="st">"O livro "</span> + titulo + <span class="st">" já está emprestado."</span>);
+        }
+        disponivel = <span class="kw">false</span>;
+    }
+
+    <span class="kw">public boolean</span> estaDisponivel() {
+        <span class="kw">return</span> disponivel;
+    }
+}</code></pre></div>
+<div class="anotacoes"><p><code>private</code>: de fora da classe, ninguém lê nem escreve <code>disponivel</code>. Tentar dá erro de compilação, antes mesmo de rodar.</p><p><code>final</code>: código e título recebem valor uma vez, no construtor, e nunca mais mudam.</p><p><strong>Construtor</strong>: o método especial com o nome da classe, chamado pelo <code>new</code>. Ele garante que todo livro nasce completo: <code>new Livro("L-001", "Dom Casmurro")</code>.</p><p><code>throw new IllegalStateException(...)</code>: lança uma exceção que diz "o objeto não está num estado que permita isso". A operação para ali, e o livro continua como estava.</p></div>
+<div class="sim" id="sim-porta"><h3>🧪 Simulador · porta aberta × porta com guarda</h3><p>Os mesmos três pedidos chegam aos dois livros. Faça na ordem: Ana pega, Bruno pega, e depois “outra tela” tenta escrever no campo. Antes do clique do Bruno, preveja o que acontece em cada lado.</p>
+<div class="sim-toolbar"><button type="button" data-pt="ana">Ana pega Dom Casmurro</button><button type="button" data-pt="bruno">Bruno pega Dom Casmurro</button><button type="button" data-pt="direto">Outra tela: livro.disponivel = true</button><button type="button" data-pt="reset">Recomeçar</button></div>
+<div class="sim-grid"><div class="sim-col"><h4>Porta aberta</h4><p class="sub">campo public, sem regra</p><p class="sub">disponível: <b data-pt-disp="aberta">true</b></p><div class="ficha-lista" data-pt-fichas="aberta"></div><div class="console" data-pt-console="aberta" aria-live="polite"></div></div>
+<div class="sim-col"><h4>Porta com guarda</h4><p class="sub">campo private + emprestar()</p><p class="sub">disponível: <b data-pt-disp="guarda">true</b></p><div class="ficha-lista" data-pt-fichas="guarda"></div><div class="console" data-pt-console="guarda" aria-live="polite"></div></div></div>
+<p class="sim-saida" data-pt-saida aria-live="polite">Comece pela Ana.</p></div>
+<div class="decision"><h3>Por que o erro de compilação do lado direito é uma <em>vantagem</em>?</h3><div class="choices"><button type="button" data-correct="true" data-feedback="Isso. O erro aparece na IDE, na hora, para quem escreveu a linha errada. Sem encapsulamento, o mesmo engano vira um bug que só aparece na segunda-feira, no balcão.">Porque o engano é barrado enquanto alguém escreve o código, e não no balcão, com um leitor reclamando.</button><button type="button" data-correct="false" data-feedback="Não há ganho de velocidade aqui. O private não muda o desempenho; ele muda quem pode mexer no campo.">Porque o programa fica mais rápido sem acesso direto ao campo.</button><button type="button" data-correct="false" data-feedback="Pelo contrário: o objetivo é deixar o caminho certo (emprestar) fácil e o caminho errado impossível. Não é esconder o livro de quem precisa.">Porque ninguém consegue mais usar o livro.</button></div><p class="feedback" aria-live="polite">Escolha uma resposta.</p><button type="button" data-reset-quiz>Tentar novamente</button></div>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<section class="step-section visible" id="getset"><div class="section-kicker">Parte 1 · a confusão mais comum <span class="relogio">14:25 · 10 min</span></div><h2>Getter e setter não são encapsulamento <span class="ponto-ref" data-ponto="06">[06]</span></h2>
+<div class="teoria"><h3>A porta fechada com a chave pendurada do lado de fora</h3>
+<p>Muita gente aprende a deixar o campo <code>private</code> e logo criar dois métodos para ele: o <strong>getter</strong> (<code>getDisponivel()</code>, que devolve o valor) e o <strong>setter</strong> (<code>setDisponivel(boolean)</code>, que troca o valor). Muitas IDEs geram os dois com um clique.</p>
+<p>O getter costuma ser inofensivo: ele só deixa <em>ler</em>. O setter genérico é o problema. <code>setDisponivel(true)</code> faz exatamente o que <code>disponivel = true</code> fazia: deixa qualquer um mudar o estado <strong>sem passar pela regra</strong>. A porta está fechada, mas a chave está pendurada do lado de fora.</p>
+<p>A pergunta que separa um do outro é: <strong>esse método fala a língua do negócio?</strong> Na biblioteca, ninguém "seta disponível". Livros são <em>emprestados</em> e <em>devolvidos</em>. Métodos com esses nomes podem conferir regras; um setter não sabe o que está acontecendo.</p></div>
+<div class="duas-colunas"><div><h4>Parece encapsulado</h4><div class="codigo" style="margin:8px 0"><pre><code><span class="kw">private boolean</span> disponivel;
+
+<span class="kw">public void</span> setDisponivel(<span class="kw">boolean</span> d) {
+    disponivel = d;
+}</code></pre></div><p>Qualquer código faz <code>setDisponivel(false)</code> duas vezes e ninguém reclama.</p></div><div><h4>É encapsulado</h4><div class="codigo" style="margin:8px 0"><pre><code><span class="kw">private boolean</span> disponivel = <span class="kw">true</span>;
+
+<span class="kw">public void</span> emprestar() { ... }
+<span class="kw">public void</span> devolver() { ... }
+<span class="kw">public boolean</span> estaDisponivel() { ... }</code></pre></div><p>Só existem os caminhos que o negócio conhece, e cada um confere a sua regra.</p></div></div>
+<div class="decision"><h3>O agente entregou esta versão do Leitor. O que você diz na revisão?</h3>
+<div class="codigo"><div class="cod-top"><span>Leitor.java · proposta do agente</span></div><pre><code><span class="kw">private</span> String nome;
+<span class="kw">private</span> String email;
+<span class="kw">private</span> String tipo;
+
+<span class="kw">public</span> String getTipo() { <span class="kw">return</span> tipo; }
+<span class="kw">public void</span> setTipo(String tipo) { <span class="kw">this</span>.tipo = tipo; }
+<span class="c">// ... getters e setters para todos os campos</span></code></pre></div>
+<div class="choices"><button type="button" data-correct="false" data-feedback="Os campos estão privados, mas setTipo deixa qualquer código transformar um aluno em professor no meio do caminho e mudar a multa. A porta tem chave do lado de fora.">Aprovo: os campos estão private, então está encapsulado.</button><button type="button" data-correct="true" data-feedback="Isso. Peça um construtor com os dados obrigatórios, campos final e só os getters que alguém de fato usa. Se um dia o leitor puder mudar de tipo, isso vira um método com nome de negócio e regra.">Peço para tirar os setters: os dados entram pelo construtor e o tipo não muda por fora.</button><button type="button" data-correct="false" data-feedback="O getter não é o problema: ler o tipo é necessário para calcular a multa. O que abre a porta é o setter.">Peço para tirar os getters, que expõem os dados.</button></div><p class="feedback" aria-live="polite">Escolha a sua revisão.</p><button type="button" data-reset-quiz>Tentar novamente</button></div>
+<aside class="limite"><h3>⚠️ Quando um setter é aceitável</h3><p>Em classes que só transportam dados de um lado para o outro (um formulário, um JSON que chega pela rede), getters e setters são comuns e não fazem mal: não há regra para proteger. O alerta vale para objetos que <strong>têm regras</strong>, como o <code>Livro</code>.</p></aside>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<section class="step-section visible" id="interface"><div class="section-kicker">Parte 1 · a última peça antes do SOLID <span class="relogio">14:35 · 15 min</span></div><h2>Interface: um contrato, vários jeitos de cumprir <span class="ponto-ref" data-ponto="07">[07]</span></h2>
+<div class="teoria"><h3>A tomada da parede</h3>
+<p>A tomada da sua casa não sabe se você vai ligar uma geladeira, um carregador ou um abajur. Ela só define um <strong>formato</strong>: dois ou três pinos, numa certa voltagem. Qualquer aparelho que respeite o formato funciona ali. Você troca o aparelho sem trocar a parede.</p>
+<p>Em Java, esse formato é uma <strong>interface</strong>: uma lista de métodos que uma classe <strong>promete</strong> ter, sem dizer como. Uma classe que cumpre a promessa escreve <code>implements</code> e dá o corpo de cada método. A interface é o <strong>contrato</strong>; cada classe é um jeito de cumprir.</p></div>
+<div class="codigo"><div class="cod-top"><span>o contrato e dois jeitos de cumprir</span><span>usaremos no passo 3</span></div><pre><code><span class="kw">public interface</span> TipoDeLeitor {
+    <span class="kw">int</span> multaPorDiaEmCentavos();      <span class="c">// a promessa: sem corpo</span>
+}
+
+<span class="kw">public class</span> Aluno <span class="kw">implements</span> TipoDeLeitor {
+    <span class="an">@Override</span>
+    <span class="kw">public int</span> multaPorDiaEmCentavos() { <span class="kw">return</span> 100; }   <span class="c">// R$ 1,00</span>
+}
+
+<span class="kw">public class</span> Professor <span class="kw">implements</span> TipoDeLeitor {
+    <span class="an">@Override</span>
+    <span class="kw">public int</span> multaPorDiaEmCentavos() { <span class="kw">return</span> 50; }    <span class="c">// R$ 0,50</span>
+}</code></pre></div>
+<div class="anotacoes"><p><code>interface</code>: só a lista de métodos. Não dá para fazer <code>new TipoDeLeitor()</code>; ela não é um objeto, é um formato.</p><p><code>implements TipoDeLeitor</code>: “eu cumpro esse contrato”. Se a classe esquecer um método, não compila.</p><p><code>@Override</code>: uma anotação que avisa “este método vem do contrato”. Se você errar o nome, o compilador reclama.</p><p>Valores de dinheiro em <strong>centavos</strong> e inteiros (100 = R$ 1,00), para não sofrer com arredondamento de números quebrados.</p></div>
+<div class="teoria"><h3>Polimorfismo: a mesma chamada, respostas diferentes</h3>
+<p>Agora o código que calcula a multa pode ser uma linha só, e ele <strong>não sabe</strong> se está falando com um aluno ou com um professor:</p>
+<div class="codigo"><pre><code><span class="kw">int</span> multa = diasDeAtraso * leitor.getTipo().multaPorDiaEmCentavos();</code></pre></div>
+<p>Cada objeto responde do seu jeito. Esse efeito tem nome: <strong>polimorfismo</strong> (do grego, “muitas formas”). O código que chama fica igual; o comportamento muda conforme o objeto que está do outro lado da tomada.</p>
+<p>Repare também que o <code>Leitor</code> agora <strong>tem um</strong> <code>TipoDeLeitor</code> guardado num campo. Montar objetos com outros objetos dentro se chama <strong>composição</strong>. É diferente de herança (<code>extends</code>), que diz “<em>é um</em> tipo de”. Herança aparece no ponto 15, com um cuidado importante.</p></div>
+<div class="sim" id="sim-poli"><h3>🧪 Simulador · quem responde a chamada?</h3><p>Escolha os dias de atraso e clique num leitor. Observe que a linha de cima <strong>nunca muda</strong>. Só muda quem responde.</p>
+<div class="codigo" style="margin:10px 0"><pre><code><span class="kw">int</span> multa = <span data-pl-dias>3</span> * leitor.getTipo().multaPorDiaEmCentavos();</code></pre></div>
+<label class="linha">Dias de atraso: <input type="range" min="0" max="7" value="3" data-pl-range aria-label="Dias de atraso"> <b data-pl-dias-txt>3</b></label>
+<div class="sim-toolbar"><button type="button" data-pl="ana">Ana · new Aluno()</button><button type="button" data-pl="bruno">Bruno · new Professor()</button></div>
+<div class="console" data-pl-console aria-live="polite">Clique num leitor.</div></div>
+<div class="decision"><h3>Amanhã surge um terceiro tipo de leitor. A linha da multa precisa mudar?</h3><div class="choices"><button type="button" data-correct="false" data-feedback="Seria assim com if por texto. Com o contrato, a linha só pede o valor ao tipo; ela nem sabe quantos tipos existem.">Sim, precisa de mais um if para o tipo novo.</button><button type="button" data-correct="true" data-feedback="Exato. Basta uma classe nova que implemente TipoDeLeitor. A linha que chama continua igual. É exatamente o conselho O do SOLID, que veremos às 16h.">Não. Basta criar uma classe nova que cumpra o contrato.</button><button type="button" data-correct="false" data-feedback="Não é preciso mexer em Aluno nem em Professor: cada classe é independente. O tipo novo é uma classe nova.">Sim, Aluno e Professor precisam ser alterados.</button></div><p class="feedback" aria-live="polite">Escolha uma previsão.</p><button type="button" data-reset-quiz>Tentar novamente</button></div>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<div class="part-head"><div class="ph-n">Prática 1 · 14:50–15:15</div><h2>A bancada e o primeiro passo</h2><p>Você dirige, o agente digita, você confere. Um passo por vez, com plano antes e testes depois.</p></div>
+
+<section class="step-section visible" id="bancada"><div class="section-kicker">Prática 1 · preparar <span class="relogio">14:50 · 10 min</span></div><h2>A bancada: Java puro e o agente <span class="ponto-ref" data-ponto="08">[08]</span></h2>
+<ol class="passo-a-passo"><li>Baixe o <a href="apoio/biblioteca-inicio.zip" download>biblioteca-inicio.zip</a> e descompacte. Vai aparecer uma pasta <code>biblioteca</code>.</li>
+<li>No IntelliJ: <strong>File → Open</strong> e escolha a pasta <code>biblioteca</code>. Espere ele reconhecer o projeto Maven.</li>
+<li>Abra o terminal embutido (aba <strong>Terminal</strong>, embaixo) e inicie o seu agente ali: Claude Code, Codex CLI ou Antigravity CLI.</li>
+<li>Cole o prompt 0. Ele só lê e explica: <strong>não muda nenhum arquivo</strong>.</li></ol>
+<aside class="concept"><h3>O que tem na pasta</h3><p><code>AGENTS.md</code> são as regras permanentes do projeto para qualquer agente: como rodar, o que é proibido (frameworks, dependências novas), e que valores de dinheiro são em centavos. <code>CLAUDE.md</code> só contém <code>@AGENTS.md</code>, para o Claude Code ler o mesmo arquivo. <code>mvnw</code> é o Maven Wrapper. Em <code>src/main</code> estão as cinco classes; em <code>src/test</code>, os testes.</p></aside>
+<div class="prompt"><div class="prompt-top"><strong>Prompt 0 · conhecer o projeto sem mexer</strong><button type="button" data-copy>Copiar prompt</button></div><pre><span class="prompt-key">[CONTEXTO]</span> Estou na pasta biblioteca, um projeto de aula em Java 21 puro. Leia AGENTS.md antes de tudo.
+<span class="prompt-key">[TAREFA]</span> <mark class="hl">Sem mudar nenhum arquivo</mark>, me explique em português simples:
+1. o que cada classe de src/main faz;
+2. onde está escrita cada regra: empréstimo, multa e aviso;
+3. o que o teste bugConhecido_emprestarDuasVezesNaoReclama está mostrando.
+Depois rode ./mvnw test e me diga quantos testes passaram e quanto tempo levaram.
+<span class="prompt-key">[GIT]</span> Se a pasta ainda não for um repositório git, peça autorização para rodar git init e fazer um primeiro commit "início". Assim veremos o diff de cada passo.
+<span class="prompt-key">[LIMITES]</span> Não edite nada. Não sugira melhorias ainda.
+<span class="prompt-key">[PROVA]</span> Mostre a linha "Tests run" do resultado.
+<span class="prompt-key">[PARE]</span> Pare depois da explicação.</pre><p class="copy-status" aria-live="polite"></p></div>
+<div class="terminal-saida"><div class="cod-top"><span>o que você deve ver (resumo)</span><span>cerca de 4 s de testes</span></div><pre>[e-mail] para bruno@email.com: Multa de 150 centavos por 3 dia(s) de atraso.
+[e-mail] para ana@email.com: Multa de 300 centavos por 3 dia(s) de atraso.
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.06 s
+BUILD SUCCESS</pre></div>
+<aside class="tip"><h3>Por que 4 segundos para 5 testes?</h3><p>Dois testes geram multa, e a <code>Biblioteca</code> cria um <code>EmailSmtp</code> que finge mandar e-mail e <strong>demora 2 s de propósito</strong>, como uma conexão de verdade. Anote esse número. Ele vai cair a cada passo, e no último vai virar quase zero.</p></aside>
+<aside class="warning"><h3>Se der erro aqui</h3><p><strong>“permission denied: ./mvnw”</strong> (macOS/Linux): peça ao agente <code>chmod +x mvnw</code>. <strong>Windows</strong>: use <code>mvnw.cmd test</code>. <strong>“release version 21 not supported”</strong>: o Java da máquina é mais antigo; confira com <code>java -version</code>. <strong>Download lento do Maven</strong>: faça em dupla e siga pela tela do colega. Não depure em sala.</p></aside>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<section class="step-section visible" id="passo1"><div class="section-kicker">Prática 1 · encapsulamento <span class="relogio">15:00 · 15 min</span></div><h2>Passo 1: o Livro se protege <span class="ponto-ref" data-ponto="09">[09]</span></h2>
+<p><span class="mode junto">👥 junto</span>O professor cola o prompt e lê o plano em voz alta com a turma. <span class="mode sozinho">🧍 sozinho</span>Você faz na sua máquina, aprova o plano e confere a prova.</p>
+<p>O que vai mudar, em palavras: <code>Livro</code> e <code>Leitor</code> ganham campos <code>private</code> e construtor. O <code>Livro</code> ganha <code>emprestar()</code> e <code>devolver()</code>, que recusam o que a regra não permite. A <code>Biblioteca</code> deixa de escrever no campo e passa a pedir ao livro. O teste do bug muda de expectativa: agora o segundo empréstimo <strong>deve</strong> falhar.</p>
+<div class="prompt"><div class="prompt-top"><strong>Prompt 1 · encapsular Livro e Leitor</strong><button type="button" data-copy>Copiar prompt</button></div><pre><span class="prompt-key">[CONTEXTO]</span> Leia AGENTS.md. Em Livro e Leitor os campos são públicos: qualquer código faz livro.disponivel = true. O teste bugConhecido_emprestarDuasVezesNaoReclama mostra o efeito: o mesmo livro vai para duas pessoas.
+<span class="prompt-key">[TAREFA]</span> Encapsule Livro e Leitor:
+- campos private (final quando não mudam) e um construtor com os dados obrigatórios;
+- <mark class="hl">a regra mora no Livro</mark>: emprestar() recusa livro já emprestado e devolver() recusa livro que não está emprestado, com IllegalStateException e mensagem clara;
+- Livro expõe estaDisponivel(), getCodigo() e getTitulo(). <mark class="hl">Nenhum setter.</mark>
+- Leitor expõe getNome(), getEmail() e getTipo(). Nenhum setter.
+- Biblioteca passa a chamar livro.emprestar() e livro.devolver(). Ajuste App.java.
+<span class="prompt-key">[TESTES]</span> Troque o teste do bug por naoEmprestaOMesmoLivroDuasVezes e crie naoDevolveLivroQueNaoFoiEmprestado. Os outros testes mantêm as mesmas expectativas.
+<span class="prompt-key">[LIMITES]</span> Não mexa na multa nem no e-mail: são os próximos passos. Não crie classes novas.
+<span class="prompt-key">[PROVA]</span> ./mvnw test verde, com 6 testes. Mostre o diff.
+<span class="prompt-key">[PARE]</span> Mostre o plano antes de editar e espere meu OK. No fim, commit "passo 1: livro encapsulado".</pre><p class="copy-status" aria-live="polite"></p></div>
+<div class="lambda-aviso"><h3>⚠️ Primeira seta do dia: <code>() -&gt;</code></h3><p>Nos testes novos o agente vai escrever <code>assertThrows(IllegalStateException.class, () -&gt; biblioteca.emprestar(livro));</code>. O trecho <code>() -&gt; ...</code> é uma <strong>lambda</strong>: um pedaço de código entregue para o teste rodar e verificar se ele lança a exceção. Hoje basta reconhecê-la.</p><p>Na sua IDE essa seta pode aparecer desenhada como <strong>→</strong>, por causa de um recurso da fonte chamado <em>ligatura</em>. Se for digitar, são <strong>dois caracteres</strong>: <kbd>-</kbd> (hífen) seguido de <kbd>&gt;</kbd> (maior que). Se você digitar o símbolo →, o Java não compila.</p></div>
+<div class="prova"><h3>✅ Como provar que deu certo</h3><p><code>Tests run: 6, Failures: 0</code>. O tempo continua perto de 4 s (o e-mail ainda está lá; tudo bem). No diff, procure: nenhum <code>public</code> em campo, nenhum método <code>set...</code>, e a <code>Biblioteca</code> sem nenhum <code>.disponivel</code>.</p></div>
+<details class="olhinho"><summary>👀 Ver o trecho-modelo do teste e da Biblioteca (depois de revisar o seu)</summary>
+<div class="codigo"><div class="cod-top"><span>BibliotecaTest.java · o bug virou regra</span></div><pre><code><span class="c">// Era o bug conhecido do início. Agora o próprio livro recusa o segundo empréstimo.</span>
+<span class="an">@Test</span>
+<span class="kw">void</span> naoEmprestaOMesmoLivroDuasVezes() {
+    Biblioteca biblioteca = <span class="kw">new</span> Biblioteca();
+    Livro livro = domCasmurro();
+    biblioteca.emprestar(livro);
+    assertThrows(IllegalStateException.<span class="kw">class</span>, () -&gt; biblioteca.emprestar(livro));
+}</code></pre></div>
+<div class="codigo"><div class="cod-top"><span>Biblioteca.java · só pede ao livro</span></div><pre><code><span class="kw">public void</span> emprestar(Livro livro) {
+    livro.emprestar();
+}
+
+<span class="kw">public int</span> devolver(Livro livro, Leitor leitor, <span class="kw">int</span> diasDeAtraso) {
+    livro.devolver();
+    <span class="c">// ... multa e e-mail continuam aqui por enquanto</span>
+}</code></pre></div>
+<p>Se o agente criou <code>setDisponivel</code> “para facilitar os testes”, recuse: o teste usa <code>emprestar()</code> como qualquer outro código. Se travou, siga com o <a href="apoio/biblioteca-passo1.zip" download>biblioteca-passo1.zip</a>.</p></details>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<div class="zone-head"><h2>☕ Intervalo · 15:15–15:30</h2><p>Deixe o IntelliJ aberto. Na volta, o projeto continua de onde parou.</p></div>
+
+<div class="part-head"><div class="ph-n">Parte 2 · 15:30–17:05</div><h2>SOLID, uma letra por vez</h2><p>Cinco conselhos para organizar classes. Cada um começa por um problema que você consegue ver.</p></div>
+
+<section class="step-section visible" id="solid"><div class="section-kicker">Parte 2 · o panorama <span class="relogio">15:30 · 5 min</span></div><h2>SOLID: cinco conselhos, não cinco leis <span class="ponto-ref" data-ponto="10">[10]</span></h2>
+<div class="teoria"><h3>De onde vem</h3>
+<p><strong>SOLID</strong> é um acrônimo: cada letra é a inicial de um princípio de design de classes. Os princípios foram reunidos por Robert C. Martin no começo dos anos 2000, e a sigla foi sugerida por Michael Feathers. Em inglês, <em>solid</em> quer dizer “sólido”: código que aguenta mudanças sem desmoronar.</p>
+<p>São <strong>conselhos</strong>, não leis. Cada um responde a uma dor concreta. Se a dor não existe no seu código, aplicar o conselho só acrescenta arquivos. Hoje, cada letra começa pela dor e termina com o limite.</p></div>
+<div class="table-scroll"><table><thead><tr><th>Letra</th><th>Nome (inglês → português)</th><th>Em uma frase</th></tr></thead><tbody>
+<tr><td><b>S</b></td><td>Single Responsibility → Responsabilidade Única</td><td>Uma classe deve ter um só motivo para mudar.</td></tr>
+<tr><td><b>O</b></td><td>Open/Closed → Aberto/Fechado</td><td>Dá para acrescentar comportamento novo sem editar o que já funciona.</td></tr>
+<tr><td><b>L</b></td><td>Liskov Substitution → Substituição de Liskov</td><td>Um filho deve cumprir as promessas do pai.</td></tr>
+<tr><td><b>I</b></td><td>Interface Segregation → Segregação de Interfaces</td><td>Ninguém deve ser obrigado a prometer o que não faz.</td></tr>
+<tr><td><b>D</b></td><td>Dependency Inversion → Inversão de Dependência</td><td>Dependa do contrato, não do detalhe.</td></tr>
+</tbody></table></div>
+<p>Repare que as cinco frases são variações da frase do dia. Cada conselho, à sua maneira, tenta fazer <strong>uma mudança cair em um lugar só</strong>.</p>
+<div class="decision"><h3>O agente diz: “para seguir SOLID, criei uma interface para cada classe”. Faz sentido?</h3><div class="choices"><button type="button" data-correct="false" data-feedback="SOLID não pede isso em nenhuma letra. Uma interface vale quando existe (ou certamente existirá) mais de um jeito de cumprir o contrato, ou quando você precisa trocar a peça num teste.">Sim, é exatamente o que SOLID manda.</button><button type="button" data-correct="true" data-feedback="Isso. Interface é ferramenta para uma dor: vários jeitos de cumprir, ou trocar a peça num teste. Sem essa dor, é só um arquivo a mais para manter. Você vai ver os dois casos em que ela paga hoje: tipos de leitor e notificador.">Não. Interface só se paga quando há mais de um jeito de cumprir ou uma troca real.</button></div><p class="feedback" aria-live="polite">Escolha uma resposta.</p><button type="button" data-reset-quiz>Tentar novamente</button></div>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<section class="step-section visible" id="srp"><div class="section-kicker">Parte 2 · S <span class="relogio">15:35 · 10 min</span></div><h2>S · Responsabilidade Única: um motivo para mudar <span class="ponto-ref" data-ponto="11">[11]</span></h2>
+<div class="teoria"><h3>A dor: mexer na multa e quebrar o aviso</h3>
+<p>Lembra da sexta-feira? A coordenação pediu para mudar o valor da multa, o sobrinho mexeu em <code>Biblioteca.devolver()</code> e quebrou o envio do e-mail, que estava no mesmo método, poucas linhas abaixo. Ninguém pediu mudança no e-mail. Ele quebrou porque morava junto.</p>
+<p>O conselho S diz: <strong>uma classe deve ter um só motivo para mudar</strong>. “Motivo” aqui quer dizer <em>quem pede a mudança</em>. Na biblioteca há três fontes de pedido diferentes:</p>
+<ul><li>a <strong>coordenação</strong>, que decide quanto custa o atraso;</li><li>a <strong>TI</strong>, que decide como o aviso chega (e-mail, WhatsApp);</li><li>o <strong>balcão</strong>, que decide as regras de empréstimo (essa já foi para o <code>Livro</code> no passo 1).</li></ul>
+<p>Uma classe que atende três pessoas diferentes vai ser alterada por três motivos, em dias diferentes, por gente que não conversa. É aí que um conserto quebra outra coisa.</p></div>
+<div class="sim" id="sim-mudancas"><h3>🧪 Simulador · para onde vai cada pedido de mudança?</h3><p>Escolha a versão do código e clique nos pedidos. Veja quais arquivos precisam ser abertos e quantos motivos se acumulam em cada um.</p>
+<div class="alterna" role="group" aria-label="Versão do código"><button type="button" data-mu-versao="antes" aria-pressed="true">Antes: Biblioteca faz tudo</button><button type="button" data-mu-versao="depois" aria-pressed="false">Depois: cada um na sua classe</button></div>
+<div class="sim-toolbar"><button type="button" data-mu="multa">Coordenação: multa de aluno vira R$ 1,50</button><button type="button" data-mu="aviso">TI: aviso por WhatsApp</button><button type="button" data-mu="emprestimo">Balcão: recusar devolução de livro não emprestado</button><button type="button" data-mu="reset">Recomeçar</button></div>
+<div class="arquivos" data-mu-arquivos></div>
+<p class="sim-saida" data-mu-saida aria-live="polite">Clique num pedido de mudança.</p></div>
+<div class="decision"><h3>Quantos motivos para mudar tem o <code>Biblioteca.devolver()</code> do início?</h3><div class="choices"><button type="button" data-correct="false" data-feedback="Um método só, mas com três assuntos dentro: estado do livro, valor da multa e forma do aviso. Conte quem pediria mudança em cada um.">Um: é um método só.</button><button type="button" data-correct="true" data-feedback="Isso. Muda o livro (balcão), calcula a multa (coordenação) e manda o aviso (TI). Três pessoas, três motivos, um arquivo. O passo 2 tira a multa daí.">Três: livro, multa e aviso.</button><button type="button" data-correct="false" data-feedback="O número de linhas não é o critério. Um método de 40 linhas pode ter um motivo só; um de 10 pode ter três.">Depende do número de linhas.</button></div><p class="feedback" aria-live="polite">Escolha uma resposta.</p><button type="button" data-reset-quiz>Tentar novamente</button></div>
+<aside class="limite"><h3>⚠️ Limite do conselho</h3><p>“Um motivo” não é “um método por classe”. Separar demais espalha uma ideia por dez arquivos minúsculos, e entender o fluxo vira caça ao tesouro. A pergunta continua sendo: <em>quem pediria essa mudança?</em> Se é a mesma pessoa, pelo mesmo motivo, pode ficar junto.</p></aside>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<section class="step-section visible" id="passo2"><div class="section-kicker">Prática · S <span class="relogio">15:45 · 15 min</span></div><h2>Passo 2: a multa ganha uma classe própria <span class="ponto-ref" data-ponto="12">[12]</span></h2>
+<p>Vamos tirar o cálculo de dentro da <code>Biblioteca</code> e colocar numa classe que só sabe isso: <code>CalculadoraDeMulta</code>. É uma <strong>mudança de lugar</strong>, não de regra: os valores continuam 100 e 50 centavos. Os testes provam isso.</p>
+<div class="prompt"><div class="prompt-top"><strong>Prompt 2 · separar a calculadora de multa</strong><button type="button" data-copy>Copiar prompt</button></div><pre><span class="prompt-key">[CONTEXTO]</span> Leia AGENTS.md. Biblioteca.devolver hoje faz três coisas: devolve o livro, calcula a multa e manda o e-mail. Quem pede mudança na multa é a coordenação; quem pede mudança no aviso é a TI.
+<span class="prompt-key">[TAREFA]</span> Crie a classe CalculadoraDeMulta com o método int calcular(Leitor leitor, int diasDeAtraso), com a mesma regra de hoje. A Biblioteca guarda uma calculadora num campo e usa esse método.
+<span class="prompt-key">[TESTES]</span> Crie CalculadoraDeMultaTest: aluno com 3 dias = 300, professor com 3 dias = 150, sem atraso = 0. Em BibliotecaTest, <mark class="hl">mantenha um só caso com atraso</mark>, para provar que o balcão usa a calculadora; os outros casos de valor passam para a calculadora.
+<span class="prompt-key">[LIMITES]</span> <mark class="hl">Mesmas regras e mesmos valores</mark>: é só mudança de lugar. Não mexa no e-mail.
+<span class="prompt-key">[PROVA]</span> ./mvnw test verde, com 8 testes. Compare o tempo total com o do passo 1 e explique a diferença.
+<span class="prompt-key">[PARE]</span> Plano antes, espere meu OK. No fim, commit "passo 2: calculadora de multa".</pre><p class="copy-status" aria-live="polite"></p></div>
+<div class="prova"><h3>✅ Como provar que deu certo</h3><p>Oito testes verdes. O tempo cai de cerca de 4 s para cerca de 2 s: os testes de valor agora falam direto com a calculadora e não esperam e-mail nenhum. Sobrou um teste lento, o da <code>Biblioteca</code> com atraso. Ele é o assunto do passo 4.</p></div>
+<details class="olhinho"><summary>👀 Ver a calculadora-modelo (depois de revisar a sua)</summary>
+<div class="codigo"><div class="cod-top"><span>CalculadoraDeMulta.java</span></div><pre><code><span class="c">/**
+ * Sabe uma coisa só: quanto custa o atraso.
+ * Se a regra de multa mudar, esta é a única classe que muda.
+ */</span>
+<span class="kw">public class</span> CalculadoraDeMulta {
+
+    <span class="kw">public int</span> calcular(Leitor leitor, <span class="kw">int</span> diasDeAtraso) {
+        <span class="kw">if</span> (leitor.getTipo().equals(<span class="st">"ALUNO"</span>)) {
+            <span class="kw">return</span> diasDeAtraso * 100;
+        }
+        <span class="kw">if</span> (leitor.getTipo().equals(<span class="st">"PROFESSOR"</span>)) {
+            <span class="kw">return</span> diasDeAtraso * 50;
+        }
+        <span class="kw">return</span> 0;
+    }
+}</code></pre></div>
+<p>Repare no <code>return 0</code> do fim: um tipo desconhecido (digamos, <code>"VISITANTE"</code>) paga zero, em silêncio. Isso já era assim no início, e o passo 2 só mudou de lugar. Anote: é a porta de entrada do próximo conselho. Se travou, siga com o <a href="apoio/biblioteca-passo2.zip" download>biblioteca-passo2.zip</a>.</p></details>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<section class="step-section visible" id="ocp"><div class="section-kicker">Parte 2 · O <span class="relogio">16:00 · 10 min</span></div><h2>O · Aberto/Fechado: crescer sem mexer no que funciona <span class="ponto-ref" data-ponto="13">[13]</span></h2>
+<div class="teoria"><h3>A dor: cada tipo novo abre o mesmo arquivo</h3>
+<p>A biblioteca vai atender <strong>visitantes</strong>, que pagam R$ 2,00 por dia. Com a calculadora do passo 2, o caminho óbvio é acrescentar mais um <code>if</code>. Depois virão funcionários, depois parceiros. A cada tipo novo, alguém abre a <code>CalculadoraDeMulta</code>, que já funciona e já foi testada, e edita no meio dela.</p>
+<p>O conselho O diz que o código deve ser <strong>aberto para extensão</strong> (dá para acrescentar comportamento novo) e <strong>fechado para modificação</strong> (sem editar o que já funciona). Na prática, com o que você já sabe: um <strong>contrato</strong> (a interface <code>TipoDeLeitor</code> do ponto 07) e <strong>uma classe nova para cada tipo</strong>.</p></div>
+<div class="sim" id="sim-ocp"><h3>🧪 Simulador · o que muda quando chega um tipo novo?</h3><p>Escolha o jeito de escrever a calculadora e faça chegar tipos novos. Conte quantos arquivos <strong>que já existiam</strong> foram editados.</p>
+<div class="alterna" role="group" aria-label="Jeito de escrever"><button type="button" data-oc-versao="if" aria-pressed="true">if por texto</button><button type="button" data-oc-versao="contrato" aria-pressed="false">contrato TipoDeLeitor</button></div>
+<div class="sim-toolbar"><button type="button" data-oc="visitante">Chegou o Visitante (R$ 2,00/dia)</button><button type="button" data-oc="funcionario">Chegou o Funcionário (R$ 0,00/dia)</button><button type="button" data-oc="reset">Recomeçar</button></div>
+<div class="arquivos" data-oc-arquivos></div>
+<div class="diff" data-oc-diff aria-label="Trecho alterado"></div>
+<p class="sim-saida" data-oc-saida aria-live="polite">Faça chegar o Visitante.</p></div>
+<div class="decision"><h3>Quando <strong>não</strong> vale a pena criar o contrato?</h3><div class="choices"><button type="button" data-correct="true" data-feedback="Isso. Se há dois casos e ninguém imagina um terceiro, um if legível é melhor do que uma interface e duas classes. O conselho paga quando a variação é real: aqui, a própria Dona Marta já anunciou o Visitante.">Quando há dois casos que, até onde se sabe, nunca vão crescer.</button><button type="button" data-correct="false" data-feedback="Pelo contrário: com mais casos e mais pedidos, o contrato evita editar o mesmo if toda semana.">Quando surgem tipos novos com frequência.</button><button type="button" data-correct="false" data-feedback="Testes não impedem o conselho; eles ajudam a provar que nada que funcionava quebrou.">Quando o projeto tem testes.</button></div><p class="feedback" aria-live="polite">Escolha uma resposta.</p><button type="button" data-reset-quiz>Tentar novamente</button></div>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<section class="step-section visible" id="passo3"><div class="section-kicker">Prática · O <span class="relogio">16:10 · 15 min</span></div><h2>Passo 3: chega o Visitante <span class="ponto-ref" data-ponto="14">[14]</span></h2>
+<p>Duas etapas, e a ordem importa. Primeiro trocamos o texto <code>"ALUNO"</code> pelo contrato, <strong>sem mudar nenhum valor</strong>: os testes provam que nada quebrou. Só depois chega o Visitante, e a prova do conselho O é o diff dessa segunda etapa: <strong>só arquivos novos</strong> (mais o teste).</p>
+<div class="prompt"><div class="prompt-top"><strong>Prompt 3 · tipo de leitor vira contrato</strong><button type="button" data-copy>Copiar prompt</button></div><pre><span class="prompt-key">[CONTEXTO]</span> Leia AGENTS.md. A biblioteca vai atender visitantes: 200 centavos por dia. Hoje CalculadoraDeMulta decide pelo texto do tipo ("ALUNO", "PROFESSOR"), e cada tipo novo obriga a editar esse if.
+<span class="prompt-key">[ETAPA 1]</span> Crie a interface TipoDeLeitor com int multaPorDiaEmCentavos() e as classes Aluno (100) e Professor (50). Leitor passa a receber um TipoDeLeitor no lugar do texto. A calculadora vira uma linha: diasDeAtraso * leitor.getTipo().multaPorDiaEmCentavos(). Ajuste testes e App. Rode os testes e commit "passo 3a: tipo vira contrato".
+<span class="prompt-key">[ETAPA 2]</span> <mark class="hl">Só então</mark> crie Visitante (200) e um teste na calculadora: 3 dias = 600. Commit "passo 3b: visitante".
+<span class="prompt-key">[LIMITES]</span> Sem enum e sem switch. <mark class="hl">Na etapa 2, nenhum arquivo que já existia pode mudar</mark>, exceto CalculadoraDeMultaTest.
+<span class="prompt-key">[PROVA]</span> 9 testes verdes. Mostre git diff --stat da etapa 2.
+<span class="prompt-key">[PARE]</span> Plano antes, espere meu OK. Pare entre as duas etapas e me mostre os testes.</pre><p class="copy-status" aria-live="polite"></p></div>
+<div class="terminal-saida"><div class="cod-top"><span>git diff --stat da etapa 2 · o que você quer ver</span></div><pre> src/main/java/br/com/biblioteca/Visitante.java              | 10 ++++++++++
+ src/test/java/br/com/biblioteca/CalculadoraDeMultaTest.java |  6 ++++++
+ 2 files changed, 16 insertions(+)</pre></div>
+<div class="prova"><h3>✅ Como provar que deu certo</h3><p>Nove testes verdes. No diff da etapa 2, <code>CalculadoraDeMulta.java</code> <strong>não aparece</strong>. Se aparecer, pergunte ao agente por quê: geralmente é um <code>if</code> que ficou para trás.</p></div>
+<details class="olhinho"><summary>👀 Ver a calculadora depois do contrato</summary>
+<div class="codigo"><div class="cod-top"><span>CalculadoraDeMulta.java · etapa 1</span></div><pre><code><span class="kw">public class</span> CalculadoraDeMulta {
+
+    <span class="kw">public int</span> calcular(Leitor leitor, <span class="kw">int</span> diasDeAtraso) {
+        <span class="kw">return</span> diasDeAtraso * leitor.getTipo().multaPorDiaEmCentavos();
+    }
+}</code></pre></div>
+<div class="codigo"><div class="cod-top"><span>Visitante.java · etapa 2, arquivo novo</span></div><pre><code><span class="c">/** Visitante paga 200 centavos (R$ 2,00) por dia de atraso. */</span>
+<span class="kw">public class</span> Visitante <span class="kw">implements</span> TipoDeLeitor {
+
+    <span class="an">@Override</span>
+    <span class="kw">public int</span> multaPorDiaEmCentavos() {
+        <span class="kw">return</span> 200;
+    }
+}</code></pre></div>
+<p>A calculadora ficou fina, e tudo bem: no dia em que surgir um teto de multa (“no máximo R$ 20,00”), é ali que ele entra, num lugar só. E o <code>return 0</code> silencioso sumiu: o tipo agora é um objeto que sabe o próprio valor, e um texto digitado errado (<code>"ALUNOO"</code>) não vira mais multa zero, porque não existe texto nenhum. Se travou, siga com o <a href="apoio/biblioteca-passo3.zip" download>biblioteca-passo3.zip</a>.</p></details>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<section class="step-section visible" id="lsp"><div class="section-kicker">Parte 2 · L <span class="relogio">16:25 · 10 min</span></div><h2>L · Substituição de Liskov: o filho cumpre a promessa do pai <span class="ponto-ref" data-ponto="15">[15]</span></h2>
+<div class="teoria"><h3>Primeiro, herança</h3>
+<p><strong>Herança</strong> é quando uma classe diz “eu sou um tipo especial daquela outra”: <code>class LivroInfantil extends Livro</code>. A classe filha ganha tudo o que o pai tem e pode acrescentar coisas ou trocar o comportamento de um método (sobrescrever, com <code>@Override</code>). Onde o programa espera um <code>Livro</code>, ele aceita um <code>LivroInfantil</code>.</p>
+<p>É essa última frase que importa. Se o programa aceita o filho no lugar do pai, o filho precisa <strong>se comportar como o pai prometeu</strong>. O conselho L, formulado por Barbara Liskov em 1987, diz exatamente isso: <strong>um objeto filho deve poder substituir o pai sem que quem usa perceba a troca</strong>.</p></div>
+<div class="teoria"><h3>A dor: o dicionário que não sai da sala</h3>
+<p>A biblioteca ganhou obras de consulta, como um dicionário que nunca pode ser emprestado. Alguém propõe o caminho rápido:</p>
+<div class="codigo"><pre><code><span class="kw">public class</span> LivroDeConsulta <span class="kw">extends</span> Livro {
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> emprestar() {
+        <span class="kw">throw new</span> UnsupportedOperationException(<span class="st">"Obra de consulta não sai da biblioteca."</span>);
+    }
+}</code></pre></div>
+<p>Compila. Mas o <code>Livro</code> prometia: “se eu estiver disponível, <code>emprestar()</code> funciona”. O filho quebra a promessa. Qualquer código que trabalha com uma lista de livros, como “emprestar todos os livros da lista de leitura para a turma”, explode no meio do caminho.</p></div>
+<div class="sim" id="sim-lsp"><h3>🧪 Simulador · emprestar a lista de leitura</h3><p>A professora pede os quatro livros da lista para a turma. O código percorre a lista e chama <code>emprestar()</code> em cada um. Escolha o modelo e rode.</p>
+<div class="alterna" role="group" aria-label="Modelo"><button type="button" data-ls-versao="heranca" aria-pressed="true">LivroDeConsulta extends Livro</button><button type="button" data-ls-versao="separado" aria-pressed="false">ObraDeConsulta separada (não é Livro)</button></div>
+<div class="codigo" style="margin:10px 0"><pre><code><span class="kw">for</span> (Livro livro : listaDeLeitura) {
+    livro.emprestar();
+}</code></pre></div>
+<div class="sim-toolbar"><button type="button" data-ls="rodar">Rodar o laço</button><button type="button" data-ls="reset">Recomeçar</button></div>
+<div class="laco" data-ls-laco></div>
+<p class="sim-saida" data-ls-saida aria-live="polite">Escolha um modelo e rode o laço.</p></div>
+<div class="decision"><h3>Qual destas classes filhas respeita a promessa de <code>Livro</code>?</h3><div class="choices"><button type="button" data-correct="false" data-feedback="Lança exceção onde o pai prometia sucesso. É o caso do simulador: quem usa Livro é surpreendido.">LivroDeConsulta: emprestar() sempre lança exceção.</button><button type="button" data-correct="true" data-feedback="Isso. Ela acrescenta informação (faixa etária) sem mudar o que emprestar() e devolver() prometem. Quem usa Livro nem percebe a diferença.">LivroInfantil: igual ao Livro, com um campo a mais de faixa etária.</button><button type="button" data-correct="false" data-feedback="Pior ainda que a exceção: o empréstimo “funciona”, mas nada acontece. O balcão acha que emprestou, o livro continua disponível e ninguém percebe. Também quebra a promessa.">LivroEmReforma: emprestar() não faz nada, em silêncio.</button></div><p class="feedback" aria-live="polite">Escolha uma resposta.</p><button type="button" data-reset-quiz>Tentar novamente</button></div>
+<aside class="limite"><h3>⚠️ O que fazer, então?</h3><p>Se o filho não consegue cumprir a promessa, ele <strong>não é</strong> um tipo especial do pai. A saída costuma ser não herdar: uma <code>ObraDeConsulta</code> separada, que nem tem <code>emprestar()</code>. Aí o compilador impede colocá-la na lista de empréstimo. A regra prática: use herança só quando o filho for, de verdade, um caso do pai em tudo o que o pai promete. Na dúvida, prefira composição. Esta é a tarefa de casa.</p></aside>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<section class="step-section visible" id="isp"><div class="section-kicker">Parte 2 · I <span class="relogio">16:35 · 5 min</span></div><h2>I · Segregação de Interfaces: contratos pequenos <span class="ponto-ref" data-ponto="16">[16]</span></h2>
+<div class="teoria"><h3>A dor: prometer o que não faz</h3>
+<p>Imagine um contrato único para tudo o que existe no acervo:</p>
+<div class="codigo"><pre><code><span class="kw">public interface</span> ItemDoAcervo {
+    <span class="kw">void</span> emprestar();
+    <span class="kw">void</span> devolver();
+    String baixarPdf();
+}</code></pre></div>
+<p>O livro de papel não tem PDF. O e-book de domínio público não se empresta: qualquer um baixa. Mas, para cumprir o contrato, cada classe é <strong>obrigada</strong> a escrever os três métodos, e os que ela não faz viram <code>throw new UnsupportedOperationException()</code>. É a mesma quebra de promessa do ponto 15, só que forçada pelo contrato.</p>
+<p>O conselho I diz: <strong>ninguém deve ser obrigado a depender de métodos que não usa</strong>. Em vez de um contrato gordo, vários contratos pequenos: <code>Emprestavel</code> (emprestar, devolver) e <code>Baixavel</code> (baixarPdf). Cada classe assina só os que cumpre.</p></div>
+<div class="sim" id="sim-isp"><h3>🧪 Simulador · o que cada classe é obrigada a escrever</h3><p>Escolha o contrato e a classe. Em vermelho, os métodos que só existem para lançar exceção.</p>
+<div class="alterna" role="group" aria-label="Contrato"><button type="button" data-is-versao="gorda" aria-pressed="true">Um contrato gordo: ItemDoAcervo</button><button type="button" data-is-versao="pequenas" aria-pressed="false">Contratos pequenos: Emprestavel e Baixavel</button></div>
+<div class="alterna" role="group" aria-label="Classe"><button type="button" data-is-classe="livro" aria-pressed="true">Livro de papel</button><button type="button" data-is-classe="ebook" aria-pressed="false">E-book de domínio público</button></div>
+<div class="isp-codigo" data-is-codigo aria-live="polite"></div>
+<p class="sim-saida" data-is-saida aria-live="polite"></p></div>
+<aside class="limite"><h3>⚠️ Limite do conselho</h3><p>Também dá para exagerar: uma interface por método é ruído. Agrupe o que sempre anda junto (quem empresta sempre devolve) e separe o que varia de forma independente.</p></aside>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<section class="step-section visible" id="dip"><div class="section-kicker">Parte 2 · D <span class="relogio">16:40 · 10 min</span></div><h2>D · Inversão de Dependência: dependa do contrato, não do detalhe <span class="ponto-ref" data-ponto="17">[17]</span></h2>
+<div class="teoria"><h3>A dor: o e-mail soldado dentro do balcão</h3>
+<p>Olhe de novo a <code>Biblioteca</code>. Lá dentro há um <code>new EmailSmtp()</code>. Isso significa que a <code>Biblioteca</code> <strong>depende</strong> do <code>EmailSmtp</code>: não existe <code>Biblioteca</code> sem ele. Três consequências que você já sentiu ou vai sentir:</p>
+<ul><li>todo teste com multa espera os 2 s do e-mail falso;</li><li>o teste não tem como conferir <em>se</em> o aviso saiu, nem com que texto;</li><li>trocar e-mail por WhatsApp obriga a editar a <code>Biblioteca</code>, que não tem nada a ver com isso.</li></ul>
+<p>É como um abajur com o fio soldado na parede: para trocar a lâmpada, você chama o eletricista.</p></div>
+<div class="teoria"><h3>A saída: a tomada, de novo</h3>
+<p>O conselho D tem duas partes. <strong>Primeira:</strong> a regra de negócio (a <code>Biblioteca</code>) não deve depender do detalhe técnico (o <code>EmailSmtp</code>). Os dois devem depender de um <strong>contrato</strong>, a interface <code>Notificador</code>. <strong>Segunda:</strong> quem dita o contrato é quem precisa dele. A <code>Biblioteca</code> diz “eu preciso de alguém que saiba avisar um leitor”, e o e-mail se adapta a isso.</p>
+<p>E quem escolhe qual notificador usar? <strong>Quem monta</strong> a <code>Biblioteca</code>: ela recebe o notificador pronto, pelo <strong>construtor</strong>. No programa de verdade (o <code>App</code>), quem monta passa o e-mail. No teste, passa um notificador falso que só anota. Receber as dependências pelo construtor, em vez de criá-las lá dentro, se chama <strong>injeção de dependência</strong>.</p></div>
+<figure class="desenho" aria-labelledby="d3-cap"><div class="svg-scroll"><svg viewBox="0 0 900 250" role="img" aria-labelledby="d3-t"><title id="d3-t">Antes a Biblioteca aponta para EmailSmtp; depois Biblioteca e EmailSmtp apontam para o contrato Notificador</title>
+<text class="a" x="20" y="30">ANTES</text>
+<rect class="n" x="20" y="50" width="170" height="60" rx="12"/><text class="t" x="40" y="86">Biblioteca</text>
+<rect class="k" x="250" y="50" width="170" height="60" rx="12"/><text class="t" x="270" y="86">EmailSmtp</text>
+<path class="lr" d="M190 80 H246"/><polygon points="246,74 258,80 246,86" fill="#d67f7f"/>
+<text class="r" x="20" y="140">new EmailSmtp() lá dentro:</text><text class="s" x="20" y="162">trocar ou testar = editar a Biblioteca</text>
+<text class="a" x="480" y="30">DEPOIS</text>
+<rect class="n" x="480" y="50" width="170" height="60" rx="12"/><text class="t" x="500" y="86">Biblioteca</text>
+<rect class="d" x="700" y="50" width="180" height="60" rx="12"/><text class="t" x="718" y="78">Notificador</text><text class="s" x="718" y="98">interface (contrato)</text>
+<path class="lb" d="M650 80 H696"/><polygon points="696,74 708,80 696,86" fill="#7ea6ff"/>
+<rect class="k" x="600" y="170" width="140" height="56" rx="12"/><text class="t" x="615" y="203">EmailSmtp</text>
+<rect class="g" x="755" y="170" width="140" height="56" rx="12"/><text class="t" x="765" y="196">Notificador</text><text class="t" x="765" y="216">DeTeste</text>
+<path class="lb" d="M670 170 L760 115 M825 170 L800 115"/><polygon points="754,112 766,108 760,120" fill="#7ea6ff"/><polygon points="796,110 804,108 806,121" fill="#7ea6ff"/>
+<text class="v" x="480" y="150">as setas agora apontam</text><text class="v" x="480" y="170">para o contrato</text>
+</svg></div><figcaption id="d3-cap"><b>A inversão.</b> Antes, a seta ia da regra de negócio para o detalhe. Depois, regra e detalhe apontam para o contrato. A seta do <code>EmailSmtp</code> “virou”: é ele que se adapta à <code>Biblioteca</code>, não o contrário.</figcaption></figure>
+<div class="sim" id="sim-dip"><h3>🧪 Simulador · plugue o notificador e rode os testes</h3><p>Escolha a versão. Na versão nova, escolha também o que plugar na tomada. Depois rode os quatro testes que geram multa.</p>
+<div class="alterna" role="group" aria-label="Versão"><button type="button" data-dp-versao="antes" aria-pressed="true">Antes: new EmailSmtp() lá dentro</button><button type="button" data-dp-versao="depois" aria-pressed="false">Depois: recebe um Notificador</button></div>
+<div class="alterna" role="group" aria-label="O que plugar" data-dp-plugues><button type="button" data-dp-plugue="email" aria-pressed="true">EmailSmtp (2 s)</button><button type="button" data-dp-plugue="whatsapp" aria-pressed="false">WhatsApp (simulado, 1 s)</button><button type="button" data-dp-plugue="teste" aria-pressed="false">NotificadorDeTeste (anota)</button></div>
+<div class="tomada"><div class="caixa"><b>Biblioteca</b><span data-dp-bib>new EmailSmtp() fixo</span></div><div class="fio" aria-hidden="true">⇄</div><div class="caixa preso" data-dp-caixa><b data-dp-nome>EmailSmtp</b><span data-dp-desc>soldado na Biblioteca</span></div></div>
+<div class="sim-toolbar"><button type="button" data-dp="rodar">Rodar 4 testes com multa</button></div>
+<div class="console" data-dp-console aria-live="polite">Escolha a versão e rode.</div>
+<p class="sim-saida" data-dp-saida aria-live="polite"></p></div>
+<div class="decision"><h3>Depois da mudança, onde fica o <code>new EmailSmtp()</code>?</h3><div class="choices"><button type="button" data-correct="false" data-feedback="Se continuasse lá, nada teria mudado: a Biblioteca ainda escolheria o e-mail sozinha e o teste ainda esperaria 2 s.">Continua dentro da Biblioteca.</button><button type="button" data-correct="true" data-feedback="Isso. Em quem monta o programa: new Biblioteca(new EmailSmtp()). O new não sumiu, mudou de lugar. A escolha do detalhe fica num ponto só, fora da regra de negócio.">No App, que monta: new Biblioteca(new EmailSmtp()).</button><button type="button" data-correct="false" data-feedback="Algum código precisa criar o objeto de verdade, senão nenhum e-mail sai. O conselho D não elimina o new; ele o tira de dentro da regra.">Em lugar nenhum: o e-mail deixa de existir.</button></div><p class="feedback" aria-live="polite">Escolha uma resposta.</p><button type="button" data-reset-quiz>Tentar novamente</button></div>
+<aside class="limite"><h3>⚠️ Limite do conselho</h3><p>Nem tudo precisa entrar pelo construtor. A <code>CalculadoraDeMulta</code> continua sendo criada dentro da <code>Biblioteca</code>, e está ótimo: ela é rápida, não fala com o mundo externo e não tem outra versão. Inverta a dependência quando o detalhe for <strong>lento, externo ou trocável</strong>: e-mail, banco, rede, relógio.</p></aside>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<section class="step-section visible" id="passo4"><div class="section-kicker">Prática · D <span class="relogio">16:50 · 15 min</span></div><h2>Passo 4: o aviso de mentirinha <span class="ponto-ref" data-ponto="18">[18]</span></h2>
+<p>Agora o simulador vira código. O <code>NotificadorDeTeste</code> é um <strong>dublê de teste</strong>: um objeto que entra no lugar do de verdade só durante o teste, como o dublê entra no lugar do ator na cena perigosa. Ele não manda nada; só guarda numa lista o que teria mandado.</p>
+<div class="prompt"><div class="prompt-top"><strong>Prompt 4 · a Biblioteca recebe um Notificador</strong><button type="button" data-copy>Copiar prompt</button></div><pre><span class="prompt-key">[CONTEXTO]</span> Leia AGENTS.md. Os testes com multa demoram 2 s porque a Biblioteca cria new EmailSmtp() lá dentro. Assim não dá para conferir o aviso nem trocar por outro canal sem editar a Biblioteca.
+<span class="prompt-key">[TAREFA]</span>
+- Crie a interface Notificador com void avisar(Leitor leitor, String mensagem).
+- EmailSmtp implementa Notificador (mesma demora e mesma saída de hoje).
+- <mark class="hl">A Biblioteca recebe um Notificador no construtor</mark> e não cria mais EmailSmtp.
+- App monta: new Biblioteca(new EmailSmtp()).
+<span class="prompt-key">[TESTES]</span> Em src/test, crie NotificadorDeTeste, que só guarda os avisos numa lista. Em BibliotecaTest, monte a Biblioteca com ele e confira: com atraso há 1 aviso com o texto exato; sem atraso, nenhum.
+<span class="prompt-key">[LIMITES]</span> <mark class="hl">Sem framework de injeção e sem biblioteca de mocks.</mark> A mensagem do aviso continua igual. A CalculadoraDeMulta continua criada dentro da Biblioteca.
+<span class="prompt-key">[PROVA]</span> ./mvnw test verde, com 9 testes, em menos de 1 segundo. Rode o App e mostre que o e-mail ainda sai.
+<span class="prompt-key">[PARE]</span> Plano antes, espere meu OK. No fim, commit "passo 4: notificador".</pre><p class="copy-status" aria-live="polite"></p></div>
+<div class="terminal-saida"><div class="cod-top"><span>a prova</span><span>de 4 s para quase zero</span></div><pre>Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.020 s -- in br.com.biblioteca.BibliotecaTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in br.com.biblioteca.CalculadoraDeMultaTest
+
+$ java -cp target/classes br.com.biblioteca.App
+Dom Casmurro disponível? false
+[e-mail] para ana@email.com: Multa de 300 centavos por 3 dia(s) de atraso.
+Multa: 300 centavos
+Dom Casmurro disponível? true</pre></div>
+<details class="olhinho"><summary>👀 Ver o dublê e o teste-modelo</summary>
+<div class="codigo"><div class="cod-top"><span>src/test · NotificadorDeTeste.java</span></div><pre><code><span class="c">/**
+ * Dublê de teste: não manda nada, só anota.
+ * Assim o teste confere o aviso na hora, sem esperar 2 segundos.
+ */</span>
+<span class="kw">class</span> NotificadorDeTeste <span class="kw">implements</span> Notificador {
+
+    <span class="kw">final</span> List&lt;String&gt; avisos = <span class="kw">new</span> ArrayList&lt;&gt;();
+
+    <span class="an">@Override</span>
+    <span class="kw">public void</span> avisar(Leitor leitor, String mensagem) {
+        avisos.add(leitor.getNome() + <span class="st">": "</span> + mensagem);
+    }
+}</code></pre></div>
+<div class="codigo"><div class="cod-top"><span>BibliotecaTest.java · o aviso agora é conferido</span></div><pre><code><span class="an">@Test</span>
+<span class="kw">void</span> devolverComAtrasoCobraEAvisaOLeitor() {
+    Livro livro = domCasmurro();
+    biblioteca.emprestar(livro);
+    assertEquals(300, biblioteca.devolver(livro, leitor(<span class="st">"Ana"</span>, <span class="kw">new</span> Aluno()), 3));
+    assertEquals(1, notificador.avisos.size());
+    assertEquals(<span class="st">"Ana: Multa de 300 centavos por 3 dia(s) de atraso."</span>, notificador.avisos.get(0));
+}</code></pre></div>
+<p><code>List&lt;String&gt;</code> se lê “lista de textos”: o que vai entre <code>&lt;</code> e <code>&gt;</code> diz o tipo do que a lista guarda. Se travou, o <a href="apoio/biblioteca-passo4.zip" download>biblioteca-passo4.zip</a> é o projeto completo do dia.</p></details>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<div class="part-head"><div class="ph-n">Parte 3 · 17:05–17:30</div><h2>Revisar e fechar</h2><p>O agente escreveu; quem assina é você.</p></div>
+
+<section class="step-section visible" id="qual-letra"><div class="section-kicker">Parte 3 · fixação <span class="relogio">17:05 · 5 min</span></div><h2>Qual conselho é esse? <span class="ponto-ref" data-ponto="19">[19]</span></h2>
+<p>Seis trechos que você pode encontrar num projeto real ou numa sugestão do agente. Para cada um, qual ideia de hoje resolve a dor? Não há pegadinha: todos apareceram na tarde.</p>
+<div class="classificador" id="classificador"><p class="placar" data-cl-placar aria-live="polite">0 de 6</p></div>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<section class="step-section visible" id="revisao"><div class="section-kicker">Parte 3 · ⚖️ revisar <span class="relogio">17:10 · 10 min</span></div><h2>Revisar o que o agente fez <span class="ponto-ref" data-ponto="20">[20]</span></h2>
+<figure class="desenho" aria-labelledby="d4-cap"><div class="svg-scroll"><svg viewBox="0 0 900 270" role="img" aria-labelledby="d4-t"><title id="d4-t">O projeto no fim do dia: cada regra num lugar</title>
+<rect class="n" x="330" y="20" width="240" height="70" rx="12"/><text class="t" x="350" y="50">Biblioteca</text><text class="s" x="350" y="72">só coordena</text>
+<rect class="g" x="20" y="150" width="200" height="80" rx="12"/><text class="t" x="40" y="180">Livro</text><text class="s" x="40" y="202">regra do empréstimo</text><text class="s" x="40" y="220">(balcão)</text>
+<rect class="g" x="250" y="150" width="200" height="80" rx="12"/><text class="t" x="270" y="180">CalculadoraDeMulta</text><text class="s" x="270" y="202">quanto custa o atraso</text><text class="s" x="270" y="220">(coordenação)</text>
+<rect class="d" x="480" y="150" width="190" height="80" rx="12"/><text class="t" x="500" y="180">TipoDeLeitor</text><text class="s" x="500" y="202">Aluno · Professor</text><text class="s" x="500" y="220">Visitante</text>
+<rect class="d" x="700" y="150" width="180" height="80" rx="12"/><text class="t" x="718" y="180">Notificador</text><text class="s" x="718" y="202">EmailSmtp · Teste</text><text class="s" x="718" y="220">(TI)</text>
+<path class="lv" d="M400 90 L120 150 M440 90 L350 150 M350 230 C 400 260, 520 260, 560 230 M520 90 L790 150"/>
+<text class="a" x="20" y="40">uma mudança,</text><text class="a" x="20" y="62">um lugar</text>
+</svg></div><figcaption id="d4-cap"><b>O fim do dia.</b> Compare com o desenho do ponto 01: a mesma biblioteca, as mesmas regras, os mesmos testes. Só mudou onde cada coisa mora.</figcaption></figure>
+<h3>Checklist de revisão do diff</h3>
+<ul class="checklist" data-checklist="cap04-revisao">
+<li><input type="checkbox" id="ck1"><label for="ck1">Eu vi os testes rodarem (a linha “Tests run”), não só o agente dizendo que passariam.</label></li>
+<li><input type="checkbox" id="ck2"><label for="ck2">O diff mexe só no que o passo pediu. Nada “aproveitado” para melhorar outra coisa.</label></li>
+<li><input type="checkbox" id="ck3"><label for="ck3">Nenhum campo com regra ficou <code>public</code>; nenhum setter abre a porta da regra.</label></li>
+<li><input type="checkbox" id="ck4"><label for="ck4">Para cada classe nova, eu sei dizer quem pediria mudança nela.</label></li>
+<li><input type="checkbox" id="ck5"><label for="ck5">Cada interface nova tem mais de um jeito de cumprir ou uma troca real (como o teste).</label></li>
+<li><input type="checkbox" id="ck6"><label for="ck6">Os nomes falam a língua da biblioteca: emprestar, devolver, multa, aviso.</label></li>
+</ul>
+<div class="decision"><h3>⚖️ Defender ou refutar: “o agente criou também <code>ILivro</code>, <code>ILeitor</code> e <code>ICalculadoraDeMulta</code>, cada uma com uma implementação só”.</h3><div class="choices"><button type="button" data-correct="false" data-feedback="O argumento da “flexibilidade futura” é o mais comum, e o mais caro: são três arquivos para manter hoje por uma troca que ninguém pediu. Se ela vier, criar a interface leva cinco minutos.">Defendo: deixa o código pronto para qualquer troca futura.</button><button type="button" data-correct="true" data-feedback="Isso. Cada interface precisa de uma dor: Notificador tem duas implementações (e-mail e teste) e TipoDeLeitor tem três. Livro, Leitor e a calculadora têm uma só e nenhuma troca à vista. Peça para remover e anote o motivo no PR.">Refuto: sem segundo jeito de cumprir nem troca real, é arquivo a mais sem benefício.</button></div><p class="feedback" aria-live="polite">Escolha e diga o seu argumento em voz alta antes de conferir.</p><button type="button" data-reset-quiz>Tentar novamente</button></div>
+<details class="olhinho"><summary>👀 Argumento-modelo, com os dois lados</summary><p><strong>A favor de criar interface:</strong> há (ou certamente haverá) mais de uma implementação; a peça é lenta ou externa e precisa de dublê no teste; equipes diferentes trabalham dos dois lados do contrato.</p><p><strong>Contra:</strong> uma implementação só e nenhuma troca à vista; o nome começa com <code>I</code> só para “parecer arquitetura”; a interface copia todos os métodos da classe, um por um.</p><p><strong>Veredito para este projeto:</strong> manter <code>Notificador</code> e <code>TipoDeLeitor</code>; remover <code>ILivro</code>, <code>ILeitor</code> e <code>ICalculadoraDeMulta</code>.</p></details>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<section class="step-section visible" id="fechamento"><div class="section-kicker">Fechamento <span class="relogio">17:20 · 5 min</span></div><h2>Explique sem decorar <span class="ponto-ref" data-ponto="21">[21]</span></h2>
+<p>Responda em voz alta, com as suas palavras, usando a biblioteca como exemplo. Se travar em alguma, volte ao ponto indicado.</p>
+<ol class="passo-a-passo"><li>Qual a diferença entre a classe <code>Livro</code> e o objeto <em>Dom Casmurro</em>? (03)</li>
+<li>Por que <code>private</code> + <code>setDisponivel</code> não protege a regra do empréstimo? (05–06)</li>
+<li>Quem pediria mudança na <code>CalculadoraDeMulta</code>? E no <code>Notificador</code>? (11)</li>
+<li>Como o Visitante entrou sem editar a calculadora? (13–14)</li>
+<li>Por que o teste ficou rápido no passo 4, e onde foi parar o <code>new EmailSmtp()</code>? (17–18)</li></ol>
+<div class="regra-central"><p style="margin:0"><b>A frase do dia, de novo:</b> uma mudança, um lugar. Encapsulamento põe a regra perto do dado. S separa por quem pede a mudança. O deixa crescer com classes novas. L e I evitam promessas quebradas. D tira o detalhe trocável de dentro da regra.</p></div>
+<p>Você vai reencontrar essas decisões em todo projeto daqui para frente: num serviço Spring, a <code>Biblioteca</code> vira um serviço, o <code>Notificador</code> vira um componente injetado e o dublê vira o que os testes usam para não depender da rede. As ideias são as mesmas de hoje, só com mais peças.</p>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<div class="zone-head" id="z-casa"><h2>🏠 Até o próximo sábado</h2><p>Uma tarefa curta, com o mesmo projeto. Use o seu resultado do passo 4 ou o ZIP do passo 4.</p></div>
+
+<section class="step-section visible" id="casa"><div class="section-kicker">Em casa · L e I na prática</div><h2>O dicionário que não sai da biblioteca <span class="ponto-ref" data-ponto="22">[22]</span></h2>
+<p>A Dona Marta recebeu um <strong>dicionário</strong> e uma <strong>enciclopédia</strong>. Eles entram no catálogo (têm código e título), mas <strong>nunca</strong> podem ser emprestados. Um colega já sugeriu o atalho do ponto 15: <code>LivroDeConsulta extends Livro</code>, com <code>emprestar()</code> lançando exceção. Sua tarefa é dirigir o agente para um desenho que não quebre a promessa do <code>Livro</code>.</p>
+<div class="prompt"><div class="prompt-top"><strong>Prompt 5 · obras de consulta sem quebrar o Livro</strong><button type="button" data-copy>Copiar prompt</button></div><pre><span class="prompt-key">[CONTEXTO]</span> Leia AGENTS.md. A biblioteca ganhou obras de consulta (dicionários) que entram no catálogo mas nunca podem ser emprestadas. Um colega sugeriu: class LivroDeConsulta extends Livro, com emprestar() lançando exceção.
+<span class="prompt-key">[ANTES DE CODAR]</span> Explique em português simples se essa sugestão respeita o princípio de substituição de Liskov. Use como exemplo um método emprestarTodos(List&lt;Livro&gt; lista) que chama emprestar() em cada livro.
+<span class="prompt-key">[TAREFA]</span> Proponha e, depois do meu OK, implemente um desenho em que <mark class="hl">uma obra de consulta nem possa ser passada para emprestar</mark>. Pode haver um contrato pequeno para o que é comum (código e título), por exemplo ItemDoAcervo, e uma classe ObraDeConsulta separada de Livro.
+<span class="prompt-key">[TESTES]</span> Um teste mostra que a obra de consulta tem código e título; outro mostra que emprestarTodos continua funcionando com uma lista de livros.
+<span class="prompt-key">[LIMITES]</span> Não mude a regra de empréstimo do Livro. Não use instanceof para “pular” obras de consulta.
+<span class="prompt-key">[PROVA]</span> ./mvnw test verde e o diff.
+<span class="prompt-key">[PARE]</span> Explicação e plano antes, espere meu OK.</pre><p class="copy-status" aria-live="polite"></p></div>
+<p><strong>Traga no próximo sábado:</strong> o diff (ou um print), e uma frase sua explicando por que a obra de consulta não deveria herdar de <code>Livro</code>.</p>
+<aside class="tip"><h3>Desafio opcional</h3><p>Crie um terceiro notificador, <code>WhatsAppSimulado</code>, e troque no <code>App</code>. Conte quantos arquivos você precisou editar além do novo. Se a resposta for “só o App”, o conselho D está funcionando.</p></aside>
+</section>
+<div class="section-connector" aria-hidden="true">↓</div>
+
+<section class="step-section visible glossario" id="glossario"><div class="section-kicker">Consulta rápida</div><h2>Glossário de bolso <span class="ponto-ref" data-ponto="23">[23]</span></h2>
+<dl>
+<dt>Classe</dt><dd>A descrição de um tipo de coisa: quais dados e quais comportamentos ela tem. A ficha em branco.</dd>
+<dt>Objeto (instância)</dt><dd>Uma coisa concreta criada a partir de uma classe, com os próprios valores. A ficha preenchida.</dd>
+<dt><code>new</code></dt><dd>A palavra que cria um objeto novo e chama o construtor.</dd>
+<dt>Referência</dt><dd>O que uma variável de objeto guarda: o caminho até o objeto, não o objeto em si.</dd>
+<dt>Atributo (campo)</dt><dd>Um dado guardado no objeto, como o título do livro.</dd>
+<dt>Estado</dt><dd>O conjunto dos valores dos atributos de um objeto num dado momento.</dd>
+<dt>Método</dt><dd>Algo que o objeto sabe fazer, como <code>emprestar()</code>.</dd>
+<dt>Construtor</dt><dd>Método especial com o nome da classe, chamado pelo <code>new</code>, que garante que o objeto nasça completo.</dd>
+<dt><code>public</code> / <code>private</code></dt><dd>Quem pode usar: qualquer código / só o código da própria classe.</dd>
+<dt><code>final</code></dt><dd>Num campo: recebe valor uma vez e nunca mais muda.</dd>
+<dt>Encapsulamento</dt><dd>Esconder os dados e oferecer só métodos que conferem as regras.</dd>
+<dt>Getter / setter</dt><dd>Métodos que leem / trocam um campo. O setter genérico pula as regras.</dd>
+<dt>Modelo anêmico</dt><dd>Classes que só guardam dados, com as regras espalhadas em outro lugar.</dd>
+<dt>Exceção</dt><dd>Sinal de erro que interrompe a operação. <code>IllegalStateException</code>: “o objeto não está num estado que permita isso”.</dd>
+<dt>Interface</dt><dd>Um contrato: a lista de métodos que uma classe promete ter, sem o corpo.</dd>
+<dt><code>implements</code></dt><dd>“Esta classe cumpre aquele contrato.”</dd>
+<dt><code>@Override</code></dt><dd>Anotação que marca um método vindo do contrato ou do pai; o compilador confere o nome.</dd>
+<dt>Polimorfismo</dt><dd>A mesma chamada produzindo comportamentos diferentes, conforme o objeto que responde.</dd>
+<dt>Composição</dt><dd>Montar um objeto com outros objetos dentro (“tem um”).</dd>
+<dt>Herança (<code>extends</code>)</dt><dd>Uma classe filha que é um tipo especial da classe pai (“é um”).</dd>
+<dt>SOLID</dt><dd>Cinco conselhos de design de classes: S, O, L, I, D.</dd>
+<dt>S · Responsabilidade Única</dt><dd>Uma classe, um motivo para mudar (uma fonte de pedidos de mudança).</dd>
+<dt>O · Aberto/Fechado</dt><dd>Acrescentar comportamento com código novo, sem editar o que já funciona.</dd>
+<dt>L · Substituição de Liskov</dt><dd>O filho cumpre tudo o que o pai promete; quem usa não percebe a troca.</dd>
+<dt>I · Segregação de Interfaces</dt><dd>Contratos pequenos; ninguém promete o que não faz.</dd>
+<dt>D · Inversão de Dependência</dt><dd>A regra de negócio depende de um contrato; o detalhe técnico se adapta a ele.</dd>
+<dt>Injeção de dependência</dt><dd>Receber as peças prontas (pelo construtor) em vez de criá-las lá dentro.</dd>
+<dt>Dublê de teste</dt><dd>Objeto que substitui o de verdade só no teste, como o <code>NotificadorDeTeste</code>.</dd>
+<dt>Lambda</dt><dd>Um pedaço de código entregue como valor: <code>() -&gt; ...</code>. Digite hífen e maior que, nunca o símbolo →.</dd>
+<dt>Maven Wrapper</dt><dd>O <code>mvnw</code>: baixa e roda a versão certa do Maven sem instalar nada.</dd>
+<dt>JUnit</dt><dd>A biblioteca de testes do Java. <code>@Test</code> marca um teste; <code>assertEquals</code> confere um valor.</dd>
+<dt>Diff</dt><dd>A lista do que mudou nos arquivos: linhas acrescentadas e removidas.</dd>
+</dl>
+<p class="sources">Fontes: Robert C. Martin, <em>Agile Software Development: Principles, Patterns, and Practices</em> (2002) e o artigo “Design Principles and Design Patterns” (2000); Barbara Liskov, “Data Abstraction and Hierarchy” (1987); documentação oficial do Java 21 (Oracle) e do JUnit 5.</p></section>
+
+<footer><a href="../03-pedidos-kafka/">← Cap 03</a><a href="../../">Voltar ao curso</a><p>Programa AI · Prof. Kelson Almeida</p></footer></main><script src="../../shared/scripts.js"></script><script src="cap4.js"></script></body></html>

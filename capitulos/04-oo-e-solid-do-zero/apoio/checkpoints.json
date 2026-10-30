@@ -1,0 +1,32 @@
+[
+  {
+    "arquivo": "biblioteca-inicio.zip",
+    "tag": "inicio",
+    "arquivos": 13,
+    "sha256": "4abc550745900b5769c76c92e50662a570a35dfb8296e2d4cea78bee7c393350"
+  },
+  {
+    "arquivo": "biblioteca-passo1.zip",
+    "tag": "passo1",
+    "arquivos": 13,
+    "sha256": "650f3982fab3d48a69dcf8dd1b72a565baca39c9761721ddb300a3fe0dd8aa32"
+  },
+  {
+    "arquivo": "biblioteca-passo2.zip",
+    "tag": "passo2",
+    "arquivos": 15,
+    "sha256": "ccfb6113eaca2a087aa312f6c2259920b53199db4b4f6ca64c0695d2c5d2cd19"
+  },
+  {
+    "arquivo": "biblioteca-passo3.zip",
+    "tag": "passo3",
+    "arquivos": 19,
+    "sha256": "d39c3e5733bbeef03659b7d063f1a2fbe5c44a8510545a002fe1b2539e5a316a"
+  },
+  {
+    "arquivo": "biblioteca-passo4.zip",
+    "tag": "passo4",
+    "arquivos": 21,
+    "sha256": "6916cde50209f988f69fc9bd945792b1566111c2e4fce6a1f0162bca59676509"
+  }
+]

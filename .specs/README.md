@@ -45,3 +45,5 @@ page-local com fallback offline, padrão olhinho) e **trocamos o registro** para
 sênior. O que muda e o que se mantém está em [`02-padroes-didaticos.md`](02-padroes-didaticos.md).
 
 - [13-cap2-mensageria-pagamentos.md](13-cap2-mensageria-pagamentos.md): Cap 02 vigente, RabbitMQ/Pagamentos, prompts marcados e apoio docente.
+- [14-cap3-kafka.md](14-cap3-kafka.md): Cap 03, Kafka do zero e prática Loja Café.
+- [15-cap4-oo-solid-do-zero.md](15-cap4-oo-solid-do-zero.md): Cap 04, OO e SOLID do zero na Biblioteca do Bairro (Java puro, quatro passos).
