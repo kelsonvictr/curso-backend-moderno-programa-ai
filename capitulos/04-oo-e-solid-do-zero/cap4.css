@@ -189,3 +189,30 @@ details.olhinho{border-color:#6b5a3a;background:#1b1812}details.olhinho summary{
 .alterna[hidden]{display:none}
 .hero .subtitle{margin-left:0;margin-right:0}
 .duas-colunas>div,.sim-col,.decision,.teoria{min-width:0}.codigo{max-width:100%}
+
+/* ===== Cap 04 v2 · SOLID na mão (30/10) ===== */
+/* Bloco para digitar (amarelo) × bloco para copiar (azul) */
+.codigo.digitar{border-color:#f2c46d;box-shadow:0 0 0 1px rgba(242,196,109,.25)}
+.codigo.digitar .cod-top{background:#3a3020;color:#ffe2a6}
+.codigo.copiar .cod-top{align-items:center}
+.codigo.copiar .cod-top button{min-height:34px;padding:4px 12px;font-size:.8rem}
+.codigo.copiar .copy-status{margin:0;padding:0 18px 10px;font-size:.82rem;color:#a7d9ce}
+.codigo .novo{display:inline-block;min-width:100%;background:rgba(242,196,109,.16);box-shadow:inset 3px 0 0 #f2c46d}
+details.olhinho .codigo{margin:12px 0 4px}
+.roteiro-ato{margin:22px 0;padding:18px 22px;border:1px dashed #6a6f96;border-radius:14px;background:rgba(255,255,255,.02)}
+.roteiro-ato h3{margin-top:0}.roteiro-ato ol{margin:0;padding-left:1.2em}.roteiro-ato li{margin:6px 0}
+.step-section h3{scroll-margin-top:80px}
+/* Mapa vivo das classes (pontos 10–15) */
+.mapa-vivo .mapa-barra{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.mapa-vivo .mapa-barra button{min-height:38px;padding:6px 12px;font-size:.88rem}
+.mapa-vivo .mapa-barra button[aria-pressed=true]{border-color:#f2c46d;background:#3a3148}
+.mapa-vivo .mapa-barra .mapa-play{margin-left:auto}
+.mapa-vivo .mapa-rotulo{font-size:.78rem;letter-spacing:1.5px;font-weight:900;text-transform:uppercase;color:#ffcf9b;margin:0 0 8px}
+.mapa-vivo [data-oculto]{display:none}
+.mapa-vivo .novo rect,.mapa-vivo rect.novo{stroke:#f2c46d;stroke-width:2.5}
+.mapa-vivo path.novo{stroke:#f2c46d;stroke-width:3}
+.mapa-vivo path.ativo{stroke:#f2c46d;stroke-width:3.5}
+.mapa-vivo .bolinha{fill:#f2c46d;stroke:#241505;stroke-width:2}
+@media(prefers-reduced-motion:no-preference){.mapa-vivo .novo rect,.mapa-vivo path.novo{animation:mapaBrilho 1.6s ease-in-out 2}}
+@keyframes mapaBrilho{50%{stroke-opacity:.35}}
+@media(max-width:640px){.mapa-vivo .mapa-barra .mapa-play{margin-left:0}}

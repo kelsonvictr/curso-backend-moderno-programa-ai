@@ -1,16 +1,21 @@
 'use strict';
 // Copia texto, não HTML: o marca-texto é somente uma ajuda de leitura.
 async function copyPlain(text){
-  if(navigator.clipboard && window.isSecureContext){await navigator.clipboard.writeText(text);return;}
+  if(navigator.clipboard && window.isSecureContext){try{await navigator.clipboard.writeText(text);return;}catch{/* sem foco ou sem permissão: tenta o jeito antigo */}}
   const area=document.createElement('textarea');area.value=text;area.setAttribute('aria-label','Texto para copiar');
   area.style.position='fixed';area.style.top='0';area.style.left='-9999px';document.body.append(area);area.select();
   const ok=document.execCommand('copy');area.remove();if(!ok)throw new Error('Cópia indisponível');
 }
-document.querySelectorAll('[data-copy]').forEach(button=>button.addEventListener('click',async()=>{
- const box=button.closest('.prompt'),status=box.querySelector('.copy-status');
- try{await copyPlain(box.querySelector('pre').textContent.trim());status.textContent='Prompt inteiro copiado, sem formatação.';}
- catch{status.textContent='Não foi possível copiar automaticamente. Selecione o texto e copie.';}
-}));
+function ligarCopia(sel,caixa,msg){
+ document.querySelectorAll(sel).forEach(button=>button.addEventListener('click',async()=>{
+  const box=button.closest(caixa),status=box.querySelector('.copy-status');
+  try{await copyPlain(box.querySelector('pre').textContent.trim()+'\n');status.textContent=msg;}
+  catch{status.textContent='Não foi possível copiar automaticamente. Selecione o texto e copie.';}
+ }));
+}
+ligarCopia('[data-copy]','.prompt','Prompt inteiro copiado, sem formatação.');
+ligarCopia('[data-copy-cmd]','.cmd','Comando copiado.');
+ligarCopia('[data-copy-code]','[data-copiavel]','Arquivo copiado. Cole no IntelliJ.');
 
 // Previsões: o aluno escolhe antes de ler a explicação.
 document.querySelectorAll('.decision').forEach(quiz=>{
@@ -34,64 +39,7 @@ function alternador(box,attr,aoMudar){
  return()=>bs.find(b=>b.getAttribute('aria-pressed')==='true').getAttribute(attr);
 }
 
-// [03] A gaveta de fichas: classe é o molde, cada new cria um objeto com estado próprio.
-(function(){
- const box=document.getElementById('sim-fabrica');if(!box)return;
- const area=box.querySelector('[data-fb-objetos]'),saida=box.querySelector('[data-fb-saida]'),sel=box.querySelector('[data-fb-titulo]');
- let livros,mudou;
- function render(novo){
-  area.replaceChildren(...livros.map((l,i)=>{
-   const c=el('div',{className:'objeto'+(i===mudou?' mudou':'')+(i===novo?' novo':'')});
-   const dl=el('dl');[['codigo','"'+l.codigo+'"'],['titulo','"'+l.titulo+'"'],['disponivel',String(l.disponivel)]].forEach(([k,v])=>dl.append(el('dt',null,k),el('dd',null,v)));
-   const b=el('button',{type:'button'},l.disponivel?'emprestar este':'devolver este');
-   b.addEventListener('click',()=>{l.disponivel=!l.disponivel;mudou=i;render();
-    const outros=livros.length-1;
-    dizer(saida,`Só a ficha de ${l.titulo} mudou (disponivel = ${l.disponivel}). ${outros?`${outros===1?'A outra ficha continua igual':`As outras ${outros} fichas continuam iguais`}: cada objeto tem o próprio estado.`:'Crie mais livros para comparar.'}`);});
-   c.append(el('h4',null,'livro'+(i+1)),dl,b);return c;
-  }));
- }
- function reset(){livros=[];mudou=-1;render();dizer(saida,'A gaveta está vazia. Crie o primeiro livro.');}
- box.querySelector('[data-fb="novo"]').addEventListener('click',()=>{
-  if(livros.length>=4){dizer(saida,'Quatro fichas bastam para ver a ideia. Use Recomeçar.','alerta');return;}
-  const titulo=sel.value;livros.push({codigo:'L-00'+(livros.length+1),titulo,disponivel:true});mudou=-1;render(livros.length-1);
-  const repetido=livros.filter(l=>l.titulo===titulo).length>1;
-  dizer(saida,`new Livro() criou o objeto livro${livros.length}. A classe continua sendo uma só; agora há ${livros.length} objeto(s).${repetido?' Repare: dois objetos com o mesmo título continuam sendo duas fichas diferentes, como dois exemplares do mesmo livro.':''}`);
- });
- box.querySelector('[data-fb="reset"]').addEventListener('click',reset);
- reset();
-})();
-
-// [05] Porta aberta × porta com guarda: mesmos pedidos, consequências diferentes.
-(function(){
- const box=document.getElementById('sim-porta');if(!box)return;
- const saida=box.querySelector('[data-pt-saida]');
- const lados=['aberta','guarda'];let st;
- const q=(a,l)=>box.querySelector(`[${a}="${l}"]`);
- function render(){lados.forEach(l=>{q('data-pt-disp',l).textContent=String(st[l].disp);
-  const nomes=st[l].fichas;q('data-pt-fichas',l).replaceChildren(...(nomes.length?nomes.map(n=>el('span',{className:nomes.length>1?'dup':''},'📇 '+n)):[el('span',null,'nenhum empréstimo')]));});}
- function reset(){st={aberta:{disp:true,fichas:[]},guarda:{disp:true,fichas:[]}};lados.forEach(l=>q('data-pt-console',l).replaceChildren());render();dizer(saida,'Comece pela Ana.');}
- function pegar(nome){
-  const ca=q('data-pt-console','aberta'),cg=q('data-pt-console','guarda');
-  const a=st.aberta;linha(ca,`livro.disponivel = false;  // ${nome}`);a.disp=false;a.fichas.push(nome);linha(ca,`ok: anotado para ${nome}`,'ok');
-  const g=st.guarda;linha(cg,`livro.emprestar();  // ${nome}`);
-  if(!g.disp){linha(cg,'IllegalStateException: O livro Dom Casmurro já está emprestado.','erro');}
-  else{g.disp=false;g.fichas.push(nome);linha(cg,`ok: anotado para ${nome}`,'ok');}
-  render();
-  if(a.fichas.length>1)dizer(saida,`Porta aberta: ${a.fichas.join(' e ')} com o mesmo exemplar. É o bug da segunda-feira. Porta com guarda: o livro recusou ${nome} e continua só com ${g.fichas[0]}.`,'alerta');
-  else dizer(saida,`${nome} pegou o livro nos dois lados. Até aqui, nenhuma diferença. Agora preveja o que acontece com o Bruno.`);
- }
- box.querySelectorAll('[data-pt]').forEach(b=>b.addEventListener('click',()=>{
-  const a=b.dataset.pt;if(a==='reset')return reset();
-  if(a==='ana')return pegar('Ana');if(a==='bruno')return pegar('Bruno');
-  const ca=q('data-pt-console','aberta'),cg=q('data-pt-console','guarda');
-  linha(ca,'livro.disponivel = true;  // outra tela');st.aberta.disp=true;linha(ca,'ok: o livro “voltou” sem devolução nenhuma','aviso');
-  linha(cg,'livro.disponivel = true;  // outra tela');linha(cg,'erro de compilação: disponivel has private access in Livro','erro');
-  render();dizer(saida,'Porta aberta: o livro aparece disponível, mas continua com alguém. Porta com guarda: o código nem compila; a IDE sublinha a linha em vermelho antes de o programa rodar.','alerta');
- }));
- reset();
-})();
-
-// [07] Polimorfismo: a linha que chama não muda; muda quem responde.
+// [04] Polimorfismo: a linha que chama não muda; muda quem responde.
 (function(){
  const box=document.getElementById('sim-poli');if(!box)return;
  const range=box.querySelector('[data-pl-range]'),c=box.querySelector('[data-pl-console]');
@@ -106,12 +54,12 @@ function alternador(box,attr,aoMudar){
  }));
 })();
 
-// [11] Pedidos de mudança: quantos motivos caem em cada arquivo.
+// [05] Pedidos de mudança: quantos motivos caem em cada arquivo.
 (function(){
  const box=document.getElementById('sim-mudancas');if(!box)return;
  const lista=box.querySelector('[data-mu-arquivos]'),saida=box.querySelector('[data-mu-saida]');
  const ARQ={antes:['Biblioteca.java','Livro.java','Leitor.java','EmailSmtp.java'],depois:['Biblioteca.java','Livro.java','CalculadoraDeMulta.java','EmailSmtp.java']};
- const DESTINO={antes:{multa:'Biblioteca.java',aviso:'Biblioteca.java',emprestimo:'Biblioteca.java'},depois:{multa:'CalculadoraDeMulta.java',aviso:'EmailSmtp.java',emprestimo:'Livro.java'}};
+ const DESTINO={antes:{multa:'Biblioteca.java',aviso:'Biblioteca.java',emprestimo:'Livro.java'},depois:{multa:'CalculadoraDeMulta.java',aviso:'EmailSmtp.java',emprestimo:'Livro.java'}};
  const QUEM={multa:'coordenação',aviso:'TI',emprestimo:'balcão'};
  let versao='antes',motivos;
  function render(alvo){
@@ -124,13 +72,14 @@ function alternador(box,attr,aoMudar){
   const k=b.dataset.mu;if(k==='reset')return reset();
   const a=DESTINO[versao][k];motivos[a]=motivos[a]||[];if(!motivos[a].includes(QUEM[k]))motivos[a].push(QUEM[k]);render(a);
   const n=motivos[a].length;
-  if(versao==='antes')dizer(saida,n>1?`De novo Biblioteca.java. Agora ${n} pessoas diferentes (${motivos[a].join(', ')}) editam o mesmo arquivo, em dias diferentes. Um conserto para a ${QUEM[k]} pode quebrar o que é de outra pessoa.`:`O pedido da ${QUEM[k]} cai em Biblioteca.java. Clique nos outros pedidos.`,n>1?'alerta':null);
+  if(versao==='antes'&&k==='emprestimo')dizer(saida,'O pedido do balcão cai em Livro.java: a regra do empréstimo já mora no livro desde o início. Agora clique nos outros dois.');
+  else if(versao==='antes')dizer(saida,n>1?`De novo Biblioteca.java. Agora ${n} pessoas diferentes (${motivos[a].join(', ')}) editam o mesmo arquivo, em dias diferentes. Um conserto para a ${QUEM[k]} pode quebrar o que é de outra pessoa.`:`O pedido da ${QUEM[k]} cai em Biblioteca.java. Clique nos outros pedidos.`,n>1?'alerta':null);
   else dizer(saida,`O pedido da ${QUEM[k]} cai só em ${a}. Nenhum outro arquivo é aberto. Cada classe tem um motivo para mudar.`);
  }));
  reset();
 })();
 
-// [13] Aberto/Fechado: arquivos existentes editados × arquivos novos.
+// [06] Aberto/Fechado: arquivos existentes editados × arquivos novos.
 (function(){
  const box=document.getElementById('sim-ocp');if(!box)return;
  const lista=box.querySelector('[data-oc-arquivos]'),diff=box.querySelector('[data-oc-diff]'),saida=box.querySelector('[data-oc-saida]');
@@ -167,11 +116,11 @@ function alternador(box,attr,aoMudar){
  reset();
 })();
 
-// [15] Liskov: o laço da lista de leitura, com herança ou com tipo separado.
+// [07] Liskov: o laço da lista de leitura, com herança ou com tipo separado.
 (function(){
  const box=document.getElementById('sim-lsp');if(!box)return;
  const laco=box.querySelector('[data-ls-laco]'),saida=box.querySelector('[data-ls-saida]'),btn=box.querySelector('[data-ls="rodar"]');
- const LISTA=[{t:'Dom Casmurro',consulta:false},{t:'Iracema',consulta:false},{t:'Dicionário de Português',consulta:true},{t:'O Cortiço',consulta:false}];
+ const LISTA=[{t:'Iracema',consulta:false},{t:'Dicionário Aurélio',consulta:true},{t:'O Cortiço',consulta:false}];
  let versao='heranca',rodando=false;
  function itens(){return LISTA.map(l=>({...l,el:el('div',{className:'laco-item'+(l.consulta&&versao==='separado'?' fora':'')},el('span',null,(l.consulta?(versao==='heranca'?'LivroDeConsulta · ':'ObraDeConsulta · '):'Livro · ')+l.t),el('span',{className:'st'},l.consulta&&versao==='separado'?'não entra na lista':'esperando'))}));}
  let atual;
@@ -188,46 +137,46 @@ function alternador(box,attr,aoMudar){
    if(i.consulta){i.el.classList.add('erro');i.el.querySelector('.st').textContent='UnsupportedOperationException';quebrou=true;continue;}
    i.el.classList.add('ok');i.el.querySelector('.st').textContent='emprestado ✓';feitos++;
   }
-  if(quebrou)dizer(saida,`O laço parou no meio: ${feitos} livros emprestados, um erro e O Cortiço nem foi tentado. A turma ficou com metade da lista, e quem escreveu o laço confiou na promessa de Livro. O filho quebrou a promessa do pai.`,'erro');
+  if(quebrou)dizer(saida,`O laço parou no meio: ${feitos===1?'1 livro emprestado':feitos+' livros emprestados'}, um erro e O Cortiço nem foi tentado. A turma ficou com metade da lista, e quem escreveu o laço confiou na promessa de Livro. O filho quebrou a promessa do pai.`,'erro');
   else dizer(saida,`Os ${feitos} livros foram emprestados. O dicionário nunca chegou perto do laço: o compilador barrou antes. Nenhum filho quebrou promessa nenhuma.`);
   rodando=false;btn.disabled=false;
  });
  reset();
 })();
 
-// [16] Segregação de interfaces: o código que cada classe é obrigada a escrever.
+// [08] Segregação de interfaces: o que cada classe é obrigada a escrever.
 (function(){
  const box=document.getElementById('sim-isp');if(!box)return;
  const cod=box.querySelector('[data-is-codigo]'),saida=box.querySelector('[data-is-saida]');
  let versao='gorda',classe='livro';
- const M={
-  emprestar:{livro:'disponivel = false; // com a regra',ebook:null},
-  devolver:{livro:'disponivel = true; // com a regra',ebook:null},
-  baixarPdf:{livro:null,ebook:'return "https://.../iracema.pdf";'}
+ const C={
+  livro:{nome:'Livro',faz:{emprestar:'disponivel = false; // com a regra',devolver:'disponivel = true; // com a regra'},pequenas:['ItemDoAcervo']},
+  obra:{nome:'ObraDeConsulta',faz:{},pequenas:['ItemDoAcervo']},
+  ebook:{nome:'EbookLivre',faz:{baixarPdf:'return linkDoPdf;'},pequenas:['ItemDoAcervo','Baixavel']}
  };
  function render(){
   cod.replaceChildren();
-  const nome=classe==='livro'?'Livro':'Ebook';
-  let contratos,metodos;
-  if(versao==='gorda'){contratos=['ItemDoAcervo'];metodos=['emprestar','devolver','baixarPdf'];}
-  else{contratos=classe==='livro'?['Emprestavel']:['Baixavel'];metodos=classe==='livro'?['emprestar','devolver']:['baixarPdf'];}
-  cod.append(`public class ${nome} implements ${contratos.join(', ')} {\n`);
+  const c=C[classe],gorda=versao==='gorda';
+  const contratos=gorda?['ItemDoAcervo']:c.pequenas;
+  cod.append(`public class ${c.nome} implements ${contratos.join(', ')} {\n`,'    public String getCodigo() { return codigo; }\n','    public String getTitulo() { return titulo; }\n');
+  const metodos=gorda?['emprestar','devolver','baixarPdf']:Object.keys(c.faz);
   let ruins=0;
   metodos.forEach(m=>{
-   const corpo=M[m][classe],tipo=m==='baixarPdf'?'String':'void';
-   if(corpo){cod.append(`    public ${tipo} ${m}() { ${corpo} }\n`);}
+   const corpo=c.faz[m],tipo=m==='baixarPdf'?'String':'void';
+   const origem=!gorda&&m!=='baixarPdf'?'  // do próprio Livro, não do contrato':'';
+   if(corpo)cod.append(`    public ${tipo} ${m}() { ${corpo} }${origem}\n`);
    else{ruins++;cod.append(el('span',{className:'ruim'},`    public ${tipo} ${m}() { throw new UnsupportedOperationException(); }`),'\n');}
   });
   cod.append('}');
-  if(ruins)dizer(saida,`${nome} é obrigado a escrever ${ruins} método(s) que só lançam exceção. Quem receber um ItemDoAcervo e chamar esse método leva um erro: é a mesma promessa quebrada do ponto 15, forçada pelo contrato.`,'alerta');
-  else dizer(saida,`${nome} assina só ${contratos[0]} e cada método dele faz algo de verdade. Quem precisa emprestar pede um Emprestavel; quem precisa baixar pede um Baixavel.`);
+  if(ruins)dizer(saida,`${c.nome} é obrigado a escrever ${ruins===1?'1 método que só lança':ruins+' métodos que só lançam'} exceção. Quem receber um ItemDoAcervo e chamar esse método leva um erro: é a promessa quebrada do ponto 07, forçada pelo contrato.`,'alerta');
+  else dizer(saida,`${c.nome} assina ${contratos.join(' e ')} e cada método dele faz algo de verdade. O catálogo pede um ItemDoAcervo; quem quer baixar pede um Baixavel.`);
  }
  alternador(box,'data-is-versao',v=>{versao=v;render();});
  alternador(box,'data-is-classe',v=>{classe=v;render();});
  render();
 })();
 
-// [17] Inversão de dependência: a tomada e o tempo dos testes.
+// [09] Inversão de dependência: a tomada e o tempo dos testes.
 (function(){
  const box=document.getElementById('sim-dip');if(!box)return;
  const c=box.querySelector('[data-dp-console]'),saida=box.querySelector('[data-dp-saida]'),btn=box.querySelector('[data-dp="rodar"]');
@@ -260,16 +209,71 @@ function alternador(box,attr,aoMudar){
  render();
 })();
 
-// [19] Classificador: qual ideia de hoje resolve a dor?
+// [10–15] Mapa vivo: o mesmo desenho das classes em cada ato, com a parte nova acesa.
+(function(){
+ const tpl=document.getElementById('tpl-mapa-bib');if(!tpl)return;
+ const NOMES=['Início','S','O','L','I','D'];
+ const LEGENDA=[
+  '<b>Início.</b> O Livro já se protege. A Biblioteca faz o resto sozinha: calcula a multa com if por texto e cria o EmailSmtp lá dentro.',
+  '<b>Depois do S.</b> A multa ganhou uma classe só dela. A Biblioteca pede a conta à calculadora; o e-mail continua soldado.',
+  '<b>Depois do O.</b> O Leitor tem um TipoDeLeitor. Aluno, Professor e Visitante cumprem o contrato; tipo novo é arquivo novo.',
+  '<b>Depois do L.</b> A ObraDeConsulta não herda de Livro, então nem entra na lista do emprestarTodos.',
+  '<b>Depois do I.</b> Um contrato pequeno (ItemDoAcervo) reúne o catálogo. Só o EbookLivre assina Baixavel.',
+  '<b>Depois do D.</b> A Biblioteca recebe um Notificador. O App pluga o EmailSmtp; os testes plugam o NotificadorDeTeste.'
+ ];
+ const CAMINHO=[['app-bib','bib-livro','bib-email'],['app-bib','bib-livro','bib-calc','bib-email'],['app-bib','bib-livro','bib-calc','calc-tipo','bib-email'],
+  ['app-bib','bib-livro','bib-calc','calc-tipo','bib-email'],['app-bib','bib-livro','bib-calc','calc-tipo','bib-email'],['app-bib','bib-livro','bib-calc','calc-tipo','bib-not','not-email']];
+ let seq=0;
+ document.querySelectorAll('.mapa-vivo').forEach(fig=>{
+  const svg=tpl.content.firstElementChild.cloneNode(true),id='mapa-'+(++seq);
+  svg.querySelector('title').id=id+'-t';svg.setAttribute('aria-labelledby',id+'-t');
+  const barra=el('div',{className:'mapa-barra'}),rotulo=el('p',{className:'mapa-rotulo'}),scroll=el('div',{className:'svg-scroll'},svg),cap=el('figcaption');
+  const play=el('button',{type:'button',className:'mapa-play'},'▶ Ver uma devolução passar');
+  if(fig.hasAttribute('data-interativo'))NOMES.forEach((n,i)=>{const b=el('button',{type:'button'},n);b.dataset.n=i;b.addEventListener('click',()=>mostrar(i));barra.append(b);});
+  else rotulo.textContent='As classes neste ato';
+  barra.append(play);fig.append(rotulo,barra,scroll,cap);
+  let estagio=Number(fig.dataset.estagio)||0,rodando=false;
+  function mostrar(n){
+   estagio=n;fig.dataset.estagio=n;
+   svg.querySelectorAll('[data-de]').forEach(e=>{
+    const de=Number(e.dataset.de),ate=Number(e.dataset.ate||9);
+    if(n>=de&&n<=ate)e.removeAttribute('data-oculto');else e.setAttribute('data-oculto','');
+    e.classList.toggle('novo',de===n&&n>0);
+   });
+   svg.querySelectorAll('.ativo').forEach(p=>p.classList.remove('ativo'));
+   barra.querySelectorAll('[data-n]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.n)===n)));
+   cap.innerHTML=LEGENDA[n];
+  }
+  function andar(path){
+   return new Promise(ok=>{
+    path.classList.add('ativo');
+    if(reduzido){setTimeout(ok,400);return;}
+    const total=path.getTotalLength(),bola=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    bola.setAttribute('r','8');bola.setAttribute('class','bolinha');svg.append(bola);
+    const dur=Math.max(500,total*4),t0=performance.now();
+    (function passo(t){const f=Math.min(1,(t-t0)/dur),p=path.getPointAtLength(total*f);bola.setAttribute('cx',p.x);bola.setAttribute('cy',p.y);
+     if(f<1)requestAnimationFrame(passo);else{bola.remove();ok();}})(t0);
+   });
+  }
+  play.addEventListener('click',async()=>{
+   if(rodando)return;rodando=true;play.disabled=true;
+   svg.querySelectorAll('.ativo').forEach(p=>p.classList.remove('ativo'));
+   for(const nome of CAMINHO[estagio]){const p=svg.querySelector(`[data-fluxo="${nome}"]`);if(p&&!p.closest('[data-oculto]')&&!p.hasAttribute('data-oculto'))await andar(p);}
+   rodando=false;play.disabled=false;
+  });
+  mostrar(estagio);
+ });
+})();
+
+// [17] Classificador: qual ideia de hoje resolve a dor?
 (function(){
  const box=document.getElementById('classificador');if(!box)return;
  const placar=box.querySelector('[data-cl-placar]');
- const OP=['Encapsulamento','S','O','L','I','D'];
+ const OP=['S','O','L','I','D'];
  const CASOS=[
-  {cod:'livro.disponivel = true;  // escrito numa tela qualquer',r:'Encapsulamento',ex:'Campo aberto: qualquer código muda o estado sem passar pela regra. private + método com regra.'},
   {cod:'class Relatorio { calcular(); gerarPdf(); enviarEmail(); }',r:'S',ex:'Três motivos para mudar (cálculo, formato, envio), três fontes de pedido. Separe por quem pede a mudança.'},
   {cod:'else if (tipo.equals("PARCEIRO")) { ... }  // mais um, de novo',r:'O',ex:'Cada tipo novo edita o mesmo arquivo. Contrato + uma classe nova por tipo.'},
-  {cod:'class Ebook extends Livro { emprestar() { throw ... } }',r:'L',ex:'O filho quebra a promessa do pai: quem usa Livro é surpreendido. Não herde; separe o tipo.'},
+  {cod:'class Revista extends Livro { devolver() { /* não faz nada */ } }',r:'L',ex:'A filha quebra a promessa do pai em silêncio: o balcão acha que recebeu a revista de volta. Se não cumpre o que o pai promete, não herde.'},
   {cod:'interface Item { emprestar(); baixarPdf(); imprimirEtiqueta(); }',r:'I',ex:'Contrato gordo: classes vão escrever métodos que só lançam exceção. Contratos pequenos.'},
   {cod:'private EmailSmtp email = new EmailSmtp();  // dentro da Biblioteca',r:'D',ex:'Regra soldada no detalhe lento e trocável. Dependa de um Notificador recebido no construtor.'}
  ];
@@ -286,7 +290,7 @@ function alternador(box,attr,aoMudar){
  });
 })();
 
-// [20] Checklist de revisão: lembrada neste navegador, só por conveniência.
+// [18] Checklist de revisão: lembrada neste navegador, só por conveniência.
 (function(){
  const ul=document.querySelector('[data-checklist]');if(!ul)return;
  const chave='backend-moderno-'+ul.dataset.checklist;let salvo={};

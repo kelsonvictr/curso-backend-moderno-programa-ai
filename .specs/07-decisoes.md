@@ -528,3 +528,12 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
 - Oito simuladores + classificador; sem áudio (geração paga não pedida). Contrato em
   15-cap4-oo-solid-do-zero.md. Validação: 5/5 ZIPs com testes e tempos; browser sem erros,
   375 px sem overflow, ligaduras desligadas. Hub: Cap 4 como aula atual.
+
+## 2026-10-30 — Cap 04 refeito: SOLID na mão, no formato do Kafka
+- Professor reprovou a v1 ("muito confuso até pra mim") e pediu o formato do Cap 03 (ideia
+  primeiro, depois um sistema que cresce em atos, mesmo teste antes e depois).
+- Em seguida: "mais para fazer na mão do que com IA" e "apenas SOLID". Padrões de Projeto:
+  fora (overkill numa tarde); só o nome Strategy no fechamento.
+- Novo projeto (tags inicio, s, o, l, i, d), um ato por letra, cada um com "quebre de
+  propósito" e mensagem real do compilador. Agente só revisa, sem editar (AGENTS.md diz isso).
+- 21 pontos, TXTs reescritos. Detalhe e motivos em 15-cap4-oo-solid-do-zero.md.

@@ -235,10 +235,13 @@ passo a passo. Cada estado deve responder: **antes, ação, depois, como provar 
 - Dentro do container do Kafka sempre `kafka:19092`; no host, `localhost:9092`. Tópicos com hífen.
   Produtor Python com `partitioner: murmur2_random` (mesma partição que o Java).
 
-## Cap 04 — OO e SOLID do zero (2026-10-27)
-- `capitulos/04-oo-e-solid-do-zero/`; contrato em `.specs/15-cap4-oo-solid-do-zero.md`. Independente
-  dos caps anteriores, nível iniciante, ritmo tranquilo. `02-oo-de-verdade-e-solid/` é material antigo.
-- Projeto Biblioteca do Bairro: Java 21 puro + JUnit + Maven Wrapper. Fonte: `tooling/cap04-oo-solid/biblioteca.bundle`
-  (tags inicio, passo1–passo4); ZIPs com `tooling/build-cap04-biblioteca.py`; validar com
-  `python3 tooling/validate-cap04-biblioteca.py`. Código no HTML deve bater com as tags.
-- Manter 23 pontos do HTML, professor.txt e professor-resolucoes.txt sincronizados. Sem links dos TXTs.
+## Cap 04 — SOLID na mão (refeito em 2026-10-30)
+- `capitulos/04-oo-e-solid-do-zero/`; contrato em `.specs/15-cap4-oo-solid-do-zero.md`. A v1 (OO do zero,
+  passos com o agente) foi reprovada: "confuso". Agora: **formato do Cap 03**, **só SOLID**, **código à mão**.
+- Parte 1 ideia (04–09, simuladores) → atos S, O, L, I, D (11–15) com mapa vivo das classes; cada ato:
+  veja o problema → digite → leia o compilador → mesmo teste. Testes são copiados; `src/main` é digitado.
+  Agente só no ponto 18, como revisor que não edita. Padrões de Projeto fora (só o nome Strategy).
+- Projeto: `tooling/cap04-oo-solid/gerar_biblioteca.py` → `biblioteca.bundle` (tags inicio, s, o, l, i, d);
+  ZIPs com `tooling/build-cap04-biblioteca.py`; validar com `python3 tooling/validate-cap04-biblioteca.py`.
+  Página gerada por `tooling/cap04-oo-solid/montar_index.py <clone do bundle>`: edite o script e regenere.
+- Manter 21 pontos do HTML, professor.txt e professor-resolucoes.txt sincronizados. Sem links dos TXTs.

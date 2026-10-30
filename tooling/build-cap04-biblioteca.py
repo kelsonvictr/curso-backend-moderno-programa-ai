@@ -2,7 +2,8 @@
 """Gera os ZIPs da Biblioteca do Bairro (Cap 04) a partir das tags do bundle.
 
 Uso: python3 tooling/build-cap04-biblioteca.py
-Cada tag (inicio, passo1..passo4) vira apoio/biblioteca-<tag>.zip com a pasta biblioteca/.
+O bundle sai de tooling/cap04-oo-solid/gerar_biblioteca.py.
+Cada tag (inicio, s, o, l, i, d) vira apoio/biblioteca-<tag>.zip com a pasta biblioteca/.
 """
 from pathlib import Path
 import hashlib, io, json, subprocess, tempfile, zipfile
@@ -10,11 +11,13 @@ import hashlib, io, json, subprocess, tempfile, zipfile
 ROOT = Path(__file__).resolve().parents[1]
 BUNDLE = ROOT / 'tooling/cap04-oo-solid/biblioteca.bundle'
 APOIO = ROOT / 'capitulos/04-oo-e-solid-do-zero/apoio'
-TAGS = ['inicio', 'passo1', 'passo2', 'passo3', 'passo4']
+TAGS = ['inicio', 's', 'o', 'l', 'i', 'd']
 
 
 def build():
     APOIO.mkdir(parents=True, exist_ok=True)
+    for velho in APOIO.glob('biblioteca-*.zip'):
+        velho.unlink()
     manifest = []
     with tempfile.TemporaryDirectory() as tmp:
         repo = Path(tmp) / 'repo'
