@@ -1,0 +1,1 @@
+window.DIGITA = {"prompt": "> faz o sistema da biblioteca", "typeS": "class CalculadoraDeMulta {", "typeO": "interface TipoDeLeitor {", "typeL": "class ObraDeConsulta {  // sem extends", "typeI": "interface Baixavel {", "typeD": "new Biblioteca(new EmailSmtp())"};

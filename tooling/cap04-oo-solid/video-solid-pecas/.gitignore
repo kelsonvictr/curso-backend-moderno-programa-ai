@@ -1,0 +1,8 @@
+renders/
+.hyperframes/
+snapshots/
+node_modules/
+.thumbnails/
+.waveform-cache/
+vertical/.hyperframes/
+voz/audio/*.mp3

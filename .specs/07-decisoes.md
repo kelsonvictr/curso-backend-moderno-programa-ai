@@ -544,3 +544,9 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
   deixar "o mais simples possível": prática guiada, só a teoria-chave de cada item.
 - Cap 04 v3: 11 pontos em step-section + card, um quiz por letra, sem zonas/partes/horários
   /simuladores. Padrão registrado no topo de 02-padroes-didaticos.md.
+
+## 2026-10-30 (noite) — Vídeos no estilo 3D de brinquedo (não 8-bit)
+- Professor trouxe um TikTok de referência e pediu vídeos didáticos e engraçados naquele estilo, com
+  ElevenLabs, citando o prof. Kelson e a Programa AI. Recusou o 8-bit para este pedido.
+- Feito o vídeo principal do Cap 04 (HyperFrames + Three.js), 16:9 no capítulo e 9:16 disponível.
+  Vinhetas por letra só depois da aprovação do estilo. Detalhe em 15-cap4-oo-solid-do-zero.md.

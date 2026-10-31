@@ -7,6 +7,8 @@ do App conferidos (tooling/cap04-oo-solid/VALIDACAO.json). Java 21, JUnit 5.12.2
 Os pontos abaixo seguem os marcadores do capítulo.
 
 [01] A biblioteca da Dona Marta
+  Vídeo de abertura: tooling/cap04-oo-solid/video-solid-pecas (HyperFrames + Three.js, estilo 3D de
+  brinquedo, vozes ElevenLabs Will/Lax/Jenifer). Rebuild: python3 scripts/build.py; render 16:9 e vertical/.
   Livro já encapsulado no início (não é tema de hoje). Sustos: visitante paga zero,
   dicionário, e-books, testes lentos por causa do e-mail. Frase: uma mudança, um lugar.
 

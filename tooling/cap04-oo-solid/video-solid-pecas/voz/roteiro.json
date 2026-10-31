@@ -1,0 +1,23 @@
+{
+  "C01": [{"role": "LLM", "text": "Você pede pro Claude: faz o sistema da biblioteca da Dona Marta. Ele faz. Lindo. Tudo numa classe só."}],
+  "C02": [{"role": "LLM", "text": "Mas a coordenação muda o valor da multa... e o e-mail para de funcionar."}],
+  "C03": [{"role": "BETO", "text": "Eu só mexi num número!"}],
+  "C04": [{"role": "LLM", "text": "Então você separa cada assunto na sua própria classe. A multa ganha uma calculadora só dela."}],
+  "C05": [{"role": "LLM", "text": "Esse é o S. Uma classe, um motivo para mudar."}],
+  "C06": [{"role": "LLM", "text": "Mas chega um visitante, devolve o livro atrasado... e paga zero."}],
+  "C07": [{"role": "LIA", "text": "Calote com nota fiscal!"}],
+  "C08": [{"role": "LLM", "text": "Então cada tipo de leitor vira uma classe que sabe a própria multa. Tipo novo, arquivo novo."}],
+  "C09": [{"role": "LLM", "text": "Esse é o O. Aberto para crescer, fechado para mexer."}],
+  "C10": [{"role": "LLM", "text": "Mas o dicionário se disfarça de livro, entra na lista da turma... e o empréstimo explode no meio."}],
+  "C11": [{"role": "LLM", "text": "Então ele para de fingir. Obra de consulta não herda de livro."}],
+  "C12": [{"role": "LLM", "text": "Esse é o L. O filho cumpre a promessa do pai."}],
+  "C13": [{"role": "LLM", "text": "Mas o contrato do acervo obriga o livro de papel a ter PDF."}],
+  "C14": [{"role": "LLM", "text": "Então você quebra em contratos pequenos. Cada um promete só o que faz."}],
+  "C15": [{"role": "LLM", "text": "Esse é o I."}],
+  "C16": [{"role": "LLM", "text": "Mas cada teste espera dois segundos por um e-mail de mentira."}],
+  "C17": [{"role": "LLM", "text": "Então a biblioteca ganha uma tomada. No teste, você pluga um dublê. Zero segundos."}],
+  "C18": [{"role": "LLM", "text": "Esse é o D. Dependa do contrato, não do detalhe."}],
+  "C19": [{"role": "LLM", "text": "Parabéns! Você escreveu código SOLID."}],
+  "C20": [{"role": "LIA", "text": "E à mão! O professor Kelson conferiu linha por linha."}],
+  "C21": [{"role": "LLM", "text": "Na Programa Aí, a gente monta peça por peça. Agora abre o IntelliJ!"}]
+}

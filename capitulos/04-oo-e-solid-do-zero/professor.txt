@@ -11,7 +11,8 @@ ANTES DA AULA (10 min, na sua máquina)
   Deve dar 5 testes, ~4 s. Isso aquece o Maven Wrapper. Peça no grupo: Java 21 e rodar
   ./mvnw test em casa (baixa o Maven).
 
-13:30 (10)  01 Dona Marta, as 5 letras em cartões, frase do dia.
+13:30 (10)  01 PLAY no vídeo "SOLID peça por peça" (1 min 46 s, abre a aula e mostra o mapa da tarde)
+            → Dona Marta, as 5 letras em cartões, frase do dia. Versão vertical: video/solid-pecas-vertical.mp4.
 13:40 (20)  02 Abrir o projeto: ZIP, IntelliJ, ./mvnw test (5 testes, 4 s), App.
             Mapa: clique Início → D para mostrar onde vamos chegar. Aviso da seta ->.
 14:00 (30)  03 S: teste de 3×100 leva 2 s → CalculadoraDeMulta. 7 testes, multa 0,016 s.

@@ -119,3 +119,12 @@ pre, code, .code-block pre, .terminal-body, .prompt pre, .mapa-vivo .m {
 .code-block .code-header { flex-wrap: wrap; }
 .code-block .code-header .filename { min-width: 0; overflow-wrap: anywhere; }
 .quiz-q code, .quiz-opt code, .card p code { overflow-wrap: anywhere; }
+
+/* Vídeo de abertura (16:9 no capítulo; 9:16 para baixar) */
+.video-pecas { max-width: 720px; margin: 18px auto 22px; padding: 12px; border-radius: 18px; background: #1b1e26; border: 1px solid rgba(255,255,255,.1); }
+.video-pecas video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 10px; background: #efe3cf; }
+.video-pecas figcaption { margin-top: 10px; font-size: .9rem; color: var(--text-dim); }
+.video-pecas figcaption b { color: var(--java-soft); }
+.video-pecas .toggler { margin: 10px 0 0; }
+.transcricao { margin: 0; padding-left: 22px; font-size: .9rem; }
+.transcricao li { margin: 4px 0; }

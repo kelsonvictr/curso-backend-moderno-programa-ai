@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<title>SOLID peça por peça · Cap 04 · Programa AI</title>
+<link rel="stylesheet" href="assets/hud.css" />
+<script type="importmap">{"imports": {"three": "./assets/vendor/three.module.js", "three/addons/": "./assets/vendor/addons/"}}</script>
+<script src="assets/vendor/gsap.min.js"></script>
+<script src="assets/timings.js"></script>
+<script src="assets/digita.js"></script>
+</head>
+<body class="v" style="width:1080px;height:1920px">
+<div id="root" data-composition-id="main" data-start="0" data-duration="105.79" data-width="1080" data-height="1920" data-fps="30">
+  <canvas id="cena" width="1080" height="1920"></canvas>
+  <div id="rotulos"></div>
+  <div id="editor"><div class="barra"><i></i><i></i><i></i><span id="editor-titulo" data-layout-ignore>claude · ~/biblioteca</span></div><div id="editor-texto"></div></div>
+  <div id="pecas">PEÇAS <b id="pecas-n">0/5</b></div>
+  <div id="titulo-peca"><span id="titulo-letra"></span><span id="titulo-nome"></span></div>
+  <div id="legenda"><span id="palavra"></span></div>
+  <div id="carimbo">CONFERIDO<small>PROF. KELSON · PROGRAMA AI</small></div>
+  <div id="fim"><img src="assets/logo-full.svg" alt="Programa AI" /><h1>SOLID <em>na mão</em></h1><p>Cap 04 · Prof. Kelson · Programa AI</p></div>
+<audio id="trilha" src="assets/sfx/trilha.mp3" data-start="0" data-duration="105.79" data-track-index="9" data-volume="0.32"></audio>
+<audio id="voz-C01" src="assets/voz/llm-b49f831a451446fa836a.mp3" data-start="0.8" data-duration="7.941" data-track-index="8"></audio>
+<audio id="voz-C02" src="assets/voz/llm-94bc2c84b05e58cb6225.mp3" data-start="9.341" data-duration="5.433" data-track-index="8"></audio>
+<audio id="voz-C03" src="assets/voz/beto-b7e384ccbc690349f532.mp3" data-start="15.125" data-duration="1.347" data-track-index="8"></audio>
+<audio id="voz-C04" src="assets/voz/llm-9fec97dbbd63ea1da57f.mp3" data-start="16.921" data-duration="6.502" data-track-index="8"></audio>
+<audio id="voz-C05" src="assets/voz/llm-e4328a333cf4f46fe27b.mp3" data-start="23.773" data-duration="3.344" data-track-index="8"></audio>
+<audio id="voz-C06" src="assets/voz/llm-ebfebe1faefae12f96e7.mp3" data-start="28.317" data-duration="4.505" data-track-index="8"></audio>
+<audio id="voz-C07" src="assets/voz/lia-6d434281541cfb2cf78e.mp3" data-start="33.171" data-duration="1.486" data-track-index="8"></audio>
+<audio id="voz-C08" src="assets/voz/llm-f6ad8bf73bd0504183f8.mp3" data-start="35.157" data-duration="6.223" data-track-index="8"></audio>
+<audio id="voz-C09" src="assets/voz/llm-93e16083187b74fc4623.mp3" data-start="41.73" data-duration="4.087" data-track-index="8"></audio>
+<audio id="voz-C10" src="assets/voz/llm-1068b8c20a6a2481e99d.mp3" data-start="47.017" data-duration="7.57" data-track-index="8"></audio>
+<audio id="voz-C11" src="assets/voz/llm-1a49b0418c76d8a49311.mp3" data-start="54.937" data-duration="4.551" data-track-index="8"></audio>
+<audio id="voz-C12" src="assets/voz/llm-764e590c7d193f187d53.mp3" data-start="59.838" data-duration="2.972" data-track-index="8"></audio>
+<audio id="voz-C13" src="assets/voz/llm-109eb78d70f1c79951a2.mp3" data-start="64.01" data-duration="4.226" data-track-index="8"></audio>
+<audio id="voz-C14" src="assets/voz/llm-c0a5d79c0522f516569f.mp3" data-start="68.586" data-duration="4.458" data-track-index="8"></audio>
+<audio id="voz-C15" src="assets/voz/llm-6b282a9363363a4a4fc8.mp3" data-start="73.394" data-duration="1.068" data-track-index="8"></audio>
+<audio id="voz-C16" src="assets/voz/llm-b165745b7435f6cd564b.mp3" data-start="75.662" data-duration="4.18" data-track-index="8"></audio>
+<audio id="voz-C17" src="assets/voz/llm-416c27cbc2bb53f0610e.mp3" data-start="80.192" data-duration="5.387" data-track-index="8"></audio>
+<audio id="voz-C18" src="assets/voz/llm-abf9f5df462092485884.mp3" data-start="85.929" data-duration="3.669" data-track-index="8"></audio>
+<audio id="voz-C19" src="assets/voz/llm-78fed1a406b1c4b44465.mp3" data-start="90.898" data-duration="2.647" data-track-index="8"></audio>
+<audio id="voz-C20" src="assets/voz/lia-2d0c137ad70bddb98b2b.mp3" data-start="93.945" data-duration="3.111" data-track-index="8"></audio>
+<audio id="voz-C21" src="assets/voz/llm-da94450633b4adffe1bb.mp3" data-start="97.406" data-duration="4.83" data-track-index="8"></audio>
+<audio id="sfx-000" src="assets/sfx/digita.mp3" data-start="0.95" data-duration="1.7" data-track-index="7" data-volume="0.35"></audio>
+<audio id="sfx-001" src="assets/sfx/whoosh.mp3" data-start="4.81" data-duration="0.45" data-track-index="7" data-volume="0.5"></audio>
+<audio id="sfx-002" src="assets/sfx/pop.mp3" data-start="5.06" data-duration="0.18" data-track-index="6" data-volume="0.7"></audio>
+<audio id="sfx-003" src="assets/sfx/pop.mp3" data-start="6.94" data-duration="0.18" data-track-index="7" data-volume="0.6"></audio>
+<audio id="sfx-004" src="assets/sfx/pop.mp3" data-start="7.19" data-duration="0.18" data-track-index="7" data-volume="0.5"></audio>
+<audio id="sfx-005" src="assets/sfx/pop.mp3" data-start="7.44" data-duration="0.18" data-track-index="7" data-volume="0.5"></audio>
+<audio id="sfx-006" src="assets/sfx/erro.mp3" data-start="12.481" data-duration="0.62" data-track-index="7" data-volume="0.7"></audio>
+<audio id="sfx-007" src="assets/sfx/digita.mp3" data-start="17.071" data-duration="1.7" data-track-index="7" data-volume="0.35"></audio>
+<audio id="sfx-008" src="assets/sfx/whoosh.mp3" data-start="20.621" data-duration="0.45" data-track-index="7" data-volume="0.5"></audio>
+<audio id="sfx-009" src="assets/sfx/pop.mp3" data-start="21.171" data-duration="0.18" data-track-index="7" data-volume="0.7"></audio>
+<audio id="sfx-010" src="assets/sfx/ding.mp3" data-start="24.353" data-duration="0.9" data-track-index="7" data-volume="0.8"></audio>
+<audio id="sfx-011" src="assets/sfx/pop.mp3" data-start="32.037" data-duration="0.18" data-track-index="7" data-volume="0.7"></audio>
+<audio id="sfx-012" src="assets/sfx/pop.mp3" data-start="33.171" data-duration="0.18" data-track-index="7" data-volume="0.6"></audio>
+<audio id="sfx-013" src="assets/sfx/digita.mp3" data-start="35.307" data-duration="1.7" data-track-index="7" data-volume="0.35"></audio>
+<audio id="sfx-014" src="assets/sfx/pop.mp3" data-start="36.217" data-duration="0.18" data-track-index="6" data-volume="0.6"></audio>
+<audio id="sfx-015" src="assets/sfx/pop.mp3" data-start="37.357" data-duration="0.18" data-track-index="7" data-volume="0.6"></audio>
+<audio id="sfx-016" src="assets/sfx/pop.mp3" data-start="37.607" data-duration="0.18" data-track-index="7" data-volume="0.6"></audio>
+<audio id="sfx-017" src="assets/sfx/pop.mp3" data-start="40.277" data-duration="0.18" data-track-index="7" data-volume="0.7"></audio>
+<audio id="sfx-018" src="assets/sfx/ding.mp3" data-start="42.35" data-duration="0.9" data-track-index="7" data-volume="0.8"></audio>
+<audio id="sfx-019" src="assets/sfx/pop.mp3" data-start="47.017" data-duration="0.18" data-track-index="7" data-volume="0.6"></audio>
+<audio id="sfx-020" src="assets/sfx/whoosh.mp3" data-start="49.437" data-duration="0.45" data-track-index="7" data-volume="0.4"></audio>
+<audio id="sfx-021" src="assets/sfx/boom.mp3" data-start="52.457" data-duration="0.7" data-track-index="7" data-volume="0.8"></audio>
+<audio id="sfx-022" src="assets/sfx/digita.mp3" data-start="55.087" data-duration="1.7" data-track-index="7" data-volume="0.35"></audio>
+<audio id="sfx-023" src="assets/sfx/snap.mp3" data-start="55.817" data-duration="0.08" data-track-index="6" data-volume="0.6"></audio>
+<audio id="sfx-024" src="assets/sfx/whoosh.mp3" data-start="56.677" data-duration="0.45" data-track-index="6" data-volume="0.5"></audio>
+<audio id="sfx-025" src="assets/sfx/ding.mp3" data-start="60.378" data-duration="0.9" data-track-index="7" data-volume="0.8"></audio>
+<audio id="sfx-026" src="assets/sfx/pop.mp3" data-start="64.31" data-duration="0.18" data-track-index="7" data-volume="0.6"></audio>
+<audio id="sfx-027" src="assets/sfx/erro.mp3" data-start="66.25" data-duration="0.62" data-track-index="7" data-volume="0.5"></audio>
+<audio id="sfx-028" src="assets/sfx/digita.mp3" data-start="68.736" data-duration="1.7" data-track-index="7" data-volume="0.35"></audio>
+<audio id="sfx-029" src="assets/sfx/snap.mp3" data-start="69.066" data-duration="0.08" data-track-index="6" data-volume="0.7"></audio>
+<audio id="sfx-030" src="assets/sfx/pop.mp3" data-start="70.906" data-duration="0.18" data-track-index="7" data-volume="0.7"></audio>
+<audio id="sfx-031" src="assets/sfx/ding.mp3" data-start="73.844" data-duration="0.9" data-track-index="7" data-volume="0.8"></audio>
+<audio id="sfx-032" src="assets/sfx/erro.mp3" data-start="77.382" data-duration="0.62" data-track-index="7" data-volume="0.4"></audio>
+<audio id="sfx-033" src="assets/sfx/digita.mp3" data-start="80.342" data-duration="1.7" data-track-index="7" data-volume="0.35"></audio>
+<audio id="sfx-034" src="assets/sfx/snap.mp3" data-start="81.292" data-duration="0.08" data-track-index="6" data-volume="0.7"></audio>
+<audio id="sfx-035" src="assets/sfx/pop.mp3" data-start="81.592" data-duration="0.18" data-track-index="6" data-volume="0.6"></audio>
+<audio id="sfx-036" src="assets/sfx/pop.mp3" data-start="83.572" data-duration="0.18" data-track-index="7" data-volume="0.7"></audio>
+<audio id="sfx-037" src="assets/sfx/ding.mp3" data-start="86.429" data-duration="0.9" data-track-index="7" data-volume="0.8"></audio>
+<audio id="sfx-038" src="assets/sfx/tada.mp3" data-start="90.898" data-duration="1.6" data-track-index="7" data-volume="0.8"></audio>
+<audio id="sfx-039" src="assets/sfx/pop.mp3" data-start="94.785" data-duration="0.18" data-track-index="7" data-volume="0.8"></audio>
+<audio id="sfx-040" src="assets/sfx/whoosh.mp3" data-start="97.366" data-duration="0.45" data-track-index="7" data-volume="0.5"></audio>
+</div>
+<script>
+  // A cena 3D é desenhada pelo hf-seek (scene.js); a linha do tempo GSAP só registra a composição.
+  window.__timelines = window.__timelines || {};
+  window.__timelines["main"] = gsap.timeline({ paused: true });
+</script>
+<script type="module" src="assets/scene.js"></script>
+</body>
+</html>

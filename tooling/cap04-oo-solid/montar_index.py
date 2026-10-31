@@ -154,9 +154,21 @@ RODAR_APP = './mvnw -q compile\njava -cp target/classes br.com.biblioteca.App'
 S = []
 add = S.append
 
+# vídeo de abertura (tooling/cap04-oo-solid/video-solid-pecas): 16:9 no capítulo, 9:16 para baixar
+ROTEIRO = __import__('json').loads((ROOT / 'tooling/cap04-oo-solid/video-solid-pecas/voz/roteiro.json').read_text())
+QUEM = {'LLM': 'Narrador', 'BETO': 'Beto', 'LIA': 'Lia'}
+VIDEO = (f'<figure class="video-pecas" aria-labelledby="vp-cap"><video controls preload="none" playsinline poster="video/solid-pecas-capa.jpg" width="1920" height="1080">'
+         f'<source src="video/solid-pecas.mp4" type="video/mp4">Seu navegador não reproduz vídeo. Use a transcrição abaixo.</video>'
+         f'<figcaption id="vp-cap"><b>🧱 SOLID peça por peça</b> (1 min 46 s, com som). Aperte play quando a turma estiver pronta: '
+         f'é o mapa da tarde. <a href="video/solid-pecas-vertical.mp4" download>Versão vertical (celular)</a></figcaption>'
+         + toggler('Transcrição do vídeo', '<ol class="transcricao">' + ''.join(
+             f'<li><strong>{QUEM[v[0]["role"]]}:</strong> {html.escape(v[0]["text"].replace("Programa Aí", "Programa AI"))}</li>'
+             for k, v in sorted(ROTEIRO.items())) + '</ol>') + '</figure>')
+
 # ================= 01 · por que =================
 add(secao('dona-marta', '📚', 'A biblioteca da Dona Marta', 'Um programa que funciona, mas sofre a cada pedido novo', f'''
 <p>A Dona Marta cuida da biblioteca do bairro. Um sobrinho fez um programa em Java para o balcão: empresta livros, recebe devoluções, cobra multa por atraso e manda um aviso por e-mail. <strong>Funciona e os testes passam.</strong> Mas cada pedido novo vira um susto: o visitante paga multa zero, o dicionário não pode sair da sala, chegam e-books, e os testes demoram porque esperam um e-mail de mentira.</p>
+{VIDEO}
 <p><strong>SOLID</strong> são cinco conselhos para organizar classes de modo que um pedido novo caia num lugar só do código. Hoje vamos aplicar um conselho por vez, no mesmo projeto, escrevendo o código à mão.</p>
 <div class="route-grid cinco">
 <div class="route-card"><strong>S · uma responsabilidade</strong><p>A multa ganha a sua própria classe.</p></div>

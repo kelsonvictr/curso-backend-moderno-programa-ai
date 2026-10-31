@@ -37,3 +37,15 @@ Mensagens de erro reais capturadas em 30/10 (números de linha variam com o alun
 - `tooling/cap04-oo-solid/montar_index.py <clone do bundle>` gera o `index.html` com o Java das
   tags. Edite o script e regenere.
 - 11 pontos `[NN]` sincronizados com `professor.txt` e `professor-resolucoes.txt`. Sem links dos TXTs.
+
+## Vídeo de abertura "SOLID peça por peça" (30/10, noite)
+- Pedido do prof: vídeos didáticos e engraçados no formato de um TikTok de referência (SaaS montado
+  "peça por peça": "Mas… Então… Esse é o…", contador PEÇAS n/N, terminal digitando, legenda palavra
+  por palavra com destaque amarelo, nome da peça em amarelo inclinado, cena 3D de brinquedo). **Não 8-bit.**
+- Primeiro só o principal (as 5 vinhetas por letra ficam para depois da aprovação do estilo).
+- Projeto `tooling/cap04-oo-solid/video-solid-pecas/`: HyperFrames + Three.js 0.181.2 local (sala com piso
+  de madeira, mesa, você no PC, placa-servidor com LEDs, blocos com etiquetas), chips HTML projetados,
+  trilha e efeitos sintetizados em numpy. Vozes ElevenLabs (Will narrador, Lax, Jenifer), 1.255 caracteres.
+  Cita o prof. Kelson (carimbo "CONFERIDO") e a Programa AI (letreiro, falas, cartão final com o logo).
+- `scripts/build.py` é a fonte única de tempo (timings.js) e gera `index.html` (16:9) e `vertical/index.html`
+  (9:16, assets por link). 105,8 s. Check sem erros. Capítulo usa o 16:9 no ponto 01; o 9:16 fica para baixar.
