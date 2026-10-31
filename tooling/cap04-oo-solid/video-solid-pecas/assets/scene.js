@@ -40,8 +40,8 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color('#efe3cf');
 const camera = new THREE.PerspectiveCamera(VERT ? 50 : 32, W / H, 0.1, 200);
 
-scene.add(new THREE.HemisphereLight('#fff6e8', '#9a7350', 1.5));
-scene.add(new THREE.AmbientLight('#ffffff', 0.35));
+const hemi = new THREE.HemisphereLight('#fff6e8', '#9a7350', 1.5); scene.add(hemi);
+const amb = new THREE.AmbientLight('#ffffff', 0.35); scene.add(amb);
 const sol = new THREE.DirectionalLight('#fff1dc', 2.6);
 sol.position.set(9, 16, 11);
 sol.castShadow = true;
@@ -108,9 +108,8 @@ function pessoa({ camisa = '#2bb39b', calca = '#2c3550', pele = '#f1c8a0', cabel
 }
 
 // ---------- o quarto ----------
-function texturaMadeira() {
+function texturaMadeira(tons = ['#c98f58', '#bf8550', '#d39a62', '#c48a55']) {
   const c = document.createElement('canvas'); c.width = c.height = 1024; const x = c.getContext('2d'); const r = rng(11);
-  const tons = ['#c98f58', '#bf8550', '#d39a62', '#c48a55'];
   for (let i = 0; i < 8; i++) {
     let px = 0; while (px < 1024) {
       const len = 260 + r() * 420; x.fillStyle = tons[Math.floor(r() * tons.length)];
@@ -134,7 +133,7 @@ const letreiroCanvas = document.createElement('canvas'); letreiroCanvas.width = 
 const letreiro = new THREE.Mesh(new THREE.PlaneGeometry(6.4, 2.25), new THREE.MeshBasicMaterial({ toneMapped: false, transparent: true }));
 letreiro.position.set(1.5, 6.2, -11.95); scene.add(letreiro);
 // quadro do professor na parede esquerda
-const quadro = rotulo('SOLID na mão  ·  Prof. Kelson', 7, 1.6, { bg: '#2f5d4f', fg: '#f4f1e8', raio: 30, peso: 800, escala: .42 });
+let quadro = rotulo('SOLID na mão  ·  Prof. Kelson', 7, 1.6, { bg: '#2f5d4f', fg: '#f4f1e8', raio: 30, peso: 800, escala: .42 });
 quadro.material.toneMapped = true; quadro.rotation.y = Math.PI / 2; quadro.position.set(-13.95, 5.6, -3); scene.add(quadro);
 
 // mesa, monitor e você
@@ -160,12 +159,111 @@ const voce = pessoa({ sentado: true }); voce.rotation.y = Math.PI; voce.position
 
 // ---------- a placa (o "servidor" da biblioteca) ----------
 const tapete = caixa(13, .06, 9.4, '#3fc4ad', .03); tapete.position.set(0, 0, .3); scene.add(tapete);
+
+// ---------- cenários das vinhetas (T.cenario): o lugar muda, a placa e as peças ficam ----------
+function texturaCanvas(desenhar, rep = 5, tam = 1024) {
+  const c = document.createElement('canvas'); c.width = c.height = tam; desenhar(c.getContext('2d'), tam);
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(rep, rep); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
+}
+const piso = (a, b, n = 8) => texturaCanvas((x, T) => { const q = T / n; for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) { x.fillStyle = (i + j) % 2 ? a : b; x.fillRect(i * q, j * q, q, q); } }, 6);
+const tijolo = () => texturaCanvas((x, T) => { x.fillStyle = '#d9cfc2'; x.fillRect(0, 0, T, T); const r = rng(3); const h = T / 16, w = T / 6;
+  for (let j = 0; j < 16; j++) for (let i = -1; i < 7; i++) { x.fillStyle = ['#b5603d', '#a95737', '#bf6a45'][Math.floor(r() * 3)]; x.fillRect(i * w + (j % 2) * w / 2 + 4, j * h + 4, w - 8, h - 8); } }, 1);
+const cimento = () => texturaCanvas((x, T) => { const r = rng(8); x.fillStyle = '#a3a39e'; x.fillRect(0, 0, T, T);
+  for (let i = 0; i < 4000; i++) { x.fillStyle = `rgba(${r() < .5 ? '255,255,255' : '40,40,40'},${.05 + r() * .06})`; x.fillRect(r() * T, r() * T, 3 + r() * 8, 3 + r() * 8); }
+  x.strokeStyle = 'rgba(60,60,60,.35)'; x.lineWidth = 4; for (let k = 0; k <= 4; k++) { x.beginPath(); x.moveTo(k * T / 4, 0); x.lineTo(k * T / 4, T); x.moveTo(0, k * T / 4); x.lineTo(T, k * T / 4); x.stroke(); } }, 4);
+const grama = () => texturaCanvas((x, T) => { const r = rng(4); x.fillStyle = '#7cc56a'; x.fillRect(0, 0, T, T);
+  for (let i = 0; i < 9000; i++) { x.fillStyle = ['#6db85c', '#8fd27a', '#74bd62'][Math.floor(r() * 3)]; x.fillRect(r() * T, r() * T, 3, 9); } }, 6);
+const listras = () => texturaCanvas((x, T) => { for (let i = -T; i < 2 * T; i += 80) { x.fillStyle = '#ffd23f'; x.fillRect(0, 0, 0, 0); x.save(); x.translate(i, 0); x.transform(1, 0, -1, 1, 0, 0); x.fillStyle = (i / 80) % 2 ? '#1f232b' : '#ffd23f'; x.fillRect(0, 0, 80, T); x.restore(); } }, 1, 256);
+const extras = new THREE.Group(); scene.add(extras);
+function bloco(w, h, d, cor, x, y, z, r = .08) { const b = caixa(w, h, d, cor, r); b.position.set(x, y, z); extras.add(b); return b; }
+function placaParede(txt, w, h, x, y, z, o = {}, rotY = 0) { const m = rotulo(txt, w, h, o); m.position.set(x, y, z); m.rotation.y = rotY; extras.add(m); return m; }
+function trocaQuadro(txt, o = {}) { scene.remove(quadro); quadro = rotulo(txt, 7, 1.6, { bg: '#2f5d4f', fg: '#f4f1e8', raio: 30, peso: 800, escala: .42, ...o });
+  quadro.material.toneMapped = true; quadro.rotation.y = Math.PI / 2; quadro.position.set(-13.95, 5.6, -3); scene.add(quadro); }
+function estante(x, z, rotY = 0) {
+  const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = rotY; extras.add(g); const r = rng(Math.round(x * 13 + z * 7 + 99));
+  const fundo = caixa(4.2, 6.2, .9, '#6e4426', .06); g.add(fundo);
+  for (let k = 0; k < 4; k++) {
+    const prat = caixa(4.0, .14, .9, '#8a5a35', .03); prat.position.set(0, .4 + k * 1.45, .12); g.add(prat);
+    let px = -1.8; while (px < 1.7) { const w = .22 + r() * .2, h = .8 + r() * .45;
+      const l = caixa(w, h, .6, ['#e2484f', '#3d9bf0', '#f7c948', '#5ccf86', '#8e6cf0', '#f59e4b'][Math.floor(r() * 6)], .04);
+      l.position.set(px + w / 2, .54 + k * 1.45, .2); g.add(l); px += w + .03; }
+  }
+}
+function carteira(x, z) { const t = bloco(1.6, .12, 1.0, '#d9a066', x, 1.5, z, .04); for (const [a, b] of [[-.7, -.4], [.7, -.4], [-.7, .4], [.7, .4]]) bloco(.1, 1.5, .1, '#8a8f99', x + a, 0, z + b, .03);
+  bloco(1.0, .12, .9, '#3d9bf0', x, .95, z + 1.0, .04); bloco(1.0, .9, .12, '#3d9bf0', x, 1.0, z + 1.45, .04); return t; }
+function arvore(x, z) { bloco(.5, 3.2, .5, '#8a5a35', x, 0, z, .1);
+  for (const [a, b, c, s] of [[0, 4.2, 0, 1.8], [-.9, 3.6, .3, 1.3], [.9, 3.7, -.2, 1.35]]) { const m = new THREE.Mesh(new THREE.SphereGeometry(s, 18, 14), mat('#4fb36b')); m.position.set(x + a, b, z + c); m.castShadow = true; extras.add(m); } }
+const CENARIOS = {
+  biblioteca() { // S: dentro da biblioteca, com estantes e o balcão
+    chao.material.map = texturaMadeira(['#8a5634', '#7d4c2d', '#94603b', '#83512f']);
+    paredeFundo.material.color.set('#3f6b5a'); paredeEsq.material.color.set('#386050'); scene.background.set('#2f4a3e');
+    for (const x of [-9.5, -5, 6.5, 11]) estante(x, -11.4);
+    for (const z of [-7, -2.5]) estante(-13.4, z, Math.PI / 2);
+    const balcao = bloco(5.5, 1.7, 1.5, '#a06a3e', 9.5, 0, -6.5, .1); naFrente(balcao, 'EMPRÉSTIMOS', { y: .55 });
+    tapete.userData.mesh.material.color.set('#c8473f');
+    trocaQuadro('Silêncio: Prof. Kelson lendo', { bg: '#20352d' });
+  },
+  rua() { // O: em frente à Biblioteca do Bairro (o visitante chega de fora)
+    chao.material.map = grama(); scene.background.set('#bfe6ff'); hemi.color.set('#ffffff'); hemi.intensity = 1.8;
+    for (const m of [paredeFundo, paredeEsq, rodape, quadro, mesa]) m.visible = false;
+    const fachada = bloco(26, 10, 4, '#efd9b4', 0, 0, -14.5, .2); bloco(27, 1, 4.6, '#c4603d', 0, 10, -14.5, .2);
+    const porta = bloco(2.8, 4.6, .3, '#8a5a35', 0, 0, -12.4, .1);
+    for (const x of [-8, -4.5, 4.5, 8]) bloco(2.2, 2.2, .25, '#9fd6f5', x, 4.2, -12.45, .08);
+    placaParede('BIBLIOTECA DO BAIRRO', 8, 1.3, 0, 7.6, -12.45, { bg: '#2b59c3', fg: '#ffffff', raio: 30 });
+    letreiro.position.set(-8.5, 7.8, -12.43); letreiro.scale.setScalar(.55);
+    const calcada = bloco(70, .1, 5, '#c9ccd3', 0, 0, -10.2, .02);
+    arvore(-11, -6); arvore(12, -5); arvore(-12, 7);
+    tapete.userData.mesh.material.color.set('#b9bcc4');
+  },
+  escola() { // L: sala de aula, com lousa e carteiras
+    chao.material.map = piso('#e9e4d8', '#d3cdbf');
+    paredeFundo.material.color.set('#f6e9b8'); paredeEsq.material.color.set('#f2e2a8'); scene.background.set('#e9d79a');
+    bloco(10, 4.2, .2, '#7b5a3a', 0, 3.2, -11.9, .06); bloco(9.4, 3.6, .22, '#2e5244', 0, 3.5, -11.88, .04);
+    placaParede('Lista da turma:', 6, .9, 0, 6.2, -11.75, { bg: null, fg: '#f4f1e8', peso: 700 });
+    placaParede('Iracema · Dicionário · O Cortiço', 8.4, 1.0, 0, 5.0, -11.75, { bg: null, fg: '#f4f1e8', peso: 700, escala: .5 });
+    letreiro.position.set(9.5, 7.6, -11.95); letreiro.scale.setScalar(.7);
+    for (const [x, z] of [[8.5, -6], [11.5, -6], [8.5, -2.5], [11.5, -2.5]]) carteira(x, z);
+    tapete.userData.mesh.material.color.set('#4a90d9');
+    trocaQuadro('Hoje: L de Liskov · Prof. Kelson', { bg: '#2e5244' });
+  },
+  noite() { // I: quarto à noite, neon de e-books
+    chao.material.map = texturaMadeira(['#5a3e2e', '#523829', '#604332', '#4d3426']);
+    paredeFundo.material.color.set('#2c2a4a'); paredeEsq.material.color.set('#28264a'); scene.background.set('#1c1830');
+    hemi.color.set('#9fa8ff'); hemi.groundColor.set('#2a1d3a'); hemi.intensity = .75; amb.intensity = .2; sol.color.set('#b9c4ff'); sol.intensity = 1.3;
+    const neon = placaParede('e-books 24h', 6.5, 1.6, -5, 6.4, -11.9, { bg: null, fg: '#ff5fb8', peso: 900 });
+    const luzNeon = new THREE.PointLight('#ff5fb8', 40, 18, 1.6); luzNeon.position.set(-5, 6, -10); extras.add(luzNeon);
+    const luzMesa = new THREE.PointLight('#ffb35c', 30, 16, 1.6); luzMesa.position.set(-6, 4.5, -7.5); extras.add(luzMesa);
+    const janela = bloco(3.6, 3.6, .2, '#131a3a', 0, 0, 0); janela.rotation.y = Math.PI / 2; janela.position.set(-13.85, 3.5, 2.5);
+    const lua = new THREE.Mesh(new THREE.CircleGeometry(.6, 32), new THREE.MeshBasicMaterial({ color: '#fff4c2', toneMapped: false })); lua.rotation.y = Math.PI / 2; lua.position.set(-13.6, 6.1, 3.2); extras.add(lua);
+    tapete.userData.mesh.material.color.set('#6e4fd6');
+    trocaQuadro('Programa AI · plantão noturno', { bg: '#3a2f63' });
+  },
+  oficina() { // D: oficina do eletricista
+    chao.material.map = cimento();
+    paredeFundo.material.map = tijolo(); paredeFundo.material.map.repeat.set(5, 2); paredeFundo.material.color.set('#ffffff'); paredeFundo.material.needsUpdate = true;
+    paredeEsq.material.color.set('#c9b9a6'); scene.background.set('#8a7a68');
+    const faixa = new THREE.Mesh(new THREE.PlaneGeometry(70, .6), new THREE.MeshStandardMaterial({ map: listras() })); faixa.material.map.repeat.set(40, 1); faixa.position.set(0, 1.2, -11.88); extras.add(faixa);
+    bloco(7, 3.6, .12, '#d8b27a', -6, 3.2, -11.9, .04);
+    bloco(.25, 1.6, .2, '#8a5a35', -8, 4.2, -11.75, .04); bloco(.9, .4, .3, '#5b6170', -8, 5.6, -11.75, .05);
+    bloco(.3, 1.8, .15, '#9aa3ad', -6, 4.1, -11.75, .05); bloco(.8, .3, .15, '#9aa3ad', -6, 5.75, -11.75, .05);
+    bloco(.3, 1.4, .15, '#e2484f', -4, 4.4, -11.75, .05);
+    const tomadona = bloco(2.2, 2.8, .25, '#ffffff', 6, 3.2, -11.85, .2);
+    for (const x of [-.45, .45]) bloco(.28, .7, .1, '#1f232b', 6 + x, 4.2, -11.68, .05);
+    const caixaFerr = bloco(2.2, 1.0, 1.0, '#e2484f', 10, 0, -8, .1); bloco(1.2, .2, .2, '#1f232b', 10, 1.05, -8, .05);
+    for (const [x, z] of [[7.2, 4.6], [-7.4, 4.4]]) { const c = new THREE.Mesh(new THREE.ConeGeometry(.45, 1.2, 20), mat('#ff8a1f')); c.position.set(x, .6, z); c.castShadow = true; extras.add(c); }
+    tapete.userData.mesh.material.color.set('#f2c230');
+    trocaQuadro('Eletricista de plantão: Prof. Kelson', { bg: '#1f232b' });
+  },
+};
+
 const placa = caixa(10.4, TOP, 7.2, '#22252d', .14); scene.add(placa);
 const led = new THREE.MeshStandardMaterial({ color: '#46f59b', emissive: '#46f59b', emissiveIntensity: 1.4 });
 const leds = [];
 for (let i = 0; i < 11; i++) { const l = new THREE.Mesh(new THREE.BoxGeometry(.55, .05, .09), led); l.position.set(-4.6 + i * .92, TOP + .01, 3.35); scene.add(l); leds.push(l); }
 for (let i = 0; i < 7; i++) { const l = new THREE.Mesh(new THREE.BoxGeometry(.09, .05, .55), led); l.position.set(5.0, TOP + .01, -2.9 + i * .92); scene.add(l); leds.push(l); }
 for (let i = 0; i < 5; i++) { const l = new THREE.Mesh(new THREE.BoxGeometry(.4, .14, .05), led); l.position.set(-1.6 + i * .8, .25, 3.61); scene.add(l); }
+
+if (T.cenario && CENARIOS[T.cenario]) CENARIOS[T.cenario]();
 
 const pecas = {};
 function peca(nome, g, x, z, y = TOP) { g.position.set(x, y, z); g.userData.base = new THREE.Vector3(x, y, z); scene.add(g); pecas[nome] = g; return g; }
@@ -261,7 +359,7 @@ function posicionaChips(t) {
   // enquanto o nome de uma peça está na tela, os chips saem do caminho
   let titulo = 0; for (const [ev] of TIT) titulo = Math.max(titulo, t >= EV[ev] - .1 && t < EV[ev] + 3.2 ? 1 - prog(t, EV[ev] + 2.9, .3) : 0);
   for (const c of chips) {
-    const vis = t >= c.de && t < c.ate;
+    const vis = t >= c.de && t < c.ate && c.de > -50; // chip de letra anterior (vinheta) não volta
     if (!vis) { c.el.style.opacity = 0; continue; }
     tmp.copy(c.ancora()).project(camera);
     const x = (tmp.x * .5 + .5) * W, y = (-tmp.y * .5 + .5) * H;
@@ -285,6 +383,10 @@ const TIROS = [
   tiro(EV.solda - .6, [-.1, 1.1, -1.7], 9.5, new THREE.Vector3(.35, 1.25, 1).normalize()),
   tiro(EV.final - .2, [0, 1.0, -.2], 20),
 ];
+if (T.tiros) {
+  TIROS.length = 0;
+  for (const [t0, alvo, dist, dir] of T.tiros) TIROS.push(tiro(t0, alvo, dist, dir ? new THREE.Vector3(...dir).normalize() : DIR));
+}
 const pA = new THREE.Vector3(), pB = new THREE.Vector3(), aA = new THREE.Vector3(), aB = new THREE.Vector3();
 function poseDe(i, t, pos, alvo) { // pequena deriva dentro de cada tiro
   const s = TIROS[i], dt = t - s.t0, ang = dt * .018;
@@ -341,6 +443,10 @@ function legenda(t) {
   pal.style.opacity = 1; pal.style.transform = `scale(${.7 + .3 * k})`;
 }
 const carimbo = document.getElementById('carimbo'), fim = document.getElementById('fim');
+if (T.fim) {
+  fim.querySelector('h1').innerHTML = T.fim.h1;
+  fim.querySelector('p').textContent = T.fim.p;
+}
 function finais(t) {
   const kc = backOut(prog(t, EV.carimbo, .35));
   carimbo.style.opacity = prog(t, EV.carimbo, .08) * (1 - prog(t, EV.fim - .3, .3));
@@ -352,7 +458,8 @@ function finais(t) {
 const verm = new THREE.Color();
 function cena(t) {
   // você digitando; susto do Beto
-  const dig = t < EV.lib ? Math.sin(t * 22) * .05 : 0;
+  const digitando = DIG.some(([ev]) => t >= EV[ev] && t < EV[ev] + .15 + .045 * window.DIGITA[ev].length);
+  const dig = digitando ? Math.sin(t * 22) * .05 : 0;
   voce.userData.bracos.forEach((b, i) => { b.rotation.x = -1.1 + (i ? dig : -dig); b.position.z = .35; });
   const susto = t >= EV.beto && t < EV.beto + 1.2 ? Math.sin((t - EV.beto) * 18) * .25 * (1 - prog(t, EV.beto, 1.2)) : 0;
   voce.userData.cabeca.forEach(c => { c.rotation.z = susto; });
@@ -453,10 +560,10 @@ async function preparar() {
   await document.fonts.load('900 64px Nunito');
   await logoImg.decode();
   const x = letreiroCanvas.getContext('2d');
-  x.fillStyle = '#2b59c3'; x.beginPath(); x.roundRect(0, 0, 1024, 360, 60); x.fill();
-  const off = document.createElement('canvas'); off.width = 860; off.height = 258; const o = off.getContext('2d');
-  o.drawImage(logoImg, 0, 0, 860, 258); o.globalCompositeOperation = 'source-in'; o.fillStyle = '#ffffff'; o.fillRect(0, 0, 860, 258);
-  x.drawImage(off, 82, 51);
+  // placa branca com o logo nas cores originais (o "AI" tem letras vazadas; pintar de branco apagava tudo)
+  x.fillStyle = '#ffffff'; x.beginPath(); x.roundRect(0, 0, 1024, 360, 60); x.fill();
+  x.strokeStyle = '#2b59c3'; x.lineWidth = 14; x.beginPath(); x.roundRect(7, 7, 1010, 346, 54); x.stroke();
+  x.drawImage(logoImg, 82, 51, 860, 258);
   const tx = new THREE.CanvasTexture(letreiroCanvas); tx.colorSpace = THREE.SRGBColorSpace; letreiro.material.map = tx; letreiro.material.needsUpdate = true;
   TEXTOS.forEach(f => f()); // as etiquetas nasceram antes da fonte: redesenha com a Nunito
   desenhaQuadro(window.__hfThreeTime || 0);

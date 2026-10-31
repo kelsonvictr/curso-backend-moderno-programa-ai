@@ -1,0 +1,50 @@
+{
+  "C01": [
+    {
+      "role": "LLM",
+      "text": "Peça cinco: o D. O e-mail foi criado lá dentro da biblioteca. Está soldado."
+    }
+  ],
+  "C02": [
+    {
+      "role": "BETO",
+      "text": "E cada teste espera dois segundos por um e-mail de mentira..."
+    }
+  ],
+  "C03": [
+    {
+      "role": "LIA",
+      "text": "E como o teste sabe se o aviso saiu? Não sabe!"
+    }
+  ],
+  "C04": [
+    {
+      "role": "LLM",
+      "text": "Então a biblioteca ganha uma tomada: o contrato Notificador. Quem monta escolhe o que plugar."
+    }
+  ],
+  "C05": [
+    {
+      "role": "BETO",
+      "text": "No teste, eu plugo um dublê. Zero segundos!"
+    }
+  ],
+  "C06": [
+    {
+      "role": "LLM",
+      "text": "Esse é o D: dependa do contrato, não do detalhe."
+    }
+  ],
+  "C07": [
+    {
+      "role": "LIA",
+      "text": "O professor Kelson ia carimbar: conferido!"
+    }
+  ],
+  "C08": [
+    {
+      "role": "LLM",
+      "text": "Cinco peças, uma biblioteca. Na Programa Aí, até a próxima!"
+    }
+  ]
+}

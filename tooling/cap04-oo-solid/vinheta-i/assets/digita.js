@@ -1,0 +1,1 @@
+../../video-solid-pecas/assets/digita.js

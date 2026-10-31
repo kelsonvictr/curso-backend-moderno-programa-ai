@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1920, height=1080" />
+<title>S · Uma classe, um motivo para mudar · Cap 04 · Programa AI</title>
+<link rel="stylesheet" href="assets/hud.css" />
+<script type="importmap">{"imports": {"three": "./assets/vendor/three.module.js", "three/addons/": "./assets/vendor/addons/"}}</script>
+<script src="assets/vendor/gsap.min.js"></script>
+<script src="assets/timings.js"></script>
+<script src="assets/digita.js"></script>
+</head>
+<body class="h" style="width:1920px;height:1080px">
+<div id="root" data-composition-id="main" data-start="0" data-duration="45.05" data-width="1920" data-height="1080" data-fps="30">
+  <canvas id="cena" width="1920" height="1080"></canvas>
+  <div id="rotulos"></div>
+  <div id="editor"><div class="barra"><i></i><i></i><i></i><span id="editor-titulo" data-layout-ignore>claude · ~/biblioteca</span></div><div id="editor-texto"></div></div>
+  <div id="pecas">PEÇAS <b id="pecas-n">0/5</b></div>
+  <div id="titulo-peca"><span id="titulo-letra"></span><span id="titulo-nome"></span></div>
+  <div id="legenda"><span id="palavra"></span></div>
+  <div id="carimbo">CONFERIDO<small>PROF. KELSON · PROGRAMA AI</small></div>
+  <div id="fim"><img src="assets/logo-full.svg" alt="Programa AI" /><h1>SOLID <em>na mão</em></h1><p>Cap 04 · Prof. Kelson · Programa AI</p></div>
+<audio id="trilha" src="assets/trilha.mp3" data-start="0" data-duration="45.05" data-track-index="9" data-volume="0.3"></audio>
+<audio id="voz-C01" src="assets/voz/llm-dd676b753a2dd24dd05b.mp3" data-start="0.8" data-duration="8.777" data-track-index="8"></audio>
+<audio id="voz-C02" src="assets/voz/lia-5be0b895a29fed2c7ad9.mp3" data-start="9.977" data-duration="5.48" data-track-index="8"></audio>
+<audio id="voz-C03" src="assets/voz/beto-2ce66824e646fc1c463f.mp3" data-start="15.857" data-duration="1.95" data-track-index="8"></audio>
+<audio id="voz-C04" src="assets/voz/llm-ae7140a8945e3733fc22.mp3" data-start="18.208" data-duration="5.108" data-track-index="8"></audio>
+<audio id="voz-C05" src="assets/voz/beto-9c1a57afc8f152f6900a.mp3" data-start="23.716" data-duration="2.09" data-track-index="8"></audio>
+<audio id="voz-C06" src="assets/voz/llm-b143f200f4b487190e11.mp3" data-start="26.206" data-duration="8.173" data-track-index="8"></audio>
+<audio id="voz-C07" src="assets/voz/llm-7c36ad994c71a52286ad.mp3" data-start="34.779" data-duration="3.622" data-track-index="8"></audio>
+<audio id="voz-C08" src="assets/voz/lia-73a74d9a6e9cbd61feb6.mp3" data-start="39.501" data-duration="1.95" data-track-index="8"></audio>
+<audio id="sfx-000" src="assets/sfx/pop.mp3" data-start="2.64" data-duration="0.18" data-track-index="7" data-volume="0.7"></audio>
+<audio id="sfx-001" src="assets/sfx/pop.mp3" data-start="4.58" data-duration="0.18" data-track-index="7" data-volume="0.7"></audio>
+<audio id="sfx-002" src="assets/sfx/erro.mp3" data-start="19.548" data-duration="0.62" data-track-index="7" data-volume="0.7"></audio>
+<audio id="sfx-003" src="assets/sfx/digita.mp3" data-start="26.356" data-duration="1.7" data-track-index="7" data-volume="0.35"></audio>
+<audio id="sfx-004" src="assets/sfx/whoosh.mp3" data-start="29.166" data-duration="0.45" data-track-index="7" data-volume="0.7"></audio>
+<audio id="sfx-005" src="assets/sfx/ding.mp3" data-start="35.459" data-duration="0.9" data-track-index="7" data-volume="0.7"></audio>
+<audio id="sfx-006" src="assets/sfx/tada.mp3" data-start="42.052" data-duration="1.6" data-track-index="7" data-volume="0.7"></audio>
+</div>
+<script>
+  // A cena 3D é desenhada pelo hf-seek (scene.js); a linha do tempo GSAP só registra a composição.
+  window.__timelines = window.__timelines || {};
+  window.__timelines["main"] = gsap.timeline({ paused: true });
+</script>
+<script type="module" src="assets/scene.js"></script>
+</body>
+</html>

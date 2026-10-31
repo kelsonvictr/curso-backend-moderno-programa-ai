@@ -1,0 +1,44 @@
+{
+  "C01": [
+    {
+      "role": "LLM",
+      "text": "Peça três: o L. A professora quer emprestar a lista inteira da turma de uma vez."
+    }
+  ],
+  "C02": [
+    {
+      "role": "LIA",
+      "text": "Beto... por que esse dicionário está de bigode?"
+    }
+  ],
+  "C03": [
+    {
+      "role": "BETO",
+      "text": "Ele herdou de Livro! Agora ele é um livro... de consulta."
+    }
+  ],
+  "C04": [
+    {
+      "role": "LLM",
+      "text": "Mas dicionário não sai da sala. Quando o laço chama emprestar, ele explode no meio da lista."
+    }
+  ],
+  "C05": [
+    {
+      "role": "LIA",
+      "text": "A Iracema saiu, e O Cortiço nem foi tentado!"
+    }
+  ],
+  "C06": [
+    {
+      "role": "LLM",
+      "text": "Então ele tira o disfarce. Obra de consulta não herda de livro, e o compilador nem deixa ela entrar na lista."
+    }
+  ],
+  "C07": [
+    {
+      "role": "LLM",
+      "text": "Esse é o L: o filho cumpre a promessa do pai."
+    }
+  ]
+}

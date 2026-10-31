@@ -550,3 +550,7 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
   ElevenLabs, citando o prof. Kelson e a Programa AI. Recusou o 8-bit para este pedido.
 - Feito o vídeo principal do Cap 04 (HyperFrames + Three.js), 16:9 no capítulo e 9:16 disponível.
   Vinhetas por letra só depois da aprovação do estilo. Detalhe em 15-cap4-oo-solid-do-zero.md.
+
+## 2026-10-31 (madrugada) — Cinco vinhetas, cada uma num cenário
+- Com o principal aprovado, o prof pediu todas as vinhetas e, no meio, cenários diferentes para não
+  ficarem iguais. Feitas S/O/L/I/D (~40 s) com biblioteca, rua, sala de aula, quarto à noite e oficina.

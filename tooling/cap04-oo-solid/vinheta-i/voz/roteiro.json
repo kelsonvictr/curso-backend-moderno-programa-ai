@@ -1,0 +1,44 @@
+{
+  "C01": [
+    {
+      "role": "LLM",
+      "text": "Peça quatro: o I. Chegaram os e-books, e alguém criou um contrato para tudo no acervo."
+    }
+  ],
+  "C02": [
+    {
+      "role": "BETO",
+      "text": "Emprestar, devolver, baixar PDF... todo mundo assina!"
+    }
+  ],
+  "C03": [
+    {
+      "role": "LIA",
+      "text": "Até o livro de papel? Vai baixar PDF como?"
+    }
+  ],
+  "C04": [
+    {
+      "role": "LLM",
+      "text": "Ele é obrigado a prometer o que não faz. E promessa falsa vira exceção."
+    }
+  ],
+  "C05": [
+    {
+      "role": "LLM",
+      "text": "Então você quebra em contratos pequenos: um com código e título, para todo item do acervo, e outro só para o que se baixa."
+    }
+  ],
+  "C06": [
+    {
+      "role": "BETO",
+      "text": "E o e-book assina os dois!"
+    }
+  ],
+  "C07": [
+    {
+      "role": "LLM",
+      "text": "Esse é o I: ninguém promete o que não faz."
+    }
+  ]
+}

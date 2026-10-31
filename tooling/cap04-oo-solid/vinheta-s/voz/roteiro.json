@@ -1,0 +1,50 @@
+{
+  "C01": [
+    {
+      "role": "LLM",
+      "text": "Peça um: o S. Olha a biblioteca da Dona Marta: multa, e-mail e livro, tudo morando na mesma classe."
+    }
+  ],
+  "C02": [
+    {
+      "role": "LIA",
+      "text": "Beto, a coordenação mandou: a multa de aluno agora é um real e cinquenta."
+    }
+  ],
+  "C03": [
+    {
+      "role": "BETO",
+      "text": "Fácil! É só mudar um número aqui..."
+    }
+  ],
+  "C04": [
+    {
+      "role": "LLM",
+      "text": "Mas mexer na multa quebrou o e-mail. Os dois moravam no mesmo método."
+    }
+  ],
+  "C05": [
+    {
+      "role": "BETO",
+      "text": "Eu só mexi num número, professor Kelson!"
+    }
+  ],
+  "C06": [
+    {
+      "role": "LLM",
+      "text": "Então a multa ganha uma classe só dela: a calculadora. A multa é da coordenação; o e-mail, da TI."
+    }
+  ],
+  "C07": [
+    {
+      "role": "LLM",
+      "text": "Esse é o S: uma classe, um motivo para mudar."
+    }
+  ],
+  "C08": [
+    {
+      "role": "LIA",
+      "text": "Uma mudança, um lugar. Anotado!"
+    }
+  ]
+}

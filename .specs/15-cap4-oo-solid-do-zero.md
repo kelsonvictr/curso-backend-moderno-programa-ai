@@ -49,3 +49,14 @@ Mensagens de erro reais capturadas em 30/10 (números de linha variam com o alun
   Cita o prof. Kelson (carimbo "CONFERIDO") e a Programa AI (letreiro, falas, cartão final com o logo).
 - `scripts/build.py` é a fonte única de tempo (timings.js) e gera `index.html` (16:9) e `vertical/index.html`
   (9:16, assets por link). 105,8 s. Check sem erros. Capítulo usa o 16:9 no ponto 01; o 9:16 fica para baixar.
+
+## Vinhetas por letra (30/10, madrugada)
+- Aprovado o principal ("ficou ótimo, pode fazer todos"). Cinco vinhetas de ~40 s (`tooling/cap04-oo-solid/vinheta-<letra>/`),
+  uma no início de cada letra, com diálogo próprio (narrador + Beto + Lia; prof. Kelson e Programa AI citados).
+- Pedido do prof: "outros cenários, para todos não ficarem muito iguais". Mesma placa/peças (o sistema que cresce),
+  cenário diferente: S biblioteca (estantes, balcão), O rua (fachada da Biblioteca do Bairro, árvores),
+  L sala de aula (lousa com a lista, carteiras), I quarto à noite (neon "e-books 24h"), D oficina (tijolo, ferramentas,
+  tomada gigante, "Eletricista de plantão: Prof. Kelson"). Abertura e fecho em plano geral do cenário.
+- Engenharia: `video-solid-pecas/scripts/vinhetas.py` (roteiros → vozes → montar). Eventos de letras anteriores
+  em -100 s (peça já montada, contador continua), seguintes em 1e9. `scene.js` lê `T.cenario`, `T.tiros`, `T.fim`.
+  Vozes: 2.308 caracteres. `renderizar-videos.sh` renderiza tudo e publica versões leves (CRF 25/26) no capítulo.

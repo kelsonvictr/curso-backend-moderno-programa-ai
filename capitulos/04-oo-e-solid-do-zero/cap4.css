@@ -128,3 +128,4 @@ pre, code, .code-block pre, .terminal-body, .prompt pre, .mapa-vivo .m {
 .video-pecas .toggler { margin: 10px 0 0; }
 .transcricao { margin: 0; padding-left: 22px; font-size: .9rem; }
 .transcricao li { margin: 4px 0; }
+.video-pecas.vinheta { max-width: 600px; margin: 0 auto 18px; }

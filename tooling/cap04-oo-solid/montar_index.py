@@ -165,6 +165,23 @@ VIDEO = (f'<figure class="video-pecas" aria-labelledby="vp-cap"><video controls 
              f'<li><strong>{QUEM[v[0]["role"]]}:</strong> {html.escape(v[0]["text"].replace("Programa Aí", "Programa AI"))}</li>'
              for k, v in sorted(ROTEIRO.items())) + '</ol>') + '</figure>')
 
+
+
+def vinheta(letra, titulo):
+    """Player da vinheta de uma letra (tooling/cap04-oo-solid/vinheta-<letra>), 16:9 com link do vertical."""
+    base = ROOT / f'tooling/cap04-oo-solid/vinheta-{letra}'
+    rot = __import__('json').loads((base / 'voz/roteiro.json').read_text())
+    tempo = __import__('json').loads((base / 'assets/timings.js').read_text().split('=', 1)[1].strip().rstrip(';'))['total']
+    falas = ''.join(f'<li><strong>{QUEM[v[0]["role"]]}:</strong> {html.escape(v[0]["text"].replace("Programa Aí", "Programa AI"))}</li>'
+                    for k, v in sorted(rot.items()))
+    return (f'<figure class="video-pecas vinheta" aria-labelledby="vv-{letra}"><video controls preload="none" playsinline '
+            f'poster="video/vinheta-{letra}-capa.jpg" width="1920" height="1080"><source src="video/vinheta-{letra}.mp4" type="video/mp4">'
+            f'Seu navegador não reproduz vídeo. Use a transcrição abaixo.</video>'
+            f'<figcaption id="vv-{letra}"><b>🎬 {titulo}</b> ({round(tempo)} s, com som). '
+            f'<a href="video/vinheta-{letra}-vertical.mp4" download>Versão vertical</a></figcaption>'
+            + toggler('Transcrição da vinheta', f'<ol class="transcricao">{falas}</ol>') + '</figure>')
+
+
 # ================= 01 · por que =================
 add(secao('dona-marta', '📚', 'A biblioteca da Dona Marta', 'Um programa que funciona, mas sofre a cada pedido novo', f'''
 <p>A Dona Marta cuida da biblioteca do bairro. Um sobrinho fez um programa em Java para o balcão: empresta livros, recebe devoluções, cobra multa por atraso e manda um aviso por e-mail. <strong>Funciona e os testes passam.</strong> Mas cada pedido novo vira um susto: o visitante paga multa zero, o dicionário não pode sair da sala, chegam e-books, e os testes demoram porque esperam um e-mail de mentira.</p>
@@ -223,6 +240,7 @@ BIB_S_DIGITAR = """public class Biblioteca {
 }"""
 
 add(secao('s', 'S', 'S · Uma classe, um motivo para mudar', 'A multa sai do balcão e ganha uma classe própria', f'''
+{vinheta('s', 'Vinheta do S: na biblioteca')}
 {ideia('A ideia', '<p>O método <code>devolver()</code> da <code>Biblioteca</code> calcula a multa <strong>e</strong> manda o aviso. Quem decide a multa é a <strong>coordenação</strong>; quem decide o aviso é a <strong>TI</strong>. Duas pessoas mexendo no mesmo método: um conserto numa coisa pode quebrar a outra.</p>',
        'separe o código por <strong>quem pede a mudança</strong>.')}
 {mapa(1)}
@@ -283,6 +301,7 @@ APP_O = """»        Leitor ana = new Leitor("Ana", "ana@email.com", new Aluno()
 »        Leitor carla = new Leitor("Carla", "carla@email.com", new Visitante());"""
 
 add(secao('o', 'O', 'O · Crescer sem mexer no que funciona', 'Chega o Visitante: um arquivo novo, nenhuma classe antiga aberta', f'''
+{vinheta('o', 'Vinheta do O: o visitante na porta')}
 {ideia('A ideia', '<p>Com <code>if (tipo.equals("ALUNO"))</code>, cada tipo novo de leitor obriga a abrir a calculadora e editar no meio dela. E um tipo esquecido cai no <code>return 0</code>: paga zero, em silêncio.</p><p>A saída é uma <strong>interface</strong>: um <strong>contrato</strong>, a lista de métodos que uma classe promete ter. Cada tipo de leitor vira uma classe que cumpre o contrato (<code>implements</code>) e sabe a própria multa.</p>',
        'o código fica <strong>aberto</strong> para crescer e <strong>fechado</strong> para edição: tipo novo é arquivo novo.')}
 {mapa(2)}
@@ -361,6 +380,7 @@ TESTE_QUEBRA_L = """    @Test
     }"""
 
 add(secao('l', 'L', 'L · O filho cumpre a promessa do pai', 'O dicionário que quebrou a lista da turma', f'''
+{vinheta('l', 'Vinheta do L: a sala de aula')}
 {ideia('A ideia', '<p><code>class LivroDeConsulta extends Livro</code> é <strong>herança</strong>: a classe filha é um tipo especial do pai, e onde o programa espera um <code>Livro</code> ele aceita a filha. Por isso a filha precisa cumprir <strong>tudo</strong> o que o pai promete. O <code>Livro</code> promete: “disponível, <code>emprestar()</code> funciona”.</p>',
        'se a filha não consegue cumprir a promessa do pai, ela <strong>não é</strong> filha. Não herde.')}
 {mapa(3)}
@@ -409,6 +429,7 @@ IMPLEMENTS = """public class Livro implements ItemDoAcervo {
 public class ObraDeConsulta implements ItemDoAcervo {"""
 
 add(secao('i', 'I', 'I · Ninguém promete o que não faz', 'O e-book que não se empresta', f'''
+{vinheta('i', 'Vinheta do I: o neon dos e-books')}
 {ideia('A ideia', '<p>Um contrato “para tudo” obriga cada classe a ter todos os métodos dele. Quem não faz algo vai escrever um método que só lança exceção: a promessa quebrada da letra L, agora <strong>forçada pelo contrato</strong>.</p>',
        'prefira <strong>contratos pequenos</strong>. Cada classe assina só os que cumpre.')}
 {mapa(4)}
@@ -474,6 +495,7 @@ APP_D = """    public static void main(String[] args) {
         ..."""
 
 add(secao('d', 'D', 'D · Dependa do contrato, não do detalhe', 'O aviso vira uma tomada, e o teste pluga um dublê', f'''
+{vinheta('d', 'Vinheta do D: a oficina do eletricista')}
 {ideia('A ideia', '<p>Dentro da <code>Biblioteca</code> há um <code>new EmailSmtp()</code>: o e-mail está <strong>soldado</strong> na regra, como um abajur com o fio preso na parede. Por isso o teste espera 2 s e não consegue conferir o aviso.</p><p>A saída: a <code>Biblioteca</code> depende de um contrato (<code>Notificador</code>) e <strong>recebe</strong> o notificador pronto pelo construtor. Quem monta (o <code>App</code>) pluga o e-mail; o teste pluga um <strong>dublê</strong> que só anota.</p>',
        'a regra depende do contrato; <strong>quem monta</strong> escolhe o detalhe.')}
 {mapa(5)}

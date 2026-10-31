@@ -1,0 +1,50 @@
+{
+  "C01": [
+    {
+      "role": "LLM",
+      "text": "Peça dois: o O. Chega a Carla, visitante, e devolve o livro com três dias de atraso."
+    }
+  ],
+  "C02": [
+    {
+      "role": "LIA",
+      "text": "Quanto ela paga de multa?"
+    }
+  ],
+  "C03": [
+    {
+      "role": "BETO",
+      "text": "Deixa eu ver... zero centavos?"
+    }
+  ],
+  "C04": [
+    {
+      "role": "LIA",
+      "text": "Calote com nota fiscal!"
+    }
+  ],
+  "C05": [
+    {
+      "role": "LLM",
+      "text": "O if só conhecia aluno e professor. O visitante caiu no return zero, em silêncio."
+    }
+  ],
+  "C06": [
+    {
+      "role": "LLM",
+      "text": "Então cada tipo de leitor vira uma classe que cumpre um contrato e sabe a própria multa."
+    }
+  ],
+  "C07": [
+    {
+      "role": "BETO",
+      "text": "E o visitante? Um arquivo novo, e pronto: seis reais."
+    }
+  ],
+  "C08": [
+    {
+      "role": "LLM",
+      "text": "Esse é o O: aberto para crescer, fechado para mexer."
+    }
+  ]
+}
