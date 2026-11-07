@@ -106,6 +106,49 @@ def ideia(titulo, corpo, regra):
             f'<p class="regra"><strong>Regra:</strong> {regra}</p></div>')
 
 
+def conceito(nome, oficial, itens):
+    """Teoria geral da letra, antes do caso da Biblioteca (pedido do professor em 07/11/2026)."""
+    corpo = f'<p><strong>Nome oficial:</strong> {oficial}</p>'
+    corpo += ''.join(f'<p><strong>{k}:</strong> {v}</p>' for k, v in itens)
+    return f'<div class="analogy conceito"><div class="analogy-title">O conceito: {nome}</div>{corpo}</div>'
+
+
+CONCEITO_S = conceito('Responsabilidade Única', '<em>Single Responsibility Principle</em> (SRP).', [
+    ('O que diz', 'cada classe deve ter <strong>um único motivo para mudar</strong>. Em outras palavras, um só “dono” pede mudanças nela.'),
+    ('Por que existe', 'quando dois assuntos moram na mesma classe, mexer num arrisca quebrar o outro. E testar um obriga a carregar o outro junto.'),
+    ('Como reconhecer o problema', 'a classe muda por pedidos de pessoas ou áreas diferentes. Para dizer o que ela faz, você precisa de um “e”.'),
+    ('Cuidado', 'não significa “uma classe, um método”. A classe pode ter vários métodos, desde que todos sirvam ao mesmo assunto.'),
+])
+
+CONCEITO_O = conceito('Aberto/Fechado', '<em>Open/Closed Principle</em> (OCP).', [
+    ('O que diz', 'o código fica <strong>aberto para crescer</strong> e <strong>fechado para edição</strong>. Comportamento novo entra como código novo, sem reabrir o que já funciona.'),
+    ('Por que existe', 'cada vez que você edita uma classe que funciona, arrisca quebrar quem já depende dela. Acrescentar é mais seguro que remendar.'),
+    ('Como reconhecer o problema', 'um <code>if</code> por tipo que ganha mais um caso a cada novidade, muitas vezes repetido em vários lugares.'),
+    ('Cuidado', 'nenhum código fica fechado para tudo. Prepare o ponto de crescimento onde a mudança se repete; se a novidade não cabe no formato combinado, editar é o certo.'),
+])
+
+CONCEITO_L = conceito('Substituição de Liskov', '<em>Liskov Substitution Principle</em> (LSP), em homenagem à cientista da computação Barbara Liskov.', [
+    ('O que diz', 'quando uma classe filha herda de uma classe pai (você vai ver como logo abaixo), a filha precisa <strong>funcionar no lugar do pai sem surpresas</strong>.'),
+    ('Por que existe', 'quem escreve código para o pai não conhece todas as filhas, nem as que ainda vão existir. Só pode confiar no que o pai promete.'),
+    ('Como reconhecer o problema', 'método herdado que só lança exceção ou fica vazio, ou um <code>instanceof</code> para tratar uma filha diferente.'),
+    ('Cuidado', 'o compilador não confere esta regra: ele vê nomes e tipos, não comportamento. Sobrescrever com <code>@Override</code> é permitido; o que não pode é deixar de cumprir a promessa.'),
+])
+
+CONCEITO_I = conceito('Segregação de Interfaces', '<em>Interface Segregation Principle</em> (ISP). Segregar quer dizer separar.', [
+    ('O que diz', '<strong>ninguém deve ser obrigado a depender de métodos que não usa</strong>. Várias interfaces pequenas são melhores que uma grande.'),
+    ('Por que existe', 'em Java, quem assina uma interface com <code>implements</code> precisa ter todos os métodos dela. Contrato grande obriga a fingir que faz o que não faz.'),
+    ('Como reconhecer o problema', 'métodos que só lançam exceção ou ficam vazios “porque a interface obriga”, ou uma interface que tenta servir para tudo.'),
+    ('Cuidado', 'não é uma interface por método. Separe quando alguém está sendo obrigado a carregar o que não usa.'),
+])
+
+CONCEITO_D = conceito('Inversão de Dependência', '<em>Dependency Inversion Principle</em> (DIP).', [
+    ('O que diz', 'a <strong>regra de negócio</strong> (o que o sistema decide, como a multa) não depende do <strong>detalhe técnico</strong> (como algo é feito: e-mail, banco, rede). Os dois dependem de um <strong>contrato</strong>.'),
+    ('Por que existe', 'detalhes mudam mais e costumam ser lentos ou externos. Se a regra depende deles direto, trocar o detalhe mexe na regra, e testar a regra obriga a usar o detalhe de verdade.'),
+    ('Como reconhecer o problema', '<code>new</code> de e-mail, banco, arquivo ou rede dentro da regra, e teste lento ou impossível de escrever sem o mundo real.'),
+    ('Cuidado', 'o que inverte é a seta de dependência no código, não a ordem de execução: a regra continua chamando o aviso. E nem todo <code>new</code> é problema: regra pura e rápida pode ser criada direto.'),
+])
+
+
 def quiz(pergunta, opcoes, explica, certo='Isso!', errado='Quase.'):
     bs = ''.join(f'<button class="quiz-opt"{" data-correct=\"true\"" if ok else ""} onclick="checkQuiz(this,{"true" if ok else "false"})">{t}</button>'
                  for t, ok in opcoes)
@@ -241,6 +284,7 @@ BIB_S_DIGITAR = """public class Biblioteca {
 
 add(secao('s', 'S', 'S · Uma classe, um motivo para mudar', 'A multa sai do balcão e ganha uma classe própria', f'''
 {vinheta('s', 'Vinheta do S: na biblioteca')}
+{CONCEITO_S}
 {ideia('A ideia', '<p>O método <code>devolver()</code> da <code>Biblioteca</code> calcula a multa <strong>e</strong> manda o aviso. Quem decide a multa é a <strong>coordenação</strong>; quem decide o aviso é a <strong>TI</strong>. Duas pessoas mexendo no mesmo método: um conserto numa coisa pode quebrar a outra.</p>',
        'separe o código por <strong>quem pede a mudança</strong>.')}
 {mapa(1)}
@@ -302,6 +346,7 @@ APP_O = """»        Leitor ana = new Leitor("Ana", "ana@email.com", new Aluno()
 
 add(secao('o', 'O', 'O · Crescer sem mexer no que funciona', 'Chega o Visitante: um arquivo novo, nenhuma classe antiga aberta', f'''
 {vinheta('o', 'Vinheta do O: o visitante na porta')}
+{CONCEITO_O}
 {ideia('A ideia', '<p>Com <code>if (tipo.equals("ALUNO"))</code>, cada tipo novo de leitor obriga a abrir a calculadora e editar no meio dela. E um tipo esquecido cai no <code>return 0</code>: paga zero, em silêncio.</p><p>A saída é uma <strong>interface</strong>: um <strong>contrato</strong>, a lista de métodos que uma classe promete ter. Cada tipo de leitor vira uma classe que cumpre o contrato (<code>implements</code>) e sabe a própria multa.</p>',
        'o código fica <strong>aberto</strong> para crescer e <strong>fechado</strong> para edição: tipo novo é arquivo novo.')}
 {mapa(2)}
@@ -381,6 +426,7 @@ TESTE_QUEBRA_L = """    @Test
 
 add(secao('l', 'L', 'L · O filho cumpre a promessa do pai', 'O dicionário que quebrou a lista da turma', f'''
 {vinheta('l', 'Vinheta do L: a sala de aula')}
+{CONCEITO_L}
 {ideia('A ideia', '<p><code>class LivroDeConsulta extends Livro</code> é <strong>herança</strong>: a classe filha é um tipo especial do pai, e onde o programa espera um <code>Livro</code> ele aceita a filha. Por isso a filha precisa cumprir <strong>tudo</strong> o que o pai promete. O <code>Livro</code> promete: “disponível, <code>emprestar()</code> funciona”.</p>',
        'se a filha não consegue cumprir a promessa do pai, ela <strong>não é</strong> filha. Não herde.')}
 {mapa(3)}
@@ -430,6 +476,7 @@ public class ObraDeConsulta implements ItemDoAcervo {"""
 
 add(secao('i', 'I', 'I · Ninguém promete o que não faz', 'O e-book que não se empresta', f'''
 {vinheta('i', 'Vinheta do I: o neon dos e-books')}
+{CONCEITO_I}
 {ideia('A ideia', '<p>Um contrato “para tudo” obriga cada classe a ter todos os métodos dele. Quem não faz algo vai escrever um método que só lança exceção: a promessa quebrada da letra L, agora <strong>forçada pelo contrato</strong>.</p>',
        'prefira <strong>contratos pequenos</strong>. Cada classe assina só os que cumpre.')}
 {mapa(4)}
@@ -496,6 +543,7 @@ APP_D = """    public static void main(String[] args) {
 
 add(secao('d', 'D', 'D · Dependa do contrato, não do detalhe', 'O aviso vira uma tomada, e o teste pluga um dublê', f'''
 {vinheta('d', 'Vinheta do D: a oficina do eletricista')}
+{CONCEITO_D}
 {ideia('A ideia', '<p>Dentro da <code>Biblioteca</code> há um <code>new EmailSmtp()</code>: o e-mail está <strong>soldado</strong> na regra, como um abajur com o fio preso na parede. Por isso o teste espera 2 s e não consegue conferir o aviso.</p><p>A saída: a <code>Biblioteca</code> depende de um contrato (<code>Notificador</code>) e <strong>recebe</strong> o notificador pronto pelo construtor. Quem monta (o <code>App</code>) pluga o e-mail; o teste pluga um <strong>dublê</strong> que só anota.</p>',
        'a regra depende do contrato; <strong>quem monta</strong> escolhe o detalhe.')}
 {mapa(5)}

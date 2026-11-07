@@ -250,3 +250,6 @@ passo a passo. Cada estado deve responder: **antes, ação, depois, como provar 
   ZIPs com `tooling/build-cap04-biblioteca.py`; validar com `python3 tooling/validate-cap04-biblioteca.py`.
   Página gerada por `tooling/cap04-oo-solid/montar_index.py <clone do bundle>`: edite o script e regenere.
 - Manter 11 pontos do HTML, professor.txt e professor-resolucoes.txt sincronizados. Sem links dos TXTs.
+- Cada letra abre com 📖 "O conceito" (teoria geral, `analogy conceito`, constantes CONCEITO_* no
+  montar_index.py) antes da 💡 ideia: o professor sentiu falta da teoria antes da prática (07/11/2026).
+  Usa o componente `analogy`, não é a caixa teoria/limite/prova reprovada.

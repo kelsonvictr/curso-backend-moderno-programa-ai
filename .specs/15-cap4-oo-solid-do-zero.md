@@ -16,7 +16,9 @@ Pasta: `capitulos/04-oo-e-solid-do-zero/` (nome mantido para não quebrar links)
 01 Dona Marta (5 cartões S/O/L/I/D, frase do dia) · 02 Abrir o projeto (checkpoints, mapa
 interativo) · 03 S · 04 O · ☕ · 05 L · 06 I · 07 D · 08 BugZilla · 09 Desafio individual
 (Funcionário + WhatsApp) · 10 O agente revisa (sem editar) · 11 O que você leva (+ casa).
-Cada letra: 💡 ideia (2–3 frases + Regra) → mapa das classes → 👀 problema → ⌨️ digitar →
+Cada letra: 📖 conceito (nome oficial, o que diz, por que existe, como reconhecer, cuidado;
+teoria geral sem a Biblioteca, `analogy conceito`; pedido do professor em 07/11/2026) →
+💡 ideia (2–3 frases + Regra) → mapa das classes → 👀 problema → ⌨️ digitar →
 🚨 compilador → ✅ mesmo teste → 🧠 1 quiz → 👀 Travou? (erros comuns + ZIP).
 Teoria-chave entra onde é usada: interface/implements/@Override no O; extends/super no L.
 
