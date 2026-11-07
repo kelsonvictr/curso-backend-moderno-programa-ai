@@ -76,3 +76,19 @@ Os pontos abaixo seguem os marcadores do capítulo.
   Cinco frases. Strategy só citado. Casa (revistas): extends Livro é honesto se empresta e
   devolve com as mesmas regras e só acrescenta numeroDaEdicao; classe separada assinando
   ItemDoAcervo também vale, mas não entra em emprestarTodos. Vale o argumento.
+
+[12] Bônus: a Biblioteca no Spring + Kafka
+  Fontes: tooling/cap04-oo-solid/bonus-spring/{comum,inicio,final}; ZIPs por
+  tooling/cap04-oo-solid/gerar_bonus_spring.py (br.com.biblioteca sai da tag d, sem o App).
+  Validado: python3 tooling/validate-cap04-bonus.py → 2/2 ZIPs (Docker ligado).
+  Início: BibliotecaConfig @Bean biblioteca() { new Biblioteca(new EmailSmtp()) }. 11 testes.
+  Balcão (localhost:8080) → POST /devolucoes?leitor&tipo&livro&dias. Ana ~2,0 s, log [e-mail].
+  Final: NotificadorKafka @Component implements Notificador, KafkaTemplate<String,String>,
+  send("multas", nome, nome + ": " + mensagem). Config: biblioteca(Notificador n) → new Biblioteca(n).
+  Devoluções em ~1–2 ms (1ª ~0,4 s, conexão). Tópico: Ana 300, Carla 600, Bia 100; Duda (0 dias) não.
+  Painel: localhost:8090 → Topics → multas → Messages. Ao vivo: kafka-console-consumer (toggler).
+  Quiz: @Component na Biblioteca → manter o @Bean (regra sem framework, escolha num lugar só).
+  Pergunta provável: "e se o Kafka cair?" App subido com o Kafka parado: 500 em 5 s (max.block.ms).
+  Kafka caindo com o app já conectado: o send é assíncrono, a devolução responde 200 e a mensagem
+  se perde (erro só no log). Isso não é SOLID: é o problema de publicar com garantia (Cap 02,
+  outbox/confirmação). Bom gancho, não resolva aqui.

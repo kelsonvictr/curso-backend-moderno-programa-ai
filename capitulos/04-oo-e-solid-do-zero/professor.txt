@@ -31,6 +31,7 @@ ANTES DA AULA (10 min, na sua máquina)
 17:00 (15)  09 Desafio individual: Funcionário (O) + WhatsApp (D). Conte arquivos.
 17:15 (10)  10 Agente revisa sem editar + quiz ILivro → recusar.
 17:25 (5)   11 O que você leva: 5 frases, Strategy (só o nome), casa (revistas).
+fora       12 BÔNUS Spring + Kafka: quem terminou faz em sala, o resto em casa. Não entra no horário.
 
 VINHETAS (~40 s, PLAY no começo de cada letra, antes de explicar a ideia):
   S biblioteca · O rua/visitante · L sala de aula · I quarto à noite · D oficina. Vertical: video/vinheta-<letra>-vertical.mp4.
@@ -40,6 +41,14 @@ VINHETAS (~40 s, PLAY no começo de cada letra, antes de explicar a ideia):
   Nome oficial em inglês, o que diz, por que existe, como reconhecer, cuidado. É a teoria
   geral, sem Biblioteca; a 💡 ideia aplica ao caso. Leia "O que diz" em voz alta.
   Atrasou? Fique só no "O que diz": o resto é leitura em casa.
+
+BÔNUS [12] (ZIPs apoio/bonus-spring-kafka-{inicio,final}.zip, pasta biblioteca-spring)
+  A Biblioteca do fim do D, sem mudar uma linha, atrás de um balcão web (Spring Boot 4.1.1) e
+  avisando multas no Kafka (mesmo compose do Cap 03: 9092 e painel 8090). O aluno digita só o
+  NotificadorKafka e troca 3 linhas no BibliotecaConfig. Balcão em localhost:8080 mostra o tempo:
+  ~2000 ms com e-mail → poucos ms com Kafka. Conta final: zero arquivos abertos em br.com.biblioteca.
+  Precisa de Docker e baixa o Spring na 1ª vez: não faça em sala com quem ainda está no desafio.
+  Loja Café ligada? Porta 8080 ou 9092 ocupada: pare a API e rode docker compose stop na infra dela.
 
 SE ATRASAR: 09 vira casa; 06 você digita projetado e a turma acompanha.
 Quem travar pega o ZIP no "👀 Travou?" de cada letra. Não depure em sala.

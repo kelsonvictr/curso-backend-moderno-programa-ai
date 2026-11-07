@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Balcão da Dona Marta</title>
+<style>
+  pre, code, .tempo, .resposta {
+    font-variant-ligatures: none;
+    font-feature-settings: "liga" 0, "clig" 0, "calt" 0;
+  }
+  :root { --fundo: #f6efe3; --papel: #fffaf2; --tinta: #2b2118; --apagado: #7a6a58; --java: #e76f00; --verde: #2f7d4f; --linha: #e2d5c0; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--fundo); color: var(--tinta); font: 16px/1.5 "Avenir Next", "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 32px 16px 48px; }
+  h1 { font-family: Georgia, "Times New Roman", serif; font-size: 2.2rem; margin: 0 0 4px; }
+  .sub { color: var(--apagado); margin: 0 0 24px; }
+  .leitores { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+  .leitor { border: 2px solid var(--linha); background: var(--papel); border-radius: 14px; padding: 14px; text-align: left; cursor: pointer; font: inherit; color: inherit; transition: transform .12s, border-color .12s; }
+  .leitor:hover, .leitor:focus-visible { border-color: var(--java); transform: translateY(-2px); outline: none; }
+  .leitor:disabled { opacity: .6; cursor: wait; }
+  .leitor strong { display: block; font-size: 1.15rem; }
+  .leitor span { color: var(--apagado); font-size: .9rem; }
+  form { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; align-items: end; background: var(--papel); border: 1px dashed var(--linha); border-radius: 14px; padding: 14px; }
+  label { display: grid; font-size: .8rem; color: var(--apagado); gap: 2px; }
+  input, select { font: inherit; padding: 6px 8px; border: 1px solid var(--linha); border-radius: 8px; background: #fff; min-width: 0; }
+  input[name="dias"] { width: 72px; }
+  form button { font: inherit; font-weight: 600; background: var(--java); color: #fff; border: 0; border-radius: 8px; padding: 8px 14px; cursor: pointer; }
+  h2 { font-size: 1rem; margin: 28px 0 8px; }
+  ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+  li { background: var(--papel); border-left: 4px solid var(--verde); border-radius: 8px; padding: 10px 12px; display: flex; gap: 12px; justify-content: space-between; align-items: baseline; }
+  li.lento { border-left-color: var(--java); }
+  li.erro { border-left-color: #b3261e; }
+  .resposta { overflow-wrap: anywhere; }
+  .tempo { white-space: nowrap; font-weight: 700; }
+  .vazio { color: var(--apagado); font-style: italic; }
+  .dica { margin-top: 24px; font-size: .9rem; color: var(--apagado); }
+  .dica a { color: var(--java); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Balcão da Dona Marta</h1>
+  <p class="sub">Cada clique devolve um livro com atraso. Repare no tempo de cada devolução.</p>
+
+  <div class="leitores">
+    <button class="leitor" data-leitor="Ana" data-tipo="aluno" data-livro="Dom Casmurro" data-dias="3"><strong>Ana</strong><span>aluna · 3 dias de atraso</span></button>
+    <button class="leitor" data-leitor="Carla" data-tipo="visitante" data-livro="Iracema" data-dias="3"><strong>Carla</strong><span>visitante · 3 dias de atraso</span></button>
+    <button class="leitor" data-leitor="Bia" data-tipo="professor" data-livro="O Cortiço" data-dias="2"><strong>Bia</strong><span>professora · 2 dias de atraso</span></button>
+    <button class="leitor" data-leitor="Duda" data-tipo="aluno" data-livro="Memórias Póstumas" data-dias="0"><strong>Duda</strong><span>aluna · no prazo</span></button>
+  </div>
+
+  <form id="outro">
+    <label>Nome <input name="leitor" required value="Você"></label>
+    <label>Tipo
+      <select name="tipo"><option value="aluno">aluno</option><option value="professor">professor</option><option value="visitante">visitante</option></select>
+    </label>
+    <label>Livro <input name="livro" required value="O Alienista"></label>
+    <label>Dias <input name="dias" type="number" min="0" max="365" required value="5"></label>
+    <button type="submit">Devolver</button>
+  </form>
+
+  <h2>Devoluções</h2>
+  <ol id="historico"><li class="vazio">Nenhuma devolução ainda.</li></ol>
+
+  <p class="dica">As multas avisadas pelo Kafka aparecem no painel em <a href="http://localhost:8090" target="_blank" rel="noopener">localhost:8090</a>, no tópico <strong>multas</strong>.</p>
+</main>
+<script>
+  const historico = document.getElementById('historico');
+
+  async function devolver(dados, botao) {
+    if (botao) botao.disabled = true;
+    const inicio = performance.now();
+    let texto, ok;
+    try {
+      const resposta = await fetch('/devolucoes', { method: 'POST', body: new URLSearchParams(dados) });
+      ok = resposta.ok;
+      texto = ok ? await resposta.text() : 'Erro ' + resposta.status + ': veja o terminal do Spring.';
+    } catch (e) {
+      ok = false;
+      texto = 'O Spring não respondeu. Ele está rodando?';
+    }
+    const ms = Math.round(performance.now() - inicio);
+    if (botao) botao.disabled = false;
+
+    const vazio = historico.querySelector('.vazio');
+    if (vazio) vazio.remove();
+    const item = document.createElement('li');
+    if (!ok) item.className = 'erro';
+    else if (ms >= 1000) item.className = 'lento';
+    const r = document.createElement('span'); r.className = 'resposta'; r.textContent = texto;
+    const t = document.createElement('span'); t.className = 'tempo'; t.textContent = '⏱ ' + ms + ' ms';
+    item.append(r, t);
+    historico.prepend(item);
+  }
+
+  document.querySelectorAll('.leitor').forEach(function (b) {
+    b.addEventListener('click', function () { devolver(b.dataset, b); });
+  });
+  document.getElementById('outro').addEventListener('submit', function (e) {
+    e.preventDefault();
+    devolver(new FormData(e.target), e.target.querySelector('button'));
+  });
+</script>
+</body>
+</html>

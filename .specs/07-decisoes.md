@@ -554,3 +554,10 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
 ## 2026-10-31 (madrugada) — Cinco vinhetas, cada uma num cenário
 - Com o principal aprovado, o prof pediu todas as vinhetas e, no meio, cenários diferentes para não
   ficarem iguais. Feitas S/O/L/I/D (~40 s) com biblioteca, rua, sala de aula, quarto à noite e oficina.
+
+## 2026-11-07 — Cap 04: conceito por letra e bônus Spring + Kafka
+- Estudando o capítulo pronto, o professor sentiu falta da teoria de cada letra antes da prática:
+  cada letra ganhou o quadro 📖 "O conceito" (componente `analogy`), sem mudar o resto.
+- Pediu também uma prática final "simples, mas bem legal e empolgante" com Spring, Kafka e SOLID.
+  Escolheu bônus fora do cronograma e Kafka local. A Biblioteca vai para um balcão web e avisa
+  multas no Kafka sem abrir a regra: o D do dia aplicado com framework. Detalhe em 15-cap4.

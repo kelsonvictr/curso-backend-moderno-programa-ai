@@ -1,0 +1,33 @@
+[
+  {
+    "zip": "bonus-spring-kafka-inicio.zip",
+    "regra_igual_tag_d": true,
+    "testes": 11,
+    "tempos_s": {
+      "Ana": 2.023,
+      "Carla": 2.009,
+      "Bia": 2.01,
+      "Duda": 0.004
+    }
+  },
+  {
+    "zip": "bonus-spring-kafka-final.zip",
+    "regra_igual_tag_d": true,
+    "testes": 11,
+    "tempos_s": {
+      "Ana": 0.415,
+      "Carla": 0.002,
+      "Bia": 0.001,
+      "Duda": 0.002
+    },
+    "mensagens_no_topico": [
+      "Ana",
+      "Bia",
+      "Carla"
+    ],
+    "kafka_parado_desde_o_inicio": {
+      "status": 500,
+      "segundos": 5.1
+    }
+  }
+]

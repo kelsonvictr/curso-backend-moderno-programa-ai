@@ -85,9 +85,9 @@ def copiar(arquivo, src):
     return codigo(arquivo, src, '', 'copiar', '<button type="button" class="copiar-btn" data-copy-code>📋 Copiar</button>')
 
 
-def cmd(texto):
+def cmd(texto, pasta='biblioteca'):
     return (f'<div class="code-block comando" data-copiavel><div class="code-header"><span class="filename">no terminal do IntelliJ, '
-            f'dentro da pasta biblioteca</span><button type="button" class="copiar-btn" data-copy-code>📋 Copiar</button></div>'
+            f'dentro da pasta {pasta}</span><button type="button" class="copiar-btn" data-copy-code>📋 Copiar</button></div>'
             f'<pre>{html.escape(texto, quote=False)}</pre><p class="copy-status" aria-live="polite"></p></div>')
 
 
@@ -641,7 +641,91 @@ add(secao('leva', '🎒', 'O que você leva', 'Uma frase por letra, e a frase do
 <div class="tip"><strong>Uma mudança, um lugar.</strong> Compare com o começo: a mesma biblioteca e os mesmos valores. Mudou onde cada coisa mora, e os testes caíram de 4 s para 0,03 s.</div>
 <div class="analogy"><div class="analogy-title">🏷️ Um nome para o que você já fez</div><p>O <code>TipoDeLeitor</code>, com uma classe por jeito de calcular atrás de um contrato, tem nome no catálogo de <strong>padrões de projeto</strong>: <em>Strategy</em>. Padrões ficam para outro dia; hoje você construiu a base deles.</p></div>
 <h3 class="passo">🏠 Para casa</h3>
-<p>Se não terminou, faça o <a href="#desafio">desafio individual</a>. Depois, uma pergunta: <strong>revistas</strong> entram no catálogo e se emprestam como livros, mas têm número de edição. <code>Revista extends Livro</code> ou uma classe separada que assina <code>ItemDoAcervo</code>? Escreva uma frase defendendo a sua escolha com a letra L e implemente. Use o seu projeto ou o <a href="apoio/biblioteca-d.zip" download>biblioteca-d.zip</a>.</p>'''))
+<p>Se não terminou, faça o <a href="#desafio">desafio individual</a>. Depois, uma pergunta: <strong>revistas</strong> entram no catálogo e se emprestam como livros, mas têm número de edição. <code>Revista extends Livro</code> ou uma classe separada que assina <code>ItemDoAcervo</code>? Escreva uma frase defendendo a sua escolha com a letra L e implemente. Use o seu projeto ou o <a href="apoio/biblioteca-d.zip" download>biblioteca-d.zip</a>.</p>
+<p>Terminou e quer mais? O <a href="#bonus">bônus</a> leva esta mesma Biblioteca para o Spring e o Kafka.</p>'''))
+
+# ================= 12 · bônus Spring + Kafka =================
+BONUS = ROOT / 'tooling/cap04-oo-solid/bonus-spring'
+SPR = 'src/main/java/br/com/biblioteca/spring/'
+
+
+def bonus(versao, arquivo):
+    return (BONUS / versao / SPR / arquivo).read_text().rstrip('\n')
+
+
+CONFIG_INI = bonus('inicio', 'BibliotecaConfig.java')
+CONFIG_FIM = bonus('final', 'BibliotecaConfig.java')
+LINHAS_INI = set(CONFIG_INI.split('\n'))
+CONFIG_DIG = '\n'.join(('»' + l) if l.strip() and l not in LINHAS_INI else l for l in CONFIG_FIM.split('\n'))
+NOTIF_KAFKA = bonus('final', 'NotificadorKafka.java')
+CONSUMIDOR = ('docker compose exec kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka:19092 '
+              '--topic multas --from-beginning --property print.key=true')
+D_BONUS = '''<figure class="desenho-fim"><svg viewBox="0 0 900 220" role="img" aria-labelledby="dbonus-t"><title id="dbonus-t">O caminho de uma multa: do balcão na web até o tópico do Kafka</title>
+<rect class="k" x="10" y="20" width="150" height="64" rx="12"/><text class="t" x="26" y="48">Balcão web</text><text class="s" x="26" y="70">clique = HTTP</text>
+<rect class="d" x="190" y="20" width="170" height="64" rx="12"/><text class="t" x="206" y="48">BalcaoController</text><text class="s" x="206" y="70">só traduz</text>
+<rect class="g" x="390" y="20" width="150" height="64" rx="12"/><text class="t" x="406" y="48">Biblioteca</text><text class="s" x="406" y="70">a regra de hoje</text>
+<rect class="n" x="570" y="20" width="160" height="64" rx="12"/><text class="t" x="586" y="48">Notificador</text><text class="s" x="586" y="70">contrato</text>
+<rect class="d" x="570" y="140" width="160" height="64" rx="12"/><text class="t" x="586" y="168">NotificadorKafka</text><text class="s" x="586" y="190">você digita</text>
+<rect class="k" x="760" y="140" width="130" height="64" rx="12"/><text class="t" x="776" y="168">Kafka</text><text class="s" x="776" y="190">tópico multas</text>
+<path class="lv" d="M160 52 H184 M360 52 H384 M540 52 H564 M730 172 H754"/>
+<path class="lv" d="M184 46 L190 52 L184 58 M384 46 L390 52 L384 58 M564 46 L570 52 L564 58 M754 166 L760 172 L754 178"/>
+<path class="lb" stroke-dasharray="6 5" d="M650 140 V90 M644 96 L650 90 L656 96"/><text class="s" x="660" y="120">implementa</text>
+</svg><figcaption>Verde: a <b>Biblioteca</b> de hoje, sem nenhuma linha mudada. O resto é borda: Spring, HTTP e Kafka.</figcaption></figure>'''
+
+TRAVOU_BONUS = '''<p><strong>Topic multas not present in metadata after 5000 ms</strong>: o Kafka não está rodando. Rode <code>docker compose up -d</code> e confira o painel na porta 8090.</p>
+<p><strong>Port 8080 was already in use</strong>: outro programa usa a porta, talvez a API da Loja Café. Pare esse programa e rode de novo.</p>
+<p><strong>port is already allocated</strong> no <code>docker compose up</code>: o Kafka da Loja Café ainda está ligado. Na pasta <code>infra</code> dela, rode <code>docker compose stop</code>.</p>
+<p><strong>No qualifying bean of type Notificador</strong>: faltou o <code>@Component</code> no <code>NotificadorKafka</code>.</p>
+<p>Se não sair, baixe o <a href="apoio/bonus-spring-kafka-final.zip" download>bonus-spring-kafka-final.zip</a>, o projeto pronto.</p>'''
+
+add(secao('bonus', '🎁', 'Bônus: a Biblioteca no Spring + Kafka', 'Para quem terminou, ou para casa · a regra não pode ser aberta', f'''
+<p>A Dona Marta quer um balcão na web, e a TI quer que cada multa vire uma mensagem no <strong>Kafka</strong>, como os pedidos da Loja Café no Cap 03: quem quiser avisar o leitor (app, WhatsApp, painel) lê de lá. O desafio é fazer isso <strong>sem abrir a classe <code>Biblioteca</code></strong>.</p>
+{ideia('A ideia', '<p>No D, quem montava o programa era o <code>App</code>: ele escolhia o notificador. No Spring, esse papel é de uma classe com <code>@Configuration</code>. Cada método dela marcado com <code>@Bean</code> cria uma peça, e o Spring entrega a peça pronta a quem pedir no construtor, como o controller.</p><p>Trocar o e-mail pelo Kafka é, então, o mesmo movimento do desafio do WhatsApp: uma classe nova que cumpre o <code>Notificador</code> e uma troca na montagem.</p>',
+       'Spring, HTTP e Kafka ficam na <strong>borda</strong>; a regra nem sabe que eles existem.')}
+{D_BONUS}
+{passo('📦 1. Baixe e abra o projeto')}
+<p>Baixe o <a href="apoio/bonus-spring-kafka-inicio.zip" download>bonus-spring-kafka-inicio.zip</a>, descompacte e abra a pasta <code>biblioteca-spring</code> no IntelliJ. São dois pacotes:</p>
+<ul>
+<li><code>br.com.biblioteca</code>: a Biblioteca do fim do D, <strong>copiada sem mudar uma linha</strong>. Só o <code>App.java</code> saiu, porque agora quem monta é o Spring.</li>
+<li><code>br.com.biblioteca.spring</code>: a borda. <code>BibliotecaApplication</code> liga o Spring, <code>BalcaoController</code> recebe a devolução por HTTP e <code>BibliotecaConfig</code> monta as peças.</li>
+</ul>
+{ler('BibliotecaConfig.java · quem monta, por enquanto com e-mail', CONFIG_INI)}
+{passo('✅ 2. Rode os testes')}
+{cmd(MVN_TEST, 'biblioteca-spring')}
+{term("""Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s -- in br.com.biblioteca.BibliotecaTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in br.com.biblioteca.CalculadoraDeMultaTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in br.com.biblioteca.AcervoTest
+Tests run: 11, Failures: 0, Errors: 0, Skipped: 0
+BUILD SUCCESS""", 'os mesmos 11 testes, sem Spring e sem Kafka')}
+<p>Na primeira vez, o Maven baixa o Spring e pode levar alguns minutos. Os testes são os mesmos de hoje e continuam usando o dublê: a regra se testa sem framework.</p>
+{passo('👀 3. Abra o balcão, ainda com e-mail')}
+{cmd('./mvnw spring-boot:run', 'biblioteca-spring')}
+<p>Quando aparecer <code>Started BibliotecaApplication</code>, abra <a href="http://localhost:8080" target="_blank" rel="noopener">localhost:8080</a> e clique na <strong>Ana</strong>. Repare no tempo da devolução: cerca de <strong>2000 ms</strong>, porque o balcão espera o e-mail.</p>
+{term("""Started BibliotecaApplication in 0.619 seconds (process running for 0.742)
+[e-mail] para ana@email.com: Multa de 300 centavos por 3 dia(s) de atraso.""", 'terminal do Spring')}
+{passo('🐳 4. Suba o Kafka')}
+<p>Abra um <strong>segundo terminal</strong> na mesma pasta. O <code>compose.yaml</code> é o do Cap 03: Kafka na porta 9092 e painel na 8090.</p>
+{cmd('docker compose up -d', 'biblioteca-spring')}
+{passo('⌨️ 5. Digite o notificador novo')}
+<p>No pacote <code>br.com.biblioteca.spring</code>, crie a classe. O <code>KafkaTemplate</code> é a peça do Spring que publica mensagens; com <code>@Component</code>, o Spring cria o notificador sozinho e o entrega a quem pedir um <code>Notificador</code>.</p>
+{digitar('NotificadorKafka.java · arquivo novo', sem_pacote(NOTIF_KAFKA))}
+{passo('⌨️ 6. Troque o que o Spring pluga')}
+<p>No <code>BibliotecaConfig</code>, o método passa a <strong>receber</strong> um <code>Notificador</code>. O Spring procura uma peça que cumpra esse contrato, acha o <code>NotificadorKafka</code> e a entrega aqui:</p>
+{digitar('BibliotecaConfig.java · quem monta escolhe', sem_pacote(CONFIG_DIG), '⌨️ linhas acesas')}
+{passo('🚀 7. Reinicie e devolva livros')}
+<p>No primeiro terminal, pare o Spring com <kbd>Ctrl</kbd>+<kbd>C</kbd> e rode <code>./mvnw spring-boot:run</code> de novo. Clique em todos os leitores do balcão.</p>
+{term("""[kafka] enviado para o tópico multas: Ana: Multa de 300 centavos por 3 dia(s) de atraso.
+[kafka] enviado para o tópico multas: Carla: Multa de 600 centavos por 3 dia(s) de atraso.
+[kafka] enviado para o tópico multas: Bia: Multa de 100 centavos por 2 dia(s) de atraso.""", 'terminal do Spring')}
+<p>O tempo cai para <strong>poucos milissegundos</strong>: publicar no Kafka não espera ninguém ler. O primeiro clique demora um pouco mais, enquanto o Spring se conecta ao Kafka. Abra o painel em <a href="http://localhost:8090" target="_blank" rel="noopener">localhost:8090</a>: <strong>Topics</strong> → <strong>multas</strong> → <strong>Messages</strong>. A Duda não aparece: ela devolveu no prazo, e quem decide se há aviso é a regra, não o Kafka.</p>
+{toggler('📺 Quer ver as multas chegando ao vivo no terminal?', '<p>Num terceiro terminal, na mesma pasta, rode o comando abaixo e volte a clicar no balcão. Cada linha mostra a chave (o nome) e a mensagem. Para sair, <kbd>Ctrl</kbd>+<kbd>C</kbd>.</p>' + cmd(CONSUMIDOR, 'biblioteca-spring') + term("""Ana     Ana: Multa de 300 centavos por 3 dia(s) de atraso.
+Carla   Carla: Multa de 600 centavos por 3 dia(s) de atraso.
+Bia     Bia: Multa de 100 centavos por 2 dia(s) de atraso.""", 'consumidor do tópico multas'))}
+{passo('🔢 8. Faça a conta')}
+<div class="tip"><strong>Arquivos abertos no pacote <code>br.com.biblioteca</code>: zero.</strong> Um arquivo novo e três linhas trocadas na montagem levaram a Biblioteca para a web e para o Kafka. É o D pagando a conta: a regra depende do contrato, e quem monta (agora o Spring) escolhe o detalhe. É também o hexagonal do Cap 01: <code>Notificador</code> é a porta de saída, <code>NotificadorKafka</code> é o adaptador.</div>
+{quiz('Um colega sugere pôr <code>@Component</code> na própria <code>Biblioteca</code> e apagar o <code>BibliotecaConfig</code>: “é menos código”. Você…', [('Mantém o <code>@Bean</code> na configuração: a regra continua sem nada do Spring', True), ('Aceita: é o jeito normal do Spring e o resultado é o mesmo', False)],
+      'funcionaria, mas a regra passaria a depender do framework. Com o @Bean, a Biblioteca segue igual à da aula, testável sem Spring, e a escolha do notificador continua num lugar só.')}
+{toggler('👀 Travou? Erros comuns e o projeto pronto', TRAVOU_BONUS)}'''))
 
 # ================= página =================
 MENU = ''.join(f'<a class="sidebar-link" href="#{i}" onclick="goTo(\'{i}\');return false"><span class="dot"></span> {ic} {re.sub(r"<[^>]+>", "", t)}</a>\n'

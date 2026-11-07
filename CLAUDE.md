@@ -249,7 +249,10 @@ passo a passo. Cada estado deve responder: **antes, ação, depois, como provar 
 - Projeto: `tooling/cap04-oo-solid/gerar_biblioteca.py` → `biblioteca.bundle` (tags inicio, s, o, l, i, d);
   ZIPs com `tooling/build-cap04-biblioteca.py`; validar com `python3 tooling/validate-cap04-biblioteca.py`.
   Página gerada por `tooling/cap04-oo-solid/montar_index.py <clone do bundle>`: edite o script e regenere.
-- Manter 11 pontos do HTML, professor.txt e professor-resolucoes.txt sincronizados. Sem links dos TXTs.
+- Manter 12 pontos do HTML, professor.txt e professor-resolucoes.txt sincronizados. Sem links dos TXTs.
+- Ponto 12 = bônus Spring + Kafka (fora do cronograma). Fontes `tooling/cap04-oo-solid/bonus-spring/`,
+  ZIPs `gerar_bonus_spring.py` (nomes bonus-spring-kafka-*: o build da Biblioteca apaga biblioteca-*),
+  validar com `python3 tooling/validate-cap04-bonus.py` (Docker). A regra é a tag d sem mudar uma linha.
 - Cada letra abre com 📖 "O conceito" (teoria geral, `analogy conceito`, constantes CONCEITO_* no
   montar_index.py) antes da 💡 ideia: o professor sentiu falta da teoria antes da prática (07/11/2026).
   Usa o componente `analogy`, não é a caixa teoria/limite/prova reprovada.

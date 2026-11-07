@@ -15,12 +15,24 @@ Pasta: `capitulos/04-oo-e-solid-do-zero/` (nome mantido para não quebrar links)
 ## Estrutura v3 (11 pontos)
 01 Dona Marta (5 cartões S/O/L/I/D, frase do dia) · 02 Abrir o projeto (checkpoints, mapa
 interativo) · 03 S · 04 O · ☕ · 05 L · 06 I · 07 D · 08 BugZilla · 09 Desafio individual
-(Funcionário + WhatsApp) · 10 O agente revisa (sem editar) · 11 O que você leva (+ casa).
+(Funcionário + WhatsApp) · 10 O agente revisa (sem editar) · 11 O que você leva (+ casa) ·
+12 Bônus Spring + Kafka (07/11/2026; fora do cronograma: quem terminou ou casa).
 Cada letra: 📖 conceito (nome oficial, o que diz, por que existe, como reconhecer, cuidado;
 teoria geral sem a Biblioteca, `analogy conceito`; pedido do professor em 07/11/2026) →
 💡 ideia (2–3 frases + Regra) → mapa das classes → 👀 problema → ⌨️ digitar →
 🚨 compilador → ✅ mesmo teste → 🧠 1 quiz → 👀 Travou? (erros comuns + ZIP).
 Teoria-chave entra onde é usada: interface/implements/@Override no O; extends/super no L.
+
+## Bônus Spring + Kafka (ponto 12, 07/11/2026)
+- Pedido do professor: prática final "simples, mas bem legal e empolgante" com Spring, Kafka e SOLID.
+  Decidiu: bônus no fim (a aula não muda) e Kafka local de cada aluno (sem depender da rede).
+- Projeto `biblioteca-spring`: `br.com.biblioteca` = tag d sem o App (validado byte a byte);
+  `br.com.biblioteca.spring` = Application, BibliotecaConfig (raiz de composição), BalcaoController
+  (só traduz HTTP) e balcão estático que mostra o tempo de cada devolução. Spring Boot 4.1.1,
+  `apache/kafka:3.9.1` + kafbat UI (compose do Cap 03). Aluno digita NotificadorKafka + 3 linhas da config.
+- Prova: e-mail ~2000 ms → Kafka poucos ms; tópico `multas` recebe Ana/Carla/Bia, Duda não;
+  zero arquivos abertos na regra. Fontes em `tooling/cap04-oo-solid/bonus-spring/`, ZIPs por
+  `gerar_bonus_spring.py`, validação `python3 tooling/validate-cap04-bonus.py`.
 
 ## Os cinco passos (o que o aluno vê acontecer)
 | Letra | Problema visível | Mudança digitada | Prova |
