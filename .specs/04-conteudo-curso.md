@@ -225,6 +225,10 @@ Kafka (o log) + o quadro de decisão.
 
 ---
 
+> **Reorganização 12/11/2026:** o Bloco 3 virou o `05-aws-serverless` (Lambda + API Gateway +
+> DynamoDB + GitHub Actions + front na Vercel, Serverless Framework v3 no lugar do SAM; contrato em
+> `16-cap5-aws-serverless.md`). Os planos abaixo dos Sáb 6–8 (SQS/SNS, S3, Streams, capstone) são históricos.
+
 ## BLOCO 3 — Eventos na Nuvem / Serverless AWS (Sáb 6–8, 12h)
 > **Objetivo:** montar um sistema event-driven serverless real, espelhando o stack de produção
 > que o prof opera. Conta **própria** de cada aluno (free tier), com notas de custo.

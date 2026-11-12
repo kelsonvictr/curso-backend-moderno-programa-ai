@@ -1,0 +1,92 @@
+CAP 05 — RESOLUÇÕES E PONTOS DE CORREÇÃO
+=========================================================================
+Os números [NN] batem com os marcadores discretos da página e com o professor.txt.
+O código do aluno vem de um agente: não precisa ser igual ao gabarito, precisa cumprir os critérios.
+Gabarito completo: tooling/cap05-aws-serverless/referencia/ (e os ZIPs em apoio/).
+
+[01] A Biblioteca vai para a nuvem
+  Sem entrega. Confira que a turma entendeu a ordem do mapa: cada peça entra por causa de uma dor.
+
+[02] Conferir a bancada
+  Critérios: Arn termina em user/deploy-biblioteca (nunca root); Framework Core 3.x; repositório
+  PRIVADO; docs/arquitetura.drawio existe e tem notebook + região vazia.
+  Regras 1 e 2 do AGENTS.md: o agente não roda nada de nuvem e não toca em chave.
+
+[03] Serverless: uma função no console
+  Quiz: custa nada de madrugada (cobrança por chamada e por milissegundo).
+  Pergunta oral: "quantos cliques?" → ninguém sabe ao certo. É a deixa para o IaC.
+  Init Duration só na primeira chamada = cold start. A ola-console NÃO é apagada agora.
+
+[04] IaC: a mesma função, escrita em arquivo
+  Critérios do serverless.yml: frameworkVersion '3', runtime java21, us-east-1, stage dev,
+  timeout 15, package.artifact apontando para target/biblioteca-serverless.jar, função ola em
+  httpApi GET /ola. Gabarito: tooling/cap05-aws-serverless/atos/serverless.ato2.yml.
+  OlaHandler: implements RequestHandler<APIGatewayV2HTTPEvent, APIGatewayV2HTTPResponse>, sem main.
+  Prova: /ola responde o JSON; CloudFormation mostra 11 recursos.
+  Quiz: a fila clicada fica lá, sem dono. O deploy só cuida da pilha dele.
+  Erro de agente comum: usar "http" (REST API, payload 1.0) no lugar de "httpApi". Funciona, mas o
+  evento Java muda (APIGatewayProxyRequestEvent) e o CORS do ponto 06 se configura de outro jeito.
+  Peça para trocar por httpApi.
+
+[05] DynamoDB: os livros ganham memória
+  Critérios: Action só com dynamodb:PutItem e dynamodb:Scan; Resource = Fn::GetAtt da tabela (ou
+  !GetAtt), nunca "*"; BillingMode PAY_PER_REQUEST; chave id (S); TABELA_LIVROS em environment;
+  handlers recebem LivroRepositorio pelo construtor; testes com repositório em memória (5 verdes).
+  Gabarito: atos/serverless.ato3.yml e referencia/backend/src.
+  Prova: POST 201 com id; GET lista em ordem de título; item visível no console do DynamoDB.
+  Quiz: dois itens. O DynamoDB só garante a unicidade da chave (id).
+  Erros de agente comuns: Resource "*"; ProvisionedThroughput no lugar de PAY_PER_REQUEST (pode
+  cobrar com a tabela parada); DynamoDbClient criado dentro do handleRequest (lento a cada
+  chamada: deve ser criado uma vez, no construtor); Spring "para facilitar".
+
+[06] A página na Vercel e o CORS
+  Critérios: frontend/ sem build (index.html, app.js, config.js); API_URL sem /livros e sem barra;
+  CORS em provider.httpApi.cors com allowedOrigins = endereço exato da Vercel, sem "*".
+  Gabarito: referencia/backend/serverless.yml (linhas do httpApi) e referencia/frontend/.
+  A ordem importa: a turma VÊ o erro no Console antes de corrigir.
+  Quiz: a API respondeu; quem bloqueou foi o navegador. A Vercel não participa da chamada.
+  Erros de agente comuns: allowedOrigins '*'; devolver Access-Control-Allow-Origin "na mão" dentro
+  do Java (funciona para GET, mas o preflight do POST continua falhando); sugerir proxy na Vercel.
+
+[07] CI/CD: o push publica
+  Critérios do deploy.yml: gatilho push na main + workflow_dispatch; testes ANTES do deploy;
+  chaves só como ${{ secrets.AWS_ACCESS_KEY_ID }} e ${{ secrets.AWS_SECRET_ACCESS_KEY }};
+  serverless@3; working-directory backend. Gabarito: referencia/.github/workflows/deploy.yml.
+  Prova 1: /ola muda depois de um push, sem deploy local.
+  Prova 2: teste quebrado → vermelho em "Rodar os testes" → /ola e página continuam no ar.
+  Quiz: a versão anterior, funcionando.
+  Erros de agente comuns: npm install -g serverless (sem @3: instala a v4 e a esteira pede login);
+  mvn no lugar de ./mvnw; esquecer o chmod do mvnw; pôr a chave em "env:" com valor literal.
+
+[08] BugZilla
+  1 chave no repo → Secrets; se vazou, apagar a chave no IAM (apagar o commit não resolve).
+  2 asterisco no IAM → só as ações usadas, só na tabela.
+  3 asterisco no CORS → origem exata.
+  4 ajuste no console → mudar o arquivo e publicar (o deploy desfaz o ajuste manual).
+  5 deploy por fora → só a esteira publica.
+  Bônus: a ola-console, criada no clique, que ninguém lembra.
+
+[09] Desafio individual: DELETE /livros/{id}
+  Cinco lugares: (1) handler + remover no contrato e no repositório; (2) função e rota no
+  serverless.yml; (3) IAM dynamodb:DeleteItem; (4) CORS allowedMethods com DELETE; (5) botão na
+  página + teste. Os que o agente esquece: 3 e 4. Sintoma do 3: 500 e AccessDenied no log.
+  Sintoma do 4: funciona no Insomnia, falha na página.
+  Aceite 204 ou 200 na resposta. O id vem de evento.getPathParameters().get("id").
+  Critério de processo: desenho atualizado ANTES do prompt, e publicação só pela esteira.
+
+[10] O agente revisa a infraestrutura
+  Respostas esperadas da revisão: (1) IAM mínimo, sem excesso; (2) nenhum segredo em arquivo;
+  (3) só a origem da Vercel; (4) a esteira para nos testes e nada é publicado; (5) parado, quase
+  nada custa: Lambda, API e DynamoDB por demanda cobram por uso (ficam os logs do CloudWatch e o
+  bucket de deploy, centavos). Toda resposta precisa de arquivo:linha.
+  Quiz: recusar o dynamodb:*.
+  Se o revisor apontar o AdministratorAccess da chave de deploy: ele tem razão, é o risco assumido
+  do curso. Aproveite para falar de OIDC e de política de deploy restrita.
+
+[11] Desligar tudo
+  serverless remove apaga a pilha (24 recursos). A ola-console fica: apagar à mão.
+  Um push (ou Run workflow) recria tudo; o endereço da API muda → atualizar config.js.
+  No fim de vez: apagar a access key no IAM e os Secrets no GitHub.
+
+[12] O que você leva
+  Casa: desafio 09, PNG do desenho no README com uma frase por caixa, e desligar.

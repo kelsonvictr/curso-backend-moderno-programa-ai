@@ -95,6 +95,13 @@ Um único domínio atravessa o curso: nasce no Sáb 1 como domínio rico em Java
 
 > *Objetivo:* montar um sistema event-driven serverless real na **conta própria** de cada aluno (free tier), espelhando o stack de produção do professor.
 
+### Capítulo 5 — A Biblioteca vai para a nuvem *(revisão 12/11)*
+- Sistema serverless completo na conta de cada aluno: Lambda + API Gateway + DynamoDB descritos em
+  `serverless.yml` (Serverless Framework v3), página na Vercel, CORS e deploy pelo GitHub Actions.
+- Conceitos explicados do zero: serverless, IaC, IAM mínimo, CORS, CI/CD. O agente escreve o código;
+  o aluno desenha a arquitetura no draw.io antes de cada passo, roda os comandos de nuvem e confere.
+- Substitui a sequência abaixo (Sáb 6–8), que fica como plano anterior.
+
 ### Sábado 6 (24/10) — SQS + SNS + Lambda + API Gateway *(spec avaliada)*
 - SQS, SNS, **fan-out**; fecha o quadro com as três famílias. Lambda como compute orientado a evento; API Gateway HTTP; deploy com AWS SAM.
 - **Lab:** spec da topologia serverless; `criar-pedido` via API Gateway → Lambda → SNS → SQS → Lambda, em **duas fases** (plan/execute).

@@ -1,0 +1,81 @@
+{
+  "01": [
+    {
+      "role": "LLM",
+      "text": "Mundo cinco, fase um. A Biblioteca do Bairro quer ir para a internet."
+    }
+  ],
+  "02": [
+    {
+      "role": "BETO",
+      "text": "Deixa comigo! Comprei um servidor. Vai ficar ligado dia e noite, aqui na sala da Programa Aí.",
+      "legenda": "Deixa comigo! Comprei um servidor. Vai ficar ligado dia e noite, aqui na sala da Programa AI."
+    }
+  ],
+  "03": [
+    {
+      "role": "LIA",
+      "text": "Dia e noite? Beto, a biblioteca recebe quarenta visitas por dia."
+    }
+  ],
+  "04": [
+    {
+      "role": "LLM",
+      "text": "Olha o relógio. Três da manhã. Zero visitas. E o servidor ligado, gastando."
+    }
+  ],
+  "05": [
+    {
+      "role": "BETO",
+      "text": "Mas e se alguém aparecer?"
+    }
+  ],
+  "06": [
+    {
+      "role": "LLM",
+      "text": "Então troca o servidor por uma função. Ela dorme. Quando chega um pedido, acorda, responde e volta a dormir."
+    }
+  ],
+  "07": [
+    {
+      "role": "LIA",
+      "text": "E quem paga a função dormindo?"
+    }
+  ],
+  "08": [
+    {
+      "role": "LLM",
+      "text": "Ninguém. A conta é por pedido atendido, medida em milissegundos."
+    }
+  ],
+  "09": [
+    {
+      "role": "BETO",
+      "text": "E quem cuida da máquina onde ela roda? Atualização, disco cheio, queda de luz?"
+    }
+  ],
+  "10": [
+    {
+      "role": "LLM",
+      "text": "A Amazon. Servidor existe, só não é problema seu. Por isso o nome: serverless."
+    }
+  ],
+  "11": [
+    {
+      "role": "LIA",
+      "text": "Tem pegadinha?"
+    }
+  ],
+  "12": [
+    {
+      "role": "LLM",
+      "text": "Uma. Quem acorda demora um pouquinho para levantar. O primeiro pedido depois do cochilo é mais lento."
+    }
+  ],
+  "13": [
+    {
+      "role": "LLM",
+      "text": "Fase completa! Sem pedido, sem custo: a função só existe enquanto trabalha."
+    }
+  ]
+}

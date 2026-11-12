@@ -1,0 +1,68 @@
+# A infraestrutura da Biblioteca, escrita como texto.
+# "serverless deploy" lê este arquivo e cria (ou atualiza) tudo na sua conta da AWS.
+service: biblioteca-serverless
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: java21
+  region: us-east-1
+  stage: dev
+  memorySize: 1024
+  timeout: 15
+  environment:
+    # As funções leem o nome da tabela daqui (System.getenv).
+    TABELA_LIVROS: ${self:service}-${sls:stage}-livros
+  httpApi:
+    cors:
+      # Só o seu site pode chamar a API pelo navegador. Troque pelo endereço da sua Vercel.
+      allowedOrigins:
+        - https://SEU-PROJETO.vercel.app
+      allowedHeaders:
+        - Content-Type
+      allowedMethods:
+        - GET
+        - POST
+  iam:
+    role:
+      statements:
+        # As funções só podem gravar e ler nesta tabela. Nada mais.
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:Scan
+          Resource:
+            Fn::GetAtt: [TabelaLivros, Arn]
+
+package:
+  # O jar que o "./mvnw package" gera.
+  artifact: target/biblioteca-serverless.jar
+
+functions:
+  ola:
+    handler: br.com.biblioteca.OlaHandler
+    events:
+      - httpApi: GET /ola
+  cadastrarLivro:
+    handler: br.com.biblioteca.CadastrarLivroHandler
+    events:
+      - httpApi: POST /livros
+  listarLivros:
+    handler: br.com.biblioteca.ListarLivrosHandler
+    events:
+      - httpApi: GET /livros
+
+resources:
+  Resources:
+    TabelaLivros:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-${sls:stage}-livros
+        # Paga por leitura e escrita feitas. Parada, a tabela não custa nada.
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH

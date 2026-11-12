@@ -1,0 +1,37 @@
+{
+  "deploy_real": false,
+  "checkpoints": [
+    {
+      "ato": "ato2",
+      "ok": true,
+      "falhas": [],
+      "testes": 1,
+      "recursos": 11,
+      "jar_mb": 13.4
+    },
+    {
+      "ato": "ato3",
+      "ok": true,
+      "falhas": [],
+      "testes": 5,
+      "recursos": 24,
+      "jar_mb": 13.4
+    },
+    {
+      "ato": "ato4",
+      "ok": true,
+      "falhas": [],
+      "testes": 5,
+      "recursos": 24,
+      "jar_mb": 13.4
+    },
+    {
+      "ato": "ato5",
+      "ok": true,
+      "falhas": [],
+      "testes": 5,
+      "recursos": 24,
+      "jar_mb": 13.4
+    }
+  ]
+}

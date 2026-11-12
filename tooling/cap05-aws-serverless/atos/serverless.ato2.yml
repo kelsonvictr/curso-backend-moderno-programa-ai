@@ -1,0 +1,22 @@
+# A infraestrutura da Biblioteca, escrita como texto.
+# "serverless deploy" lê este arquivo e cria (ou atualiza) tudo na sua conta da AWS.
+service: biblioteca-serverless
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: java21
+  region: us-east-1
+  stage: dev
+  memorySize: 1024
+  timeout: 15
+
+package:
+  # O jar que o "./mvnw package" gera.
+  artifact: target/biblioteca-serverless.jar
+
+functions:
+  ola:
+    handler: br.com.biblioteca.OlaHandler
+    events:
+      - httpApi: GET /ola

@@ -1,0 +1,19 @@
+# Saída do Maven
+target/
+
+# Pasta de trabalho do Serverless Framework
+.serverless/
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+
+# Sistema
+.DS_Store
+
+# Segredos: nunca vão para o repositório
+.env
+.env.*
+*.pem
+credentials

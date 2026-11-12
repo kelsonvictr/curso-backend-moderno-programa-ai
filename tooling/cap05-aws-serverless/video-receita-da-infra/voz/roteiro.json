@@ -1,0 +1,81 @@
+{
+  "01": [
+    {
+      "role": "LLM",
+      "text": "Mundo cinco, fase dois. O Beto montou a nuvem da biblioteca inteira. Clicando."
+    }
+  ],
+  "02": [
+    {
+      "role": "BETO",
+      "text": "Trinta e sete cliques! Função, porta de entrada, permissão. Ficou uma beleza."
+    }
+  ],
+  "03": [
+    {
+      "role": "LIA",
+      "text": "Ótimo. Agora faz igual na conta de testes, que a gente vai precisar."
+    }
+  ],
+  "04": [
+    {
+      "role": "BETO",
+      "text": "Igual? Eu… cliquei em Avançar… depois marquei uma caixinha… ou eram duas?"
+    }
+  ],
+  "05": [
+    {
+      "role": "LLM",
+      "text": "Infra clicada mora na memória de quem clicou. E memória falha."
+    }
+  ],
+  "06": [
+    {
+      "role": "LIA",
+      "text": "E se a gente escrevesse a nuvem, como escreve código?"
+    }
+  ],
+  "07": [
+    {
+      "role": "LLM",
+      "text": "Isso tem nome: infraestrutura como código. Um arquivo de texto diz o que deve existir."
+    }
+  ],
+  "08": [
+    {
+      "role": "BETO",
+      "text": "Tipo uma receita de bolo?"
+    }
+  ],
+  "09": [
+    {
+      "role": "LLM",
+      "text": "Uma receita que a própria cozinha executa. Um comando lê o arquivo e cria tudo, sempre igual."
+    }
+  ],
+  "10": [
+    {
+      "role": "LIA",
+      "text": "E se alguém mudar a receita?"
+    }
+  ],
+  "11": [
+    {
+      "role": "LLM",
+      "text": "Fica no histórico do Guit: quem mudou, quando e por quê. Dá até para revisar antes.",
+      "legenda": "Fica no histórico do Git: quem mudou, quando e por quê. Dá até para revisar antes."
+    }
+  ],
+  "12": [
+    {
+      "role": "BETO",
+      "text": "Então eu posso apagar tudo sem medo?"
+    }
+  ],
+  "13": [
+    {
+      "role": "LLM",
+      "text": "Pode. Um comando apaga, outro recria. Fase completa! Infra escrita se refaz; infra clicada se perde."
+    }
+  ]
+}

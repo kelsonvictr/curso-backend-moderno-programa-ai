@@ -1,0 +1,185 @@
+/* Cap 05 · A Biblioteca vai para a nuvem — no formato do material Fullstack (step-header + card).
+   Só o que é deste capítulo; o resto vem de ../../shared. */
+:root {
+  --acento: #ff9900;
+  --acento-soft: #ffc46b;
+  --spring: #6db33f;
+}
+
+pre, code, .code-block pre, .terminal-body, .prompt pre, .mapa-vivo .m {
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "clig" 0, "calt" 0;
+}
+
+.hero-badge.aws, .sn-aws { background: linear-gradient(135deg, var(--acento), #ec7211); color: #0a0a12; }
+.step-number.sn-aws { font-weight: 900; font-size: 1.6rem; }
+.stack-chip.aws { border-color: rgba(255, 153, 0, .52); color: var(--acento-soft); }
+.stack-chip.verde { border-color: rgba(109, 179, 63, .52); color: #9bd77d; }
+.direct-note {
+  max-width: 820px; margin: 20px auto 0; padding: 13px 18px;
+  border: 1px solid rgba(255, 153, 0, .3); border-radius: 14px;
+  background: rgba(255, 153, 0, .07); color: var(--text-dim); font-size: .9rem;
+}
+
+/* Marcador discreto dos pontos da aula (sincronizado com professor.txt) */
+.lesson-point {
+  display: inline-block; margin-left: .5rem; color: #9292aa;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 400;
+  vertical-align: middle; white-space: nowrap;
+}
+
+/* Cartões em grade */
+.route-grid, .concept-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+.route-grid.cinco { grid-template-columns: repeat(5, 1fr); }
+.concept-grid.duas { grid-template-columns: repeat(2, 1fr); }
+.route-card, .concept-card { border: 1px solid rgba(255, 255, 255, .1); background: rgba(255, 255, 255, .025); border-radius: 14px; padding: 16px; min-width: 0; }
+.route-card strong, .concept-card strong { display: block; color: var(--acento-soft); margin-bottom: 5px; }
+.route-card p, .concept-card p { margin: 0; color: var(--text-dim); font-size: .86rem; line-height: 1.55; }
+
+/* Checkpoints numerados */
+.checkpoints { margin: 8px 0 16px; border: 1px solid rgba(255,255,255,.08); border-radius: 14px; }
+.checkpoint { display: grid; grid-template-columns: 54px 1fr; gap: 14px; padding: 15px; border-bottom: 1px solid rgba(255,255,255,.07); }
+.checkpoint:last-child { border-bottom: 0; }
+.checkpoint-mark { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 13px; background: rgba(255, 153, 0,.14); color: var(--acento-soft); font-weight: 900; }
+.checkpoint h4 { margin: 0 0 4px; color: var(--text); }
+.checkpoint p { margin: 0; color: var(--text-dim); font-size: .9rem; }
+
+/* Passos dentro de cada letra */
+.card h3.passo { margin: 28px 0 10px; font-size: 1.08rem; color: var(--text); }
+.analogy .regra { margin-bottom: 0; padding-top: 8px; border-top: 1px dashed rgba(255,255,255,.12); }
+
+/* Código: amarelo = digitar; com botão = copiar */
+.code-block.digitar { border: 1px solid rgba(255, 153, 0,.6); box-shadow: 0 0 0 1px rgba(255, 153, 0,.15); }
+.code-block.digitar .lang-badge { background: rgba(255, 153, 0,.18); color: var(--acento-soft); }
+.code-block .novo { display: inline-block; min-width: 100%; background: rgba(255, 153, 0,.16); box-shadow: inset 3px 0 0 var(--acento); }
+.code-block .code-header { gap: 10px; }
+.code-block .copiar-btn {
+  margin-left: auto; padding: 4px 12px; border-radius: 8px; cursor: pointer;
+  border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.06); color: var(--text); font: inherit; font-size: .78rem;
+}
+.code-block .copiar-btn:hover { border-color: var(--acento); }
+.code-block .copy-status { margin: 0; padding: 0 16px 8px; font-size: .8rem; color: #8ff0c8; }
+.code-block.comando pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.terminal-body { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: .8rem; line-height: 1.7; }
+.toggler-body .code-block { margin: 10px 0; }
+
+/* Prompt do agente (ponto do revisor) */
+.prompt { margin: 16px 0; border: 1px solid rgba(255,255,255,.12); border-radius: 14px; overflow: hidden; background: #10101a; }
+.prompt-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 16px; background: #1d2034; }
+.prompt-top button { padding: 4px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.06); color: var(--text); cursor: pointer; font: inherit; font-size: .8rem; }
+.prompt pre { margin: 0; padding: 16px; white-space: pre-wrap; font-size: .82rem; line-height: 1.7; color: #e3e6f5; }
+.prompt-key { color: var(--acento-soft); font-weight: 700; }
+.prompt mark.hl { background: rgba(255, 214, 102, .28); color: inherit; padding: 0 2px; border-radius: 3px; }
+.prompt .copy-status { margin: 0; padding: 0 16px 10px; font-size: .8rem; color: #8ff0c8; }
+
+/* Mapa vivo das classes e desenho final */
+.mapa-vivo, .desenho-fim { margin: 18px 0; padding: 14px; border-radius: 14px; background: #141420; border: 1px solid #3a3a52; }
+.mapa-vivo .svg-scroll, .desenho-fim { overflow-x: auto; }
+.mapa-vivo svg, .desenho-fim svg { display: block; width: 100%; height: auto; min-width: 640px; }
+.mapa-vivo figcaption { margin-top: 10px; font-size: .88rem; color: #c3c8da; }
+.mapa-vivo figcaption b { color: var(--acento-soft); }
+:is(.mapa-vivo, .desenho-fim) text { font-family: inherit; fill: #f1eee6; font-size: 15px; }
+:is(.mapa-vivo, .desenho-fim) .t { font-size: 17px; font-weight: 700; }
+:is(.mapa-vivo, .desenho-fim) .s { fill: #c4c1d4; font-size: 13.5px; }
+:is(.mapa-vivo, .desenho-fim) .m { font-family: 'JetBrains Mono', monospace; font-size: 13px; fill: #e9e4ff; }
+:is(.mapa-vivo, .desenho-fim) .v { fill: #a1e5b3; font-weight: 700; }
+:is(.mapa-vivo, .desenho-fim) .r { fill: #ffa3a3; font-weight: 700; }
+:is(.mapa-vivo, .desenho-fim) .b { fill: #bcd0ff; font-weight: 700; }
+:is(.mapa-vivo, .desenho-fim) .n { fill: #23233a; stroke: #6b6684; stroke-width: 1.5; }
+:is(.mapa-vivo, .desenho-fim) .k { fill: #30271f; stroke: #b4814b; stroke-width: 1.5; }
+:is(.mapa-vivo, .desenho-fim) .d { fill: #1c2935; stroke: #6d96b1; stroke-width: 1.5; }
+:is(.mapa-vivo, .desenho-fim) .g { fill: #1b2a21; stroke: #5d9c73; stroke-width: 1.5; }
+:is(.mapa-vivo, .desenho-fim) .l { fill: none; stroke: #9a8466; stroke-width: 2; }
+:is(.mapa-vivo, .desenho-fim) .lv { fill: none; stroke: #6fbf8a; stroke-width: 2; }
+:is(.mapa-vivo, .desenho-fim) .lr { fill: none; stroke: #d67f7f; stroke-width: 2; }
+:is(.mapa-vivo, .desenho-fim) .lb { fill: none; stroke: #7ea6ff; stroke-width: 2; }
+.mapa-vivo .mapa-barra { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 10px; }
+.mapa-vivo .mapa-barra button { min-height: 36px; padding: 5px 12px; border-radius: 9px; border: 1px solid #51516b; background: #1d1d2c; color: var(--text); cursor: pointer; font: inherit; font-size: .86rem; }
+.mapa-vivo .mapa-barra button[aria-pressed=true] { border-color: var(--acento); background: #3a2d1c; }
+.mapa-vivo .mapa-barra .mapa-play { margin-left: auto; }
+.mapa-vivo .mapa-rotulo { font-size: .74rem; letter-spacing: 1.5px; font-weight: 900; text-transform: uppercase; color: var(--acento-soft); margin: 0 0 8px; }
+.mapa-vivo [data-oculto] { display: none; }
+.mapa-vivo .novo rect, .mapa-vivo rect.novo { stroke: var(--acento); stroke-width: 2.5; }
+.mapa-vivo path.novo { stroke: var(--acento); stroke-width: 3; }
+.mapa-vivo path.ativo { stroke: var(--acento); stroke-width: 3.5; }
+.mapa-vivo .bolinha { fill: var(--acento); stroke: #241505; stroke-width: 2; }
+@media (prefers-reduced-motion: no-preference) { .mapa-vivo .novo rect, .mapa-vivo path.novo { animation: mapaBrilho 1.6s ease-in-out 2; } }
+@keyframes mapaBrilho { 50% { stroke-opacity: .35; } }
+
+.step-section.intervalo .step-header { margin-bottom: 0; }
+.cap-footer { margin: 50px 0 30px; text-align: center; color: var(--text-dim); }
+
+@media (max-width: 900px) { .route-grid.cinco { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) {
+  .route-grid, .concept-grid, .concept-grid.duas, .route-grid.cinco { grid-template-columns: 1fr; }
+  .mapa-vivo .mapa-barra .mapa-play { margin-left: 0; }
+  .checkpoint { grid-template-columns: 40px 1fr; gap: 10px; }
+  .checkpoint-mark { width: 36px; height: 36px; }
+}
+.code-block .code-header { flex-wrap: wrap; }
+.code-block .code-header .filename { min-width: 0; overflow-wrap: anywhere; }
+.quiz-q code, .quiz-opt code, .card p code { overflow-wrap: anywhere; }
+
+/* Vídeo de abertura (16:9 no capítulo; 9:16 para baixar) */
+.video-pecas { max-width: 720px; margin: 18px auto 22px; padding: 12px; border-radius: 18px; background: #1b1e26; border: 1px solid rgba(255,255,255,.1); }
+.video-pecas video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 10px; background: #efe3cf; }
+.video-pecas figcaption { margin-top: 10px; font-size: .9rem; color: var(--text-dim); }
+.video-pecas figcaption b { color: var(--acento-soft); }
+.video-pecas .toggler { margin: 10px 0 0; }
+.transcricao { margin: 0; padding-left: 22px; font-size: .9rem; }
+.transcricao li { margin: 4px 0; }
+.video-pecas.vinheta { max-width: 600px; margin: 0 auto 18px; }
+
+/* O conceito: teoria geral da letra, antes do caso da Biblioteca */
+.analogy.conceito { border-color: rgba(69,183,209,.32); }
+.analogy.conceito::before { content: '📖'; }
+.analogy.conceito p strong:first-child { color: var(--text); }
+
+/* ── Só do Cap 05 ─────────────────────────────────────────────────────── */
+/* ✏️ Desenhe: o passo de draw.io antes de pedir código ao agente */
+.desenhe { margin: 18px 0; padding: 16px 18px; border-radius: 14px; border: 1px dashed rgba(255, 153, 0, .55); background: rgba(255, 153, 0, .06); }
+.desenhe h4 { margin: 0 0 8px; color: var(--acento-soft); font-size: 1rem; }
+.desenhe ul { margin: 0 0 4px; padding-left: 20px; color: var(--text-dim); font-size: .92rem; }
+.desenhe li { margin: 4px 0; }
+.desenhe .toggler { margin: 12px 0 0; }
+
+/* Lista "confira no que o agente escreveu" */
+.confira { margin: 10px 0 16px; padding: 0; list-style: none; }
+.confira li { position: relative; margin: 6px 0; padding-left: 28px; color: var(--text-dim); font-size: .92rem; }
+.confira li::before { content: '☐'; position: absolute; left: 4px; color: var(--acento-soft); font-weight: 900; }
+
+/* Código só para ler (um resultado possível do agente) */
+.code-block.leitura { border: 1px solid rgba(255, 255, 255, .12); }
+.code-block.leitura .lang-badge { background: rgba(255, 255, 255, .08); color: var(--text-dim); }
+.code-block pre .ky { color: #8fc7ff; }
+
+/* Passo a passo de clique (console da AWS, GitHub, Vercel) */
+.cliques { margin: 10px 0 16px; padding-left: 22px; color: var(--text-dim); font-size: .93rem; }
+.cliques li { margin: 6px 0; }
+.cliques strong { color: var(--text); }
+
+/* Tabela "linha do arquivo → o que nasce na AWS" */
+.tabela-wrap { overflow-x: auto; margin: 14px 0; }
+.tabela { width: 100%; border-collapse: collapse; font-size: .88rem; min-width: 520px; }
+.tabela th, .tabela td { padding: 9px 12px; border-bottom: 1px solid rgba(255, 255, 255, .09); text-align: left; vertical-align: top; }
+.tabela th { color: var(--acento-soft); font-size: .76rem; letter-spacing: 1px; text-transform: uppercase; }
+.tabela td { color: var(--text-dim); }
+.tabela td:first-child { color: var(--text); white-space: nowrap; }
+
+/* Mapa vivo: peças da arquitetura */
+:is(.mapa-vivo, .desenho-fim) .regiao { fill: rgba(255, 153, 0, .04); stroke: #b4814b; stroke-width: 1.5; stroke-dasharray: 7 6; }
+:is(.mapa-vivo, .desenho-fim) .a { fill: #2a1f3d; stroke: #a166ff; stroke-width: 1.5; }
+:is(.mapa-vivo, .desenho-fim) .f { fill: #33231a; stroke: #f58536; stroke-width: 1.5; }
+:is(.mapa-vivo, .desenho-fim) .db { fill: #1b2140; stroke: #6f80f0; stroke-width: 1.5; }
+:is(.mapa-vivo, .desenho-fim) .x { fill: #2b2b33; stroke: #8a8799; stroke-width: 1.5; stroke-dasharray: 4 4; }
+.mapa-vivo .mapa-play[hidden] { display: none; }
+
+/* Vídeo 8-bit (padrão aprovado: 720 px, sem autoplay) */
+.video-8bit { max-width: 720px; margin: 18px auto 22px; padding: 12px; border-radius: 16px; background: #1a1c2c; border: 1px solid rgba(255, 255, 255, .1); }
+.video-8bit video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 8px; background: #1a1c2c; image-rendering: pixelated; }
+.video-8bit figcaption { margin-top: 10px; font-size: .9rem; color: var(--text-dim); }
+.video-8bit figcaption b { color: var(--acento-soft); }
+.video-8bit details { margin-top: 8px; font-size: .88rem; color: var(--text-dim); }
+.video-8bit summary { cursor: pointer; }
+
+@media (max-width: 640px) { .tabela td:first-child { white-space: normal; } }

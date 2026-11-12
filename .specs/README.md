@@ -47,3 +47,4 @@ sênior. O que muda e o que se mantém está em [`02-padroes-didaticos.md`](02-p
 - [13-cap2-mensageria-pagamentos.md](13-cap2-mensageria-pagamentos.md): Cap 02 vigente, RabbitMQ/Pagamentos, prompts marcados e apoio docente.
 - [14-cap3-kafka.md](14-cap3-kafka.md): Cap 03, Kafka do zero e prática Loja Café.
 - [15-cap4-oo-solid-do-zero.md](15-cap4-oo-solid-do-zero.md): Cap 04, SOLID na mão na Biblioteca do Bairro (formato Fullstack/Iniciantes, prática guiada por letra, código digitado).
+- [16-cap5-aws-serverless.md](16-cap5-aws-serverless.md): Cap 05, sistema serverless na AWS (Lambda, API Gateway, DynamoDB, Serverless v3, GitHub Actions, front na Vercel); agente constrói, aluno desenha no draw.io.

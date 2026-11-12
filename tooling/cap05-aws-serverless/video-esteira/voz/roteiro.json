@@ -1,0 +1,86 @@
+{
+  "01": [
+    {
+      "role": "LLM",
+      "text": "Mundo cinco, fase três. Sexta-feira, seis da tarde. O Beto vai publicar."
+    }
+  ],
+  "02": [
+    {
+      "role": "BETO",
+      "text": "É rapidinho! Rodo o comando aqui no meu notebook e pronto."
+    }
+  ],
+  "03": [
+    {
+      "role": "LIA",
+      "text": "Você rodou os testes antes?"
+    }
+  ],
+  "04": [
+    {
+      "role": "BETO",
+      "text": "Rodei… ontem. Acho."
+    }
+  ],
+  "05": [
+    {
+      "role": "LLM",
+      "text": "E a biblioteca saiu do ar. O teste que ia avisar ficou sem rodar."
+    }
+  ],
+  "06": [
+    {
+      "role": "LIA",
+      "text": "E se o Beto ficar doente? Só o notebook dele sabe publicar."
+    }
+  ],
+  "07": [
+    {
+      "role": "LLM",
+      "text": "Então a publicação sai do notebook e vai para uma esteira. Cada push sobe na esteira."
+    }
+  ],
+  "08": [
+    {
+      "role": "BETO",
+      "text": "E o que a esteira faz?"
+    }
+  ],
+  "09": [
+    {
+      "role": "LLM",
+      "text": "Primeiro, testa. Isso é integração contínua. Passou? Publica. Isso é entrega contínua."
+    }
+  ],
+  "10": [
+    {
+      "role": "LIA",
+      "text": "E se um teste falhar?"
+    }
+  ],
+  "11": [
+    {
+      "role": "LLM",
+      "text": "A esteira para. Nada vai para o ar, e o que estava funcionando continua funcionando."
+    }
+  ],
+  "12": [
+    {
+      "role": "BETO",
+      "text": "E a chave da nuvem? A esteira precisa dela."
+    }
+  ],
+  "13": [
+    {
+      "role": "LLM",
+      "text": "Fica num cofre do repositório. A esteira usa sem mostrar. Nem o professor Kelson vê."
+    }
+  ],
+  "14": [
+    {
+      "role": "LLM",
+      "text": "Fase completa! Quem publica é a esteira, e ela só publica o que passou no teste."
+    }
+  ]
+}

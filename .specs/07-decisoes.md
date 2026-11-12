@@ -561,3 +561,23 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
 - Pediu também uma prática final "simples, mas bem legal e empolgante" com Spring, Kafka e SOLID.
   Escolheu bônus fora do cronograma e Kafka local. A Biblioteca vai para um balcão web e avisa
   multas no Kafka sem abrir a regra: o D do dia aplicado com framework. Detalhe em 15-cap4.
+
+## 2026-11-12 — Cap 05: a Biblioteca vai para a nuvem (AWS serverless)
+- Pedido do professor: sistema serverless completo (Lambda, API Gateway, DynamoDB) na conta real de
+  cada aluno, repositório no GitHub, chave nos Secrets do Actions, Serverless Framework "no estilo
+  da Programa AI e classcontent", explicando serverless, IaC, Actions e CI/CD. Acrescentou: código
+  pelos agentes, desenho no draw.io a cada passo, front simples na Vercel e vídeos didáticos.
+- **Substitui o Bloco 3 antigo** (SQS/SNS/S3/Streams/capstone) por um capítulo só, com corte natural
+  depois do ponto 05 se precisar de dois sábados.
+- **Serverless Framework v3 no lugar do SAM** (decisão de 03/09 revista): é o stack de produção do
+  professor e a v4 exige login e uma chave a mais por aluno.
+- **Java 21 puro** nas Lambdas (o stack do professor é Python; escolha minha para manter o curso em
+  Java e ter build + teste na esteira). Domínio: Biblioteca do Bairro, do Cap 04.
+- **Exceção ao padrão de 30/10:** aqui o agente escreve o código e o aluno desenha, roda os comandos
+  de nuvem e confere. O formato da página continua o Fullstack/Iniciantes.
+- Chave de deploy com AdministratorAccess é risco assumido; contenção e o que não foi provado
+  (nenhum deploy real) estão em 16-cap5-aws-serverless.md.
+- Seção 8 do setup reescrita (usuário `deploy-biblioteca`, serverless@3, Vercel). Hub ganhou o Cap 05;
+  os cards "em breve" de DynamoDB+S3 e Capstone ficaram, à espera de decisão do professor.
+- Mesmo dia: três vídeos 8-bit (serverless, IaC, CI/CD) com vozes autorizadas, aprovados no preview e
+  publicados nos pontos 03, 04 e 07. Detalhe em 16-cap5-aws-serverless.md.

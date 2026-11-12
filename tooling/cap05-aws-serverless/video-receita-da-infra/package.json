@@ -1,0 +1,14 @@
+{
+  "name": "video-receita-da-infra",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx --yes hyperframes@0.9.39 preview",
+    "check": "npx --yes hyperframes@0.9.39 check",
+    "render": "npx --yes hyperframes@0.9.39 render",
+    "publish": "npx --yes hyperframes@0.9.39 publish"
+  },
+  "devDependencies": {
+    "@hyperframes/core": "^0.9.39"
+  }
+}

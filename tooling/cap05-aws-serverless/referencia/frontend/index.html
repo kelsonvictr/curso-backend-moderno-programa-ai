@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Biblioteca do Bairro</title>
+  <style>
+    :root { color-scheme: light dark; --tinta: #1f2933; --papel: #fbf7ef; --destaque: #b4532a; --linha: #d9cfbd; }
+    @media (prefers-color-scheme: dark) { :root { --tinta: #f1ece2; --papel: #1c1a17; --destaque: #f0a070; --linha: #4a443b; } }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Georgia, "Times New Roman", serif; color: var(--tinta); background: var(--papel); }
+    main { max-width: 640px; margin: 0 auto; padding: 32px 16px 64px; }
+    h1 { margin: 0 0 4px; font-size: 2rem; }
+    .sub { margin: 0 0 24px; opacity: .75; }
+    form { display: grid; gap: 12px; padding: 16px; border: 1px solid var(--linha); border-radius: 12px; }
+    label { display: grid; gap: 4px; font-size: .9rem; }
+    input { padding: 10px 12px; font: inherit; color: inherit; background: transparent; border: 1px solid var(--linha); border-radius: 8px; }
+    button { padding: 10px 16px; font: inherit; font-weight: 700; color: var(--papel); background: var(--destaque); border: 0; border-radius: 8px; cursor: pointer; }
+    button:disabled { opacity: .5; cursor: wait; }
+    #aviso { min-height: 1.4em; margin: 12px 0; font-size: .95rem; }
+    #aviso.erro { color: #c0392b; }
+    h2 { margin: 24px 0 8px; font-size: 1.2rem; }
+    ul { margin: 0; padding: 0; list-style: none; }
+    li { padding: 10px 0; border-bottom: 1px solid var(--linha); }
+    li strong { display: block; }
+    li span { font-size: .9rem; opacity: .75; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>📚 Biblioteca do Bairro</h1>
+    <p class="sub">O acervo da Dona Marta, agora na nuvem.</p>
+
+    <form id="form-livro">
+      <label>Título <input id="titulo" name="titulo" required autocomplete="off"></label>
+      <label>Autor <input id="autor" name="autor" required autocomplete="off"></label>
+      <button id="botao" type="submit">Cadastrar livro</button>
+    </form>
+    <p id="aviso" role="status" aria-live="polite"></p>
+
+    <h2>Acervo</h2>
+    <ul id="acervo"></ul>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

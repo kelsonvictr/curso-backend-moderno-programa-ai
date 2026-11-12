@@ -256,3 +256,23 @@ passo a passo. Cada estado deve responder: **antes, ação, depois, como provar 
 - Cada letra abre com 📖 "O conceito" (teoria geral, `analogy conceito`, constantes CONCEITO_* no
   montar_index.py) antes da 💡 ideia: o professor sentiu falta da teoria antes da prática (07/11/2026).
   Usa o componente `analogy`, não é a caixa teoria/limite/prova reprovada.
+
+## Cap 05 — A Biblioteca vai para a nuvem (2026-11-12)
+- `capitulos/05-aws-serverless/`; contrato em `.specs/16-cap5-aws-serverless.md`. Lambda + API Gateway +
+  DynamoDB com **Serverless Framework v3** (não SAM, não v4), Java 21 puro, front sem build na Vercel,
+  deploy pelo GitHub Actions com access key nos Secrets. Conta real de cada aluno, `us-east-1`.
+- **Aqui o agente escreve o código** (pedido do professor): o aluno desenha no draw.io antes de cada
+  passo, roda os comandos de nuvem e confere. Formato da página continua o Fullstack/Iniciantes; cada
+  ponto de construção tem 📖 conceito → 💡 ideia → ✏️ desenhe → 🤖 prompt → 🔎 confira → ▶️ → ✅ → 🧠.
+- Fonte: `tooling/cap05-aws-serverless/referencia/` (estado final) + `atos/` (serverless.yml por ato).
+  ZIPs com `python3 tooling/build-cap05-biblioteca-serverless.py`; validar com
+  `python3 tooling/validate-cap05-biblioteca-serverless.py` (sem AWS: testes, jar, `serverless package`).
+  Página gerada por `python3 tooling/cap05-aws-serverless/montar_index.py`: edite o script e regenere.
+- Manter 12 pontos do HTML, professor.txt e professor-resolucoes.txt sincronizados. Sem links dos TXTs.
+- **Nunca rode deploy na conta do professor sem ele pedir.** As saídas de deploy/console/Vercel/Actions
+  na página são formato esperado até alguém fazer o roteiro numa conta real (ver "O que NÃO foi provado").
+- O mapa vivo (`#tpl-mapa-nuvem`, `cap5.js`) é o gabarito do desenho do aluno em cada estágio (0–5).
+- Vídeos 8-bit publicados (`video-servidor-que-dorme`, `video-receita-da-infra`, `video-esteira`, pontos
+  03/04/07). Falas em `FALAS_*` do montar_index.py; `gerar_roteiros.py` escreve os roteiros. A função
+  `video()` só inclui o player quando o `.mp4` existe em `video/`.
+
