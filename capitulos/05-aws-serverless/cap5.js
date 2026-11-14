@@ -25,17 +25,17 @@ function el(tag,props,...filhos){const e=document.createElement(tag);if(props)Ob
 // É o gabarito do draw.io do aluno: por isso aparece atrás de um "Já desenhou? Compare".
 (function(){
  const tpl=document.getElementById('tpl-mapa-nuvem');if(!tpl)return;
- const NOMES=['Conta vazia','Console','IaC','DynamoDB','Página','Esteira'];
+ const NOMES=['Conta vazia','Console','IaC','Esteira','DynamoDB','Página'];
  const LEGENDA=[
   '<b>Conta vazia.</b> Só o seu notebook e uma região da AWS sem nada dentro.',
   '<b>Depois do console.</b> Uma função criada no clique. Funciona, mas só quem clicou sabe como ela foi feita.',
-  '<b>Depois do IaC.</b> O serverless.yml criou a porta HTTP e a função ola. O deploy sai do seu notebook. A ola-console continua lá, fora do arquivo.',
-  '<b>Depois do DynamoDB.</b> Duas funções novas e uma tabela. Em cada seta, a única ação que aquela função pode fazer.',
-  '<b>Depois da página.</b> O navegador carrega a página na Vercel e chama a API direto. É nessa seta azul que o CORS atua.',
-  '<b>Depois da esteira.</b> O notebook só faz git push. O GitHub testa e publica o backend na AWS, e a Vercel publica a página.'
+  '<b>Depois do IaC.</b> A receita (serverless.yml) descreve a porta HTTP e a função ola e já está no GitHub. Mas ninguém a executou: na AWS ainda não existe nada dela.',
+  '<b>Depois da esteira.</b> A cada push, o GitHub testa e publica na AWS. A chave mora só no cofre do GitHub; o notebook só faz git push. A ola-console continua lá, fora do arquivo.',
+  '<b>Depois do DynamoDB.</b> Duas funções novas e uma tabela, publicadas pelo mesmo push. Em cada seta, a única ação que aquela função pode fazer.',
+  '<b>Depois da página.</b> O navegador carrega a página na Vercel e chama a API direto. É nessa seta azul que o CORS atua. Um push publica as duas pontas.'
  ];
- const BOTAO=['','','▶ Ver um GET /ola passar','▶ Ver um cadastro passar','▶ Ver um cadastro passar','▶ Ver um push passar'];
- const CAMINHO=[[],[],['api-ola'],['api-cad','cad-db'],['nav-vercel','nav-api','api-cad','cad-db'],['note-gh','gh-vercel','gh-aws']];
+ const BOTAO=['','','▶ Ver um push passar','▶ Ver um push publicar','▶ Ver um cadastro passar','▶ Ver um cadastro passar'];
+ const CAMINHO=[[],[],['note-gh'],['note-gh','gh-aws','api-ola'],['api-cad','cad-db'],['nav-vercel','nav-api','api-cad','cad-db']];
  let seq=0;
  document.querySelectorAll('.mapa-vivo').forEach(fig=>{
   const svg=tpl.content.firstElementChild.cloneNode(true),id='mapa-'+(++seq);

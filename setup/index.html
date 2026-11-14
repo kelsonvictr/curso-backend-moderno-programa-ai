@@ -60,7 +60,7 @@
   </div>
   <div class="sidebar-group">
     <div class="sidebar-group-title">Só antes do Sáb 6</div>
-    <div class="sidebar-link" onclick="goTo('s-aws')"><span class="dot" style="background:var(--aws)"></span> 8 · AWS + Serverless + Vercel</div>
+    <div class="sidebar-link" onclick="goTo('s-aws')"><span class="dot" style="background:var(--aws)"></span> 8 · Conta AWS + Vercel</div>
   </div>
 </nav>
 
@@ -340,31 +340,21 @@ claude
   <section class="step-section later" id="s-aws">
     <div class="step-header">
       <div class="step-number">8</div>
-      <div><div class="step-title">Conta AWS + CLI + Serverless + Vercel <span class="badge-later">antes do Cap 05</span></div><div class="step-sub">faça na véspera: a conta da AWS pode levar até 24 h para ativar</div></div>
+      <div><div class="step-title">Conta AWS + Vercel <span class="badge-later">antes do Cap 05</span></div><div class="step-sub">faça na véspera: a conta da AWS pode levar até 24 h para ativar</div></div>
     </div>
     <div class="card">
       <div class="why">🎯 <span><b>Por quê conta própria:</b> o sistema serverless do Cap 05 é seu, fica no seu portfólio, e você
       aprende a operar (e a desligar) a conta, que é o que o mercado paga. Conta nova no plano Free não gera cobrança.</span></div>
       <ol style="color:var(--text-dim);font-size:0.9rem;line-height:1.9;margin-left:20px">
-        <li>Crie a conta em <code>aws.amazon.com</code>. Pede cartão e confirmação por telefone. Na escolha do plano, fique com o <strong>Free</strong>: ele não cobra nada enquanto você não mudar de plano.</li>
+        <li>Crie a conta em <code>aws.amazon.com</code>. Pede um cartão de crédito ou débito (Visa, Mastercard ou Amex) <strong>com compra internacional liberada</strong> e confirmação por telefone. A AWS faz uma verificação de US$ 1 que não é cobrada. Na escolha do plano, fique com o <strong>Free</strong>: ele não cobra nada enquanto você não mudar de plano.</li>
         <li><strong>Ative MFA no usuário root</strong> e nunca mais use o root no dia a dia.</li>
         <li><strong>Budget alarm</strong> em <em>Billing → Budgets</em>: US$ 5/mês com alerta por e-mail. É o seu cinto de segurança.</li>
-        <li>Em <em>IAM → Users</em>, crie o usuário <code>deploy-biblioteca</code>, <strong>sem</strong> acesso ao console, com a política <em>AdministratorAccess</em> (é conta de estudo; no Cap 05 a gente discute o risco).</li>
-        <li>No usuário: <em>Security credentials → Create access key → Command Line Interface (CLI)</em>. <strong>Baixe o .csv</strong> e guarde fora de qualquer pasta de projeto. A chave secreta só aparece nessa hora.</li>
-        <li>Instale a <strong>AWS CLI v2</strong> (instalador oficial por sistema) e rode <code>aws configure</code>: cole o ID da chave, a chave secreta, região <code>us-east-1</code>, formato <code>json</code>.</li>
-        <li>Instale o <strong>Node.js 20 ou mais novo</strong> e o Serverless Framework <strong>versão 3</strong>: <code>npm install -g serverless@3</code>. Não instale a mais nova: a versão 4 pede login e uma chave a mais.</li>
         <li>Crie a conta na <strong>Vercel</strong> em <code>vercel.com</code>, entrando com o GitHub (<em>Continue with GitHub</em>). Plano Hobby, gratuito.</li>
       </ol>
-      <div class="code-block"><div class="code-header"><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span class="filename">confira</span><span class="lang-badge terminal">terminal</span></div>
-<pre>aws sts get-caller-identity    <span class="cm"># o Arn tem que terminar em user/deploy-biblioteca</span>
-node -v                        <span class="cm"># v20 ou mais</span>
-serverless --version
-<span class="cm">Framework Core: 3.40.0</span></pre></div>
-      <div class="warning"><div class="warning-icon">⚠️</div><div class="warning-content"><strong>A chave de acesso é como a senha do cartão.</strong> Nunca cole em arquivo de projeto, em commit, em chat ou na conversa com o agente. Se desconfiar que vazou, apague a chave no IAM na mesma hora e gere outra.</div></div>
+      <div class="tip"><div class="tip-icon">💡</div><div class="tip-content"><strong>Não instale nada da AWS no notebook.</strong> No Cap 05, tudo na AWS é feito no console, pelo navegador, e quem publica o sistema é o GitHub Actions. Nada de AWS CLI nem de Serverless Framework na sua máquina. A chave de acesso é criada na aula e vai direto para os Secrets do GitHub.</div></div>
+      <div class="warning"><div class="warning-icon">⚠️</div><div class="warning-content"><strong>A chave de acesso é como a senha do cartão.</strong> Quando você a criar, no Cap 05, ela vai só para os Secrets do GitHub: nunca em arquivo de projeto, commit, chat ou conversa com o agente. Se desconfiar que vazou, apague a chave no IAM na mesma hora e gere outra.</div></div>
       <ul class="chk-list">
         <li><label class="chk"><input type="checkbox" data-persist="setup/aws/conta"><span><span class="chk-t">Conta criada no plano Free, MFA no root, budget alarm de US$ 5</span></span></label></li>
-        <li><label class="chk"><input type="checkbox" data-persist="setup/aws/cli"><span><span class="chk-t"><code>aws sts get-caller-identity</code> responde com <code>user/deploy-biblioteca</code></span></span></label></li>
-        <li><label class="chk"><input type="checkbox" data-persist="setup/aws/serverless"><span><span class="chk-t"><code>serverless --version</code> mostra <code>Framework Core: 3</code></span></span></label></li>
         <li><label class="chk"><input type="checkbox" data-persist="setup/aws/vercel"><span><span class="chk-t">Conta na Vercel criada com o GitHub</span></span></label></li>
       </ul>
       <p style="margin-top:8px"><span data-progress="setup/aws/"></span></p>

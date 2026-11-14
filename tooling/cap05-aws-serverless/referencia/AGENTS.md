@@ -10,10 +10,10 @@ Projeto de aula (Cap 05 · Backend Moderno). Um cadastro de livros que roda na A
 - `docs/arquitetura.drawio`: o desenho da arquitetura. Eu atualizo antes de cada mudança.
 
 ## Regras para o agente
-1. **Não rode nada que mexa na nuvem.** `serverless deploy`, `serverless remove` e comandos
-   `aws` são meus. Prepare o código, diga o comando e pare.
-2. **Nunca peça, leia ou escreva chaves da AWS.** Não abra `~/.aws`. Nenhuma chave entra em
-   arquivo do projeto, em commit ou nesta conversa.
+1. **Não rode nada que mexa na nuvem.** Quem publica é a esteira (`deploy.yml`), a cada push.
+   Nada de `serverless deploy`, `serverless remove` ou `aws`. O `git push` também é meu.
+2. **Nunca peça, leia ou escreva chaves da AWS.** A chave só existe nos Secrets do GitHub.
+   Nenhuma chave entra em arquivo do projeto, em commit, no notebook ou nesta conversa.
 3. **Java 21 puro.** Sem Spring, sem Lombok. Use o Maven Wrapper (`./mvnw`), nunca `mvn`.
 4. **Uma mudança por vez.** Antes de editar, mostre o plano em até 6 linhas e espere o meu OK.
 5. **Permissão mínima.** As funções só recebem as ações do DynamoDB que usam, só na tabela delas.

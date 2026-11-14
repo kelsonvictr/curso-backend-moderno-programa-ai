@@ -23,8 +23,8 @@ RELATORIO = ROOT / 'tooling/cap05-aws-serverless/VALIDACAO.json'
 # ato -> (testes esperados, funções, tem tabela, tem CORS, tem front, tem workflow)
 ESPERADO = {
     'ato2': (1, 1, False, False, False, False),
-    'ato3': (5, 3, True, False, False, False),
-    'ato4': (5, 3, True, True, True, False),
+    'ato3': (1, 1, False, False, False, True),
+    'ato4': (5, 3, True, False, False, True),
     'ato5': (5, 3, True, True, True, True),
 }
 

@@ -581,3 +581,14 @@ planejamento com o prof (só `.specs/`, ROADMAP e CLAUDE.md; **nenhum HTML tocad
   os cards "em breve" de DynamoDB+S3 e Capstone ficaram, à espera de decisão do professor.
 - Mesmo dia: três vídeos 8-bit (serverless, IaC, CI/CD) com vozes autorizadas, aprovados no preview e
   publicados nos pontos 03, 04 e 07. Detalhe em 16-cap5-aws-serverless.md.
+
+## 2026-11-14 — Cap 05 sem AWS CLI: tudo no console, deploy só pelo Actions
+- **Pedido do professor (dia da aula):** "vamos não utilizar nada de aws cli, quero usar 100% no
+  console web com eles mesmo". Escolheu, entre três opções, a "chave só no GitHub".
+- **Decisão:** ninguém instala AWS CLI, Node ou Serverless no notebook. A access key é criada no
+  console (IAM) e colada direto nos Secrets do GitHub; todo deploy sai do GitHub Actions.
+- **Consequência na ordem:** a esteira passa para o ponto 05, logo depois da receita (04). No 04 a
+  prova é o CloudFormation vazio ("receita não é bolo"); DynamoDB e página viram 06 e 07, publicados
+  por push. Desligar vira S3 Empty + CloudFormation Delete (o `serverless remove` saiu).
+- ZIPs reordenados e revalidados (4/4); setup seção 8 ficou só com conta AWS + Vercel.
+

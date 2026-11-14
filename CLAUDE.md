@@ -272,7 +272,9 @@ passo a passo. Cada estado deve responder: **antes, ação, depois, como provar 
 - **Nunca rode deploy na conta do professor sem ele pedir.** As saídas de deploy/console/Vercel/Actions
   na página são formato esperado até alguém fazer o roteiro numa conta real (ver "O que NÃO foi provado").
 - O mapa vivo (`#tpl-mapa-nuvem`, `cap5.js`) é o gabarito do desenho do aluno em cada estágio (0–5).
+- **Sem AWS CLI (14/11):** tudo de AWS no console web; a chave vai só para os Secrets e todo deploy sai
+  do Actions. Ordem: 04 IaC (CloudFormation vazio) → 05 CI/CD → ☕ → 06 DynamoDB → 07 Página.
 - Vídeos 8-bit publicados (`video-servidor-que-dorme`, `video-receita-da-infra`, `video-esteira`, pontos
-  03/04/07). Falas em `FALAS_*` do montar_index.py; `gerar_roteiros.py` escreve os roteiros. A função
+  03/04/05). Falas em `FALAS_*` do montar_index.py; `gerar_roteiros.py` escreve os roteiros. A função
   `video()` só inclui o player quando o `.mp4` existe em `video/`.
 

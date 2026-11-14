@@ -35,10 +35,12 @@ INICIO = ['AGENTS.md', 'CLAUDE.md', '.gitignore', 'backend/mvnw', 'backend/mvnw.
 CHECKPOINTS = {
     # inicio: só as regras e o Maven Wrapper. Sem pom e sem serverless.yml: o agente cria.
     'inicio': (INICIO, None),
-    'ato2': (COMUM + OLA, ATOS / 'serverless.ato2.yml'),
-    'ato3': (COMUM + OLA + LIVROS, ATOS / 'serverless.ato3.yml'),
-    'ato4': (COMUM + OLA + LIVROS + FRONT, REF / 'backend/serverless.yml'),
-    'ato5': (COMUM + OLA + LIVROS + FRONT + ACTIONS, REF / 'backend/serverless.yml'),
+    # A ordem segue a aula (14/11/2026): a esteira vem logo depois da receita, porque a chave
+    # da AWS só existe nos Secrets do GitHub e ninguém publica do notebook.
+    'ato2': (COMUM + OLA, ATOS / 'serverless.ato2.yml'),                              # 04 IaC
+    'ato3': (COMUM + OLA + ACTIONS, ATOS / 'serverless.ato2.yml'),                    # 05 CI/CD
+    'ato4': (COMUM + OLA + ACTIONS + LIVROS, ATOS / 'serverless.ato3.yml'),           # 06 DynamoDB
+    'ato5': (COMUM + OLA + ACTIONS + LIVROS + FRONT, REF / 'backend/serverless.yml'), # 07 Página
 }
 
 

@@ -49,6 +49,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      # CD: o mesmo comando que você rodava no notebook.
+      # CD: só a esteira publica. A chave mora nos Secrets, não no notebook de ninguém.
       - name: Publicar na AWS
         run: serverless deploy --stage dev

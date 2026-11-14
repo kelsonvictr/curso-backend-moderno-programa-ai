@@ -1,9 +1,11 @@
 CAP 05 — A BIBLIOTECA VAI PARA A NUVEM (AWS SERVERLESS)
 =========================================================================
-O agente escreve o código. O aluno DESENHA antes (draw.io), RODA os comandos de nuvem e CONFERE.
+O agente escreve o código. O aluno DESENHA antes (draw.io), dá o PUSH, clica no CONSOLE e CONFERE.
 Cada ponto de construção: 📖 conceito → 💡 ideia + regra → ✏️ desenha → 🤖 prompt → 🔎 confere →
-▶️ deploy → ✅ prova → 🧠 1 quiz → 👀 Travou? (com ZIP).
+▶️ push → ✅ prova (console) → 🧠 1 quiz → 👀 Travou? (com ZIP).
 Projeto: Biblioteca do Bairro. Java 21 puro, Serverless Framework v3, us-east-1, conta de cada aluno.
+SEM AWS CLI (decisão 14/11): tudo de AWS no console web. A chave vai só para os Secrets do GitHub e
+todo deploy sai do Actions. Por isso a esteira (05) vem logo depois da receita (04).
 FRASE DO DIA (repita): "desenhe, peça, confira".
 
 ⚠️ ANTES DE DAR ESTA AULA
@@ -13,67 +15,68 @@ FRASE DO DIA (repita): "desenhe, peça, confira".
   Meça também: tempo do deploy e da primeira chamada (cold start) do POST /livros.
 
 NA VÉSPERA (mande no grupo)
-  Seção 8 do Setup: conta AWS no plano Free (pode levar até 24 h para ativar), MFA, budget US$ 5,
-  usuário IAM deploy-biblioteca com access key, AWS CLI, Node, npm install -g serverless@3,
-  conta na Vercel com o GitHub. Quem chegar sem conta ativa acompanha em dupla.
+  Só a conta AWS no plano Free (cartão com compra internacional; pode levar horas para ativar).
+  O resto se faz na aula: budget, repositório, chave (direto para os Secrets) e Vercel.
+  Quem chegar sem conta ativa acompanha em dupla.
 
 UMA TARDE (apertado; ver o plano de dois sábados abaixo)
-13:30 (10)  01 História da Dona Marta + mapa da tarde (clique Conta vazia → Esteira).
-13:40 (20)  02 Bancada: aws sts get-caller-identity, serverless --version, repo PRIVADO, ZIP inicial,
+13:30 (10)  01 História da Dona Marta + mapa da tarde (clique Conta vazia → Página).
+13:40 (20)  02 Bancada: console em us-east-1, budget US$ 5, java -version, repo PRIVADO, ZIP inicial,
             ler as regras 1 e 2 do AGENTS.md, primeiro desenho (notebook + região vazia).
 14:00 (20)  03 Serverless: Lambda Python no console, Test, ler Billed/Init Duration.
             Pergunte: "quantos cliques foram? refaz igual na conta do colega?". NÃO apagar a ola-console.
-14:20 (40)  04 IaC: desenha → Prompt 1 → lê o serverless.yml com a tabela → ./mvnw package →
-            serverless deploy → /ola no navegador → CloudFormation: 11 recursos.
-15:00 (15)  ☕
-15:15 (40)  05 DynamoDB: desenha (PutItem/Scan nas setas) → Prompt 2 → confere o bloco iam →
-            testes (5 verdes) → deploy → POST no Insomnia → item no console.
-15:55 (35)  06 Página: Prompt 3 → push → Vercel (Root Directory = frontend) → ERRO de CORS no F12 →
-            Prompt 4 → deploy → funciona. Abra no celular.
-16:30 (35)  07 CI/CD: Secrets (o aluno, no navegador) → Prompt 5 → push → aba Actions.
-            Prova 1: muda o /ola pelo push. Prova 2: quebra um teste, esteira vermelha, site no ar.
-17:05 (5)   08 BugZilla: leia junto, pergunte o conserto de cada um.
-17:10 (5)   10 Agente revisor: só o quiz do dynamodb:* se faltar tempo.
-17:15 (10)  11 Desligar: serverless remove; depois "quem lembra da ola-console?".
-17:25 (5)   12 Cinco frases + casa.
+14:20 (25)  04 IaC: desenha → Prompt 1 → lê o serverless.yml com a tabela → push →
+            CloudFormation VAZIO: "receita não é bolo; quem executa?".
+14:45 (35)  05 CI/CD: IAM no console (usuário + access key) → cola direto nos Secrets → Prompt 2 →
+            push → aba Actions → endereço no log → /ola → 11 recursos → quebra teste, vermelho.
+15:20 (15)  ☕
+15:35 (35)  06 DynamoDB: desenha (PutItem/Scan nas setas) → Prompt 3 → confere o bloco iam →
+            testes (5 verdes) → push → POST no Insomnia → item no console.
+16:10 (35)  07 Página: Prompt 4 → push → Vercel (Root Directory = frontend) → ERRO de CORS no F12 →
+            Prompt 5 → push → funciona. Abra no celular.
+16:45 (10)  08 BugZilla: leia junto, pergunte o conserto de cada um.
+16:55 (10)  10 Agente revisor: só o quiz do dynamodb:* se faltar tempo.
+17:05 (15)  11 Desligar no console: S3 Empty → CloudFormation Delete; depois "quem lembra da ola-console?".
+17:20 (10)  12 Cinco frases + casa.
 casa        09 Desafio DELETE /livros/{id} (um push recria o sistema; o endereço da API muda).
 
 DOIS SÁBADOS (recomendado para turma mista com conta real)
-  Sábado A: 01 a 05. Termina com a API no ar, testada no Insomnia. Casa: desenho exportado no README.
-            Quem quiser desliga com serverless remove e recria na aula seguinte com um deploy.
+  Sábado A: 01 a 05. Termina com a esteira verde e o /ola no ar. Casa: desenho exportado no README.
   Sábado B: revisão do desenho (10 min) → 06 a 12, com o desafio 09 em sala.
 
 VÍDEOS 8-BIT (PLAY no topo do ponto, antes do 📖 conceito; sem autoplay, com som)
   03 "O servidor que dorme" (serverless, 1 min 13 s) · 04 "A receita da infra" (IaC, 1 min 15 s) ·
-  07 "A esteira" (CI/CD, 1 min 7 s). Arquivos em video/. Atrasou? Pule o vídeo: o 📖 conceito cobre
+  05 "A esteira" (CI/CD, 1 min 7 s). Arquivos em video/. Atrasou? Pule o vídeo: o 📖 conceito cobre
   o mesmo conteúdo. A transcrição fica recolhida embaixo de cada player.
 
 SE ATRASAR
   03 vira demonstração sua (a turma só assiste): ganha 15 min.
-  06 e 07 não se cortam pela metade: se não couberem os dois, pare no 05 e vire dois sábados.
-  Quem travar pega o ZIP do "👀 Travou?" e segue do deploy. Não depure código de agente em sala.
+  04 e 05 andam juntos (sem a esteira nada vai ao ar). Se não couber 06 e 07, pare no 05.
+  Quem travar pega o ZIP do "👀 Travou?", copia por cima e dá push. Não depure código de agente em sala.
 
 REGRAS QUE VOCÊ REPETE
-  A chave nunca entra em arquivo, commit ou conversa com o agente.
-  Comando de nuvem (deploy, remove, aws) quem roda é o aluno, nunca o agente.
-  Depois que a esteira existe, ninguém faz deploy do notebook.
+  A chave vai da página da AWS direto para os Secrets do GitHub. Nunca em arquivo, notebook ou agente.
+  Quem publica é a esteira. Ninguém roda deploy (nem tem como: não há chave no notebook).
+  O agente não roda nada de nuvem nem git push.
 
 SE ALGO DER ERRADO
-  Conta AWS "pending" / ainda ativando → aluno acompanha em dupla; não há atalho.
-  Unable to locate credentials → aws configure. InvalidClientTokenId → chave errada ou apagada.
-  Framework Core: 4.x → instalou a v4 (pede login). npm install -g serverless@3.
-  PowerShell "execução de scripts desabilitada" → usar cmd ou Git Bash.
-  artifact não encontrado → faltou ./mvnw package. permission denied ./mvnw → chmod +x mvnw.
-  Internal Server Error → serverless logs -f cadastrarLivro. AccessDenied = iam; ResourceNotFound =
-  nome da tabela; Task timed out after 6.00 seconds = faltou timeout: 15.
-  Vercel 404 → Root Directory. CORS persiste → origem com barra no fim ou sem https.
+  Conta AWS ainda ativando → aluno acompanha em dupla; não há atalho.
+  Console em outra região → canto superior direito, N. Virginia (us-east-1).
+  Actions "Credentials could not be loaded" → nome do Secret errado. "security token ... invalid" →
+  valor colado errado: apagar a chave no IAM, criar outra, regravar os dois Secrets.
+  "not authorized to perform: cloudformation:CreateStack" → faltou AdministratorAccess no usuário.
   Actions: ./mvnw Permission denied → git update-index --chmod=+x backend/mvnw (Windows).
-  UPDATE_IN_PROGRESS → dois deploys ao mesmo tempo; esperar.
-  O agente rodou deploy sozinho → pare, releia a regra 1 do AGENTS.md com a turma: é conteúdo.
+  Internal Server Error → Lambda → função → Monitor → View CloudWatch logs. AccessDenied = iam;
+  ResourceNotFound = nome da tabela; Task timed out after 6.00 seconds = faltou timeout: 15.
+  Vercel 404 → Root Directory. CORS persiste → esteira ainda rodando, ou origem com barra/sem https.
+  UPDATE_IN_PROGRESS → dois pushes seguidos; esperar e Re-run jobs.
+  CloudFormation DELETE_FAILED → bucket de deploy não foi esvaziado no S3.
+  O agente quis rodar deploy ou instalar a AWS CLI → pare, releia a regra 1 do AGENTS.md com a turma.
 
-NÚMEROS DO GABARITO (validados sem AWS em 12/11/2026)
-  ato 2: 1 teste, 11 recursos CloudFormation · atos 3 a 5: 5 testes, 24 recursos · jar 13,4 MB.
+NÚMEROS DO GABARITO (validados sem AWS em 14/11/2026)
+  ato2 (04) e ato3 (05): 1 teste, 11 recursos · ato4 (06) e ato5 (07): 5 testes, 24 recursos · jar 13,4 MB.
   Serverless 3.40.0. ZIPs: apoio/biblioteca-serverless-{inicio,ato2,ato3,ato4,ato5}.zip.
+  Desenho pronto (gabarito por estágio, para projetar): apoio/arquitetura-biblioteca.drawio.
 
 CINCO FRASES
   Serverless: sem pedido, sem custo.
